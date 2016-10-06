@@ -2,6 +2,7 @@ package tv.twitchbot.common.dto.messages.events;
 
 import tv.twitchbot.common.dto.core.ChatMessage;
 import tv.twitchbot.common.dto.core.Module;
+import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
@@ -9,15 +10,20 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * Created by cobi on 10/5/16.
  */
 public class ChatMessageEvent extends Event {
-    public static ChatMessageEvent fromProto(Module module, EventOuterClass.ChatMessageEvent chatMessageEvent) {
+    public static ChatMessageEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.ChatMessageEvent chatMessageEvent) {
         ChatMessage chatMessage = ChatMessage.fromProto(chatMessageEvent.getChatMessage());
-        return new ChatMessageEvent(module, chatMessage);
+        return new ChatMessageEvent(module, uuid, timestamp, chatMessage);
     }
 
     private ChatMessage chatMessage;
 
-    public ChatMessageEvent(Module module, ChatMessage chatMessage) {
-        super(module);
+    public ChatMessageEvent(Module from, ChatMessage chatMessage) {
+        super(from);
+        this.chatMessage = chatMessage;
+    }
+
+    public ChatMessageEvent(Module from, UUID messageId, long timestamp, ChatMessage chatMessage) {
+        super(from, messageId, timestamp);
         this.chatMessage = chatMessage;
     }
 
