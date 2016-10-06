@@ -16,7 +16,7 @@ public abstract class Module {
         return null;
     }
 
-    protected ChannelConfiguration getChannelConfiguration(String channel) {
+    protected TenantConfiguration getTenantConfiguration(String channel) {
         return null;
     }
 
@@ -28,8 +28,12 @@ public abstract class Module {
         MessageQueueManager mqm = getMessageQueueManager();
         MessageQueue mq = mqm.forName("inbound|module|" + getName());
         for(;;) {
-            Message message = mq.get();
-            handle(message);
+            try {
+                Message message = mq.get();
+                handle(message);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

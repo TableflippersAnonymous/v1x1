@@ -15,13 +15,19 @@ public abstract class Channel {
     }
 
     protected String name;
+    protected Tenant tenant;
 
-    protected Channel(String name) {
+    public Channel(String name, Tenant tenant) {
         this.name = name;
+        this.tenant = tenant;
     }
 
     public String getName() {
         return name;
+    }
+
+    public Tenant getTenant() {
+        return tenant;
     }
 
     public abstract ChannelOuterClass.Channel toProto();

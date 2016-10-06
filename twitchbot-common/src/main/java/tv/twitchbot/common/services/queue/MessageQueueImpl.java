@@ -1,5 +1,7 @@
 package tv.twitchbot.common.services.queue;
 
+import com.google.protobuf.InvalidProtocolBufferException;
+import org.redisson.api.RBlockingQueue;
 import tv.twitchbot.common.dto.messages.Message;
 
 /**
@@ -7,13 +9,19 @@ import tv.twitchbot.common.dto.messages.Message;
  */
 public class MessageQueueImpl implements MessageQueue {
 
+    private RBlockingQueue<byte[]> blockingQueue;
+
+    public MessageQueueImpl(RBlockingQueue<byte[]> blockingQueue) {
+        this.blockingQueue = blockingQueue;
+    }
+
     @Override
-    public Message get() {
-        return null;
+    public Message get() throws InterruptedException, InvalidProtocolBufferException {
+        return Message.fromBytes(blockingQueue.take());
     }
 
     @Override
     public void add(Message message) {
-
+        blockingQueue.add(message.toBytes());
     }
 }
