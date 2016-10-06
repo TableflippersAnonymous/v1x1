@@ -114,7 +114,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     private void run() throws Exception {
         MessageQueueManager mqm = getMessageQueueManager();
-        MessageQueue mq = mqm.forName("inbound|module|" + getName());
+        MessageQueue mq = mqm.forName(getQueueName());
         for(;;) {
             try {
                 Message message = mq.get();
@@ -145,5 +145,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     protected void reply(Request request, Response response) {
         send(request.getResponseQueueName(), response);
+    }
+
+    protected String getQueueName() {
+        return "inbound|module|" + getName();
     }
 }
