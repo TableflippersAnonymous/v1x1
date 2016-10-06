@@ -55,7 +55,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     protected abstract void handle(Message message);
 
-    protected void main(final String[] args) throws Exception {
+    protected void entryPoint(final String[] args) throws Exception {
         parseArgs(args);
         initializeInternal();
         initialize();
