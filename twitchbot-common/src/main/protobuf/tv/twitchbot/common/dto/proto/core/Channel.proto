@@ -2,6 +2,8 @@ syntax = "proto2";
 
 package tv.twitchbot.common.dto.proto.core;
 
+import "Tenant.proto";
+
 message Channel {
     enum ChannelType {
         TWITCH = 1;
@@ -10,4 +12,5 @@ message Channel {
 
     required string name = 1;
     required ChannelType type = 2;
+    required Tenant tenant = 3;
 }

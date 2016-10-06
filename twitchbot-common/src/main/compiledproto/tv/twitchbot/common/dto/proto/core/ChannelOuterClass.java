@@ -40,6 +40,19 @@ public final class ChannelOuterClass {
      * <code>required .tv.twitchbot.common.dto.proto.core.Channel.ChannelType type = 2;</code>
      */
     tv.twitchbot.common.dto.proto.core.ChannelOuterClass.Channel.ChannelType getType();
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+     */
+    boolean hasTenant();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant getTenant();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.TenantOuterClass.TenantOrBuilder getTenantOrBuilder();
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.core.Channel}
@@ -100,6 +113,19 @@ public final class ChannelOuterClass {
                 bitField0_ |= 0x00000002;
                 type_ = rawValue;
               }
+              break;
+            }
+            case 26: {
+              tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = tenant_.toBuilder();
+              }
+              tenant_ = input.readMessage(tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(tenant_);
+                tenant_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000004;
               break;
             }
           }
@@ -275,6 +301,27 @@ public final class ChannelOuterClass {
       return result == null ? tv.twitchbot.common.dto.proto.core.ChannelOuterClass.Channel.ChannelType.TWITCH : result;
     }
 
+    public static final int TENANT_FIELD_NUMBER = 3;
+    private tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant tenant_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+     */
+    public boolean hasTenant() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant getTenant() {
+      return tenant_ == null ? tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.getDefaultInstance() : tenant_;
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.TenantOuterClass.TenantOrBuilder getTenantOrBuilder() {
+      return tenant_ == null ? tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.getDefaultInstance() : tenant_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -286,6 +333,14 @@ public final class ChannelOuterClass {
         return false;
       }
       if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTenant()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getTenant().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -301,6 +356,9 @@ public final class ChannelOuterClass {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeEnum(2, type_);
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeMessage(3, getTenant());
+      }
       unknownFields.writeTo(output);
     }
 
@@ -315,6 +373,10 @@ public final class ChannelOuterClass {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(2, type_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getTenant());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -342,6 +404,11 @@ public final class ChannelOuterClass {
       if (hasType()) {
         result = result && type_ == other.type_;
       }
+      result = result && (hasTenant() == other.hasTenant());
+      if (hasTenant()) {
+        result = result && getTenant()
+            .equals(other.getTenant());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -360,6 +427,10 @@ public final class ChannelOuterClass {
       if (hasType()) {
         hash = (37 * hash) + TYPE_FIELD_NUMBER;
         hash = (53 * hash) + type_;
+      }
+      if (hasTenant()) {
+        hash = (37 * hash) + TENANT_FIELD_NUMBER;
+        hash = (53 * hash) + getTenant().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -475,6 +546,7 @@ public final class ChannelOuterClass {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getTenantFieldBuilder();
         }
       }
       public Builder clear() {
@@ -483,6 +555,12 @@ public final class ChannelOuterClass {
         bitField0_ = (bitField0_ & ~0x00000001);
         type_ = 1;
         bitField0_ = (bitField0_ & ~0x00000002);
+        if (tenantBuilder_ == null) {
+          tenant_ = null;
+        } else {
+          tenantBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -515,6 +593,14 @@ public final class ChannelOuterClass {
           to_bitField0_ |= 0x00000002;
         }
         result.type_ = type_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        if (tenantBuilder_ == null) {
+          result.tenant_ = tenant_;
+        } else {
+          result.tenant_ = tenantBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -565,6 +651,9 @@ public final class ChannelOuterClass {
         if (other.hasType()) {
           setType(other.getType());
         }
+        if (other.hasTenant()) {
+          mergeTenant(other.getTenant());
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -575,6 +664,12 @@ public final class ChannelOuterClass {
           return false;
         }
         if (!hasType()) {
+          return false;
+        }
+        if (!hasTenant()) {
+          return false;
+        }
+        if (!getTenant().isInitialized()) {
           return false;
         }
         return true;
@@ -710,6 +805,124 @@ public final class ChannelOuterClass {
         onChanged();
         return this;
       }
+
+      private tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant tenant_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant, tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.Builder, tv.twitchbot.common.dto.proto.core.TenantOuterClass.TenantOrBuilder> tenantBuilder_;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      public boolean hasTenant() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant getTenant() {
+        if (tenantBuilder_ == null) {
+          return tenant_ == null ? tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.getDefaultInstance() : tenant_;
+        } else {
+          return tenantBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      public Builder setTenant(tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant value) {
+        if (tenantBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          tenant_ = value;
+          onChanged();
+        } else {
+          tenantBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      public Builder setTenant(
+          tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.Builder builderForValue) {
+        if (tenantBuilder_ == null) {
+          tenant_ = builderForValue.build();
+          onChanged();
+        } else {
+          tenantBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      public Builder mergeTenant(tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant value) {
+        if (tenantBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              tenant_ != null &&
+              tenant_ != tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.getDefaultInstance()) {
+            tenant_ =
+              tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.newBuilder(tenant_).mergeFrom(value).buildPartial();
+          } else {
+            tenant_ = value;
+          }
+          onChanged();
+        } else {
+          tenantBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      public Builder clearTenant() {
+        if (tenantBuilder_ == null) {
+          tenant_ = null;
+          onChanged();
+        } else {
+          tenantBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.Builder getTenantBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getTenantFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.TenantOuterClass.TenantOrBuilder getTenantOrBuilder() {
+        if (tenantBuilder_ != null) {
+          return tenantBuilder_.getMessageOrBuilder();
+        } else {
+          return tenant_ == null ?
+              tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.getDefaultInstance() : tenant_;
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Tenant tenant = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant, tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.Builder, tv.twitchbot.common.dto.proto.core.TenantOuterClass.TenantOrBuilder> 
+          getTenantFieldBuilder() {
+        if (tenantBuilder_ == null) {
+          tenantBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant, tv.twitchbot.common.dto.proto.core.TenantOuterClass.Tenant.Builder, tv.twitchbot.common.dto.proto.core.TenantOuterClass.TenantOrBuilder>(
+                  getTenant(),
+                  getParentForChildren(),
+                  isClean());
+          tenant_ = null;
+        }
+        return tenantBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -774,10 +987,12 @@ public final class ChannelOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\rChannel.proto\022\"tv.twitchbot.common.dto" +
-      ".proto.core\"\206\001\n\007Channel\022\014\n\004name\030\001 \002(\t\022E\n" +
-      "\004type\030\002 \002(\01627.tv.twitchbot.common.dto.pr" +
-      "oto.core.Channel.ChannelType\"&\n\013ChannelT" +
-      "ype\022\n\n\006TWITCH\020\001\022\013\n\007DISCORD\020\002"
+      ".proto.core\032\014Tenant.proto\"\302\001\n\007Channel\022\014\n" +
+      "\004name\030\001 \002(\t\022E\n\004type\030\002 \002(\01627.tv.twitchbot" +
+      ".common.dto.proto.core.Channel.ChannelTy" +
+      "pe\022:\n\006tenant\030\003 \002(\0132*.tv.twitchbot.common" +
+      ".dto.proto.core.Tenant\"&\n\013ChannelType\022\n\n" +
+      "\006TWITCH\020\001\022\013\n\007DISCORD\020\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -790,13 +1005,15 @@ public final class ChannelOuterClass {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          tv.twitchbot.common.dto.proto.core.TenantOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_core_Channel_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_tv_twitchbot_common_dto_proto_core_Channel_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_twitchbot_common_dto_proto_core_Channel_descriptor,
-        new java.lang.String[] { "Name", "Type", });
+        new java.lang.String[] { "Name", "Type", "Tenant", });
+    tv.twitchbot.common.dto.proto.core.TenantOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

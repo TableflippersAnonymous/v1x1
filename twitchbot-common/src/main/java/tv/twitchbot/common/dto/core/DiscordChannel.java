@@ -7,11 +7,13 @@ import tv.twitchbot.common.dto.proto.core.ChannelOuterClass;
  */
 public class DiscordChannel extends Channel {
     public static DiscordChannel fromProto(ChannelOuterClass.Channel channel) {
-        return new DiscordChannel(channel.getName());
+        String name = channel.getName();
+        Tenant tenant = Tenant.fromProto(channel.getTenant());
+        return new DiscordChannel(name, tenant);
     }
 
-    public DiscordChannel(String name) {
-        super(name);
+    public DiscordChannel(String name, Tenant tenant) {
+        super(name, tenant);
     }
 
     @Override
@@ -19,6 +21,7 @@ public class DiscordChannel extends Channel {
         return ChannelOuterClass.Channel.newBuilder()
                 .setName(name)
                 .setType(ChannelOuterClass.Channel.ChannelType.DISCORD)
+                .setTenant(tenant.toProto())
                 .build();
     }
 }
