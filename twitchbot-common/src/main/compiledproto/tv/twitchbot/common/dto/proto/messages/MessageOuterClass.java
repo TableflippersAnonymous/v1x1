@@ -40,6 +40,28 @@ public final class MessageOuterClass {
      * <code>required .tv.twitchbot.common.dto.proto.core.Module from = 2;</code>
      */
     tv.twitchbot.common.dto.proto.core.ModuleOuterClass.ModuleOrBuilder getFromOrBuilder();
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+     */
+    boolean hasMessageId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getMessageId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getMessageIdOrBuilder();
+
+    /**
+     * <code>required int64 timestamp = 4;</code>
+     */
+    boolean hasTimestamp();
+    /**
+     * <code>required int64 timestamp = 4;</code>
+     */
+    long getTimestamp();
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.Message}
@@ -55,6 +77,7 @@ public final class MessageOuterClass {
     }
     private Message() {
       type_ = 1;
+      timestamp_ = 0L;
     }
 
     @java.lang.Override
@@ -107,6 +130,24 @@ public final class MessageOuterClass {
                 from_ = subBuilder.buildPartial();
               }
               bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = messageId_.toBuilder();
+              }
+              messageId_ = input.readMessage(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(messageId_);
+                messageId_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000004;
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              timestamp_ = input.readInt64();
               break;
             }
           }
@@ -270,6 +311,42 @@ public final class MessageOuterClass {
       return from_ == null ? tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.getDefaultInstance() : from_;
     }
 
+    public static final int MESSAGE_ID_FIELD_NUMBER = 3;
+    private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID messageId_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+     */
+    public boolean hasMessageId() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getMessageId() {
+      return messageId_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : messageId_;
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getMessageIdOrBuilder() {
+      return messageId_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : messageId_;
+    }
+
+    public static final int TIMESTAMP_FIELD_NUMBER = 4;
+    private long timestamp_;
+    /**
+     * <code>required int64 timestamp = 4;</code>
+     */
+    public boolean hasTimestamp() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>required int64 timestamp = 4;</code>
+     */
+    public long getTimestamp() {
+      return timestamp_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -284,7 +361,19 @@ public final class MessageOuterClass {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (!hasMessageId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTimestamp()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
       if (!getFrom().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getMessageId().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -307,6 +396,12 @@ public final class MessageOuterClass {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeMessage(2, getFrom());
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeMessage(3, getMessageId());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt64(4, timestamp_);
+      }
       extensionWriter.writeUntil(536870912, output);
       unknownFields.writeTo(output);
     }
@@ -323,6 +418,14 @@ public final class MessageOuterClass {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getFrom());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, getMessageId());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt64Size(4, timestamp_);
       }
       size += extensionsSerializedSize();
       size += unknownFields.getSerializedSize();
@@ -351,6 +454,16 @@ public final class MessageOuterClass {
         result = result && getFrom()
             .equals(other.getFrom());
       }
+      result = result && (hasMessageId() == other.hasMessageId());
+      if (hasMessageId()) {
+        result = result && getMessageId()
+            .equals(other.getMessageId());
+      }
+      result = result && (hasTimestamp() == other.hasTimestamp());
+      if (hasTimestamp()) {
+        result = result && (getTimestamp()
+            == other.getTimestamp());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       result = result &&
           getExtensionFields().equals(other.getExtensionFields());
@@ -371,6 +484,15 @@ public final class MessageOuterClass {
       if (hasFrom()) {
         hash = (37 * hash) + FROM_FIELD_NUMBER;
         hash = (53 * hash) + getFrom().hashCode();
+      }
+      if (hasMessageId()) {
+        hash = (37 * hash) + MESSAGE_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getMessageId().hashCode();
+      }
+      if (hasTimestamp()) {
+        hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getTimestamp());
       }
       hash = hashFields(hash, getExtensionFields());
       hash = (29 * hash) + unknownFields.hashCode();
@@ -489,6 +611,7 @@ public final class MessageOuterClass {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
           getFromFieldBuilder();
+          getMessageIdFieldBuilder();
         }
       }
       public Builder clear() {
@@ -501,6 +624,14 @@ public final class MessageOuterClass {
           fromBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
+        if (messageIdBuilder_ == null) {
+          messageId_ = null;
+        } else {
+          messageIdBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        timestamp_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -537,6 +668,18 @@ public final class MessageOuterClass {
         } else {
           result.from_ = fromBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        if (messageIdBuilder_ == null) {
+          result.messageId_ = messageId_;
+        } else {
+          result.messageId_ = messageIdBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.timestamp_ = timestamp_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -608,6 +751,12 @@ public final class MessageOuterClass {
         if (other.hasFrom()) {
           mergeFrom(other.getFrom());
         }
+        if (other.hasMessageId()) {
+          mergeMessageId(other.getMessageId());
+        }
+        if (other.hasTimestamp()) {
+          setTimestamp(other.getTimestamp());
+        }
         this.mergeExtensionFields(other);
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -621,7 +770,16 @@ public final class MessageOuterClass {
         if (!hasFrom()) {
           return false;
         }
+        if (!hasMessageId()) {
+          return false;
+        }
+        if (!hasTimestamp()) {
+          return false;
+        }
         if (!getFrom().isInitialized()) {
+          return false;
+        }
+        if (!getMessageId().isInitialized()) {
           return false;
         }
         if (!extensionsAreInitialized()) {
@@ -802,6 +960,156 @@ public final class MessageOuterClass {
         }
         return fromBuilder_;
       }
+
+      private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID messageId_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> messageIdBuilder_;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      public boolean hasMessageId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getMessageId() {
+        if (messageIdBuilder_ == null) {
+          return messageId_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : messageId_;
+        } else {
+          return messageIdBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      public Builder setMessageId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (messageIdBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          messageId_ = value;
+          onChanged();
+        } else {
+          messageIdBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      public Builder setMessageId(
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder builderForValue) {
+        if (messageIdBuilder_ == null) {
+          messageId_ = builderForValue.build();
+          onChanged();
+        } else {
+          messageIdBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      public Builder mergeMessageId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (messageIdBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              messageId_ != null &&
+              messageId_ != tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance()) {
+            messageId_ =
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.newBuilder(messageId_).mergeFrom(value).buildPartial();
+          } else {
+            messageId_ = value;
+          }
+          onChanged();
+        } else {
+          messageIdBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      public Builder clearMessageId() {
+        if (messageIdBuilder_ == null) {
+          messageId_ = null;
+          onChanged();
+        } else {
+          messageIdBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder getMessageIdBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getMessageIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getMessageIdOrBuilder() {
+        if (messageIdBuilder_ != null) {
+          return messageIdBuilder_.getMessageOrBuilder();
+        } else {
+          return messageId_ == null ?
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : messageId_;
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID message_id = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> 
+          getMessageIdFieldBuilder() {
+        if (messageIdBuilder_ == null) {
+          messageIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder>(
+                  getMessageId(),
+                  getParentForChildren(),
+                  isClean());
+          messageId_ = null;
+        }
+        return messageIdBuilder_;
+      }
+
+      private long timestamp_ ;
+      /**
+       * <code>required int64 timestamp = 4;</code>
+       */
+      public boolean hasTimestamp() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>required int64 timestamp = 4;</code>
+       */
+      public long getTimestamp() {
+        return timestamp_;
+      }
+      /**
+       * <code>required int64 timestamp = 4;</code>
+       */
+      public Builder setTimestamp(long value) {
+        bitField0_ |= 0x00000008;
+        timestamp_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required int64 timestamp = 4;</code>
+       */
+      public Builder clearTimestamp() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        timestamp_ = 0L;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -866,12 +1174,15 @@ public final class MessageOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\rMessage.proto\022&tv.twitchbot.common.dto" +
-      ".proto.messages\032\014Module.proto\"\315\001\n\007Messag" +
-      "e\022I\n\004type\030\001 \002(\0162;.tv.twitchbot.common.dt" +
-      "o.proto.messages.Message.MessageType\0228\n\004" +
-      "from\030\002 \002(\0132*.tv.twitchbot.common.dto.pro" +
-      "to.core.Module\"3\n\013MessageType\022\t\n\005EVENT\020\001" +
-      "\022\013\n\007REQUEST\020\002\022\014\n\010RESPONSE\020\003*\010\010d\020\200\200\200\200\002"
+      ".proto.messages\032\014Module.proto\032\nUUID.prot" +
+      "o\"\236\002\n\007Message\022I\n\004type\030\001 \002(\0162;.tv.twitchb" +
+      "ot.common.dto.proto.messages.Message.Mes" +
+      "sageType\0228\n\004from\030\002 \002(\0132*.tv.twitchbot.co" +
+      "mmon.dto.proto.core.Module\022<\n\nmessage_id" +
+      "\030\003 \002(\0132(.tv.twitchbot.common.dto.proto.c" +
+      "ore.UUID\022\021\n\ttimestamp\030\004 \002(\003\"3\n\013MessageTy" +
+      "pe\022\t\n\005EVENT\020\001\022\013\n\007REQUEST\020\002\022\014\n\010RESPONSE\020\003" +
+      "*\010\010d\020\200\200\200\200\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -885,14 +1196,16 @@ public final class MessageOuterClass {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           tv.twitchbot.common.dto.proto.core.ModuleOuterClass.getDescriptor(),
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_messages_Message_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_tv_twitchbot_common_dto_proto_messages_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_twitchbot_common_dto_proto_messages_Message_descriptor,
-        new java.lang.String[] { "Type", "From", });
+        new java.lang.String[] { "Type", "From", "MessageId", "Timestamp", });
     tv.twitchbot.common.dto.proto.core.ModuleOuterClass.getDescriptor();
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
