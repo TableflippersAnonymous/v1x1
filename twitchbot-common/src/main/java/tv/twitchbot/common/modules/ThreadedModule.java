@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by naomi on 10/5/16.
  */
-public abstract class ThreadedModule extends Module {
+public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends Module<T, U, V> {
     private ExecutorService executorService;
 
     protected ThreadedModule() {
@@ -30,5 +30,10 @@ public abstract class ThreadedModule extends Module {
     @Override
     protected void handle(final Message message) {
         executorService.submit(() -> processMessage(message));
+    }
+
+    @Override
+    protected void shutdown() {
+        executorService.shutdown();
     }
 }
