@@ -1,0 +1,28 @@
+syntax = "proto2";
+
+package tv.twitchbot.common.dto.proto.messages;
+
+import "Message.proto";
+import "ChatMessage.proto";
+
+message Event {
+    enum EventType {
+        CHAT_MESSAGE = 1;
+    };
+
+    extensions 100 to max; /* Convention is to use the same 100 + your EventType ID */
+
+    extend Message {
+        optional Event data = 101;
+    }
+
+    required EventType type = 1;
+}
+
+message ChatMessageEvent {
+    extend Event {
+        optional ChatMessageEvent data = 101;
+    }
+
+    required core.ChatMessage chat_message = 1;
+}

@@ -1,0 +1,59 @@
+syntax = "proto2";
+
+package tv.twitchbot.common.dto.proto.messages;
+
+import "Message.proto";
+import "Channel.proto";
+
+enum RequestType {
+    MODULE_SHUTDOWN = 1;
+    SEND_MESSAGE = 2;
+};
+
+message Request {
+    extensions 100 to max; /* Convention is to use the same 100 + your RequestType ID */
+
+    extend Message {
+        optional Request data = 102;
+    }
+
+    required RequestType type = 1;
+    required string response_queue_name = 2;
+}
+
+message Response {
+    extensions 100 to max; /* Convention is to use the same 100 + your RequestType ID */
+
+    extend Message {
+        optional Response data = 103;
+    }
+
+    required RequestType type = 1;
+}
+
+message ModuleShutdownRequest {
+    extend Request {
+        optional ModuleShutdownRequest data = 101;
+    }
+}
+
+message ModuleShutdownResponse {
+    extend Response {
+        optional ModuleShutdownResponse data = 101;
+    }
+}
+
+message SendMessageRequest {
+    extend Request {
+        optional SendMessageRequest data = 102;
+    }
+
+    required core.Channel destination = 1;
+    required string text = 2;
+}
+
+message SendMessageResponse {
+    extend Response {
+        optional SendMessageResponse data = 102;
+    }
+}

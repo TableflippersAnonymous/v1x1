@@ -1,0 +1,13 @@
+syntax = "proto2";
+
+package tv.twitchbot.common.dto.proto.core;
+
+message Channel {
+    enum ChannelType {
+        TWITCH = 1;
+        DISCORD = 2;
+    };
+
+    required string name = 1;
+    required ChannelType type = 2;
+}

@@ -1,19 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <artifactId>twitchbot-parent</artifactId>
-    <groupId>tv.twitchbot</groupId>
-    <version>0.0.0-SNAPSHOT</version>
-  </parent>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>twitchbot-parent</artifactId>
+        <groupId>tv.twitchbot</groupId>
+        <version>0.0.0-SNAPSHOT</version>
+    </parent>
 
-  <artifactId>twitchbot-common</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
+    <artifactId>twitchbot-common</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
 
-  <name>twitchbot-common</name>
+    <name>twitchbot-common</name>
 
-  <dependencies>
-  </dependencies>
+    <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <extensions>
+            <extension>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.5.0.Final</version>
+            </extension>
+        </extensions>
+
+        <plugins>
+            <plugin>
+                <groupId>com.github.os72</groupId>
+                <artifactId>protoc-jar-maven-plugin</artifactId>
+                <version>3.0.0.1</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <protocVersion>3.0.0</protocVersion> <!-- 2.4.1, 2.5.0, 2.6.1, 3.0.0 -->
+                            <includeStdTypes>true</includeStdTypes>
+                            <outputDirectory>src/main/compiledproto</outputDirectory>
+                            <inputDirectories>
+                                <include>src/main/protobuf</include>
+                            </inputDirectories>
+                            <includeDirectories>
+                                <include>src/main/protobuf/tv/twitchbot/common/dto/proto/core</include>
+                                <include>src/main/protobuf/tv/twitchbot/common/dto/proto/messages</include>
+                            </includeDirectories>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
