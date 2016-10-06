@@ -1,6 +1,7 @@
 package tv.twitchbot.common.dto.messages.responses;
 
 import tv.twitchbot.common.dto.core.Module;
+import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.messages.Response;
 import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
 
@@ -8,12 +9,16 @@ import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
  * Created by cobi on 10/5/16.
  */
 public class SendMessageResponse extends Response {
-    public static SendMessageResponse fromProto(Module module, RequestOuterClass.SendMessageResponse extension) {
-        return new SendMessageResponse(module);
+    public static SendMessageResponse fromProto(Module module, UUID uuid, long timestamp, RequestOuterClass.SendMessageResponse extension) {
+        return new SendMessageResponse(module, uuid, timestamp);
     }
 
-    public SendMessageResponse(Module module) {
-        super(module);
+    public SendMessageResponse(Module from) {
+        super(from);
+    }
+
+    public SendMessageResponse(Module from, UUID messageId, long timestamp) {
+        super(from, messageId, timestamp);
     }
 
     @Override
