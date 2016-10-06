@@ -1,0 +1,18 @@
+syntax = "proto2";
+
+package tv.twitchbot.common.dto.proto.messages;
+
+import "Module.proto";
+
+message Message {
+    extensions 100 to max; /* Convention is to use the same 100 + your MessageType ID */
+
+    enum MessageType {
+        EVENT = 1;
+        REQUEST = 2;
+        RESPONSE = 3;
+    };
+
+    required MessageType type = 1;
+    required core.Module from = 2;
+}

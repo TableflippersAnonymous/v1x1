@@ -1,0 +1,19 @@
+syntax = "proto2";
+
+package tv.twitchbot.common.dto.proto.core;
+
+message User {
+    enum UserType {
+        TWITCH = 1;
+        DISCORD = 2;
+    };
+
+    message Permission {
+        required string node = 1;
+    }
+
+    required string name = 1;
+    required UserType type = 2;
+    optional string mention = 3;
+    repeated Permission permissions = 4;
+}

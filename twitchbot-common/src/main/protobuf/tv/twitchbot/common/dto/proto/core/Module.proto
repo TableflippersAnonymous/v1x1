@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+package tv.twitchbot.common.dto.proto.core;
+
+message Module {
+    required string name = 1;
+}
