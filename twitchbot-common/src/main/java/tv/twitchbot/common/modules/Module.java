@@ -20,6 +20,9 @@ import tv.twitchbot.common.dto.messages.Request;
 import tv.twitchbot.common.dto.messages.Response;
 import tv.twitchbot.common.dto.messages.requests.ModuleShutdownRequest;
 import tv.twitchbot.common.dto.messages.responses.ModuleShutdownResponse;
+import tv.twitchbot.common.services.persistence.KeyValueStore;
+import tv.twitchbot.common.services.persistence.TemporaryKeyValueStoreImpl;
+import tv.twitchbot.common.services.persistence.TenantKeyValueStoreImpl;
 import tv.twitchbot.common.services.queue.MessageQueue;
 import tv.twitchbot.common.services.queue.MessageQueueManager;
 import tv.twitchbot.common.services.queue.MessageQueueManagerImpl;
@@ -34,6 +37,44 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private T settings;
     private U globalConfig;
     private MessageQueueManager messageQueueManager;
+
+    private KeyValueStore temporaryKeyValueStore;
+    private KeyValueStore temporaryGlobalKeyValueStore;
+
+    private KeyValueStore persistentKeyValueStore;
+    private KeyValueStore persistentGlobalKeyValueStore;
+
+    protected KeyValueStore getTemporaryKeyValueStore() {
+        return temporaryKeyValueStore;
+    }
+
+    protected KeyValueStore getTemporaryGlobalKeyValueStore() {
+        return temporaryGlobalKeyValueStore;
+    }
+
+    protected KeyValueStore getTemporaryTenantKeyValueStore(Tenant tenant) {
+        return new TenantKeyValueStoreImpl(tenant, temporaryKeyValueStore);
+    }
+
+    protected KeyValueStore getTemporaryGlobalTenantKeyValueStore(Tenant tenant) {
+        return new TenantKeyValueStoreImpl(tenant, temporaryGlobalKeyValueStore);
+    }
+
+    protected KeyValueStore getPersistentKeyValueStore() {
+        return persistentKeyValueStore;
+    }
+
+    protected KeyValueStore getPersistentGlobalKeyValueStore() {
+        return persistentGlobalKeyValueStore;
+    }
+
+    protected KeyValueStore getPersistentTenantKeyValueStore(Tenant tenant) {
+        return new TenantKeyValueStoreImpl(tenant, persistentKeyValueStore);
+    }
+
+    protected KeyValueStore getPersistentGlobalTenantKeyValueStore(Tenant tenant) {
+        return new TenantKeyValueStoreImpl(tenant, persistentGlobalKeyValueStore);
+    }
 
     protected MessageQueueManager getMessageQueueManager() {
         return messageQueueManager;
@@ -95,6 +136,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         Config redissonConfig = settings.getRedissonConfig();
         RedissonClient client = Redisson.create(redissonConfig);
         messageQueueManager = new MessageQueueManagerImpl(client);
+
+        temporaryKeyValueStore = new TemporaryKeyValueStoreImpl(client, toDto());
+        temporaryGlobalKeyValueStore = new TemporaryKeyValueStoreImpl(client);
     }
 
     private Class<T> getSettingsClass() {
@@ -120,7 +164,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
                 Message message = mq.get();
                 if(message instanceof ModuleShutdownRequest) {
                     ModuleShutdownRequest msr = (ModuleShutdownRequest) message;
-                    reply(msr, new ModuleShutdownResponse(toDto()));
+                    reply(msr, new ModuleShutdownResponse(toDto(), msr.getMessageId()));
                     break;
                 }
                 handle(message);
@@ -148,6 +192,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     protected String getQueueName() {
-        return "inbound|module|" + getName();
+        return getMainQueueForModule(toDto());
+    }
+
+    protected String getMainQueueForModule(tv.twitchbot.common.dto.core.Module module) {
+        return "inbound|module|" + module.getName();
     }
 }

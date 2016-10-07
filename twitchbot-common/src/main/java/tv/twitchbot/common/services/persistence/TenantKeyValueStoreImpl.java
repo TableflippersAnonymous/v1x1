@@ -2,6 +2,7 @@ package tv.twitchbot.common.services.persistence;
 
 
 import tv.twitchbot.common.dto.core.Channel;
+import tv.twitchbot.common.dto.core.Tenant;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -10,28 +11,28 @@ import java.io.IOException;
 /**
  * Created by naomi on 10/5/16.
  */
-public class ChannelKeyValueStoreImpl implements KeyValueStore {
-    private Channel channel;
+public class TenantKeyValueStoreImpl implements KeyValueStore {
+    private Tenant tenant;
     private KeyValueStore keyValueStore;
 
-    public ChannelKeyValueStoreImpl(Channel channel, KeyValueStore keyValueStore) {
-        this.channel = channel;
+    public TenantKeyValueStoreImpl(Tenant tenant, KeyValueStore keyValueStore) {
+        this.tenant = tenant;
         this.keyValueStore = keyValueStore;
     }
 
     @Override
     public void put(byte[] key, byte[] value) {
-        keyValueStore.put(compositeKey(new byte[][]{channel.getClass().getCanonicalName().getBytes(), channel.getName().getBytes(), key}), value);
+        keyValueStore.put(compositeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}), value);
     }
 
     @Override
     public byte[] get(byte[] key) {
-        return keyValueStore.get(compositeKey(new byte[][]{channel.getClass().getCanonicalName().getBytes(), channel.getName().getBytes(), key}));
+        return keyValueStore.get(compositeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}));
     }
 
     @Override
     public void delete(byte[] key) {
-        keyValueStore.delete(compositeKey(new byte[][]{channel.getClass().getCanonicalName().getBytes(), channel.getName().getBytes(), key}));
+        keyValueStore.delete(compositeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}));
     }
 
     private byte[] compositeKey(byte[][] keys) {

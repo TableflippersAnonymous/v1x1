@@ -4,6 +4,7 @@ package tv.twitchbot.common.dto.proto.messages;
 
 import "Message.proto";
 import "Channel.proto";
+import "UUID.proto";
 
 enum RequestType {
     MODULE_SHUTDOWN = 1;
@@ -29,6 +30,7 @@ message Response {
     }
 
     required RequestType type = 1;
+    required core.UUID request_message_id = 2;
 }
 
 message ModuleShutdownRequest {

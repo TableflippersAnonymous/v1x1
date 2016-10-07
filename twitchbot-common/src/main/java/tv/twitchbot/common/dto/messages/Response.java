@@ -12,19 +12,28 @@ import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
  */
 public abstract class Response extends Message {
     public static Response fromProto(Module module, UUID uuid, long timestamp, RequestOuterClass.Response response) {
+        UUID requestMessageId = UUID.fromProto(response.getRequestMessageId());
         switch(response.getType()) {
-            case MODULE_SHUTDOWN: return ModuleShutdownResponse.fromProto(module, uuid, timestamp, response.getExtension(RequestOuterClass.ModuleShutdownResponse.data));
-            case SEND_MESSAGE: return SendMessageResponse.fromProto(module, uuid, timestamp, response.getExtension(RequestOuterClass.SendMessageResponse.data));
+            case MODULE_SHUTDOWN: return ModuleShutdownResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ModuleShutdownResponse.data));
+            case SEND_MESSAGE: return SendMessageResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.SendMessageResponse.data));
             default: throw new IllegalStateException("Unknown request type " + response.getType().name());
         }
     }
 
-    public Response(Module from) {
+    private UUID requestMessageId;
+
+    public Response(Module from, UUID requestMessageId) {
         super(from);
+        this.requestMessageId = requestMessageId;
     }
 
-    public Response(Module from, UUID messageId, long timestamp) {
+    public Response(Module from, UUID messageId, long timestamp, UUID requestMessageId) {
         super(from, messageId, timestamp);
+        this.requestMessageId = requestMessageId;
+    }
+
+    public UUID getRequestMessageId() {
+        return requestMessageId;
     }
 
     @Override
@@ -35,6 +44,7 @@ public abstract class Response extends Message {
     }
 
     protected RequestOuterClass.Response.Builder toProtoResponse() {
-        return RequestOuterClass.Response.newBuilder();
+        return RequestOuterClass.Response.newBuilder()
+                .setRequestMessageId(requestMessageId.toProto());
     }
 }
