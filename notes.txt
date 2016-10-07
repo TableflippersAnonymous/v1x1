@@ -1,0 +1,5 @@
+Notes for technology to use:
+- Netflix Hystrix for things that could be slow
+- Netflix Atlas for real-time stats
+- Look into GRPC
+-

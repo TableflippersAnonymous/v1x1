@@ -833,6 +833,19 @@ public final class RequestOuterClass {
      * <code>required .tv.twitchbot.common.dto.proto.messages.RequestType type = 1;</code>
      */
     tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType getType();
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+     */
+    boolean hasRequestMessageId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getRequestMessageId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getRequestMessageIdOrBuilder();
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.Response}
@@ -889,6 +902,19 @@ public final class RequestOuterClass {
               }
               break;
             }
+            case 18: {
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = requestMessageId_.toBuilder();
+              }
+              requestMessageId_ = input.readMessage(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(requestMessageId_);
+                requestMessageId_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -930,6 +956,27 @@ public final class RequestOuterClass {
       return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.MODULE_SHUTDOWN : result;
     }
 
+    public static final int REQUEST_MESSAGE_ID_FIELD_NUMBER = 2;
+    private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID requestMessageId_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+     */
+    public boolean hasRequestMessageId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getRequestMessageId() {
+      return requestMessageId_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : requestMessageId_;
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getRequestMessageIdOrBuilder() {
+      return requestMessageId_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : requestMessageId_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -937,6 +984,14 @@ public final class RequestOuterClass {
       if (isInitialized == 0) return false;
 
       if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasRequestMessageId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getRequestMessageId().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -956,6 +1011,9 @@ public final class RequestOuterClass {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeEnum(1, type_);
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, getRequestMessageId());
+      }
       extensionWriter.writeUntil(536870912, output);
       unknownFields.writeTo(output);
     }
@@ -968,6 +1026,10 @@ public final class RequestOuterClass {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(1, type_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getRequestMessageId());
       }
       size += extensionsSerializedSize();
       size += unknownFields.getSerializedSize();
@@ -991,6 +1053,11 @@ public final class RequestOuterClass {
       if (hasType()) {
         result = result && type_ == other.type_;
       }
+      result = result && (hasRequestMessageId() == other.hasRequestMessageId());
+      if (hasRequestMessageId()) {
+        result = result && getRequestMessageId()
+            .equals(other.getRequestMessageId());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       result = result &&
           getExtensionFields().equals(other.getExtensionFields());
@@ -1007,6 +1074,10 @@ public final class RequestOuterClass {
       if (hasType()) {
         hash = (37 * hash) + TYPE_FIELD_NUMBER;
         hash = (53 * hash) + type_;
+      }
+      if (hasRequestMessageId()) {
+        hash = (37 * hash) + REQUEST_MESSAGE_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getRequestMessageId().hashCode();
       }
       hash = hashFields(hash, getExtensionFields());
       hash = (29 * hash) + unknownFields.hashCode();
@@ -1124,12 +1195,19 @@ public final class RequestOuterClass {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getRequestMessageIdFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
         type_ = 1;
         bitField0_ = (bitField0_ & ~0x00000001);
+        if (requestMessageIdBuilder_ == null) {
+          requestMessageId_ = null;
+        } else {
+          requestMessageIdBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -1158,6 +1236,14 @@ public final class RequestOuterClass {
           to_bitField0_ |= 0x00000001;
         }
         result.type_ = type_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (requestMessageIdBuilder_ == null) {
+          result.requestMessageId_ = requestMessageId_;
+        } else {
+          result.requestMessageId_ = requestMessageIdBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1226,6 +1312,9 @@ public final class RequestOuterClass {
         if (other.hasType()) {
           setType(other.getType());
         }
+        if (other.hasRequestMessageId()) {
+          mergeRequestMessageId(other.getRequestMessageId());
+        }
         this.mergeExtensionFields(other);
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1234,6 +1323,12 @@ public final class RequestOuterClass {
 
       public final boolean isInitialized() {
         if (!hasType()) {
+          return false;
+        }
+        if (!hasRequestMessageId()) {
+          return false;
+        }
+        if (!getRequestMessageId().isInitialized()) {
           return false;
         }
         if (!extensionsAreInitialized()) {
@@ -1295,6 +1390,124 @@ public final class RequestOuterClass {
         type_ = 1;
         onChanged();
         return this;
+      }
+
+      private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID requestMessageId_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> requestMessageIdBuilder_;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      public boolean hasRequestMessageId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getRequestMessageId() {
+        if (requestMessageIdBuilder_ == null) {
+          return requestMessageId_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : requestMessageId_;
+        } else {
+          return requestMessageIdBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      public Builder setRequestMessageId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (requestMessageIdBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          requestMessageId_ = value;
+          onChanged();
+        } else {
+          requestMessageIdBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      public Builder setRequestMessageId(
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder builderForValue) {
+        if (requestMessageIdBuilder_ == null) {
+          requestMessageId_ = builderForValue.build();
+          onChanged();
+        } else {
+          requestMessageIdBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      public Builder mergeRequestMessageId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (requestMessageIdBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              requestMessageId_ != null &&
+              requestMessageId_ != tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance()) {
+            requestMessageId_ =
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.newBuilder(requestMessageId_).mergeFrom(value).buildPartial();
+          } else {
+            requestMessageId_ = value;
+          }
+          onChanged();
+        } else {
+          requestMessageIdBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      public Builder clearRequestMessageId() {
+        if (requestMessageIdBuilder_ == null) {
+          requestMessageId_ = null;
+          onChanged();
+        } else {
+          requestMessageIdBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder getRequestMessageIdBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getRequestMessageIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getRequestMessageIdOrBuilder() {
+        if (requestMessageIdBuilder_ != null) {
+          return requestMessageIdBuilder_.getMessageOrBuilder();
+        } else {
+          return requestMessageId_ == null ?
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : requestMessageId_;
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID request_message_id = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> 
+          getRequestMessageIdFieldBuilder() {
+        if (requestMessageIdBuilder_ == null) {
+          requestMessageIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder>(
+                  getRequestMessageId(),
+                  getParentForChildren(),
+                  isClean());
+          requestMessageId_ = null;
+        }
+        return requestMessageIdBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -3334,36 +3547,38 @@ public final class RequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n\rRequest.proto\022&tv.twitchbot.common.dto" +
       ".proto.messages\032\rMessage.proto\032\rChannel." +
-      "proto\"\343\001\n\007Request\022A\n\004type\030\001 \002(\01623.tv.twi" +
-      "tchbot.common.dto.proto.messages.Request" +
-      "Type\022\033\n\023response_queue_name\030\002 \002(\t*\010\010d\020\200\200" +
-      "\200\200\0022n\n\004data\022/.tv.twitchbot.common.dto.pr" +
-      "oto.messages.Message\030f \001(\0132/.tv.twitchbo" +
-      "t.common.dto.proto.messages.Request\"\310\001\n\010" +
-      "Response\022A\n\004type\030\001 \002(\01623.tv.twitchbot.co" +
-      "mmon.dto.proto.messages.RequestType*\010\010d\020",
-      "\200\200\200\200\0022o\n\004data\022/.tv.twitchbot.common.dto." +
-      "proto.messages.Message\030g \001(\01320.tv.twitch" +
-      "bot.common.dto.proto.messages.Response\"\225" +
-      "\001\n\025ModuleShutdownRequest2|\n\004data\022/.tv.tw" +
-      "itchbot.common.dto.proto.messages.Reques" +
-      "t\030e \001(\0132=.tv.twitchbot.common.dto.proto." +
-      "messages.ModuleShutdownRequest\"\230\001\n\026Modul" +
-      "eShutdownResponse2~\n\004data\0220.tv.twitchbot" +
-      ".common.dto.proto.messages.Response\030e \001(" +
-      "\0132>.tv.twitchbot.common.dto.proto.messag",
-      "es.ModuleShutdownResponse\"\337\001\n\022SendMessag" +
-      "eRequest\022@\n\013destination\030\001 \002(\0132+.tv.twitc" +
-      "hbot.common.dto.proto.core.Channel\022\014\n\004te" +
-      "xt\030\002 \002(\t2y\n\004data\022/.tv.twitchbot.common.d" +
-      "to.proto.messages.Request\030f \001(\0132:.tv.twi" +
-      "tchbot.common.dto.proto.messages.SendMes" +
-      "sageRequest\"\222\001\n\023SendMessageResponse2{\n\004d" +
-      "ata\0220.tv.twitchbot.common.dto.proto.mess" +
-      "ages.Response\030f \001(\0132;.tv.twitchbot.commo" +
-      "n.dto.proto.messages.SendMessageResponse",
-      "*4\n\013RequestType\022\023\n\017MODULE_SHUTDOWN\020\001\022\020\n\014" +
-      "SEND_MESSAGE\020\002"
+      "proto\032\nUUID.proto\"\343\001\n\007Request\022A\n\004type\030\001 " +
+      "\002(\01623.tv.twitchbot.common.dto.proto.mess" +
+      "ages.RequestType\022\033\n\023response_queue_name\030" +
+      "\002 \002(\t*\010\010d\020\200\200\200\200\0022n\n\004data\022/.tv.twitchbot.c" +
+      "ommon.dto.proto.messages.Message\030f \001(\0132/" +
+      ".tv.twitchbot.common.dto.proto.messages." +
+      "Request\"\216\002\n\010Response\022A\n\004type\030\001 \002(\01623.tv." +
+      "twitchbot.common.dto.proto.messages.Requ",
+      "estType\022D\n\022request_message_id\030\002 \002(\0132(.tv" +
+      ".twitchbot.common.dto.proto.core.UUID*\010\010" +
+      "d\020\200\200\200\200\0022o\n\004data\022/.tv.twitchbot.common.dt" +
+      "o.proto.messages.Message\030g \001(\01320.tv.twit" +
+      "chbot.common.dto.proto.messages.Response" +
+      "\"\225\001\n\025ModuleShutdownRequest2|\n\004data\022/.tv." +
+      "twitchbot.common.dto.proto.messages.Requ" +
+      "est\030e \001(\0132=.tv.twitchbot.common.dto.prot" +
+      "o.messages.ModuleShutdownRequest\"\230\001\n\026Mod" +
+      "uleShutdownResponse2~\n\004data\0220.tv.twitchb",
+      "ot.common.dto.proto.messages.Response\030e " +
+      "\001(\0132>.tv.twitchbot.common.dto.proto.mess" +
+      "ages.ModuleShutdownResponse\"\337\001\n\022SendMess" +
+      "ageRequest\022@\n\013destination\030\001 \002(\0132+.tv.twi" +
+      "tchbot.common.dto.proto.core.Channel\022\014\n\004" +
+      "text\030\002 \002(\t2y\n\004data\022/.tv.twitchbot.common" +
+      ".dto.proto.messages.Request\030f \001(\0132:.tv.t" +
+      "witchbot.common.dto.proto.messages.SendM" +
+      "essageRequest\"\222\001\n\023SendMessageResponse2{\n" +
+      "\004data\0220.tv.twitchbot.common.dto.proto.me",
+      "ssages.Response\030f \001(\0132;.tv.twitchbot.com" +
+      "mon.dto.proto.messages.SendMessageRespon" +
+      "se*4\n\013RequestType\022\023\n\017MODULE_SHUTDOWN\020\001\022\020" +
+      "\n\014SEND_MESSAGE\020\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3378,6 +3593,7 @@ public final class RequestOuterClass {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           tv.twitchbot.common.dto.proto.messages.MessageOuterClass.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor(),
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_messages_Request_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -3390,7 +3606,7 @@ public final class RequestOuterClass {
     internal_static_tv_twitchbot_common_dto_proto_messages_Response_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_twitchbot_common_dto_proto_messages_Response_descriptor,
-        new java.lang.String[] { "Type", });
+        new java.lang.String[] { "Type", "RequestMessageId", });
     internal_static_tv_twitchbot_common_dto_proto_messages_ModuleShutdownRequest_descriptor =
       getDescriptor().getMessageTypes().get(2);
     internal_static_tv_twitchbot_common_dto_proto_messages_ModuleShutdownRequest_fieldAccessorTable = new
@@ -3417,6 +3633,7 @@ public final class RequestOuterClass {
         new java.lang.String[] { });
     tv.twitchbot.common.dto.proto.messages.MessageOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor();
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)
