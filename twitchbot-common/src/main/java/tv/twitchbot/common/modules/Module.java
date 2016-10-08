@@ -20,6 +20,7 @@ import tv.twitchbot.common.dto.messages.Request;
 import tv.twitchbot.common.dto.messages.Response;
 import tv.twitchbot.common.dto.messages.requests.ModuleShutdownRequest;
 import tv.twitchbot.common.dto.messages.responses.ModuleShutdownResponse;
+import tv.twitchbot.common.rpc.client.ServiceClient;
 import tv.twitchbot.common.services.persistence.KeyValueStore;
 import tv.twitchbot.common.services.persistence.TemporaryKeyValueStoreImpl;
 import tv.twitchbot.common.services.persistence.TenantKeyValueStoreImpl;
@@ -29,6 +30,9 @@ import tv.twitchbot.common.services.queue.MessageQueueManagerImpl;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by cobi on 10/4/16.
@@ -43,6 +47,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     private KeyValueStore persistentKeyValueStore;
     private KeyValueStore persistentGlobalKeyValueStore;
+
+    private Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
 
     protected KeyValueStore getTemporaryKeyValueStore() {
         return temporaryKeyValueStore;
@@ -76,7 +82,18 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return new TenantKeyValueStoreImpl(tenant, persistentGlobalKeyValueStore);
     }
 
-    protected MessageQueueManager getMessageQueueManager() {
+    protected <W extends ServiceClient<? extends Request, ? extends Response<? extends Request>>> W getServiceClient(Class<W> serviceClass) {
+        if(!serviceClientMap.containsKey(serviceClass)) {
+            try {
+                serviceClientMap.put(serviceClass, serviceClass.getConstructor(Module.class).newInstance(this));
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return (W) serviceClientMap.get(serviceClass);
+    }
+
+    public MessageQueueManager getMessageQueueManager() {
         return messageQueueManager;
     }
 
@@ -92,7 +109,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return null;
     }
 
-    protected abstract String getName();
+    public abstract String getName();
 
     protected abstract void handle(Message message);
 
@@ -179,15 +196,15 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     }
 
-    protected tv.twitchbot.common.dto.core.Module toDto() {
+    public tv.twitchbot.common.dto.core.Module toDto() {
         return new tv.twitchbot.common.dto.core.Module(getName());
     }
 
-    protected void send(String queueName, Message message) {
+    public void send(String queueName, Message message) {
         getMessageQueueManager().forName(queueName).add(message);
     }
 
-    protected void reply(Request request, Response response) {
+    public void reply(Request request, Response response) {
         send(request.getResponseQueueName(), response);
     }
 
