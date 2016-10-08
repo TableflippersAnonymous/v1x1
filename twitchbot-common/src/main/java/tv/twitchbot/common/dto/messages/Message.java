@@ -47,10 +47,18 @@ public abstract class Message {
         return from;
     }
 
+    /**
+     * Represents the (queue) message ID dropped onto the message queue
+     * @return UUID the message ID
+     */
     public UUID getMessageId() {
         return messageId;
     }
 
+    /**
+     * Represents the timestamp the (queue) message was created locally
+     * @return long the timestamp we put it on
+     */
     public long getTimestamp() {
         return timestamp;
     }
