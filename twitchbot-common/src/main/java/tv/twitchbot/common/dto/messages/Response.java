@@ -10,8 +10,8 @@ import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
 /**
  * Created by naomi on 10/4/16.
  */
-public abstract class Response extends Message {
-    public static Response fromProto(Module module, UUID uuid, long timestamp, RequestOuterClass.Response response) {
+public abstract class Response<T extends Request> extends Message {
+    public static Response<? extends Request> fromProto(Module module, UUID uuid, long timestamp, RequestOuterClass.Response response) {
         UUID requestMessageId = UUID.fromProto(response.getRequestMessageId());
         switch(response.getType()) {
             case MODULE_SHUTDOWN: return ModuleShutdownResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ModuleShutdownResponse.data));

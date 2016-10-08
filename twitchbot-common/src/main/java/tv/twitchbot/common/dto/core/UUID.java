@@ -27,4 +27,20 @@ public class UUID {
                 .setLeastSignificantBits(value.getLeastSignificantBits())
                 .build();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UUID uuid = (UUID) o;
+
+        return value != null ? value.equals(uuid.value) : uuid.value == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return value != null ? value.hashCode() : 0;
+    }
 }

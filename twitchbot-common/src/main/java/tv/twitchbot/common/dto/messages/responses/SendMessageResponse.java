@@ -3,12 +3,13 @@ package tv.twitchbot.common.dto.messages.responses;
 import tv.twitchbot.common.dto.core.Module;
 import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.messages.Response;
+import tv.twitchbot.common.dto.messages.requests.SendMessageRequest;
 import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
 
 /**
  * Created by naomi on 10/5/16.
  */
-public class SendMessageResponse extends Response {
+public class SendMessageResponse extends Response<SendMessageRequest> {
     public static SendMessageResponse fromProto(Module module, UUID uuid, long timestamp, UUID requestMessageId, RequestOuterClass.SendMessageResponse extension) {
         return new SendMessageResponse(module, uuid, timestamp, requestMessageId);
     }
