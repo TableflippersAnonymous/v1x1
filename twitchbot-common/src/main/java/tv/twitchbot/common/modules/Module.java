@@ -3,6 +3,9 @@ package tv.twitchbot.common.modules;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.dropwizard.util.Generics;
+import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.framework.CuratorFrameworkFactory;
+import org.apache.curator.retry.BoundedExponentialBackoffRetry;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.RedissonNodeInitializer;
@@ -14,6 +17,7 @@ import org.redisson.config.MasterSlaveServersConfig;
 import org.redisson.config.SingleServerConfig;
 import org.redisson.connection.balancer.LoadBalancer;
 import org.redisson.liveobject.provider.ResolverProvider;
+import tv.twitchbot.common.dto.core.ModuleInstance;
 import tv.twitchbot.common.dto.core.Tenant;
 import tv.twitchbot.common.dto.messages.Message;
 import tv.twitchbot.common.dto.messages.Request;
@@ -21,6 +25,7 @@ import tv.twitchbot.common.dto.messages.Response;
 import tv.twitchbot.common.dto.messages.requests.ModuleShutdownRequest;
 import tv.twitchbot.common.dto.messages.responses.ModuleShutdownResponse;
 import tv.twitchbot.common.rpc.client.ServiceClient;
+import tv.twitchbot.common.services.coordination.ModuleRegistry;
 import tv.twitchbot.common.services.persistence.KeyValueStore;
 import tv.twitchbot.common.services.persistence.TemporaryKeyValueStoreImpl;
 import tv.twitchbot.common.services.persistence.TenantKeyValueStoreImpl;
@@ -32,6 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -49,6 +55,11 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private KeyValueStore persistentGlobalKeyValueStore;
 
     private Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
+
+    private UUID instanceId = UUID.randomUUID();
+
+    private ModuleRegistry moduleRegistry;
+    private CuratorFramework curatorFramework;
 
     protected KeyValueStore getTemporaryKeyValueStore() {
         return temporaryKeyValueStore;
@@ -156,6 +167,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
         temporaryKeyValueStore = new TemporaryKeyValueStoreImpl(client, toDto());
         temporaryGlobalKeyValueStore = new TemporaryKeyValueStoreImpl(client);
+
+        curatorFramework = CuratorFrameworkFactory.newClient(settings.getZookeeperConnectionString(), new BoundedExponentialBackoffRetry(50, 1000, 50));
+        curatorFramework.start();
+        moduleRegistry = new ModuleRegistry(curatorFramework, toModuleInstance());
     }
 
     private Class<T> getSettingsClass() {
@@ -195,10 +210,20 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private void cleanup() {
         for(Map.Entry<Class<? extends ServiceClient>, ServiceClient> entry : serviceClientMap.entrySet())
             entry.getValue().shutdown();
+        try {
+            moduleRegistry.shutdown();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        curatorFramework.close();
     }
 
     public tv.twitchbot.common.dto.core.Module toDto() {
         return new tv.twitchbot.common.dto.core.Module(getName());
+    }
+
+    public ModuleInstance toModuleInstance() {
+        return new ModuleInstance(new tv.twitchbot.common.dto.core.UUID(instanceId), toDto());
     }
 
     public void send(String queueName, Message message) {

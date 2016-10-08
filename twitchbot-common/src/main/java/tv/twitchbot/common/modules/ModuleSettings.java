@@ -8,6 +8,7 @@ import org.redisson.config.Config;
  */
 public class ModuleSettings {
     private Config redissonConfig;
+    private String zookeeperConnectionString;
 
     @JsonProperty("redisson")
     public Config getRedissonConfig() {
@@ -17,5 +18,15 @@ public class ModuleSettings {
     @JsonProperty("redisson")
     public void setRedissonConfig(Config redissonConfig) {
         this.redissonConfig = redissonConfig;
+    }
+
+    @JsonProperty("zookeeper_connection_string")
+    public String getZookeeperConnectionString() {
+        return zookeeperConnectionString;
+    }
+
+    @JsonProperty("zookeeper_connection_string")
+    public void setZookeeperConnectionString(String zookeeperConnectionString) {
+        this.zookeeperConnectionString = zookeeperConnectionString;
     }
 }
