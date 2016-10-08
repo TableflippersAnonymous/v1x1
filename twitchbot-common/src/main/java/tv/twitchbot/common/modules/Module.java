@@ -193,7 +193,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     private void cleanup() {
-
+        for(Map.Entry<Class<? extends ServiceClient>, ServiceClient> entry : serviceClientMap.entrySet())
+            entry.getValue().shutdown();
     }
 
     public tv.twitchbot.common.dto.core.Module toDto() {

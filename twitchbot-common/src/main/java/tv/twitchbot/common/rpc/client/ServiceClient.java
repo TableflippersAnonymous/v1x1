@@ -27,26 +27,24 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
 
     public ServiceClient(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, final Class<U> responseClass) {
         this.module = module;
-        this.queueName = "ServiceResponseQueue|" + module.getName() + "|" + getClass().getCanonicalName() + "|" + UUID.randomUUID().toString();
+        this.queueName = "ServiceResponse|" + module.getName() + "|" + getClass().getCanonicalName() + "|" + UUID.randomUUID().toString();
         final MessageQueue messageQueue = module.getMessageQueueManager().forName(queueName);
-        executorService.submit(new Runnable() {
-            @Override
-            public void run() {
-                for (; ; ) {
-                    try {
-                        Message m = messageQueue.get();
-                        if (!responseClass.isInstance(m))
-                            continue;
-                        U response = (U) m;
-                        ServiceFuture<U> future = futureMap.remove(response.getRequestMessageId());
-                        if (future == null)
-                            continue;
-                        future.set(response);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (InvalidProtocolBufferException e) {
-                        e.printStackTrace();
-                    }
+        executorService.submit(() -> {
+            for (; !Thread.interrupted(); ) {
+                try {
+                    Message m = messageQueue.get();
+                    if (!responseClass.isInstance(m))
+                        continue;
+                    U response = (U) m;
+                    ServiceFuture<U> future = futureMap.remove(response.getRequestMessageId());
+                    if (future == null)
+                        continue;
+                    future.set(response);
+                } catch (InterruptedException e) {
+                    break;
+                } catch (InvalidProtocolBufferException e) {
+                    e.printStackTrace();
+                    continue;
                 }
             }
         });
