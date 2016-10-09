@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * Created by naomi on 10/9/2016.
  */
-public class MessageTaggedIrcStanza extends IrcStanza {
+public class MessageTaggedIrcStanza extends TaggedIrcStanza {
     public static class Emote {
         public static class Range{
             private int beginIndex;
