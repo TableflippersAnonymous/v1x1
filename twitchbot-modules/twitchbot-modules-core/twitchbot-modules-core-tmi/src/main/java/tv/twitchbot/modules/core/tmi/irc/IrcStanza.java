@@ -1,4 +1,4 @@
-package tv.twitchbot.modules.core.tmi;
+package tv.twitchbot.modules.core.tmi.irc;
 
 import java.util.Map;
 
@@ -8,25 +8,28 @@ import java.util.Map;
 public class IrcStanza {
     public enum IrcCommand {
         JOIN, PART, PRIVMSG,
-        NAMES, MODE, NOTICE,
-        HOSTTARGET, CLEARCHAT,
-        USERSTATE, RECONNECT,
-        ROOMSTATE, USERNOTICE,
-        GLOBALUSERSTATE;
+        RPL_NAMREPLY, RPL_ENDOFMOTD,
+        MODE, NOTICE, HOSTTARGET,
+        CLEARCHAT, USERSTATE,
+        RECONNECT, ROOMSTATE,
+        USERNOTICE, GLOBALUSERSTATE,
+        PING;
     }
 
     private String rawLine;
     private Map<String, String> tags;
     private IrcSource source;
     private IrcCommand command;
-    private String[] rawArgs;
+    private String rawArgs;
+    private String[] args;
 
-    public IrcStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcCommand command, String[] rawArgs) {
+    public IrcStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcCommand command, String rawArgs, String[] args) {
         this.rawLine = rawLine;
         this.tags = tags;
         this.source = source;
         this.command = command;
         this.rawArgs = rawArgs;
+        this.args = args;
     }
 
     public String getRawLine() {
@@ -45,7 +48,11 @@ public class IrcStanza {
         return command;
     }
 
-    public String[] getRawArgs() {
+    public String getRawArgs() {
         return rawArgs;
+    }
+
+    public String[] getArgs() {
+        return args;
     }
 }

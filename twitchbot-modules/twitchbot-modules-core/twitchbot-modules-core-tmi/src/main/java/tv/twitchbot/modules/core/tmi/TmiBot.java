@@ -1,5 +1,14 @@
 package tv.twitchbot.modules.core.tmi;
 
+import tv.twitchbot.common.dto.core.ChatMessage;
+import tv.twitchbot.common.dto.core.Module;
+import tv.twitchbot.common.dto.core.TwitchChannel;
+import tv.twitchbot.common.dto.messages.events.ChatMessageEvent;
+import tv.twitchbot.modules.core.tmi.irc.IrcParser;
+import tv.twitchbot.modules.core.tmi.irc.IrcStanza;
+import tv.twitchbot.modules.core.tmi.irc.commands.PingCommand;
+import tv.twitchbot.modules.core.tmi.irc.commands.PrivmsgCommand;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.Set;
@@ -16,11 +25,13 @@ public class TmiBot implements Runnable {
     private final String oauthToken;
     private final String username;
     private final Set<String> channels;
+    private final Module module;
 
-    public TmiBot(String oauthToken, String username, Set<String> channels) {
+    public TmiBot(String oauthToken, String username, Set<String> channels, Module module) {
         this.oauthToken = oauthToken;
         this.username = username;
         this.channels = channels;
+        this.module = module;
     }
 
     @Override
@@ -56,20 +67,13 @@ public class TmiBot implements Runnable {
         sendLine("CAP REQ :twitch.tv/tags");
     }
 
-    private void processLine(String line) {
-        /* [tags] <source> <command> [args] */
-        String tags = null;
-        if(line.startsWith("@")) {
-            String[] parts = line.split(" ", 2);
-            tags = parts[0];
-            line = parts[1];
+    private void processLine(String line) throws IOException {
+        IrcStanza stanza = IrcParser.parse(line);
+        if(stanza instanceof PingCommand)
+            sendLine("PONG :" + ((PingCommand) stanza).getToken());
+        if(stanza instanceof PrivmsgCommand) {
+            //event(new ChatMessageEvent(module, new ChatMessage(new TwitchChannel())))
         }
-        if(!line.startsWith(":"))
-            throw new RuntimeException("Unparsable TMI line: " + line);
-        String[] parts = line.split(" ", 3);
-        String source = parts[0];
-        String command = parts[1];
-        String args = parts[2];
     }
 
     private void connect() throws IOException {
