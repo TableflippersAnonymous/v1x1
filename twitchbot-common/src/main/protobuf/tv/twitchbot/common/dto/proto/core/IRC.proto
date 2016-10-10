@@ -1,0 +1,297 @@
+syntax = "proto2";
+
+package tv.twitchbot.common.dto.proto.core;
+
+import "UUID.proto";
+
+message IrcStanza {
+    extensions 100 to max;
+
+    enum IrcCommand {
+        CLEARCHAT = 1;
+        GLOBALUSERSTATE = 2;
+        HOSTTARGET = 3;
+        JOIN = 4;
+        MODE = 5;
+        NOTICE = 6;
+        PART = 7;
+        PING = 8;
+        PRIVMSG = 9;
+        RECONNECT = 10;
+        ROOMSTATE = 11;
+        RPL_ENDOFMOTD = 12;
+        RPL_NAMREPLY = 13;
+        USERNOTICE = 14;
+        USERSTATE = 15;
+    }
+
+    required string raw_line = 1;
+    map<string, string> tags = 2;
+    required IrcSource source = 3;
+    required IrcCommand command = 4;
+    optional string raw_args = 5;
+    repeated string args = 6;
+}
+
+message IrcSource {
+    extensions 100 to max;
+
+    enum Type {
+        SERVER = 1;
+        USER = 2;
+    }
+
+    required Type type = 1;
+}
+
+message IrcServer {
+    extend IrcSource {
+        optional IrcServer data = 101;
+    }
+
+    required string name = 1;
+}
+
+message IrcUser {
+    extend IrcSource {
+        optional IrcUser data = 102;
+    }
+
+    required string nickname = 1;
+    required string username = 2;
+    required string hostname = 3;
+}
+
+message TaggedIrcStanza {
+    enum UserType {
+        MOD = 1;
+        GLOBAL_MOD = 2;
+        ADMIN = 3;
+        STAFF = 4;
+    }
+
+    optional string color = 1;
+    optional string display_name = 2;
+    optional bool mod = 3;
+    optional bool subscriber = 4;
+    optional bool turbo = 5;
+    optional UserType user_type = 6;
+}
+
+message EmoteSetIrcStanza {
+    repeated int32 emote_set = 1;
+    required TaggedIrcStanza tagged_stanza = 2;
+}
+
+message MessageTaggedIrcStanza {
+    enum Badge {
+        STAFF = 1;
+        ADMIN = 2;
+        GLOBAL_MOD = 3;
+        MODERATOR = 4;
+        SUBSCRIBER = 5;
+        TURBO = 6;
+    }
+
+    message Emote {
+        message Range {
+            required int32 begin_index = 1;
+            required int32 end_index = 2;
+        }
+
+        required string id = 1;
+        repeated Range ranges = 2;
+    }
+
+    repeated Badge badges = 1;
+    repeated Emote emotes = 2;
+    optional int32 room_id = 3;
+    optional int32 user_id = 4;
+
+    required TaggedIrcStanza tagged_stanza = 5;
+}
+
+message ClearChatCommand {
+    extend IrcStanza {
+        optional ClearChatCommand data = 101;
+    }
+
+    required string channel = 1;
+    optional string nickname = 2;
+
+    optional int32 ban_duration = 3;
+    optional string ban_reason = 4;
+}
+
+message GlobalUserStateCommand {
+    extend IrcStanza {
+        optional GlobalUserStateCommand data = 102;
+    }
+
+    required int32 user_id = 1;
+    required EmoteSetIrcStanza emote_set_stanza = 2;
+}
+
+message HostTargetCommand {
+    extend IrcStanza {
+        optional HostTargetCommand data = 103;
+    }
+
+    required string channel = 1;
+    optional string target_channel = 2;
+}
+
+message JoinCommand {
+    extend IrcStanza {
+        optional JoinCommand data = 104;
+    }
+
+    required string channel = 1;
+}
+
+message ModeCommand {
+    extend IrcStanza {
+        optional ModeCommand data = 105;
+    }
+
+    required string channel = 1;
+    optional string mode_string = 2;
+    repeated string nicknames = 3;
+}
+
+message NoticeCommand {
+    extend IrcStanza {
+        optional NoticeCommand data = 106;
+    }
+
+    enum MessageId {
+        SUBS_ON = 1;
+        ALREADY_SUBS_ON = 2;
+        SUBS_OFF = 3;
+        ALREADY_SUBS_OFF = 4;
+        SLOW_ON = 5;
+        SLOW_OFF = 6;
+        R9K_ON = 7;
+        ALREADY_R9K_ON = 8;
+        R9K_OFF = 9;
+        ALREADY_R9K_OFF = 10;
+        HOST_ON = 11;
+        BAD_HOST_HOSTING = 12;
+        HOST_OFF = 13;
+        HOSTS_REMAINING = 14;
+        EMOTE_ONLY_ON = 15;
+        ALREADY_EMOTE_ONLY_ON = 16;
+        EMOTE_ONLY_OFF = 17;
+        ALREADY_EMOTE_ONLY_OFF = 18;
+        MSG_CHANNEL_SUSPENDED = 19;
+        TIMEOUT_SUCCESS = 20;
+        BAN_SUCCESS = 21;
+        UNBAN_SUCCESS = 22;
+        BAD_UNBAN_NO_BAN = 23;
+        ALREADY_BANNED = 24;
+        UNRECOGNIZED_COMMAND = 25;
+    }
+
+    required string channel = 1;
+    required string message = 2;
+    optional MessageId message_id = 3;
+}
+
+message PartCommand {
+    extend IrcStanza {
+        optional PartCommand data = 107;
+    }
+
+    required string channel = 1;
+}
+
+message PingCommand {
+    extend IrcStanza {
+        optional PingCommand data = 108;
+    }
+
+    optional string token = 1;
+}
+
+message PrivmsgCommand {
+    extend IrcStanza {
+        optional PrivmsgCommand data = 109;
+    }
+
+    required string channel = 1;
+    required string message = 2;
+
+    optional UUID id = 3;
+    optional int32 bits = 4;
+
+    required MessageTaggedIrcStanza message_tagged_stanza = 5;
+}
+
+message ReconnectCommand {
+    extend IrcStanza {
+        optional ReconnectCommand data = 110;
+    }
+}
+
+message RoomStateCommand {
+    extend IrcStanza {
+        optional RoomStateCommand data = 111;
+    }
+
+    required string channel = 1;
+
+    optional string broadcaster_language = 2;
+    optional bool r9k = 3;
+    optional bool subs_only = 4;
+    optional int32 slow = 5;
+}
+
+message RplEndOfMotdCommand {
+    extend IrcStanza {
+        optional RplEndOfMotdCommand data = 112;
+    }
+}
+
+message RplNameReplyCommand {
+    extend IrcStanza {
+        optional RplNameReplyCommand data = 113;
+    }
+
+    message Member {
+        required string nickname = 1;
+        required bool isOp = 2;
+    }
+
+    required string channel = 1;
+    repeated Member members = 2;
+}
+
+message UserNoticeCommand {
+    extend IrcStanza {
+        optional UserNoticeCommand data = 114;
+    }
+
+    enum MessageId {
+        RESUB = 1;
+    }
+
+    required string channel = 1;
+    required string message = 2;
+
+    optional MessageId message_id = 3;
+    optional int32 months = 4;
+    optional string system_message = 5;
+    optional string login = 6;
+
+    required MessageTaggedIrcStanza message_tagged_stanza = 7;
+}
+
+message UserStateCommand {
+    extend IrcStanza {
+        optional UserStateCommand data = 115;
+    }
+
+    required string channel = 1;
+
+    required EmoteSetIrcStanza emote_set_stanza = 2;
+}

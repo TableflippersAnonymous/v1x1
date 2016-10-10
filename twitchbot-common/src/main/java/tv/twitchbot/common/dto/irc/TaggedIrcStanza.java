@@ -1,15 +1,25 @@
-package tv.twitchbot.modules.core.tmi.irc;
+package tv.twitchbot.common.dto.irc;
 
-import tv.twitchbot.modules.core.tmi.irc.commands.PrivmsgCommand;
+import tv.twitchbot.common.dto.proto.core.IRC;
 
 import java.util.Map;
 
 /**
  * Created by naomi on 10/9/2016.
  */
-public class TaggedIrcStanza extends IrcStanza {
+public abstract class TaggedIrcStanza extends IrcStanza {
     public enum UserType {
         MOD, GLOBAL_MOD, ADMIN, STAFF;
+
+        public IRC.TaggedIrcStanza.UserType toProto() {
+            switch(this) {
+                case MOD: return IRC.TaggedIrcStanza.UserType.MOD;
+                case GLOBAL_MOD: return IRC.TaggedIrcStanza.UserType.GLOBAL_MOD;
+                case ADMIN: return IRC.TaggedIrcStanza.UserType.ADMIN;
+                case STAFF: return IRC.TaggedIrcStanza.UserType.STAFF;
+                default: throw new IllegalStateException("Unknown UserType: " + this);
+            }
+        }
     }
 
     private String color;
@@ -55,5 +65,19 @@ public class TaggedIrcStanza extends IrcStanza {
 
     public UserType getUserType() {
         return userType;
+    }
+
+    protected IRC.TaggedIrcStanza toProtoTagged() {
+        IRC.TaggedIrcStanza.Builder builder = IRC.TaggedIrcStanza.newBuilder();
+        if(color != null)
+            builder.setColor(color);
+        if(displayName != null)
+            builder.setDisplayName(displayName);
+        if(userType != null)
+            builder.setUserType(userType.toProto());
+        return builder.setMod(mod)
+                .setSubscriber(subscriber)
+                .setTurbo(turbo)
+                .build();
     }
 }

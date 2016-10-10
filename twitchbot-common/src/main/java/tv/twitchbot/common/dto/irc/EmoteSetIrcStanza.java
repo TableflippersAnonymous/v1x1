@@ -1,6 +1,9 @@
-package tv.twitchbot.modules.core.tmi.irc;
+package tv.twitchbot.common.dto.irc;
+
+import tv.twitchbot.common.dto.proto.core.IRC;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -8,8 +11,8 @@ import java.util.stream.Collectors;
 /**
  * Created by naomi on 10/9/2016.
  */
-public class EmoteSetIrcStanza extends TaggedIrcStanza {
-    private Set<Integer> emoteSets;
+public abstract class EmoteSetIrcStanza extends TaggedIrcStanza {
+    private Set<Integer> emoteSets = new HashSet<>();
 
     public EmoteSetIrcStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcCommand command, String rawArgs, String[] args) {
         super(rawLine, tags, source, command, rawArgs, args);
@@ -19,5 +22,12 @@ public class EmoteSetIrcStanza extends TaggedIrcStanza {
 
     public Set<Integer> getEmoteSets() {
         return emoteSets;
+    }
+
+    protected IRC.EmoteSetIrcStanza toProtoEmoteSet() {
+        return IRC.EmoteSetIrcStanza.newBuilder()
+                .addAllEmoteSet(emoteSets)
+                .setTaggedStanza(toProtoTagged())
+                .build();
     }
 }

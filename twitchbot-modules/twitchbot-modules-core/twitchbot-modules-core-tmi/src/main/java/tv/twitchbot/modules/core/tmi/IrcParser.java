@@ -1,8 +1,12 @@
-package tv.twitchbot.modules.core.tmi.irc;
+package tv.twitchbot.modules.core.tmi;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import tv.twitchbot.modules.core.tmi.irc.commands.*;
+import tv.twitchbot.common.dto.irc.IrcServer;
+import tv.twitchbot.common.dto.irc.IrcSource;
+import tv.twitchbot.common.dto.irc.IrcStanza;
+import tv.twitchbot.common.dto.irc.IrcUser;
+import tv.twitchbot.common.dto.irc.commands.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
