@@ -1,13 +1,9 @@
 package tv.twitchbot.modules.core.tmi;
 
-import tv.twitchbot.common.dto.core.ChatMessage;
 import tv.twitchbot.common.dto.core.Module;
-import tv.twitchbot.common.dto.core.TwitchChannel;
-import tv.twitchbot.common.dto.messages.events.ChatMessageEvent;
-import tv.twitchbot.modules.core.tmi.irc.IrcParser;
-import tv.twitchbot.modules.core.tmi.irc.IrcStanza;
-import tv.twitchbot.modules.core.tmi.irc.commands.PingCommand;
-import tv.twitchbot.modules.core.tmi.irc.commands.PrivmsgCommand;
+import tv.twitchbot.common.dto.irc.IrcStanza;
+import tv.twitchbot.common.dto.irc.commands.PingCommand;
+import tv.twitchbot.common.dto.irc.commands.PrivmsgCommand;
 
 import java.io.*;
 import java.net.Socket;

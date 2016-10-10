@@ -1,7 +1,8 @@
-package tv.twitchbot.modules.core.tmi.irc.commands;
+package tv.twitchbot.common.dto.irc.commands;
 
-import tv.twitchbot.modules.core.tmi.irc.IrcSource;
-import tv.twitchbot.modules.core.tmi.irc.IrcStanza;
+import tv.twitchbot.common.dto.irc.IrcSource;
+import tv.twitchbot.common.dto.irc.IrcStanza;
+import tv.twitchbot.common.dto.proto.core.IRC;
 
 import java.util.Map;
 
@@ -9,6 +10,11 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class RoomStateCommand extends IrcStanza {
+    public static RoomStateCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.RoomStateCommand roomStateCommand) {
+        String channel = roomStateCommand.getChannel();
+        return new RoomStateCommand(rawLine, tags, source, rawArgs, args, channel);
+    }
+
     private String channel;
 
     private String broadcasterLanguage;
@@ -46,5 +52,23 @@ public class RoomStateCommand extends IrcStanza {
 
     public int getSlow() {
         return slow;
+    }
+
+    @Override
+    protected IRC.IrcStanza.Builder toProtoBuilder() {
+        return super.toProtoBuilder()
+                .setCommand(IRC.IrcStanza.IrcCommand.ROOMSTATE)
+                .setExtension(IRC.RoomStateCommand.data, toProtoCommand());
+    }
+
+    private IRC.RoomStateCommand toProtoCommand() {
+        IRC.RoomStateCommand.Builder builder = IRC.RoomStateCommand.newBuilder()
+                .setChannel(channel);
+        if(broadcasterLanguage != null)
+            builder.setBroadcasterLanguage(broadcasterLanguage);
+        return builder.setR9K(r9k)
+                .setSubsOnly(subsOnly)
+                .setSlow(slow)
+                .build();
     }
 }
