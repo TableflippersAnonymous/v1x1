@@ -1,7 +1,5 @@
 package tv.twitchbot.common.util.commands;
 
-import tv.twitchbot.common.dto.messages.events.ChatMessageEvent;
-
 import java.util.List;
 
 /**
