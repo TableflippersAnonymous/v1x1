@@ -199,10 +199,9 @@ public final class IRC {
                 mutable_bitField0_ |= 0x00000002;
               }
               com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-              tags__ = input.readMessage(
+              tags = input.readMessage(
                   TagsDefaultEntryHolder.defaultEntry.getParserForType(), extensionRegistry);
-              tags_.getMutableMap().put(
-                  tags__.getKey(), tags__.getValue());
+              tags_.getMutableMap().put(tags.getKey(), tags.getValue());
               break;
             }
             case 26: {
@@ -754,12 +753,15 @@ public final class IRC {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 1, rawLine_);
       }
-      com.google.protobuf.GeneratedMessageV3
-        .serializeStringMapTo(
-          output,
-          internalGetTags(),
-          TagsDefaultEntryHolder.defaultEntry,
-          2);
+      for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
+           : internalGetTags().getMap().entrySet()) {
+        com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
+        tags = TagsDefaultEntryHolder.defaultEntry.newBuilderForType()
+            .setKey(entry.getKey())
+            .setValue(entry.getValue())
+            .build();
+        output.writeMessage(2, tags);
+      }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeMessage(3, getSource());
       }
@@ -787,12 +789,12 @@ public final class IRC {
       for (java.util.Map.Entry<java.lang.String, java.lang.String> entry
            : internalGetTags().getMap().entrySet()) {
         com.google.protobuf.MapEntry<java.lang.String, java.lang.String>
-        tags__ = TagsDefaultEntryHolder.defaultEntry.newBuilderForType()
+        tags = TagsDefaultEntryHolder.defaultEntry.newBuilderForType()
             .setKey(entry.getKey())
             .setValue(entry.getValue())
             .build();
         size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, tags__);
+            .computeMessageSize(2, tags);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
