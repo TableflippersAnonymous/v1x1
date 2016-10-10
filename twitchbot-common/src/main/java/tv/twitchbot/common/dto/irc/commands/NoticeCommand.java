@@ -1,7 +1,8 @@
-package tv.twitchbot.modules.core.tmi.irc.commands;
+package tv.twitchbot.common.dto.irc.commands;
 
-import tv.twitchbot.modules.core.tmi.irc.IrcSource;
-import tv.twitchbot.modules.core.tmi.irc.IrcStanza;
+import tv.twitchbot.common.dto.irc.IrcSource;
+import tv.twitchbot.common.dto.irc.IrcStanza;
+import tv.twitchbot.common.dto.proto.core.IRC;
 
 import java.util.Map;
 
@@ -9,6 +10,12 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class NoticeCommand extends IrcStanza {
+    public static NoticeCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.NoticeCommand noticeCommand) {
+        String channel = noticeCommand.getChannel();
+        String message = noticeCommand.getMessage();
+        return new NoticeCommand(rawLine, tags, source, rawArgs, args, channel, message);
+    }
+
     public enum MessageId {
         SUBS_ON, ALREADY_SUBS_ON, SUBS_OFF, ALREADY_SUBS_OFF,
         SLOW_ON, SLOW_OFF,
@@ -43,5 +50,21 @@ public class NoticeCommand extends IrcStanza {
 
     public MessageId getMessageId() {
         return messageId;
+    }
+
+    @Override
+    protected IRC.IrcStanza.Builder toProtoBuilder() {
+        return super.toProtoBuilder()
+                .setCommand(IRC.IrcStanza.IrcCommand.NOTICE)
+                .setExtension(IRC.NoticeCommand.data, toProtoCommand());
+    }
+
+    private IRC.NoticeCommand toProtoCommand() {
+        IRC.NoticeCommand.Builder builder = IRC.NoticeCommand.newBuilder()
+                .setChannel(channel)
+                .setMessage(message);
+        if(messageId != null)
+            builder.setMessageId(IRC.NoticeCommand.MessageId.valueOf(messageId.name()));
+        return builder.build();
     }
 }
