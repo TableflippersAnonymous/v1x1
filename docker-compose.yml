@@ -1,0 +1,14 @@
+version: '2'
+services:
+  redis:
+    image: redis:alpine
+  zoo1:
+    image: zookeeper:latest
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=zoo1:2888:3888
+  hello:
+    image: v1x1-hello_world:latest
+    depends_on:
+      - redis
+      - zoo1
