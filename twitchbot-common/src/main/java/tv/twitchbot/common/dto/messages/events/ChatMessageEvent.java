@@ -9,10 +9,13 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 /**
  * Created by naomi on 10/5/16.
  */
-public class ChatMessageEvent extends Event {
+public abstract class ChatMessageEvent extends Event {
     public static ChatMessageEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.ChatMessageEvent chatMessageEvent) {
         ChatMessage chatMessage = ChatMessage.fromProto(chatMessageEvent.getChatMessage());
-        return new ChatMessageEvent(module, uuid, timestamp, chatMessage);
+        switch(chatMessageEvent.getType()) {
+            case TWITCH: return TwitchChatMessageEvent.fromProto(module, uuid, timestamp, chatMessage, chatMessageEvent.getExtension(EventOuterClass.TwitchChatMessageEvent.data));
+            default: throw new IllegalStateException("Unknown ChatMessageEvent type: " + chatMessageEvent.getType());
+        }
     }
 
     private ChatMessage chatMessage;
@@ -35,6 +38,11 @@ public class ChatMessageEvent extends Event {
     protected EventOuterClass.Event.Builder toProtoEvent() {
         return super.toProtoEvent()
                 .setType(EventOuterClass.Event.EventType.CHAT_MESSAGE)
-                .setExtension(EventOuterClass.ChatMessageEvent.data, EventOuterClass.ChatMessageEvent.newBuilder().build());
+                .setExtension(EventOuterClass.ChatMessageEvent.data, toProtoChatMessage().build());
+    }
+
+    protected EventOuterClass.ChatMessageEvent.Builder toProtoChatMessage() {
+        return EventOuterClass.ChatMessageEvent.newBuilder()
+                .setChatMessage(chatMessage.toProto());
     }
 }

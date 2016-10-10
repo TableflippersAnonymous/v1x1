@@ -4,6 +4,7 @@ import tv.twitchbot.common.dto.core.Module;
 import tv.twitchbot.common.dto.irc.IrcStanza;
 import tv.twitchbot.common.dto.irc.commands.PingCommand;
 import tv.twitchbot.common.dto.irc.commands.PrivmsgCommand;
+import tv.twitchbot.common.dto.messages.Event;
 
 import java.io.*;
 import java.net.Socket;
@@ -68,8 +69,12 @@ public class TmiBot implements Runnable {
         if(stanza instanceof PingCommand)
             sendLine("PONG :" + ((PingCommand) stanza).getToken());
         if(stanza instanceof PrivmsgCommand) {
-            //event(new ChatMessageEvent(module, new ChatMessage(new TwitchChannel())))
+
         }
+    }
+
+    private void event(Event event) {
+        //TODO: Implement
     }
 
     private void connect() throws IOException {
