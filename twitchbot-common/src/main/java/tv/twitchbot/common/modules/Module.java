@@ -25,6 +25,8 @@ import tv.twitchbot.common.dto.messages.Response;
 import tv.twitchbot.common.dto.messages.requests.ModuleShutdownRequest;
 import tv.twitchbot.common.dto.messages.responses.ModuleShutdownResponse;
 import tv.twitchbot.common.rpc.client.ServiceClient;
+import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
+import tv.twitchbot.common.services.coordination.LoadBalancingDistributorImpl;
 import tv.twitchbot.common.services.coordination.ModuleRegistry;
 import tv.twitchbot.common.services.persistence.KeyValueStore;
 import tv.twitchbot.common.services.persistence.TemporaryKeyValueStoreImpl;
@@ -60,6 +62,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     private ModuleRegistry moduleRegistry;
     private CuratorFramework curatorFramework;
+
+    private Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
 
     protected KeyValueStore getTemporaryKeyValueStore() {
         return temporaryKeyValueStore;
@@ -102,6 +106,19 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
             }
         }
         return (W) serviceClientMap.get(serviceClass);
+    }
+
+    protected LoadBalancingDistributor getLoadBalancingDistributor(String path, int redundancy) {
+        if(!loadBalancingDistributorMap.containsKey(path)) {
+            LoadBalancingDistributor loadBalancingDistributor = new LoadBalancingDistributorImpl(curatorFramework, path, redundancy);
+            try {
+                loadBalancingDistributor.start();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            loadBalancingDistributorMap.put(path, loadBalancingDistributor);
+        }
+        return loadBalancingDistributorMap.get(path);
     }
 
     public MessageQueueManager getMessageQueueManager() {
@@ -208,6 +225,12 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     private void cleanup() {
+        for(Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
+            try {
+                entry.getValue().shutdown();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         for(Map.Entry<Class<? extends ServiceClient>, ServiceClient> entry : serviceClientMap.entrySet())
             entry.getValue().shutdown();
         try {
