@@ -1,0 +1,7 @@
+---
+# Devel config
+redisson:
+  singleServerConfig:
+    address:
+    - "//redis:6379"
+zookeeper_connection_string: zoo1:2181
