@@ -15,10 +15,14 @@ public abstract class ServiceModule<T extends ModuleSettings, U extends GlobalCo
         service.start();
     }
 
+    protected void unregisterService(Service service) {
+        services.remove(service);
+        service.shutdown();
+    }
+
     @Override
     protected void shutdown() {
-        for(Service service : services)
-            service.shutdown();
+        services.forEach(Service::shutdown);
         super.shutdown();
     }
 }

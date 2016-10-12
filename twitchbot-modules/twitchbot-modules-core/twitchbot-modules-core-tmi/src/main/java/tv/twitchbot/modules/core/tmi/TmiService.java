@@ -12,8 +12,13 @@ import tv.twitchbot.common.rpc.services.Service;
  * Created by cobi on 10/8/2016.
  */
 public class TmiService extends Service<SendMessageRequest, SendMessageResponse> {
-    public TmiService(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
-        super(module, "Core|TMI", SendMessageRequest.class);
+    private final TmiBot bot;
+    private final String channel;
+
+    public TmiService(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, String channel, TmiBot bot) {
+        super(module, "Core|TMI|channel|" + channel, SendMessageRequest.class);
+        this.channel = channel;
+        this.bot = bot;
     }
 
     @Override
