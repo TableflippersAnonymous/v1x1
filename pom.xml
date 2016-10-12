@@ -15,6 +15,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
+    <environment>dev</environment>
   </properties>
 
   <modules>
@@ -79,10 +80,22 @@
         <groupId>com.spotify</groupId>
         <artifactId>docker-maven-plugin</artifactId>
         <version>0.4.13</version>
-        <configuration>
-          <imageName>v1x1-base</imageName>
-          <dockerDirectory>docker</dockerDirectory>
-        </configuration>
+        <inherited>false</inherited>
+        <executions>
+          <execution>
+          <phase>package</phase>
+          <goals>
+            <goal>build</goal>
+          </goals>
+          <configuration>
+            <imageName>v1x1-base</imageName>
+            <dockerDirectory>docker</dockerDirectory>
+            <buildArgs>
+              <APP_ENV>${environment}</APP_ENV>
+            </buildArgs>
+          </configuration>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
