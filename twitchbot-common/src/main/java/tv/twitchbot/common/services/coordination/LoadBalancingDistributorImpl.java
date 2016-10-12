@@ -204,6 +204,16 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     }
 
     @Override
+    public void removeListener(Listener listener) {
+        listeners.remove(listener);
+    }
+
+    @Override
+    public void removeInstance(UUID instanceId) throws Exception {
+        instanceDiscovery.unregisterService(serviceInstanceFor(new InstanceId(instanceId)));
+    }
+
+    @Override
     public void start() throws Exception {
         entryCache.start();
         instanceDiscovery.start();

@@ -17,6 +17,8 @@ public interface LoadBalancingDistributor {
     void addInstance(UUID instanceId) throws Exception; // Will be bound to our client
     Set<String> getEntriesForInstance(UUID instanceId) throws Exception;
     void addListener(Listener listener);
+    void removeListener(Listener listener);
+    void removeInstance(UUID instanceId) throws Exception;
 
     void start() throws Exception;
     void shutdown() throws IOException;
