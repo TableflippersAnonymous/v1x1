@@ -1,19 +1,28 @@
 package tv.twitchbot.modules.core.tmi;
 
 import tv.twitchbot.common.dto.core.Module;
+import tv.twitchbot.common.dto.core.TwitchBot;
 import tv.twitchbot.common.dto.irc.IrcStanza;
 import tv.twitchbot.common.dto.irc.commands.PingCommand;
 import tv.twitchbot.common.dto.irc.commands.PrivmsgCommand;
 import tv.twitchbot.common.dto.messages.Event;
+import tv.twitchbot.common.dto.messages.events.TwitchRawMessageEvent;
+import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
+import tv.twitchbot.common.services.queue.MessageQueue;
 
 import java.io.*;
 import java.net.Socket;
 import java.util.Set;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * Created by naomi on 10/8/2016.
  */
 public class TmiBot implements Runnable {
+    private final LoadBalancingDistributor.Listener listener;
     private volatile boolean running;
     private volatile Socket socket;
     private volatile InputStream inputStream;
@@ -21,14 +30,26 @@ public class TmiBot implements Runnable {
     private volatile BufferedOutputStream outputStream;
     private final String oauthToken;
     private final String username;
-    private final Set<String> channels;
     private final Module module;
+    private final TwitchBot bot;
+    private final UUID botId = UUID.randomUUID();
+    private final LoadBalancingDistributor channelDistributor;
+    private final MessageQueue messageQueue;
+    private Set<String> channels = new ConcurrentSkipListSet<>();
 
-    public TmiBot(String oauthToken, String username, Set<String> channels, Module module) {
+    public TmiBot(String username, String oauthToken, LoadBalancingDistributor distributor, MessageQueue queue, Module module) {
         this.oauthToken = oauthToken;
         this.username = username;
-        this.channels = channels;
         this.module = module;
+        this.channelDistributor = distributor;
+        this.messageQueue = queue;
+        this.bot = new TwitchBot(username);
+        listener = (instanceId, entries) -> {
+            if (botId.equals(instanceId.getValue())) {
+                setChannels(entries);
+            }
+        };
+        channelDistributor.addListener(listener);
     }
 
     @Override
@@ -47,13 +68,29 @@ public class TmiBot implements Runnable {
                     processLine(line);
                 }
                 disconnect();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
+                cleanup();
             }
+        }
+        channelDistributor.removeListener(listener);
+    }
+
+    private void cleanup() {
+        try {
+            channelDistributor.removeInstance(new tv.twitchbot.common.dto.core.UUID(botId));
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     private void disconnect() throws IOException {
+        try {
+            channelDistributor.removeInstance(new tv.twitchbot.common.dto.core.UUID(botId));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         quit();
         socket.close();
     }
@@ -66,6 +103,7 @@ public class TmiBot implements Runnable {
 
     private void processLine(String line) throws IOException {
         IrcStanza stanza = IrcParser.parse(line);
+        event(new TwitchRawMessageEvent(module, bot, stanza));
         if(stanza instanceof PingCommand)
             sendLine("PONG :" + ((PingCommand) stanza).getToken());
         if(stanza instanceof PrivmsgCommand) {
@@ -74,7 +112,7 @@ public class TmiBot implements Runnable {
     }
 
     private void event(Event event) {
-        //TODO: Implement
+        messageQueue.add(event);
     }
 
     private void connect() throws IOException {
@@ -95,9 +133,8 @@ public class TmiBot implements Runnable {
         sendLine("NICK " + username);
     }
 
-    private void joinChannels() throws IOException {
-        for(String channel : channels)
-            join(channel);
+    private void joinChannels() throws Exception {
+        channelDistributor.addInstance(new tv.twitchbot.common.dto.core.UUID(botId));
     }
 
     private void join(String channel) throws IOException {
@@ -106,6 +143,7 @@ public class TmiBot implements Runnable {
     }
 
     private void quit() throws IOException {
+        channels.clear();
         sendLine("QUIT :Disconnecting.");
     }
 
@@ -118,4 +156,7 @@ public class TmiBot implements Runnable {
         quit();
     }
 
+    private void setChannels(Set<String> channels) {
+
+    }
 }
