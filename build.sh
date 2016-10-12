@@ -1,4 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+APP_ENV=$1
+if [ x${APP_ENV} == 'x' ]; then
+  echo "Usage: ./build.sh <dev|prod>"
+  exit 1
+fi
 MODULES="v1x1-base"
 cd $(dirname $0)
 echo "Finding modules..."
@@ -9,4 +14,4 @@ echo "Clearing out old Docker images..."
 docker rmi ${MODULES}
 
 echo "Rebuilding..."
-MAVEN_OPTS=-Djava.io.tmpdir=${HOME}/tmp mvn clean install
+MAVEN_OPTS=-Djava.io.tmpdir=${HOME}/tmp mvn clean install -Denvironmnent=$APP_ENV
