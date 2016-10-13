@@ -34,6 +34,8 @@ import tv.twitchbot.common.services.persistence.TenantKeyValueStoreImpl;
 import tv.twitchbot.common.services.queue.MessageQueue;
 import tv.twitchbot.common.services.queue.MessageQueueManager;
 import tv.twitchbot.common.services.queue.MessageQueueManagerImpl;
+import tv.twitchbot.common.services.stats.NoopStatsCollector;
+import tv.twitchbot.common.services.stats.StatsCollector;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,113 +48,36 @@ import java.util.concurrent.ConcurrentHashMap;
  * Created by cobi on 10/4/16.
  */
 public abstract class Module<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> {
+    /* Config */
     private T settings;
     private U globalConfig;
+    private UUID instanceId = UUID.randomUUID();
+
+    /* Queues */
     private MessageQueueManager messageQueueManager;
 
+    /* Key-Value Stores */
     private KeyValueStore temporaryKeyValueStore;
     private KeyValueStore temporaryGlobalKeyValueStore;
-
     private KeyValueStore persistentKeyValueStore;
     private KeyValueStore persistentGlobalKeyValueStore;
 
-    private Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
-
-    private UUID instanceId = UUID.randomUUID();
-
+    /* Services */
     private ModuleRegistry moduleRegistry;
+    private Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
+    private Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
+    private StatsCollector statsCollector;
+
+    /* Third-Party Clients */
     private CuratorFramework curatorFramework;
 
-    private Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
-
-    protected KeyValueStore getTemporaryKeyValueStore() {
-        return temporaryKeyValueStore;
-    }
-
-    protected KeyValueStore getTemporaryGlobalKeyValueStore() {
-        return temporaryGlobalKeyValueStore;
-    }
-
-    protected KeyValueStore getTemporaryTenantKeyValueStore(Tenant tenant) {
-        return new TenantKeyValueStoreImpl(tenant, temporaryKeyValueStore);
-    }
-
-    protected KeyValueStore getTemporaryGlobalTenantKeyValueStore(Tenant tenant) {
-        return new TenantKeyValueStoreImpl(tenant, temporaryGlobalKeyValueStore);
-    }
-
-    protected KeyValueStore getPersistentKeyValueStore() {
-        return persistentKeyValueStore;
-    }
-
-    protected KeyValueStore getPersistentGlobalKeyValueStore() {
-        return persistentGlobalKeyValueStore;
-    }
-
-    protected KeyValueStore getPersistentTenantKeyValueStore(Tenant tenant) {
-        return new TenantKeyValueStoreImpl(tenant, persistentKeyValueStore);
-    }
-
-    protected KeyValueStore getPersistentGlobalTenantKeyValueStore(Tenant tenant) {
-        return new TenantKeyValueStoreImpl(tenant, persistentGlobalKeyValueStore);
-    }
-
-    protected <W extends ServiceClient<? extends Request, ? extends Response<? extends Request>>> W getServiceClient(Class<W> serviceClass) {
-        if(!serviceClientMap.containsKey(serviceClass)) {
-            try {
-                serviceClientMap.put(serviceClass, serviceClass.getConstructor(Module.class).newInstance(this));
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        return (W) serviceClientMap.get(serviceClass);
-    }
-
-    protected LoadBalancingDistributor getLoadBalancingDistributor(String path, int redundancy) {
-        if(!loadBalancingDistributorMap.containsKey(path)) {
-            LoadBalancingDistributor loadBalancingDistributor = new LoadBalancingDistributorImpl(curatorFramework, path, redundancy);
-            try {
-                loadBalancingDistributor.start();
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-            loadBalancingDistributorMap.put(path, loadBalancingDistributor);
-        }
-        return loadBalancingDistributorMap.get(path);
-    }
-
-    public MessageQueueManager getMessageQueueManager() {
-        return messageQueueManager;
-    }
-
-    protected T getSettings() {
-        return settings;
-    }
-
-    protected U getGlobalConfiguration() {
-        return globalConfig;
-    }
-
-    protected V getTenantConfiguration(Tenant tenant) {
-        return null;
-    }
-
+    /* Designed to be overridden */
     public abstract String getName();
-
     protected abstract void handle(Message message);
+    protected abstract void initialize();
+    protected abstract void shutdown();
 
-    protected void entryPoint(final String[] args) throws Exception {
-        parseArgs(args);
-        initializeInternal();
-        initialize();
-        try {
-            run();
-        } finally {
-            shutdown();
-        }
-        cleanup();
-    }
-
+    /* ******************************* Initialization ******************************* */
     private void parseArgs(final String[] args) throws IOException {
         if(args.length != 1) {
             System.err.println("Error.  Expected 1 argument: config.yml");
@@ -188,23 +113,23 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         curatorFramework = CuratorFrameworkFactory.newClient(settings.getZookeeperConnectionString(), new BoundedExponentialBackoffRetry(50, 1000, 50));
         curatorFramework.start();
         moduleRegistry = new ModuleRegistry(curatorFramework, toModuleInstance());
+        statsCollector = new NoopStatsCollector();
     }
 
-    private Class<T> getSettingsClass() {
-        return Generics.getTypeParameter(getClass(), ModuleSettings.class);
+    /* ******************************* CALL THIS FROM main() ******************************* */
+    protected void entryPoint(final String[] args) throws Exception {
+        parseArgs(args);
+        initializeInternal();
+        initialize();
+        try {
+            run();
+        } finally {
+            shutdown();
+        }
+        cleanup();
     }
 
-    private Class<U> getGlobalConfigurationClass() {
-        return Generics.getTypeParameter(getClass(), GlobalConfiguration.class);
-    }
-
-    private Class<V> getTenantConfigurationClass() {
-        return Generics.getTypeParameter(getClass(), TenantConfiguration.class);
-    }
-
-    protected abstract void initialize();
-    protected abstract void shutdown();
-
+    /* ******************************* MAIN LOOP ******************************* */
     private void run() throws Exception {
         MessageQueueManager mqm = getMessageQueueManager();
         MessageQueue mq = mqm.forName(getQueueName());
@@ -224,6 +149,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         }
     }
 
+    /* ******************************* TEAR-DOWN ******************************* */
     private void cleanup() {
         for(Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
             try {
@@ -241,6 +167,86 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         curatorFramework.close();
     }
 
+    /* ******************************* SIMPLE GETTERS ******************************* */
+    public MessageQueueManager getMessageQueueManager() {
+        return messageQueueManager;
+    }
+
+    protected T getSettings() {
+        return settings;
+    }
+
+    protected U getGlobalConfiguration() {
+        return globalConfig;
+    }
+
+    protected V getTenantConfiguration(Tenant tenant) {
+        return null;
+    }
+
+    protected KeyValueStore getTemporaryKeyValueStore() {
+        return temporaryKeyValueStore;
+    }
+
+    protected KeyValueStore getTemporaryGlobalKeyValueStore() {
+        return temporaryGlobalKeyValueStore;
+    }
+
+    protected KeyValueStore getPersistentKeyValueStore() {
+        return persistentKeyValueStore;
+    }
+
+    protected KeyValueStore getPersistentGlobalKeyValueStore() {
+        return persistentGlobalKeyValueStore;
+    }
+
+    public StatsCollector getStatsCollector() {
+        return statsCollector;
+    }
+
+    /* ******************************* COMPLEX GETTERS ******************************* */
+    protected KeyValueStore getTemporaryTenantKeyValueStore(Tenant tenant) {
+        return new TenantKeyValueStoreImpl(tenant, temporaryKeyValueStore);
+    }
+
+    protected KeyValueStore getTemporaryGlobalTenantKeyValueStore(Tenant tenant) {
+        return new TenantKeyValueStoreImpl(tenant, temporaryGlobalKeyValueStore);
+    }
+
+    protected KeyValueStore getPersistentTenantKeyValueStore(Tenant tenant) {
+        return new TenantKeyValueStoreImpl(tenant, persistentKeyValueStore);
+    }
+
+    protected KeyValueStore getPersistentGlobalTenantKeyValueStore(Tenant tenant) {
+        return new TenantKeyValueStoreImpl(tenant, persistentGlobalKeyValueStore);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <W extends ServiceClient<? extends Request, ? extends Response<? extends Request>>> W getServiceClient(Class<W> serviceClass) {
+        if(!serviceClientMap.containsKey(serviceClass)) {
+            try {
+                serviceClientMap.put(serviceClass, serviceClass.getConstructor(Module.class).newInstance(this));
+            } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return (W) serviceClientMap.get(serviceClass);
+    }
+
+    protected LoadBalancingDistributor getLoadBalancingDistributor(String path, int redundancy) {
+        if(!loadBalancingDistributorMap.containsKey(path)) {
+            LoadBalancingDistributor loadBalancingDistributor = new LoadBalancingDistributorImpl(curatorFramework, path, redundancy);
+            try {
+                loadBalancingDistributor.start();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            loadBalancingDistributorMap.put(path, loadBalancingDistributor);
+        }
+        return loadBalancingDistributorMap.get(path);
+    }
+
+    /* ******************************* UTILITY METHODS ******************************* */
     public tv.twitchbot.common.dto.core.Module toDto() {
         return new tv.twitchbot.common.dto.core.Module(getName());
     }
@@ -263,5 +269,18 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     protected String getMainQueueForModule(tv.twitchbot.common.dto.core.Module module) {
         return "inbound|module|" + module.getName();
+    }
+
+    /* ******************************* PRIVATE METHODS ******************************* */
+    private Class<T> getSettingsClass() {
+        return Generics.getTypeParameter(getClass(), ModuleSettings.class);
+    }
+
+    private Class<U> getGlobalConfigurationClass() {
+        return Generics.getTypeParameter(getClass(), GlobalConfiguration.class);
+    }
+
+    private Class<V> getTenantConfigurationClass() {
+        return Generics.getTypeParameter(getClass(), TenantConfiguration.class);
     }
 }
