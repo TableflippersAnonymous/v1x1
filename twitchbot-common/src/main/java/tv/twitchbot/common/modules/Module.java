@@ -204,6 +204,14 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return statsCollector;
     }
 
+    public ModuleRegistry getModuleRegistry() {
+        return moduleRegistry;
+    }
+
+    public UUID getInstanceId() {
+        return instanceId;
+    }
+
     /* ******************************* COMPLEX GETTERS ******************************* */
     protected KeyValueStore getTemporaryTenantKeyValueStore(Tenant tenant) {
         return new TenantKeyValueStoreImpl(tenant, temporaryKeyValueStore);
