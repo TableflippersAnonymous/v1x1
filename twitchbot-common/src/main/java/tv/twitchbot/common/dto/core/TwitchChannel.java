@@ -24,4 +24,9 @@ public class TwitchChannel extends Channel {
                 .setTenant(tenant.toProto())
                 .build();
     }
+
+    @Override
+    public tv.twitchbot.common.dto.db.TwitchChannel toDB() {
+        return new tv.twitchbot.common.dto.db.TwitchChannel(getName(), getTenant().getId().getValue());
+    }
 }

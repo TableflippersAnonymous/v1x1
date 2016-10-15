@@ -9,6 +9,7 @@ import org.redisson.config.Config;
 public class ModuleSettings {
     private Config redissonConfig;
     private String zookeeperConnectionString;
+    private CassandraConfig cassandraConfig;
 
     @JsonProperty("redisson")
     public Config getRedissonConfig() {
@@ -28,5 +29,15 @@ public class ModuleSettings {
     @JsonProperty("zookeeper_connection_string")
     public void setZookeeperConnectionString(String zookeeperConnectionString) {
         this.zookeeperConnectionString = zookeeperConnectionString;
+    }
+
+    @JsonProperty("cassandra")
+    public CassandraConfig getCassandraConfig() {
+        return cassandraConfig;
+    }
+
+    @JsonProperty("cassandra")
+    public void setCassandraConfig(CassandraConfig cassandraConfig) {
+        this.cassandraConfig = cassandraConfig;
     }
 }
