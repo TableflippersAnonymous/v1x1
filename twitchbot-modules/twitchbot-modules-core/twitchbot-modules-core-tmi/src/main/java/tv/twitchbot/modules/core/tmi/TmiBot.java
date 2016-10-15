@@ -2,11 +2,14 @@ package tv.twitchbot.modules.core.tmi;
 
 import tv.twitchbot.common.dto.core.Module;
 import tv.twitchbot.common.dto.core.TwitchBot;
+import tv.twitchbot.common.dto.core.TwitchChannel;
 import tv.twitchbot.common.dto.irc.IrcStanza;
+import tv.twitchbot.common.dto.irc.commands.ClearChatCommand;
 import tv.twitchbot.common.dto.irc.commands.PingCommand;
 import tv.twitchbot.common.dto.irc.commands.PrivmsgCommand;
 import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.messages.events.TwitchRawMessageEvent;
+import tv.twitchbot.common.dto.messages.events.TwitchTimeoutEvent;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
 import tv.twitchbot.common.services.queue.MessageQueue;
 
@@ -103,16 +106,19 @@ public class TmiBot implements Runnable {
 
     private void processLine(String line) throws IOException {
         IrcStanza stanza = IrcParser.parse(line);
-        event(new TwitchRawMessageEvent(module, bot, stanza));
         if(stanza instanceof PingCommand)
             sendLine("PONG :" + ((PingCommand) stanza).getToken());
-        if(stanza instanceof PrivmsgCommand) {
-
-        }
+        event(stanza);
     }
 
     private void event(Event event) {
         messageQueue.add(event);
+    }
+
+    private void event(IrcStanza stanza) {
+        event(new TwitchRawMessageEvent(module, bot, stanza));
+        //if(stanza instanceof ClearChatCommand)
+            //event(new TwitchTimeoutEvent(module, new TwitchChannel((ClearChatCommand) stanza).getChannel(), ))
     }
 
     private void connect() throws IOException {

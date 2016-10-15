@@ -1,5 +1,8 @@
 package tv.twitchbot.common.modules;
 
+import com.datastax.driver.core.*;
+import com.datastax.driver.core.policies.*;
+import com.datastax.driver.mapping.MappingManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.dropwizard.util.Generics;
@@ -43,6 +46,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by naomi on 10/4/16.
@@ -56,11 +60,14 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     /* Queues */
     private MessageQueueManager messageQueueManager;
 
-    /* Key-Value Stores */
+    /* Persistence */
     private KeyValueStore temporaryKeyValueStore;
     private KeyValueStore temporaryGlobalKeyValueStore;
     private KeyValueStore persistentKeyValueStore;
     private KeyValueStore persistentGlobalKeyValueStore;
+    private Cluster cassandraCluster;
+    private Session cassandraSession;
+    private MappingManager mappingManager;
 
     /* Services */
     private ModuleRegistry moduleRegistry;
@@ -114,6 +121,44 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         curatorFramework.start();
         moduleRegistry = new ModuleRegistry(curatorFramework, toModuleInstance());
         statsCollector = new NoopStatsCollector();
+
+        CassandraConfig cassandraConfig = settings.getCassandraConfig();
+        cassandraCluster = Cluster.builder() /* Yay, options! */
+                .withClusterName(cassandraConfig.getClusterName())
+                .addContactPoints(cassandraConfig.getContactPoints().toArray(new String[] {}))
+                .withPort(cassandraConfig.getPort())
+                .withAuthProvider(cassandraConfig.isAuthenticated() ? new PlainTextAuthProvider(cassandraConfig.getUsername(), cassandraConfig.getPassword()) : AuthProvider.NONE)
+                .withLoadBalancingPolicy(new TokenAwarePolicy(
+                    LatencyAwarePolicy.builder(
+                            DCAwareRoundRobinPolicy.builder()
+                                .build()
+                    )
+                    .withExclusionThreshold(cassandraConfig.getExclusionThreshold())
+                    .withScale(cassandraConfig.getScaleMs(), TimeUnit.MILLISECONDS)
+                    .withRetryPeriod(cassandraConfig.getRetryMs(), TimeUnit.MILLISECONDS)
+                    .withUpdateRate(cassandraConfig.getUpdateMs(), TimeUnit.MILLISECONDS)
+                    .withMininumMeasurements(cassandraConfig.getMinimumMeasurements())
+                    .build()
+                ))
+                .withQueryOptions(new QueryOptions()
+                        .setConsistencyLevel(ConsistencyLevel.valueOf(cassandraConfig.getConsistencyLevel()))
+                        .setSerialConsistencyLevel(ConsistencyLevel.valueOf(cassandraConfig.getSerialConsistencyLevel()))
+                        .setFetchSize(cassandraConfig.getFetchSize())
+                )
+                .withReconnectionPolicy(new ExponentialReconnectionPolicy(cassandraConfig.getReconnectBaseDelayMs(), cassandraConfig.getReconnectMaxDelayMs()))
+                .withRetryPolicy(new LoggingRetryPolicy(DowngradingConsistencyRetryPolicy.INSTANCE))
+                .withSocketOptions(new SocketOptions()
+                        .setConnectTimeoutMillis(cassandraConfig.getConnectTimeoutMs())
+                        .setKeepAlive(cassandraConfig.isTcpKeepAlive())
+                )
+                .withSpeculativeExecutionPolicy(new PercentileSpeculativeExecutionPolicy(
+                        PerHostPercentileTracker.builder(cassandraConfig.getHighestTrackableLatencyMs()).build(),
+                        cassandraConfig.getSpeculativeRetryPercentile(),
+                        cassandraConfig.getSpeculativeMaxRetries()
+                ))
+                .build();
+        cassandraSession = cassandraCluster.connect();
+        mappingManager = new MappingManager(cassandraSession);
     }
 
     /* ******************************* CALL THIS FROM main() ******************************* */
@@ -151,6 +196,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* ******************************* TEAR-DOWN ******************************* */
     private void cleanup() {
+        cassandraSession.close();
+        cassandraCluster.close();
         for(Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
             try {
                 entry.getValue().shutdown();
@@ -210,6 +257,14 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public UUID getInstanceId() {
         return instanceId;
+    }
+
+    public Session getCassandraSession() {
+        return cassandraSession;
+    }
+
+    public MappingManager getMappingManager() {
+        return mappingManager;
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */

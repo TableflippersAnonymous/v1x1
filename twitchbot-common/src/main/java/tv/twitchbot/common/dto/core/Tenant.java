@@ -26,4 +26,8 @@ public class Tenant {
                 .setId(id.toProto())
                 .build();
     }
+
+    public tv.twitchbot.common.dto.db.Tenant toDB() {
+        return new tv.twitchbot.common.dto.db.Tenant(id.getValue());
+    }
 }
