@@ -31,4 +31,6 @@ public abstract class Channel {
     }
 
     public abstract ChannelOuterClass.Channel toProto();
+
+    public abstract tv.twitchbot.common.dto.db.Channel toDB();
 }
