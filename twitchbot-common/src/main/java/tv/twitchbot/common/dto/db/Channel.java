@@ -11,18 +11,24 @@ import java.util.UUID;
 public abstract class Channel {
 
     @PartitionKey
-    private String name;
-
+    private String id;
+    @Column(name = "display_name")
+    private String displayName;
     @Column(name = "tenant_id")
     private UUID tenantId;
 
-    public Channel(String name, UUID tenantId) {
-        this.name = name;
+    public Channel(String id, String displayName, UUID tenantId) {
+        this.id = id;
+        this.displayName = displayName;
         this.tenantId = tenantId;
     }
 
-    public String getName() {
-        return name;
+    public String getId() {
+        return id;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     public UUID getTenantId() {

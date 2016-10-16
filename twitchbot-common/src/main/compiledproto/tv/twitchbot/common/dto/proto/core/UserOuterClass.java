@@ -19,65 +19,54 @@ public final class UserOuterClass {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string id = 1;</code>
      */
-    boolean hasName();
+    boolean hasId();
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string id = 1;</code>
      */
-    java.lang.String getName();
+    java.lang.String getId();
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string id = 1;</code>
      */
     com.google.protobuf.ByteString
-        getNameBytes();
+        getIdBytes();
 
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.core.User.UserType type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
      */
-    boolean hasType();
+    boolean hasPlatform();
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.core.User.UserType type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
      */
-    tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType getType();
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform();
 
     /**
-     * <code>optional string mention = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
      */
-    boolean hasMention();
+    boolean hasGlobalUser();
     /**
-     * <code>optional string mention = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
      */
-    java.lang.String getMention();
+    tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser getGlobalUser();
     /**
-     * <code>optional string mention = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserOrBuilder getGlobalUserOrBuilder();
+
+    /**
+     * <code>required string display_name = 4;</code>
+     */
+    boolean hasDisplayName();
+    /**
+     * <code>required string display_name = 4;</code>
+     */
+    java.lang.String getDisplayName();
+    /**
+     * <code>required string display_name = 4;</code>
      */
     com.google.protobuf.ByteString
-        getMentionBytes();
-
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission> 
-        getPermissionsList();
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission getPermissions(int index);
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    int getPermissionsCount();
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    java.util.List<? extends tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder> 
-        getPermissionsOrBuilderList();
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder getPermissionsOrBuilder(
-        int index);
+        getDisplayNameBytes();
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.core.User}
@@ -91,10 +80,9 @@ public final class UserOuterClass {
       super(builder);
     }
     private User() {
-      name_ = "";
-      type_ = 1;
-      mention_ = "";
-      permissions_ = java.util.Collections.emptyList();
+      id_ = "";
+      platform_ = 1;
+      displayName_ = "";
     }
 
     @java.lang.Override
@@ -128,33 +116,37 @@ public final class UserOuterClass {
             case 10: {
               com.google.protobuf.ByteString bs = input.readBytes();
               bitField0_ |= 0x00000001;
-              name_ = bs;
+              id_ = bs;
               break;
             }
             case 16: {
               int rawValue = input.readEnum();
-              tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType value = tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType.valueOf(rawValue);
+              tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
                 bitField0_ |= 0x00000002;
-                type_ = rawValue;
+                platform_ = rawValue;
               }
               break;
             }
             case 26: {
-              com.google.protobuf.ByteString bs = input.readBytes();
+              tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = globalUser_.toBuilder();
+              }
+              globalUser_ = input.readMessage(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(globalUser_);
+                globalUser_ = subBuilder.buildPartial();
+              }
               bitField0_ |= 0x00000004;
-              mention_ = bs;
               break;
             }
             case 34: {
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                permissions_ = new java.util.ArrayList<tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission>();
-                mutable_bitField0_ |= 0x00000008;
-              }
-              permissions_.add(
-                  input.readMessage(tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.PARSER, extensionRegistry));
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000008;
+              displayName_ = bs;
               break;
             }
           }
@@ -165,9 +157,6 @@ public final class UserOuterClass {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
-        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-          permissions_ = java.util.Collections.unmodifiableList(permissions_);
-        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -184,661 +173,20 @@ public final class UserOuterClass {
               tv.twitchbot.common.dto.proto.core.UserOuterClass.User.class, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Builder.class);
     }
 
-    /**
-     * Protobuf enum {@code tv.twitchbot.common.dto.proto.core.User.UserType}
-     */
-    public enum UserType
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      TWITCH(1),
-      /**
-       * <code>DISCORD = 2;</code>
-       */
-      DISCORD(2),
-      ;
-
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      public static final int TWITCH_VALUE = 1;
-      /**
-       * <code>DISCORD = 2;</code>
-       */
-      public static final int DISCORD_VALUE = 2;
-
-
-      public final int getNumber() {
-        return value;
-      }
-
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static UserType valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static UserType forNumber(int value) {
-        switch (value) {
-          case 1: return TWITCH;
-          case 2: return DISCORD;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<UserType>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          UserType> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<UserType>() {
-              public UserType findValueByNumber(int number) {
-                return UserType.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return tv.twitchbot.common.dto.proto.core.UserOuterClass.User.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final UserType[] VALUES = values();
-
-      public static UserType valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private UserType(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:tv.twitchbot.common.dto.proto.core.User.UserType)
-    }
-
-    public interface PermissionOrBuilder extends
-        // @@protoc_insertion_point(interface_extends:tv.twitchbot.common.dto.proto.core.User.Permission)
-        com.google.protobuf.MessageOrBuilder {
-
-      /**
-       * <code>required string node = 1;</code>
-       */
-      boolean hasNode();
-      /**
-       * <code>required string node = 1;</code>
-       */
-      java.lang.String getNode();
-      /**
-       * <code>required string node = 1;</code>
-       */
-      com.google.protobuf.ByteString
-          getNodeBytes();
-    }
-    /**
-     * Protobuf type {@code tv.twitchbot.common.dto.proto.core.User.Permission}
-     */
-    public  static final class Permission extends
-        com.google.protobuf.GeneratedMessageV3 implements
-        // @@protoc_insertion_point(message_implements:tv.twitchbot.common.dto.proto.core.User.Permission)
-        PermissionOrBuilder {
-      // Use Permission.newBuilder() to construct.
-      private Permission(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
-        super(builder);
-      }
-      private Permission() {
-        node_ = "";
-      }
-
-      @java.lang.Override
-      public final com.google.protobuf.UnknownFieldSet
-      getUnknownFields() {
-        return this.unknownFields;
-      }
-      private Permission(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        this();
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              default: {
-                if (!parseUnknownField(input, unknownFields,
-                                       extensionRegistry, tag)) {
-                  done = true;
-                }
-                break;
-              }
-              case 10: {
-                com.google.protobuf.ByteString bs = input.readBytes();
-                bitField0_ |= 0x00000001;
-                node_ = bs;
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(
-              e).setUnfinishedMessage(this);
-        } finally {
-          this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
-        }
-      }
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.class, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder.class);
-      }
-
-      private int bitField0_;
-      public static final int NODE_FIELD_NUMBER = 1;
-      private volatile java.lang.Object node_;
-      /**
-       * <code>required string node = 1;</code>
-       */
-      public boolean hasNode() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>required string node = 1;</code>
-       */
-      public java.lang.String getNode() {
-        java.lang.Object ref = node_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            node_ = s;
-          }
-          return s;
-        }
-      }
-      /**
-       * <code>required string node = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getNodeBytes() {
-        java.lang.Object ref = node_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          node_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      private byte memoizedIsInitialized = -1;
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized == 1) return true;
-        if (isInitialized == 0) return false;
-
-        if (!hasNode()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
-        memoizedIsInitialized = 1;
-        return true;
-      }
-
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, node_);
-        }
-        unknownFields.writeTo(output);
-      }
-
-      public int getSerializedSize() {
-        int size = memoizedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, node_);
-        }
-        size += unknownFields.getSerializedSize();
-        memoizedSize = size;
-        return size;
-      }
-
-      private static final long serialVersionUID = 0L;
-      @java.lang.Override
-      public boolean equals(final java.lang.Object obj) {
-        if (obj == this) {
-         return true;
-        }
-        if (!(obj instanceof tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission)) {
-          return super.equals(obj);
-        }
-        tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission other = (tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission) obj;
-
-        boolean result = true;
-        result = result && (hasNode() == other.hasNode());
-        if (hasNode()) {
-          result = result && getNode()
-              .equals(other.getNode());
-        }
-        result = result && unknownFields.equals(other.unknownFields);
-        return result;
-      }
-
-      @java.lang.Override
-      public int hashCode() {
-        if (memoizedHashCode != 0) {
-          return memoizedHashCode;
-        }
-        int hash = 41;
-        hash = (19 * hash) + getDescriptorForType().hashCode();
-        if (hasNode()) {
-          hash = (37 * hash) + NODE_FIELD_NUMBER;
-          hash = (53 * hash) + getNode().hashCode();
-        }
-        hash = (29 * hash) + unknownFields.hashCode();
-        memoizedHashCode = hash;
-        return hash;
-      }
-
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input);
-      }
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return com.google.protobuf.GeneratedMessageV3
-            .parseWithIOException(PARSER, input, extensionRegistry);
-      }
-
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder() {
-        return DEFAULT_INSTANCE.toBuilder();
-      }
-      public static Builder newBuilder(tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission prototype) {
-        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
-      }
-      public Builder toBuilder() {
-        return this == DEFAULT_INSTANCE
-            ? new Builder() : new Builder().mergeFrom(this);
-      }
-
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      /**
-       * Protobuf type {@code tv.twitchbot.common.dto.proto.core.User.Permission}
-       */
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
-          // @@protoc_insertion_point(builder_implements:tv.twitchbot.common.dto.proto.core.User.Permission)
-          tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_descriptor;
-        }
-
-        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                  tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.class, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder.class);
-        }
-
-        // Construct using tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessageV3
-                  .alwaysUseFieldBuilders) {
-          }
-        }
-        public Builder clear() {
-          super.clear();
-          node_ = "";
-          bitField0_ = (bitField0_ & ~0x00000001);
-          return this;
-        }
-
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_descriptor;
-        }
-
-        public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission getDefaultInstanceForType() {
-          return tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.getDefaultInstance();
-        }
-
-        public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission build() {
-          tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-
-        public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission buildPartial() {
-          tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission result = new tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission(this);
-          int from_bitField0_ = bitField0_;
-          int to_bitField0_ = 0;
-          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-            to_bitField0_ |= 0x00000001;
-          }
-          result.node_ = node_;
-          result.bitField0_ = to_bitField0_;
-          onBuilt();
-          return result;
-        }
-
-        public Builder clone() {
-          return (Builder) super.clone();
-        }
-        public Builder setField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            Object value) {
-          return (Builder) super.setField(field, value);
-        }
-        public Builder clearField(
-            com.google.protobuf.Descriptors.FieldDescriptor field) {
-          return (Builder) super.clearField(field);
-        }
-        public Builder clearOneof(
-            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
-          return (Builder) super.clearOneof(oneof);
-        }
-        public Builder setRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            int index, Object value) {
-          return (Builder) super.setRepeatedField(field, index, value);
-        }
-        public Builder addRepeatedField(
-            com.google.protobuf.Descriptors.FieldDescriptor field,
-            Object value) {
-          return (Builder) super.addRepeatedField(field, value);
-        }
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission) {
-            return mergeFrom((tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-
-        public Builder mergeFrom(tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission other) {
-          if (other == tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.getDefaultInstance()) return this;
-          if (other.hasNode()) {
-            bitField0_ |= 0x00000001;
-            node_ = other.node_;
-            onChanged();
-          }
-          this.mergeUnknownFields(other.unknownFields);
-          onChanged();
-          return this;
-        }
-
-        public final boolean isInitialized() {
-          if (!hasNode()) {
-            return false;
-          }
-          return true;
-        }
-
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission parsedMessage = null;
-          try {
-            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission) e.getUnfinishedMessage();
-            throw e.unwrapIOException();
-          } finally {
-            if (parsedMessage != null) {
-              mergeFrom(parsedMessage);
-            }
-          }
-          return this;
-        }
-        private int bitField0_;
-
-        private java.lang.Object node_ = "";
-        /**
-         * <code>required string node = 1;</code>
-         */
-        public boolean hasNode() {
-          return ((bitField0_ & 0x00000001) == 0x00000001);
-        }
-        /**
-         * <code>required string node = 1;</code>
-         */
-        public java.lang.String getNode() {
-          java.lang.Object ref = node_;
-          if (!(ref instanceof java.lang.String)) {
-            com.google.protobuf.ByteString bs =
-                (com.google.protobuf.ByteString) ref;
-            java.lang.String s = bs.toStringUtf8();
-            if (bs.isValidUtf8()) {
-              node_ = s;
-            }
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>required string node = 1;</code>
-         */
-        public com.google.protobuf.ByteString
-            getNodeBytes() {
-          java.lang.Object ref = node_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            node_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>required string node = 1;</code>
-         */
-        public Builder setNode(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-          node_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>required string node = 1;</code>
-         */
-        public Builder clearNode() {
-          bitField0_ = (bitField0_ & ~0x00000001);
-          node_ = getDefaultInstance().getNode();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>required string node = 1;</code>
-         */
-        public Builder setNodeBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-          node_ = value;
-          onChanged();
-          return this;
-        }
-        public final Builder setUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.setUnknownFields(unknownFields);
-        }
-
-        public final Builder mergeUnknownFields(
-            final com.google.protobuf.UnknownFieldSet unknownFields) {
-          return super.mergeUnknownFields(unknownFields);
-        }
-
-
-        // @@protoc_insertion_point(builder_scope:tv.twitchbot.common.dto.proto.core.User.Permission)
-      }
-
-      // @@protoc_insertion_point(class_scope:tv.twitchbot.common.dto.proto.core.User.Permission)
-      private static final tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission DEFAULT_INSTANCE;
-      static {
-        DEFAULT_INSTANCE = new tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission();
-      }
-
-      public static tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission getDefaultInstance() {
-        return DEFAULT_INSTANCE;
-      }
-
-      @java.lang.Deprecated public static final com.google.protobuf.Parser<Permission>
-          PARSER = new com.google.protobuf.AbstractParser<Permission>() {
-        public Permission parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-            return new Permission(input, extensionRegistry);
-        }
-      };
-
-      public static com.google.protobuf.Parser<Permission> parser() {
-        return PARSER;
-      }
-
-      @java.lang.Override
-      public com.google.protobuf.Parser<Permission> getParserForType() {
-        return PARSER;
-      }
-
-      public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission getDefaultInstanceForType() {
-        return DEFAULT_INSTANCE;
-      }
-
-    }
-
     private int bitField0_;
-    public static final int NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object name_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string id = 1;</code>
      */
-    public boolean hasName() {
+    public boolean hasId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string id = 1;</code>
      */
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -846,57 +194,78 @@ public final class UserOuterClass {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          name_ = s;
+          id_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>required string name = 1;</code>
+     * <code>required string id = 1;</code>
      */
     public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
+        getIdBytes() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        name_ = b;
+        id_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int TYPE_FIELD_NUMBER = 2;
-    private int type_;
+    public static final int PLATFORM_FIELD_NUMBER = 2;
+    private int platform_;
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.core.User.UserType type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
      */
-    public boolean hasType() {
+    public boolean hasPlatform() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.core.User.UserType type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
      */
-    public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType getType() {
-      tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType result = tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType.TWITCH : result;
+    public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
+      tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
+      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.TWITCH : result;
     }
 
-    public static final int MENTION_FIELD_NUMBER = 3;
-    private volatile java.lang.Object mention_;
+    public static final int GLOBAL_USER_FIELD_NUMBER = 3;
+    private tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser globalUser_;
     /**
-     * <code>optional string mention = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
      */
-    public boolean hasMention() {
+    public boolean hasGlobalUser() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>optional string mention = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
      */
-    public java.lang.String getMention() {
-      java.lang.Object ref = mention_;
+    public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser getGlobalUser() {
+      return globalUser_ == null ? tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.getDefaultInstance() : globalUser_;
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserOrBuilder getGlobalUserOrBuilder() {
+      return globalUser_ == null ? tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.getDefaultInstance() : globalUser_;
+    }
+
+    public static final int DISPLAY_NAME_FIELD_NUMBER = 4;
+    private volatile java.lang.Object displayName_;
+    /**
+     * <code>required string display_name = 4;</code>
+     */
+    public boolean hasDisplayName() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>required string display_name = 4;</code>
+     */
+    public java.lang.String getDisplayName() {
+      java.lang.Object ref = displayName_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
@@ -904,61 +273,26 @@ public final class UserOuterClass {
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
-          mention_ = s;
+          displayName_ = s;
         }
         return s;
       }
     }
     /**
-     * <code>optional string mention = 3;</code>
+     * <code>required string display_name = 4;</code>
      */
     public com.google.protobuf.ByteString
-        getMentionBytes() {
-      java.lang.Object ref = mention_;
+        getDisplayNameBytes() {
+      java.lang.Object ref = displayName_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        mention_ = b;
+        displayName_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
-    }
-
-    public static final int PERMISSIONS_FIELD_NUMBER = 4;
-    private java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission> permissions_;
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    public java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission> getPermissionsList() {
-      return permissions_;
-    }
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    public java.util.List<? extends tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder> 
-        getPermissionsOrBuilderList() {
-      return permissions_;
-    }
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    public int getPermissionsCount() {
-      return permissions_.size();
-    }
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission getPermissions(int index) {
-      return permissions_.get(index);
-    }
-    /**
-     * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-     */
-    public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder getPermissionsOrBuilder(
-        int index) {
-      return permissions_.get(index);
     }
 
     private byte memoizedIsInitialized = -1;
@@ -967,19 +301,25 @@ public final class UserOuterClass {
       if (isInitialized == 1) return true;
       if (isInitialized == 0) return false;
 
-      if (!hasName()) {
+      if (!hasId()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasType()) {
+      if (!hasPlatform()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      for (int i = 0; i < getPermissionsCount(); i++) {
-        if (!getPermissions(i).isInitialized()) {
-          memoizedIsInitialized = 0;
-          return false;
-        }
+      if (!hasGlobalUser()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasDisplayName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getGlobalUser().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
       }
       memoizedIsInitialized = 1;
       return true;
@@ -988,16 +328,16 @@ public final class UserOuterClass {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, type_);
+        output.writeEnum(2, platform_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, mention_);
+        output.writeMessage(3, getGlobalUser());
       }
-      for (int i = 0; i < permissions_.size(); i++) {
-        output.writeMessage(4, permissions_.get(i));
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 4, displayName_);
       }
       unknownFields.writeTo(output);
     }
@@ -1008,18 +348,18 @@ public final class UserOuterClass {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, type_);
+          .computeEnumSize(2, platform_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, mention_);
-      }
-      for (int i = 0; i < permissions_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, permissions_.get(i));
+          .computeMessageSize(3, getGlobalUser());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, displayName_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1038,22 +378,25 @@ public final class UserOuterClass {
       tv.twitchbot.common.dto.proto.core.UserOuterClass.User other = (tv.twitchbot.common.dto.proto.core.UserOuterClass.User) obj;
 
       boolean result = true;
-      result = result && (hasName() == other.hasName());
-      if (hasName()) {
-        result = result && getName()
-            .equals(other.getName());
+      result = result && (hasId() == other.hasId());
+      if (hasId()) {
+        result = result && getId()
+            .equals(other.getId());
       }
-      result = result && (hasType() == other.hasType());
-      if (hasType()) {
-        result = result && type_ == other.type_;
+      result = result && (hasPlatform() == other.hasPlatform());
+      if (hasPlatform()) {
+        result = result && platform_ == other.platform_;
       }
-      result = result && (hasMention() == other.hasMention());
-      if (hasMention()) {
-        result = result && getMention()
-            .equals(other.getMention());
+      result = result && (hasGlobalUser() == other.hasGlobalUser());
+      if (hasGlobalUser()) {
+        result = result && getGlobalUser()
+            .equals(other.getGlobalUser());
       }
-      result = result && getPermissionsList()
-          .equals(other.getPermissionsList());
+      result = result && (hasDisplayName() == other.hasDisplayName());
+      if (hasDisplayName()) {
+        result = result && getDisplayName()
+            .equals(other.getDisplayName());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1065,21 +408,21 @@ public final class UserOuterClass {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptorForType().hashCode();
-      if (hasName()) {
-        hash = (37 * hash) + NAME_FIELD_NUMBER;
-        hash = (53 * hash) + getName().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
       }
-      if (hasType()) {
-        hash = (37 * hash) + TYPE_FIELD_NUMBER;
-        hash = (53 * hash) + type_;
+      if (hasPlatform()) {
+        hash = (37 * hash) + PLATFORM_FIELD_NUMBER;
+        hash = (53 * hash) + platform_;
       }
-      if (hasMention()) {
-        hash = (37 * hash) + MENTION_FIELD_NUMBER;
-        hash = (53 * hash) + getMention().hashCode();
+      if (hasGlobalUser()) {
+        hash = (37 * hash) + GLOBAL_USER_FIELD_NUMBER;
+        hash = (53 * hash) + getGlobalUser().hashCode();
       }
-      if (getPermissionsCount() > 0) {
-        hash = (37 * hash) + PERMISSIONS_FIELD_NUMBER;
-        hash = (53 * hash) + getPermissionsList().hashCode();
+      if (hasDisplayName()) {
+        hash = (37 * hash) + DISPLAY_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getDisplayName().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1195,23 +538,23 @@ public final class UserOuterClass {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getPermissionsFieldBuilder();
+          getGlobalUserFieldBuilder();
         }
       }
       public Builder clear() {
         super.clear();
-        name_ = "";
+        id_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        platform_ = 1;
         bitField0_ = (bitField0_ & ~0x00000002);
-        mention_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
-        if (permissionsBuilder_ == null) {
-          permissions_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000008);
+        if (globalUserBuilder_ == null) {
+          globalUser_ = null;
         } else {
-          permissionsBuilder_.clear();
+          globalUserBuilder_.clear();
         }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        displayName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1239,24 +582,23 @@ public final class UserOuterClass {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.name_ = name_;
+        result.id_ = id_;
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.type_ = type_;
+        result.platform_ = platform_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.mention_ = mention_;
-        if (permissionsBuilder_ == null) {
-          if (((bitField0_ & 0x00000008) == 0x00000008)) {
-            permissions_ = java.util.Collections.unmodifiableList(permissions_);
-            bitField0_ = (bitField0_ & ~0x00000008);
-          }
-          result.permissions_ = permissions_;
+        if (globalUserBuilder_ == null) {
+          result.globalUser_ = globalUser_;
         } else {
-          result.permissions_ = permissionsBuilder_.build();
+          result.globalUser_ = globalUserBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.displayName_ = displayName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1299,44 +641,21 @@ public final class UserOuterClass {
 
       public Builder mergeFrom(tv.twitchbot.common.dto.proto.core.UserOuterClass.User other) {
         if (other == tv.twitchbot.common.dto.proto.core.UserOuterClass.User.getDefaultInstance()) return this;
-        if (other.hasName()) {
+        if (other.hasId()) {
           bitField0_ |= 0x00000001;
-          name_ = other.name_;
+          id_ = other.id_;
           onChanged();
         }
-        if (other.hasType()) {
-          setType(other.getType());
+        if (other.hasPlatform()) {
+          setPlatform(other.getPlatform());
         }
-        if (other.hasMention()) {
-          bitField0_ |= 0x00000004;
-          mention_ = other.mention_;
+        if (other.hasGlobalUser()) {
+          mergeGlobalUser(other.getGlobalUser());
+        }
+        if (other.hasDisplayName()) {
+          bitField0_ |= 0x00000008;
+          displayName_ = other.displayName_;
           onChanged();
-        }
-        if (permissionsBuilder_ == null) {
-          if (!other.permissions_.isEmpty()) {
-            if (permissions_.isEmpty()) {
-              permissions_ = other.permissions_;
-              bitField0_ = (bitField0_ & ~0x00000008);
-            } else {
-              ensurePermissionsIsMutable();
-              permissions_.addAll(other.permissions_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.permissions_.isEmpty()) {
-            if (permissionsBuilder_.isEmpty()) {
-              permissionsBuilder_.dispose();
-              permissionsBuilder_ = null;
-              permissions_ = other.permissions_;
-              bitField0_ = (bitField0_ & ~0x00000008);
-              permissionsBuilder_ = 
-                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
-                   getPermissionsFieldBuilder() : null;
-            } else {
-              permissionsBuilder_.addAllMessages(other.permissions_);
-            }
-          }
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -1344,16 +663,20 @@ public final class UserOuterClass {
       }
 
       public final boolean isInitialized() {
-        if (!hasName()) {
+        if (!hasId()) {
           return false;
         }
-        if (!hasType()) {
+        if (!hasPlatform()) {
           return false;
         }
-        for (int i = 0; i < getPermissionsCount(); i++) {
-          if (!getPermissions(i).isInitialized()) {
-            return false;
-          }
+        if (!hasGlobalUser()) {
+          return false;
+        }
+        if (!hasDisplayName()) {
+          return false;
+        }
+        if (!getGlobalUser().isInitialized()) {
+          return false;
         }
         return true;
       }
@@ -1377,24 +700,24 @@ public final class UserOuterClass {
       }
       private int bitField0_;
 
-      private java.lang.Object name_ = "";
+      private java.lang.Object id_ = "";
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string id = 1;</code>
        */
-      public boolean hasName() {
+      public boolean hasId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string id = 1;</code>
        */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
-            name_ = s;
+            id_ = s;
           }
           return s;
         } else {
@@ -1402,111 +725,229 @@ public final class UserOuterClass {
         }
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string id = 1;</code>
        */
       public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
+          getIdBytes() {
+        java.lang.Object ref = id_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          name_ = b;
+          id_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string id = 1;</code>
        */
-      public Builder setName(
+      public Builder setId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        name_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string id = 1;</code>
        */
-      public Builder clearName() {
+      public Builder clearId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        name_ = getDefaultInstance().getName();
+        id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
       /**
-       * <code>required string name = 1;</code>
+       * <code>required string id = 1;</code>
        */
-      public Builder setNameBytes(
+      public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        name_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
 
-      private int type_ = 1;
+      private int platform_ = 1;
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.core.User.UserType type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
        */
-      public boolean hasType() {
+      public boolean hasPlatform() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.core.User.UserType type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
        */
-      public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType getType() {
-        tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType result = tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType.TWITCH : result;
+      public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
+        tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
+        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.TWITCH : result;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.core.User.UserType type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
        */
-      public Builder setType(tv.twitchbot.common.dto.proto.core.UserOuterClass.User.UserType value) {
+      public Builder setPlatform(tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value) {
         if (value == null) {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000002;
-        type_ = value.getNumber();
+        platform_ = value.getNumber();
         onChanged();
         return this;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.core.User.UserType type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
        */
-      public Builder clearType() {
+      public Builder clearPlatform() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = 1;
+        platform_ = 1;
         onChanged();
         return this;
       }
 
-      private java.lang.Object mention_ = "";
+      private tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser globalUser_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserOrBuilder> globalUserBuilder_;
       /**
-       * <code>optional string mention = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
        */
-      public boolean hasMention() {
+      public boolean hasGlobalUser() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>optional string mention = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
        */
-      public java.lang.String getMention() {
-        java.lang.Object ref = mention_;
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser getGlobalUser() {
+        if (globalUserBuilder_ == null) {
+          return globalUser_ == null ? tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.getDefaultInstance() : globalUser_;
+        } else {
+          return globalUserBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+       */
+      public Builder setGlobalUser(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser value) {
+        if (globalUserBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          globalUser_ = value;
+          onChanged();
+        } else {
+          globalUserBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+       */
+      public Builder setGlobalUser(
+          tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.Builder builderForValue) {
+        if (globalUserBuilder_ == null) {
+          globalUser_ = builderForValue.build();
+          onChanged();
+        } else {
+          globalUserBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+       */
+      public Builder mergeGlobalUser(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser value) {
+        if (globalUserBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              globalUser_ != null &&
+              globalUser_ != tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.getDefaultInstance()) {
+            globalUser_ =
+              tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.newBuilder(globalUser_).mergeFrom(value).buildPartial();
+          } else {
+            globalUser_ = value;
+          }
+          onChanged();
+        } else {
+          globalUserBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+       */
+      public Builder clearGlobalUser() {
+        if (globalUserBuilder_ == null) {
+          globalUser_ = null;
+          onChanged();
+        } else {
+          globalUserBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.Builder getGlobalUserBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getGlobalUserFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserOrBuilder getGlobalUserOrBuilder() {
+        if (globalUserBuilder_ != null) {
+          return globalUserBuilder_.getMessageOrBuilder();
+        } else {
+          return globalUser_ == null ?
+              tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.getDefaultInstance() : globalUser_;
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.GlobalUser global_user = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserOrBuilder> 
+          getGlobalUserFieldBuilder() {
+        if (globalUserBuilder_ == null) {
+          globalUserBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserOrBuilder>(
+                  getGlobalUser(),
+                  getParentForChildren(),
+                  isClean());
+          globalUser_ = null;
+        }
+        return globalUserBuilder_;
+      }
+
+      private java.lang.Object displayName_ = "";
+      /**
+       * <code>required string display_name = 4;</code>
+       */
+      public boolean hasDisplayName() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>required string display_name = 4;</code>
+       */
+      public java.lang.String getDisplayName() {
+        java.lang.Object ref = displayName_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
           if (bs.isValidUtf8()) {
-            mention_ = s;
+            displayName_ = s;
           }
           return s;
         } else {
@@ -1514,295 +955,55 @@ public final class UserOuterClass {
         }
       }
       /**
-       * <code>optional string mention = 3;</code>
+       * <code>required string display_name = 4;</code>
        */
       public com.google.protobuf.ByteString
-          getMentionBytes() {
-        java.lang.Object ref = mention_;
+          getDisplayNameBytes() {
+        java.lang.Object ref = displayName_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          mention_ = b;
+          displayName_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>optional string mention = 3;</code>
+       * <code>required string display_name = 4;</code>
        */
-      public Builder setMention(
+      public Builder setDisplayName(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
-        mention_ = value;
+  bitField0_ |= 0x00000008;
+        displayName_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>optional string mention = 3;</code>
+       * <code>required string display_name = 4;</code>
        */
-      public Builder clearMention() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        mention_ = getDefaultInstance().getMention();
+      public Builder clearDisplayName() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        displayName_ = getDefaultInstance().getDisplayName();
         onChanged();
         return this;
       }
       /**
-       * <code>optional string mention = 3;</code>
+       * <code>required string display_name = 4;</code>
        */
-      public Builder setMentionBytes(
+      public Builder setDisplayNameBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
-        mention_ = value;
+  bitField0_ |= 0x00000008;
+        displayName_ = value;
         onChanged();
         return this;
-      }
-
-      private java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission> permissions_ =
-        java.util.Collections.emptyList();
-      private void ensurePermissionsIsMutable() {
-        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          permissions_ = new java.util.ArrayList<tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission>(permissions_);
-          bitField0_ |= 0x00000008;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder> permissionsBuilder_;
-
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission> getPermissionsList() {
-        if (permissionsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(permissions_);
-        } else {
-          return permissionsBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public int getPermissionsCount() {
-        if (permissionsBuilder_ == null) {
-          return permissions_.size();
-        } else {
-          return permissionsBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission getPermissions(int index) {
-        if (permissionsBuilder_ == null) {
-          return permissions_.get(index);
-        } else {
-          return permissionsBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder setPermissions(
-          int index, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission value) {
-        if (permissionsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensurePermissionsIsMutable();
-          permissions_.set(index, value);
-          onChanged();
-        } else {
-          permissionsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder setPermissions(
-          int index, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder builderForValue) {
-        if (permissionsBuilder_ == null) {
-          ensurePermissionsIsMutable();
-          permissions_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          permissionsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder addPermissions(tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission value) {
-        if (permissionsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensurePermissionsIsMutable();
-          permissions_.add(value);
-          onChanged();
-        } else {
-          permissionsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder addPermissions(
-          int index, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission value) {
-        if (permissionsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensurePermissionsIsMutable();
-          permissions_.add(index, value);
-          onChanged();
-        } else {
-          permissionsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder addPermissions(
-          tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder builderForValue) {
-        if (permissionsBuilder_ == null) {
-          ensurePermissionsIsMutable();
-          permissions_.add(builderForValue.build());
-          onChanged();
-        } else {
-          permissionsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder addPermissions(
-          int index, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder builderForValue) {
-        if (permissionsBuilder_ == null) {
-          ensurePermissionsIsMutable();
-          permissions_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          permissionsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder addAllPermissions(
-          java.lang.Iterable<? extends tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission> values) {
-        if (permissionsBuilder_ == null) {
-          ensurePermissionsIsMutable();
-          com.google.protobuf.AbstractMessageLite.Builder.addAll(
-              values, permissions_);
-          onChanged();
-        } else {
-          permissionsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder clearPermissions() {
-        if (permissionsBuilder_ == null) {
-          permissions_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000008);
-          onChanged();
-        } else {
-          permissionsBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public Builder removePermissions(int index) {
-        if (permissionsBuilder_ == null) {
-          ensurePermissionsIsMutable();
-          permissions_.remove(index);
-          onChanged();
-        } else {
-          permissionsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder getPermissionsBuilder(
-          int index) {
-        return getPermissionsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder getPermissionsOrBuilder(
-          int index) {
-        if (permissionsBuilder_ == null) {
-          return permissions_.get(index);  } else {
-          return permissionsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public java.util.List<? extends tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder> 
-           getPermissionsOrBuilderList() {
-        if (permissionsBuilder_ != null) {
-          return permissionsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(permissions_);
-        }
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder addPermissionsBuilder() {
-        return getPermissionsFieldBuilder().addBuilder(
-            tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder addPermissionsBuilder(
-          int index) {
-        return getPermissionsFieldBuilder().addBuilder(
-            index, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .tv.twitchbot.common.dto.proto.core.User.Permission permissions = 4;</code>
-       */
-      public java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder> 
-           getPermissionsBuilderList() {
-        return getPermissionsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilderV3<
-          tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder> 
-          getPermissionsFieldBuilder() {
-        if (permissionsBuilder_ == null) {
-          permissionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
-              tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.Permission.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.User.PermissionOrBuilder>(
-                  permissions_,
-                  ((bitField0_ & 0x00000008) == 0x00000008),
-                  getParentForChildren(),
-                  isClean());
-          permissions_ = null;
-        }
-        return permissionsBuilder_;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -1853,16 +1054,1818 @@ public final class UserOuterClass {
 
   }
 
+  public interface GlobalUserOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.twitchbot.common.dto.proto.core.GlobalUser)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder();
+
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry> 
+        getEntriesList();
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry getEntries(int index);
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    int getEntriesCount();
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    java.util.List<? extends tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder> 
+        getEntriesOrBuilderList();
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder getEntriesOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code tv.twitchbot.common.dto.proto.core.GlobalUser}
+   */
+  public  static final class GlobalUser extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.twitchbot.common.dto.proto.core.GlobalUser)
+      GlobalUserOrBuilder {
+    // Use GlobalUser.newBuilder() to construct.
+    private GlobalUser(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private GlobalUser() {
+      entries_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GlobalUser(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = id_.toBuilder();
+              }
+              id_ = input.readMessage(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(id_);
+                id_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 18: {
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                entries_ = new java.util.ArrayList<tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              entries_.add(
+                  input.readMessage(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          entries_ = java.util.Collections.unmodifiableList(entries_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.class, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID id_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId() {
+      return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder() {
+      return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+    }
+
+    public static final int ENTRIES_FIELD_NUMBER = 2;
+    private java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry> entries_;
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    public java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry> getEntriesList() {
+      return entries_;
+    }
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    public java.util.List<? extends tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder> 
+        getEntriesOrBuilderList() {
+      return entries_;
+    }
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    public int getEntriesCount() {
+      return entries_.size();
+    }
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry getEntries(int index) {
+      return entries_.get(index);
+    }
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder getEntriesOrBuilder(
+        int index) {
+      return entries_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getId().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      for (int i = 0; i < getEntriesCount(); i++) {
+        if (!getEntries(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, getId());
+      }
+      for (int i = 0; i < entries_.size(); i++) {
+        output.writeMessage(2, entries_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getId());
+      }
+      for (int i = 0; i < entries_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, entries_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser)) {
+        return super.equals(obj);
+      }
+      tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser other = (tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser) obj;
+
+      boolean result = true;
+      result = result && (hasId() == other.hasId());
+      if (hasId()) {
+        result = result && getId()
+            .equals(other.getId());
+      }
+      result = result && getEntriesList()
+          .equals(other.getEntriesList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+      }
+      if (getEntriesCount() > 0) {
+        hash = (37 * hash) + ENTRIES_FIELD_NUMBER;
+        hash = (53 * hash) + getEntriesList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.twitchbot.common.dto.proto.core.GlobalUser}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.twitchbot.common.dto.proto.core.GlobalUser)
+        tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.class, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.Builder.class);
+      }
+
+      // Construct using tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getIdFieldBuilder();
+          getEntriesFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (idBuilder_ == null) {
+          id_ = null;
+        } else {
+          idBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (entriesBuilder_ == null) {
+          entries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+        } else {
+          entriesBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_descriptor;
+      }
+
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser getDefaultInstanceForType() {
+        return tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.getDefaultInstance();
+      }
+
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser build() {
+        tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser buildPartial() {
+        tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser result = new tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (idBuilder_ == null) {
+          result.id_ = id_;
+        } else {
+          result.id_ = idBuilder_.build();
+        }
+        if (entriesBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            entries_ = java.util.Collections.unmodifiableList(entries_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.entries_ = entries_;
+        } else {
+          result.entries_ = entriesBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser) {
+          return mergeFrom((tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser other) {
+        if (other == tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          mergeId(other.getId());
+        }
+        if (entriesBuilder_ == null) {
+          if (!other.entries_.isEmpty()) {
+            if (entries_.isEmpty()) {
+              entries_ = other.entries_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureEntriesIsMutable();
+              entries_.addAll(other.entries_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.entries_.isEmpty()) {
+            if (entriesBuilder_.isEmpty()) {
+              entriesBuilder_.dispose();
+              entriesBuilder_ = null;
+              entries_ = other.entries_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              entriesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getEntriesFieldBuilder() : null;
+            } else {
+              entriesBuilder_.addAllMessages(other.entries_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        if (!getId().isInitialized()) {
+          return false;
+        }
+        for (int i = 0; i < getEntriesCount(); i++) {
+          if (!getEntries(i).isInitialized()) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID id_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> idBuilder_;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId() {
+        if (idBuilder_ == null) {
+          return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+        } else {
+          return idBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public Builder setId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (idBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          id_ = value;
+          onChanged();
+        } else {
+          idBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public Builder setId(
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder builderForValue) {
+        if (idBuilder_ == null) {
+          id_ = builderForValue.build();
+          onChanged();
+        } else {
+          idBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public Builder mergeId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (idBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              id_ != null &&
+              id_ != tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance()) {
+            id_ =
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.newBuilder(id_).mergeFrom(value).buildPartial();
+          } else {
+            id_ = value;
+          }
+          onChanged();
+        } else {
+          idBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public Builder clearId() {
+        if (idBuilder_ == null) {
+          id_ = null;
+          onChanged();
+        } else {
+          idBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder getIdBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder() {
+        if (idBuilder_ != null) {
+          return idBuilder_.getMessageOrBuilder();
+        } else {
+          return id_ == null ?
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> 
+          getIdFieldBuilder() {
+        if (idBuilder_ == null) {
+          idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder>(
+                  getId(),
+                  getParentForChildren(),
+                  isClean());
+          id_ = null;
+        }
+        return idBuilder_;
+      }
+
+      private java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry> entries_ =
+        java.util.Collections.emptyList();
+      private void ensureEntriesIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          entries_ = new java.util.ArrayList<tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry>(entries_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder> entriesBuilder_;
+
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry> getEntriesList() {
+        if (entriesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(entries_);
+        } else {
+          return entriesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public int getEntriesCount() {
+        if (entriesBuilder_ == null) {
+          return entries_.size();
+        } else {
+          return entriesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry getEntries(int index) {
+        if (entriesBuilder_ == null) {
+          return entries_.get(index);
+        } else {
+          return entriesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder setEntries(
+          int index, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.set(index, value);
+          onChanged();
+        } else {
+          entriesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder setEntries(
+          int index, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder addEntries(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.add(value);
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder addEntries(
+          int index, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.add(index, value);
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder addEntries(
+          tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.add(builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder addEntries(
+          int index, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder addAllEntries(
+          java.lang.Iterable<? extends tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry> values) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, entries_);
+          onChanged();
+        } else {
+          entriesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder clearEntries() {
+        if (entriesBuilder_ == null) {
+          entries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+        } else {
+          entriesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public Builder removeEntries(int index) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.remove(index);
+          onChanged();
+        } else {
+          entriesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder getEntriesBuilder(
+          int index) {
+        return getEntriesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder getEntriesOrBuilder(
+          int index) {
+        if (entriesBuilder_ == null) {
+          return entries_.get(index);  } else {
+          return entriesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public java.util.List<? extends tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder> 
+           getEntriesOrBuilderList() {
+        if (entriesBuilder_ != null) {
+          return entriesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(entries_);
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder addEntriesBuilder() {
+        return getEntriesFieldBuilder().addBuilder(
+            tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder addEntriesBuilder(
+          int index) {
+        return getEntriesFieldBuilder().addBuilder(
+            index, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.GlobalUserEntry entries = 2;</code>
+       */
+      public java.util.List<tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder> 
+           getEntriesBuilderList() {
+        return getEntriesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder> 
+          getEntriesFieldBuilder() {
+        if (entriesBuilder_ == null) {
+          entriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder>(
+                  entries_,
+                  ((bitField0_ & 0x00000002) == 0x00000002),
+                  getParentForChildren(),
+                  isClean());
+          entries_ = null;
+        }
+        return entriesBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.twitchbot.common.dto.proto.core.GlobalUser)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.twitchbot.common.dto.proto.core.GlobalUser)
+    private static final tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser();
+    }
+
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<GlobalUser>
+        PARSER = new com.google.protobuf.AbstractParser<GlobalUser>() {
+      public GlobalUser parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GlobalUser(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<GlobalUser> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GlobalUser> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUser getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface GlobalUserEntryOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.twitchbot.common.dto.proto.core.GlobalUserEntry)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required string id = 1;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
+     */
+    boolean hasPlatform();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform();
+
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    boolean hasDisplayName();
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    java.lang.String getDisplayName();
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getDisplayNameBytes();
+  }
+  /**
+   * Protobuf type {@code tv.twitchbot.common.dto.proto.core.GlobalUserEntry}
+   */
+  public  static final class GlobalUserEntry extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.twitchbot.common.dto.proto.core.GlobalUserEntry)
+      GlobalUserEntryOrBuilder {
+    // Use GlobalUserEntry.newBuilder() to construct.
+    private GlobalUserEntry(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private GlobalUserEntry() {
+      id_ = "";
+      platform_ = 1;
+      displayName_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private GlobalUserEntry(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              id_ = bs;
+              break;
+            }
+            case 16: {
+              int rawValue = input.readEnum();
+              tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(2, rawValue);
+              } else {
+                bitField0_ |= 0x00000002;
+                platform_ = rawValue;
+              }
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              displayName_ = bs;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.class, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          id_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PLATFORM_FIELD_NUMBER = 2;
+    private int platform_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
+     */
+    public boolean hasPlatform() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
+      tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
+      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.TWITCH : result;
+    }
+
+    public static final int DISPLAY_NAME_FIELD_NUMBER = 3;
+    private volatile java.lang.Object displayName_;
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    public boolean hasDisplayName() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    public java.lang.String getDisplayName() {
+      java.lang.Object ref = displayName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          displayName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDisplayNameBytes() {
+      java.lang.Object ref = displayName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        displayName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasPlatform()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasDisplayName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeEnum(2, platform_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, displayName_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, platform_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, displayName_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry)) {
+        return super.equals(obj);
+      }
+      tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry other = (tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry) obj;
+
+      boolean result = true;
+      result = result && (hasId() == other.hasId());
+      if (hasId()) {
+        result = result && getId()
+            .equals(other.getId());
+      }
+      result = result && (hasPlatform() == other.hasPlatform());
+      if (hasPlatform()) {
+        result = result && platform_ == other.platform_;
+      }
+      result = result && (hasDisplayName() == other.hasDisplayName());
+      if (hasDisplayName()) {
+        result = result && getDisplayName()
+            .equals(other.getDisplayName());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+      }
+      if (hasPlatform()) {
+        hash = (37 * hash) + PLATFORM_FIELD_NUMBER;
+        hash = (53 * hash) + platform_;
+      }
+      if (hasDisplayName()) {
+        hash = (37 * hash) + DISPLAY_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getDisplayName().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.twitchbot.common.dto.proto.core.GlobalUserEntry}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.twitchbot.common.dto.proto.core.GlobalUserEntry)
+        tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntryOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.class, tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.Builder.class);
+      }
+
+      // Construct using tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        id_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        platform_ = 1;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        displayName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.twitchbot.common.dto.proto.core.UserOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_descriptor;
+      }
+
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry getDefaultInstanceForType() {
+        return tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.getDefaultInstance();
+      }
+
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry build() {
+        tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry buildPartial() {
+        tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry result = new tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.platform_ = platform_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.displayName_ = displayName_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry) {
+          return mergeFrom((tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry other) {
+        if (other == tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          bitField0_ |= 0x00000001;
+          id_ = other.id_;
+          onChanged();
+        }
+        if (other.hasPlatform()) {
+          setPlatform(other.getPlatform());
+        }
+        if (other.hasDisplayName()) {
+          bitField0_ |= 0x00000004;
+          displayName_ = other.displayName_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        if (!hasPlatform()) {
+          return false;
+        }
+        if (!hasDisplayName()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object id_ = "";
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            id_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder clearId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      private int platform_ = 1;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
+       */
+      public boolean hasPlatform() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
+        tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
+        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.TWITCH : result;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
+       */
+      public Builder setPlatform(tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
+        platform_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
+       */
+      public Builder clearPlatform() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        platform_ = 1;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object displayName_ = "";
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public boolean hasDisplayName() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public java.lang.String getDisplayName() {
+        java.lang.Object ref = displayName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            displayName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDisplayNameBytes() {
+        java.lang.Object ref = displayName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          displayName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public Builder setDisplayName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        displayName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public Builder clearDisplayName() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        displayName_ = getDefaultInstance().getDisplayName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public Builder setDisplayNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        displayName_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.twitchbot.common.dto.proto.core.GlobalUserEntry)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.twitchbot.common.dto.proto.core.GlobalUserEntry)
+    private static final tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry();
+    }
+
+    public static tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<GlobalUserEntry>
+        PARSER = new com.google.protobuf.AbstractParser<GlobalUserEntry>() {
+      public GlobalUserEntry parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new GlobalUserEntry(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<GlobalUserEntry> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<GlobalUserEntry> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.twitchbot.common.dto.proto.core.UserOuterClass.GlobalUserEntry getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_twitchbot_common_dto_proto_core_User_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_twitchbot_common_dto_proto_core_User_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
-    internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_descriptor;
+    internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
-      internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_fieldAccessorTable;
+      internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1873,13 +2876,18 @@ public final class UserOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\nUser.proto\022\"tv.twitchbot.common.dto.pr" +
-      "oto.core\"\361\001\n\004User\022\014\n\004name\030\001 \002(\t\022?\n\004type\030" +
-      "\002 \002(\01621.tv.twitchbot.common.dto.proto.co" +
-      "re.User.UserType\022\017\n\007mention\030\003 \001(\t\022H\n\013per" +
-      "missions\030\004 \003(\01323.tv.twitchbot.common.dto" +
-      ".proto.core.User.Permission\032\032\n\nPermissio" +
-      "n\022\014\n\004node\030\001 \002(\t\"#\n\010UserType\022\n\n\006TWITCH\020\001\022" +
-      "\013\n\007DISCORD\020\002"
+      "oto.core\032\nUUID.proto\032\016Platform.proto\"\255\001\n" +
+      "\004User\022\n\n\002id\030\001 \002(\t\022>\n\010platform\030\002 \002(\0162,.tv" +
+      ".twitchbot.common.dto.proto.core.Platfor" +
+      "m\022C\n\013global_user\030\003 \002(\0132..tv.twitchbot.co" +
+      "mmon.dto.proto.core.GlobalUser\022\024\n\014displa" +
+      "y_name\030\004 \002(\t\"\210\001\n\nGlobalUser\0224\n\002id\030\001 \002(\0132" +
+      "(.tv.twitchbot.common.dto.proto.core.UUI" +
+      "D\022D\n\007entries\030\002 \003(\01323.tv.twitchbot.common" +
+      ".dto.proto.core.GlobalUserEntry\"s\n\017Globa",
+      "lUserEntry\022\n\n\002id\030\001 \002(\t\022>\n\010platform\030\002 \002(\016" +
+      "2,.tv.twitchbot.common.dto.proto.core.Pl" +
+      "atform\022\024\n\014display_name\030\003 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1892,19 +2900,29 @@ public final class UserOuterClass {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor(),
+          tv.twitchbot.common.dto.proto.core.PlatformOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_core_User_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_tv_twitchbot_common_dto_proto_core_User_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_twitchbot_common_dto_proto_core_User_descriptor,
-        new java.lang.String[] { "Name", "Type", "Mention", "Permissions", });
-    internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_descriptor =
-      internal_static_tv_twitchbot_common_dto_proto_core_User_descriptor.getNestedTypes().get(0);
-    internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_fieldAccessorTable = new
+        new java.lang.String[] { "Id", "Platform", "GlobalUser", "DisplayName", });
+    internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
-        internal_static_tv_twitchbot_common_dto_proto_core_User_Permission_descriptor,
-        new java.lang.String[] { "Node", });
+        internal_static_tv_twitchbot_common_dto_proto_core_GlobalUser_descriptor,
+        new java.lang.String[] { "Id", "Entries", });
+    internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_descriptor =
+      getDescriptor().getMessageTypes().get(2);
+    internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_twitchbot_common_dto_proto_core_GlobalUserEntry_descriptor,
+        new java.lang.String[] { "Id", "Platform", "DisplayName", });
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor();
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

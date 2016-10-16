@@ -2,6 +2,7 @@ package tv.twitchbot.common.modules;
 
 import com.datastax.driver.core.*;
 import com.datastax.driver.core.policies.*;
+import com.datastax.driver.extras.codecs.enums.EnumOrdinalCodec;
 import com.datastax.driver.mapping.MappingManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -22,6 +23,7 @@ import org.redisson.connection.balancer.LoadBalancer;
 import org.redisson.liveobject.provider.ResolverProvider;
 import tv.twitchbot.common.dto.core.ModuleInstance;
 import tv.twitchbot.common.dto.core.Tenant;
+import tv.twitchbot.common.dto.db.Platform;
 import tv.twitchbot.common.dto.messages.Message;
 import tv.twitchbot.common.dto.messages.Request;
 import tv.twitchbot.common.dto.messages.Response;
@@ -156,6 +158,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
                         cassandraConfig.getSpeculativeRetryPercentile(),
                         cassandraConfig.getSpeculativeMaxRetries()
                 ))
+                .withCodecRegistry(new CodecRegistry()
+                        .register(new EnumOrdinalCodec<>(Platform.class))
+                )
                 .build();
         cassandraSession = cassandraCluster.connect();
         mappingManager = new MappingManager(cassandraSession);
