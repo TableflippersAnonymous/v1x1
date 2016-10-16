@@ -10,7 +10,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 /**
  * Created by naomi on 10/9/2016.
  */
-public class ChatPartEvent extends Event {
+public abstract class ChatPartEvent extends Event {
     public static ChatPartEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.ChatPartEvent chatPartEvent) {
         User user = User.fromProto(chatPartEvent.getUser());
         Channel channel = Channel.fromProto(chatPartEvent.getChannel());
