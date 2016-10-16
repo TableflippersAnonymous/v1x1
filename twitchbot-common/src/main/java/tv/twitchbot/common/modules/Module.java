@@ -33,9 +33,7 @@ import tv.twitchbot.common.rpc.client.ServiceClient;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributorImpl;
 import tv.twitchbot.common.services.coordination.ModuleRegistry;
-import tv.twitchbot.common.services.persistence.KeyValueStore;
-import tv.twitchbot.common.services.persistence.TemporaryKeyValueStoreImpl;
-import tv.twitchbot.common.services.persistence.TenantKeyValueStoreImpl;
+import tv.twitchbot.common.services.persistence.*;
 import tv.twitchbot.common.services.queue.MessageQueue;
 import tv.twitchbot.common.services.queue.MessageQueueManager;
 import tv.twitchbot.common.services.queue.MessageQueueManagerImpl;
@@ -70,6 +68,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private Cluster cassandraCluster;
     private Session cassandraSession;
     private MappingManager mappingManager;
+    private DAOManager daoManager;
+    private Deduplicator deduplicator;
 
     /* Services */
     private ModuleRegistry moduleRegistry;
@@ -118,6 +118,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
         temporaryKeyValueStore = new TemporaryKeyValueStoreImpl(client, toDto());
         temporaryGlobalKeyValueStore = new TemporaryKeyValueStoreImpl(client);
+        deduplicator = new Deduplicator(client, toDto());
 
         curatorFramework = CuratorFrameworkFactory.newClient(settings.getZookeeperConnectionString(), new BoundedExponentialBackoffRetry(50, 1000, 50));
         curatorFramework.start();
@@ -164,6 +165,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
                 .build();
         cassandraSession = cassandraCluster.connect();
         mappingManager = new MappingManager(cassandraSession);
+        daoManager = new DAOManager(mappingManager);
     }
 
     /* ******************************* CALL THIS FROM main() ******************************* */
@@ -186,6 +188,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         for(;;) {
             try {
                 Message message = mq.get();
+                if(deduplicator.seenAndAdd(message.getMessageId()))
+                    continue;
                 if(message instanceof ModuleShutdownRequest) {
                     ModuleShutdownRequest msr = (ModuleShutdownRequest) message;
                     reply(msr, new ModuleShutdownResponse(toDto(), msr.getMessageId()));
@@ -252,24 +256,32 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return persistentGlobalKeyValueStore;
     }
 
-    public StatsCollector getStatsCollector() {
+    protected StatsCollector getStatsCollector() {
         return statsCollector;
     }
 
-    public ModuleRegistry getModuleRegistry() {
+    protected ModuleRegistry getModuleRegistry() {
         return moduleRegistry;
     }
 
-    public UUID getInstanceId() {
+    protected UUID getInstanceId() {
         return instanceId;
     }
 
-    public Session getCassandraSession() {
+    protected Session getCassandraSession() {
         return cassandraSession;
     }
 
-    public MappingManager getMappingManager() {
+    protected MappingManager getMappingManager() {
         return mappingManager;
+    }
+
+    protected DAOManager getDaoManager() {
+        return daoManager;
+    }
+
+    protected Deduplicator getDeduplicator() {
+        return deduplicator;
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */
