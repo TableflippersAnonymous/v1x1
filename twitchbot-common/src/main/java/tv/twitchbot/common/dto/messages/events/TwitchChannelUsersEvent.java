@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
  * Created by naomi on 10/9/2016.
  */
 public class TwitchChannelUsersEvent extends Event {
+    @SuppressWarnings("unchecked")
     public static TwitchChannelUsersEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchChannelUsersEvent twitchChannelUsersEvent) {
         TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelUsersEvent.getChannel());
         List<TwitchUser> users = (List<TwitchUser>) (List) twitchChannelUsersEvent.getUsersList().stream().map(User::fromProto).collect(Collectors.toList());

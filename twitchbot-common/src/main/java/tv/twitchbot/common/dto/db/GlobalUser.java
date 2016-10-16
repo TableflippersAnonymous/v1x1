@@ -4,8 +4,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.UDT;
-import tv.twitchbot.common.dto.core.Channel;
-import tv.twitchbot.common.dto.core.DiscordChannel;
+import tv.twitchbot.common.dto.core.*;
 import tv.twitchbot.common.dto.core.TwitchChannel;
 
 import java.util.ArrayList;
@@ -16,20 +15,22 @@ import java.util.stream.Collectors;
 /**
  * Created by naomi on 10/15/2016.
  */
-@Table(name = "tenant")
-public class Tenant {
-    @UDT(name = "tenant_entry")
+@Table(name = "global_user")
+public class GlobalUser {
+    @UDT(name = "global_user_entry")
     public static class Entry {
         private Platform platform;
         @Column(name = "display_name")
         private String displayName;
-        @Column(name = "channel_id")
-        private String channelId;
 
-        public Entry(Platform platform, String displayName, String channelId) {
+        // Unique, unchanging identifier of user on specific platform
+        @Column(name = "user_id")
+        private String userId;
+
+        public Entry(Platform platform, String displayName, String userId) {
             this.platform = platform;
             this.displayName = displayName;
-            this.channelId = channelId;
+            this.userId = userId;
         }
 
         public Platform getPlatform() {
@@ -40,15 +41,15 @@ public class Tenant {
             return displayName;
         }
 
-        public String getChannelId() {
-            return channelId;
+        public String getUserId() {
+            return userId;
         }
 
-        public tv.twitchbot.common.dto.core.Channel toCore(tv.twitchbot.common.dto.core.Tenant tenant) {
+        public User toCore(tv.twitchbot.common.dto.core.GlobalUser globalUser) {
             switch(platform) {
-                case DISCORD: return new DiscordChannel(channelId, tenant, displayName);
-                case TWITCH: return new TwitchChannel(channelId, tenant, displayName);
-                default: throw new IllegalStateException("Unknown channel platform " + platform.name());
+                case DISCORD: return new DiscordUser(userId, globalUser, displayName);
+                case TWITCH: return new TwitchUser(userId, globalUser, displayName);
+                default: throw new IllegalStateException("Unknown user platform " + platform.name());
             }
         }
     }
@@ -57,7 +58,7 @@ public class Tenant {
     private UUID id;
     private List<Entry> entries;
 
-    public Tenant(UUID id, List<Entry> entries) {
+    public GlobalUser(UUID id, List<Entry> entries) {
         this.id = id;
         this.entries = entries;
     }
@@ -70,13 +71,13 @@ public class Tenant {
         return entries;
     }
 
-    public tv.twitchbot.common.dto.core.Tenant toCore() {
-        List<Channel> channels = new ArrayList<>();
-        tv.twitchbot.common.dto.core.Tenant tenant = new tv.twitchbot.common.dto.core.Tenant(
+    public tv.twitchbot.common.dto.core.GlobalUser toCore() {
+        List<User> users = new ArrayList<>();
+        tv.twitchbot.common.dto.core.GlobalUser globalUser = new tv.twitchbot.common.dto.core.GlobalUser(
                 new tv.twitchbot.common.dto.core.UUID(id),
-                channels
+                users
         );
-        channels.addAll(entries.stream().map(entry -> entry.toCore(tenant)).collect(Collectors.toList()));
-        return tenant;
+        users.addAll(entries.stream().map(entry -> entry.toCore(globalUser)).collect(Collectors.toList()));
+        return globalUser;
     }
 }

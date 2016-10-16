@@ -1,13 +1,14 @@
 package tv.twitchbot.common.dto.core;
 
-import tv.twitchbot.common.dto.proto.core.UserOuterClass;
+
+import tv.twitchbot.common.dto.proto.core.PermissionOuterClass;
 
 /**
  * Created by naomi on 10/5/16.
  */
 public class Permission {
-    public static Permission fromProto(UserOuterClass.User.Permission permission) {
-        String node = permission.getNode();
+    public static Permission fromProto(PermissionOuterClass.Permission proto) {
+        String node = proto.getNode();
         return new Permission(node);
     }
 
@@ -21,25 +22,8 @@ public class Permission {
         return node;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Permission that = (Permission) o;
-
-        if (node != null ? !node.equals(that.node) : that.node != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return node != null ? node.hashCode() : 0;
-    }
-
-    public UserOuterClass.User.Permission toProto() {
-        return UserOuterClass.User.Permission.newBuilder()
+    public PermissionOuterClass.Permission toProto() {
+        return PermissionOuterClass.Permission.newBuilder()
                 .setNode(node)
                 .build();
     }
