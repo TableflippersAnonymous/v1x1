@@ -57,6 +57,30 @@ public final class ChatMessageOuterClass {
      */
     com.google.protobuf.ByteString
         getTextBytes();
+
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    java.util.List<tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission> 
+        getPermissionsList();
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission getPermissions(int index);
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    int getPermissionsCount();
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    java.util.List<? extends tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> 
+        getPermissionsOrBuilderList();
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder getPermissionsOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.core.ChatMessage}
@@ -71,6 +95,7 @@ public final class ChatMessageOuterClass {
     }
     private ChatMessage() {
       text_ = "";
+      permissions_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -133,6 +158,15 @@ public final class ChatMessageOuterClass {
               text_ = bs;
               break;
             }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                permissions_ = new java.util.ArrayList<tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              permissions_.add(
+                  input.readMessage(tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -141,6 +175,9 @@ public final class ChatMessageOuterClass {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          permissions_ = java.util.Collections.unmodifiableList(permissions_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -242,6 +279,41 @@ public final class ChatMessageOuterClass {
       }
     }
 
+    public static final int PERMISSIONS_FIELD_NUMBER = 4;
+    private java.util.List<tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission> permissions_;
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    public java.util.List<tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission> getPermissionsList() {
+      return permissions_;
+    }
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    public java.util.List<? extends tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> 
+        getPermissionsOrBuilderList() {
+      return permissions_;
+    }
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    public int getPermissionsCount() {
+      return permissions_.size();
+    }
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission getPermissions(int index) {
+      return permissions_.get(index);
+    }
+    /**
+     * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder getPermissionsOrBuilder(
+        int index) {
+      return permissions_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -268,6 +340,12 @@ public final class ChatMessageOuterClass {
         memoizedIsInitialized = 0;
         return false;
       }
+      for (int i = 0; i < getPermissionsCount(); i++) {
+        if (!getPermissions(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -282,6 +360,9 @@ public final class ChatMessageOuterClass {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, text_);
+      }
+      for (int i = 0; i < permissions_.size(); i++) {
+        output.writeMessage(4, permissions_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -301,6 +382,10 @@ public final class ChatMessageOuterClass {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, text_);
+      }
+      for (int i = 0; i < permissions_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, permissions_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -334,6 +419,8 @@ public final class ChatMessageOuterClass {
         result = result && getText()
             .equals(other.getText());
       }
+      result = result && getPermissionsList()
+          .equals(other.getPermissionsList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -356,6 +443,10 @@ public final class ChatMessageOuterClass {
       if (hasText()) {
         hash = (37 * hash) + TEXT_FIELD_NUMBER;
         hash = (53 * hash) + getText().hashCode();
+      }
+      if (getPermissionsCount() > 0) {
+        hash = (37 * hash) + PERMISSIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getPermissionsList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -473,6 +564,7 @@ public final class ChatMessageOuterClass {
                 .alwaysUseFieldBuilders) {
           getChannelFieldBuilder();
           getSenderFieldBuilder();
+          getPermissionsFieldBuilder();
         }
       }
       public Builder clear() {
@@ -491,6 +583,12 @@ public final class ChatMessageOuterClass {
         bitField0_ = (bitField0_ & ~0x00000002);
         text_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
+        if (permissionsBuilder_ == null) {
+          permissions_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          permissionsBuilder_.clear();
+        }
         return this;
       }
 
@@ -535,6 +633,15 @@ public final class ChatMessageOuterClass {
           to_bitField0_ |= 0x00000004;
         }
         result.text_ = text_;
+        if (permissionsBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            permissions_ = java.util.Collections.unmodifiableList(permissions_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.permissions_ = permissions_;
+        } else {
+          result.permissions_ = permissionsBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -588,6 +695,32 @@ public final class ChatMessageOuterClass {
           text_ = other.text_;
           onChanged();
         }
+        if (permissionsBuilder_ == null) {
+          if (!other.permissions_.isEmpty()) {
+            if (permissions_.isEmpty()) {
+              permissions_ = other.permissions_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensurePermissionsIsMutable();
+              permissions_.addAll(other.permissions_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.permissions_.isEmpty()) {
+            if (permissionsBuilder_.isEmpty()) {
+              permissionsBuilder_.dispose();
+              permissionsBuilder_ = null;
+              permissions_ = other.permissions_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              permissionsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getPermissionsFieldBuilder() : null;
+            } else {
+              permissionsBuilder_.addAllMessages(other.permissions_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -608,6 +741,11 @@ public final class ChatMessageOuterClass {
         }
         if (!getSender().isInitialized()) {
           return false;
+        }
+        for (int i = 0; i < getPermissionsCount(); i++) {
+          if (!getPermissions(i).isInitialized()) {
+            return false;
+          }
         }
         return true;
       }
@@ -942,6 +1080,246 @@ public final class ChatMessageOuterClass {
         onChanged();
         return this;
       }
+
+      private java.util.List<tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission> permissions_ =
+        java.util.Collections.emptyList();
+      private void ensurePermissionsIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          permissions_ = new java.util.ArrayList<tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission>(permissions_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> permissionsBuilder_;
+
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public java.util.List<tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission> getPermissionsList() {
+        if (permissionsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(permissions_);
+        } else {
+          return permissionsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public int getPermissionsCount() {
+        if (permissionsBuilder_ == null) {
+          return permissions_.size();
+        } else {
+          return permissionsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission getPermissions(int index) {
+        if (permissionsBuilder_ == null) {
+          return permissions_.get(index);
+        } else {
+          return permissionsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder setPermissions(
+          int index, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission value) {
+        if (permissionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePermissionsIsMutable();
+          permissions_.set(index, value);
+          onChanged();
+        } else {
+          permissionsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder setPermissions(
+          int index, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder builderForValue) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          permissions_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          permissionsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder addPermissions(tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission value) {
+        if (permissionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePermissionsIsMutable();
+          permissions_.add(value);
+          onChanged();
+        } else {
+          permissionsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder addPermissions(
+          int index, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission value) {
+        if (permissionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePermissionsIsMutable();
+          permissions_.add(index, value);
+          onChanged();
+        } else {
+          permissionsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder addPermissions(
+          tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder builderForValue) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          permissions_.add(builderForValue.build());
+          onChanged();
+        } else {
+          permissionsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder addPermissions(
+          int index, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder builderForValue) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          permissions_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          permissionsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder addAllPermissions(
+          java.lang.Iterable<? extends tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission> values) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, permissions_);
+          onChanged();
+        } else {
+          permissionsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder clearPermissions() {
+        if (permissionsBuilder_ == null) {
+          permissions_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          permissionsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public Builder removePermissions(int index) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          permissions_.remove(index);
+          onChanged();
+        } else {
+          permissionsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder getPermissionsBuilder(
+          int index) {
+        return getPermissionsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder getPermissionsOrBuilder(
+          int index) {
+        if (permissionsBuilder_ == null) {
+          return permissions_.get(index);  } else {
+          return permissionsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public java.util.List<? extends tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> 
+           getPermissionsOrBuilderList() {
+        if (permissionsBuilder_ != null) {
+          return permissionsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(permissions_);
+        }
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder addPermissionsBuilder() {
+        return getPermissionsFieldBuilder().addBuilder(
+            tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder addPermissionsBuilder(
+          int index) {
+        return getPermissionsFieldBuilder().addBuilder(
+            index, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.twitchbot.common.dto.proto.core.Permission permissions = 4;</code>
+       */
+      public java.util.List<tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder> 
+           getPermissionsBuilderList() {
+        return getPermissionsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> 
+          getPermissionsFieldBuilder() {
+        if (permissionsBuilder_ == null) {
+          permissionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.Permission.Builder, tv.twitchbot.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder>(
+                  permissions_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          permissions_ = null;
+        }
+        return permissionsBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -1007,10 +1385,12 @@ public final class ChatMessageOuterClass {
     java.lang.String[] descriptorData = {
       "\n\021ChatMessage.proto\022\"tv.twitchbot.common" +
       ".dto.proto.core\032\rChannel.proto\032\nUser.pro" +
-      "to\"\223\001\n\013ChatMessage\022<\n\007channel\030\001 \002(\0132+.tv" +
-      ".twitchbot.common.dto.proto.core.Channel" +
-      "\0228\n\006sender\030\002 \002(\0132(.tv.twitchbot.common.d" +
-      "to.proto.core.User\022\014\n\004text\030\003 \002(\t"
+      "to\032\020Permission.proto\"\330\001\n\013ChatMessage\022<\n\007" +
+      "channel\030\001 \002(\0132+.tv.twitchbot.common.dto." +
+      "proto.core.Channel\0228\n\006sender\030\002 \002(\0132(.tv." +
+      "twitchbot.common.dto.proto.core.User\022\014\n\004" +
+      "text\030\003 \002(\t\022C\n\013permissions\030\004 \003(\0132..tv.twi" +
+      "tchbot.common.dto.proto.core.Permission"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1025,15 +1405,17 @@ public final class ChatMessageOuterClass {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.UserOuterClass.getDescriptor(),
+          tv.twitchbot.common.dto.proto.core.PermissionOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_core_ChatMessage_descriptor =
       getDescriptor().getMessageTypes().get(0);
     internal_static_tv_twitchbot_common_dto_proto_core_ChatMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_twitchbot_common_dto_proto_core_ChatMessage_descriptor,
-        new java.lang.String[] { "Channel", "Sender", "Text", });
+        new java.lang.String[] { "Channel", "Sender", "Text", "Permissions", });
     tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.UserOuterClass.getDescriptor();
+    tv.twitchbot.common.dto.proto.core.PermissionOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

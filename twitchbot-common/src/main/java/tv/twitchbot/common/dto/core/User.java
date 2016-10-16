@@ -1,36 +1,48 @@
 package tv.twitchbot.common.dto.core;
 
-import com.google.common.collect.ImmutableSet;
 import tv.twitchbot.common.dto.proto.core.UserOuterClass;
-
-import java.util.Set;
 
 /**
  * Created by cobi on 10/5/16.
  */
 public abstract class User {
     public static User fromProto(UserOuterClass.User user) {
-        switch(user.getType()) {
+        switch(user.getPlatform()) {
             case TWITCH: return TwitchUser.fromProto(user);
             case DISCORD: return DiscordUser.fromProto(user);
-            default: throw new IllegalStateException("Unknown user type " + user.getType().name());
+            default: throw new IllegalStateException("Unknown user platform " + user.getPlatform().name());
         }
     }
 
-    private String name;
-    private Set<Permission> permissions;
-
-    protected User(String name, Set<Permission> permissions) {
-        this.name = name;
-        this.permissions = permissions;
+    public static User fromProto(GlobalUser globalUser, UserOuterClass.GlobalUserEntry globalUserEntry) {
+        switch(globalUserEntry.getPlatform()) {
+            case TWITCH: return TwitchUser.fromProto(globalUser, globalUserEntry);
+            case DISCORD: return DiscordUser.fromProto(globalUser, globalUserEntry);
+            default: throw new IllegalStateException("Unknown user platform " + globalUserEntry.getPlatform().name());
+        }
     }
 
-    public String getName() {
-        return name;
+
+    private String id;
+    private GlobalUser globalUser;
+    private String displayName;
+
+    public User(String id, GlobalUser globalUser, String displayName) {
+        this.id = id;
+        this.globalUser = globalUser;
+        this.displayName = displayName;
     }
 
-    public Set<Permission> getPermissions() {
-        return ImmutableSet.copyOf(permissions);
+    public String getId() {
+        return id;
+    }
+
+    public GlobalUser getGlobalUser() {
+        return globalUser;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 
     @Override
@@ -40,15 +52,16 @@ public abstract class User {
 
         User user = (User) o;
 
-        if (name != null ? !name.equals(user.name) : user.name != null) return false;
+        return id != null ? id.equals(user.id) : user.id == null;
 
-        return true;
     }
 
     @Override
     public int hashCode() {
-        return name != null ? name.hashCode() : 0;
+        return id != null ? id.hashCode() : 0;
     }
 
     public abstract UserOuterClass.User toProto();
+    public abstract UserOuterClass.GlobalUserEntry toProtoGlobalUserEntry();
+    public abstract tv.twitchbot.common.dto.db.GlobalUser.Entry toDBGlobalUser();
 }

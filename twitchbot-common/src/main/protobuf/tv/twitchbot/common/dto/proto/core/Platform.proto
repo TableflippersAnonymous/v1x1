@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package tv.twitchbot.common.dto.proto.core;
+
+enum Platform {
+    TWITCH = 1;
+    DISCORD = 2;
+};

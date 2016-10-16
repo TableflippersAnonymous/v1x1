@@ -3,11 +3,12 @@ syntax = "proto2";
 package tv.twitchbot.common.dto.proto.core;
 
 import "Channel.proto";
-
 import "User.proto";
+import "Permission.proto";
 
 message ChatMessage {
     required Channel channel = 1;
     required User sender = 2;
     required string text = 3;
+    repeated Permission permissions = 4;
 }
