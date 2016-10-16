@@ -50,13 +50,6 @@ CREATE TABLE tenant (
     PRIMARY KEY (id)
 );
 
-CREATE TABLE inverse_tenant (
-    platform int,
-    channel_id text,
-    tenant_id uuid,
-    PRIMARY KEY ((platform, channel_id))
-);
-
 CREATE TYPE permission (
     node text
 );

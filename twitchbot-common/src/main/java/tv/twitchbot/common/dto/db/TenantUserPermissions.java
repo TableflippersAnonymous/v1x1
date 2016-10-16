@@ -29,6 +29,22 @@ public class TenantUserPermissions {
         public tv.twitchbot.common.dto.core.Permission toCore() {
             return new tv.twitchbot.common.dto.core.Permission(node);
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Permission that = (Permission) o;
+
+            return node != null ? node.equals(that.node) : that.node == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            return node != null ? node.hashCode() : 0;
+        }
     }
 
     @PartitionKey
