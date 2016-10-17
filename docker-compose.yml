@@ -7,8 +7,35 @@ services:
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zoo1:2888:3888
+  cass1:
+    image: cassandra:3
+    environment:
+      CASSANDRA_CLUSTER_NAME: v1x1_dev
+    volumes:
+      - ./docker-data/cassandra:/var/lib/cassandra
+  chat_router:
+    image: v1x1-chat_router:latest
+    depends_on:
+      - redis
+      - zoo1
+  event_router:
+    image: v1x1-event_router:latest
+    depends_on:
+      - redis
+      - zoo1
+  tmi:
+    image: v1x1-tmi:latest
+    depends_on:
+      - redis
+      - zoo1
   hello:
     image: v1x1-hello_world:latest
     depends_on:
       - redis
       - zoo1
+  echo:
+    image: v1x1-echo:latest
+    depends_on:
+      - redis
+      - zoo1
+      - chat_router
