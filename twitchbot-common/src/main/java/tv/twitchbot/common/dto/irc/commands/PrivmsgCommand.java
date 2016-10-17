@@ -1,6 +1,5 @@
 package tv.twitchbot.common.dto.irc.commands;
 
-import tv.twitchbot.common.dto.core.*;
 import tv.twitchbot.common.dto.irc.IrcSource;
 import tv.twitchbot.common.dto.irc.MessageTaggedIrcStanza;
 import tv.twitchbot.common.dto.proto.core.IRC;
