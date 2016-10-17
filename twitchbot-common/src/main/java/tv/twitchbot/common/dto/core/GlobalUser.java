@@ -46,4 +46,20 @@ public class GlobalUser {
     public tv.twitchbot.common.dto.db.GlobalUser toDB() {
         return new tv.twitchbot.common.dto.db.GlobalUser(id.getValue(), entries.stream().map(User::toDBGlobalUser).collect(Collectors.toList()));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        GlobalUser that = (GlobalUser) o;
+
+        return id != null ? id.equals(that.id) : that.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }

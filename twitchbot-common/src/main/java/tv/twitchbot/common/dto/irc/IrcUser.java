@@ -23,6 +23,18 @@ public class IrcUser extends IrcSource {
         this.hostname = hostname;
     }
 
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getHostname() {
+        return hostname;
+    }
+
     @Override
     protected IRC.IrcSource.Builder toProtoBuilder() {
         return super.toProtoBuilder()
