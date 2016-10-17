@@ -3,7 +3,8 @@ package tv.twitchbot.common.dto.core;
 import tv.twitchbot.common.dto.proto.core.ModuleOuterClass;
 
 /**
- * Created by cobi on 10/8/2016.
+ * Represents a particular running process of a {@link Module}
+ * @author Cobi
  */
 public class ModuleInstance {
     public static ModuleInstance fromProto(ModuleOuterClass.ModuleInstance moduleInstance) {

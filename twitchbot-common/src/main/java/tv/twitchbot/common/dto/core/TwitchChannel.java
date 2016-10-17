@@ -5,7 +5,8 @@ import tv.twitchbot.common.dto.proto.core.ChannelOuterClass;
 import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
 
 /**
- * Created by cobi on 10/5/16.
+ * Represents a {@link Channel} on the Twitch platform
+ * @author Cobi
  */
 public class TwitchChannel extends Channel {
     public static TwitchChannel fromProto(ChannelOuterClass.Channel channel) {

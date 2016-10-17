@@ -8,7 +8,8 @@ import tv.twitchbot.common.dto.irc.commands.PrivmsgCommand;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by cobi on 10/9/2016.
+ * Fired when a {@link tv.twitchbot.common.dto.core.TwitchUser} sends a message to a {@link tv.twitchbot.common.dto.core.TwitchChannel} we've ingested
+ * @author Cobi
  */
 public class TwitchChatMessageEvent extends ChatMessageEvent {
     public static TwitchChatMessageEvent fromProto(Module module, UUID uuid, long timestamp, ChatMessage chatMessage, EventOuterClass.TwitchChatMessageEvent twitchChatMessageEvent) {
