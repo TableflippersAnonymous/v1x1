@@ -1,9 +1,6 @@
 package tv.twitchbot.common.dto.db;
 
-import com.datastax.driver.mapping.annotations.Column;
-import com.datastax.driver.mapping.annotations.PartitionKey;
-import com.datastax.driver.mapping.annotations.Table;
-import com.datastax.driver.mapping.annotations.UDT;
+import com.datastax.driver.mapping.annotations.*;
 import tv.twitchbot.common.dto.core.Channel;
 import tv.twitchbot.common.dto.core.DiscordChannel;
 import tv.twitchbot.common.dto.core.TwitchChannel;
@@ -21,9 +18,9 @@ public class Tenant {
     @UDT(name = "tenant_entry")
     public static class Entry {
         private Platform platform;
-        @Column(name = "display_name")
+        @Field(name = "display_name")
         private String displayName;
-        @Column(name = "channel_id")
+        @Field(name = "channel_id")
         private String channelId;
 
         public Entry(Platform platform, String displayName, String channelId) {
