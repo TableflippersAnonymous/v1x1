@@ -10,7 +10,9 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by cobi on 10/9/2016.
+ * Fired when the global state of a {@link TwitchBot} is reported
+ * @author Cobi
+ * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#globaluserstate">Twitch-API documentation</a>
  */
 public class TwitchBotGlobalStateEvent extends Event {
     public static TwitchBotGlobalStateEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchBotGlobalStateEvent twitchBotGlobalStateEvent) {
