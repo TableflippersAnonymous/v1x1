@@ -5,7 +5,7 @@ import org.redisson.api.RBlockingQueue;
 import tv.twitchbot.common.dto.messages.Message;
 
 /**
- * Created by naomi on 10/5/16.
+ * @author Naomi
  */
 public class MessageQueueImpl implements MessageQueue {
 
