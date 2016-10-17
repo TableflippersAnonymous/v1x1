@@ -8,7 +8,8 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when TMI sends us a keep-alive message
+ * @author Naomi
  */
 public class TwitchPingEvent extends Event {
     public static TwitchPingEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchPingEvent twitchPingEvent) {

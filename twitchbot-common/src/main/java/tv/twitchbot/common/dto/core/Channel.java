@@ -3,7 +3,8 @@ package tv.twitchbot.common.dto.core;
 import tv.twitchbot.common.dto.proto.core.ChannelOuterClass;
 
 /**
- * Created by naomi on 10/5/16.
+ * Represents a single text chat room on a platform on which the bot is a part of
+ * @author Naomi
  */
 public abstract class Channel {
     public static Channel fromProto(ChannelOuterClass.Channel channel) {

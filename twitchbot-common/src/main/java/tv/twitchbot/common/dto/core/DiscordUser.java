@@ -8,7 +8,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Created by naomi on 10/5/16.
+ * Represents a {@link User} on Discord
+ * @author Naomi
  */
 public class DiscordUser extends User {
     public static DiscordUser fromProto(UserOuterClass.User user) {

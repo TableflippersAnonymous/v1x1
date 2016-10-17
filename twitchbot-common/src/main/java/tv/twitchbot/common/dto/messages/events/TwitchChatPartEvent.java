@@ -9,7 +9,8 @@ import tv.twitchbot.common.dto.irc.commands.PartCommand;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/10/2016.
+ * Fired when a {@link tv.twitchbot.common.dto.core.TwitchUser} leaves a {@link tv.twitchbot.common.dto.core.TwitchChannel}
+ * @author Naomi
  */
 public class TwitchChatPartEvent extends ChatPartEvent {
     public static TwitchChatPartEvent fromProto(Module module, UUID uuid, long timestamp, User user, Channel channel, EventOuterClass.TwitchChatPartEvent twitchChatPartEvent) {

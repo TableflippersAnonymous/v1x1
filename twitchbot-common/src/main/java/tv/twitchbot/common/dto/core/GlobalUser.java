@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by naomi on 10/16/2016.
+ * Represents a group of {@link User}s that we may treat the same across all platforms
+ * (Think: Linking your Discord account to Twitch)
+ * @author Naomi
  */
 public class GlobalUser {
     public static GlobalUser fromProto(UserOuterClass.GlobalUser proto) {

@@ -10,7 +10,8 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when we are requested to reconnect to TMI
+ * @author Naomi
  */
 public class TwitchReconnectEvent extends Event {
     public static TwitchReconnectEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchReconnectEvent twitchReconnectEvent) {

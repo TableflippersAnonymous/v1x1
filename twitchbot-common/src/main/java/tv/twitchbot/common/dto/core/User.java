@@ -3,7 +3,8 @@ package tv.twitchbot.common.dto.core;
 import tv.twitchbot.common.dto.proto.core.UserOuterClass;
 
 /**
- * Created by naomi on 10/5/16.
+ * Represents a single name on a single platform
+ * @author Naomi
  */
 public abstract class User {
     public static User fromProto(UserOuterClass.User user) {

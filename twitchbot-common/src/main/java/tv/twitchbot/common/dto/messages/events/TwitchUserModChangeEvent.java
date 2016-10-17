@@ -7,7 +7,8 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when someone gained or lost Moderator status
+ * @author Naomi
  */
 public class TwitchUserModChangeEvent extends Event {
     public static TwitchUserModChangeEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchUserModChangeEvent twitchUserModChangeEvent) {

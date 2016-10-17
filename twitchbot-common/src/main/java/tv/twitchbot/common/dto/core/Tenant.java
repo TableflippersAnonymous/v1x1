@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by naomi on 10/6/2016.
+ * Represents a group of {@link Channel}s the bot will treat the same
+ * @author Naomi
  */
 public class Tenant {
     public static Tenant fromProto(ChannelOuterClass.Tenant proto) {
