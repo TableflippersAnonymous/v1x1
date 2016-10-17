@@ -5,32 +5,69 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import tv.twitchbot.common.dto.core.*;
 import tv.twitchbot.common.dto.db.Platform;
+import tv.twitchbot.common.dto.db.TenantUserPermissions;
+import tv.twitchbot.common.dto.irc.IrcSource;
 import tv.twitchbot.common.dto.irc.IrcStanza;
-import tv.twitchbot.common.dto.irc.commands.ClearChatCommand;
-import tv.twitchbot.common.dto.irc.commands.GlobalUserStateCommand;
-import tv.twitchbot.common.dto.irc.commands.HostTargetCommand;
-import tv.twitchbot.common.dto.irc.commands.PingCommand;
+import tv.twitchbot.common.dto.irc.IrcUser;
+import tv.twitchbot.common.dto.irc.commands.*;
 import tv.twitchbot.common.dto.messages.Event;
-import tv.twitchbot.common.dto.messages.events.TwitchBotGlobalStateEvent;
-import tv.twitchbot.common.dto.messages.events.TwitchHostEvent;
-import tv.twitchbot.common.dto.messages.events.TwitchRawMessageEvent;
-import tv.twitchbot.common.dto.messages.events.TwitchTimeoutEvent;
+import tv.twitchbot.common.dto.messages.events.*;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
 import tv.twitchbot.common.services.persistence.DAOManager;
 import tv.twitchbot.common.services.queue.MessageQueue;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by naomi on 10/8/2016.
  */
 public class TmiBot implements Runnable {
+    private static class Pair<A, B> {
+        private A first;
+        private B second;
+
+        public Pair(A first, B second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        public A getFirst() {
+            return first;
+        }
+
+        public B getSecond() {
+            return second;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            Pair<?, ?> pair = (Pair<?, ?>) o;
+
+            if (first != null ? !first.equals(pair.first) : pair.first != null) return false;
+            return second != null ? second.equals(pair.second) : pair.second == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = first != null ? first.hashCode() : 0;
+            result = 31 * result + (second != null ? second.hashCode() : 0);
+            return result;
+        }
+    }
+
     private final LoadBalancingDistributor.Listener listener;
     private volatile boolean running;
     private volatile Socket socket;
@@ -48,6 +85,7 @@ public class TmiBot implements Runnable {
     private Set<String> channels = new ConcurrentSkipListSet<>();
     private final LoadingCache<String, Tenant> tenantCache;
     private final LoadingCache<String, GlobalUser> globalUserCache;
+    private final LoadingCache<Pair<Tenant, GlobalUser>, List<Permission>> permissionCache;
 
     public TmiBot(String username, String oauthToken, LoadBalancingDistributor distributor, MessageQueue queue, Module module, DAOManager daoManager) {
         this.oauthToken = oauthToken;
@@ -81,6 +119,15 @@ public class TmiBot implements Runnable {
                     @Override
                     public GlobalUser load(String s) throws Exception {
                         return daoManager.getDaoGlobalUser().getByUser(Platform.TWITCH, s).toCore();
+                    }
+                });
+        this.permissionCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(30, TimeUnit.SECONDS)
+                .build(new CacheLoader<Pair<Tenant, GlobalUser>, List<Permission>>() {
+                    @Override
+                    public List<Permission> load(Pair<Tenant, GlobalUser> tenantGlobalUserPair) throws Exception {
+                        TenantUserPermissions permissions = daoManager.getDaoTenantUserPermissions().getByTenantAndUser(tenantGlobalUserPair.getFirst().getId().getValue(), tenantGlobalUserPair.getSecond().getId().getValue());
+                        return permissions.getPermissions().stream().map(TenantUserPermissions.Permission::toCore).collect(Collectors.toList());
                     }
                 });
     }
@@ -153,10 +200,36 @@ public class TmiBot implements Runnable {
             event((GlobalUserStateCommand) stanza);
         else if(stanza instanceof HostTargetCommand)
             event((HostTargetCommand) stanza);
+        else if(stanza instanceof JoinCommand)
+            event((JoinCommand) stanza);
+        else if(stanza instanceof ModeCommand)
+            event((ModeCommand) stanza);
+        else if(stanza instanceof NoticeCommand)
+            event((NoticeCommand) stanza);
+        else if(stanza instanceof PartCommand)
+            event((PartCommand) stanza);
+        else if(stanza instanceof PingCommand)
+            event((PingCommand) stanza);
+        else if(stanza instanceof PrivmsgCommand)
+            event((PrivmsgCommand) stanza);
+        else if(stanza instanceof ReconnectCommand)
+            event((ReconnectCommand) stanza);
+        else if(stanza instanceof RoomStateCommand)
+            event((RoomStateCommand) stanza);
+        else if(stanza instanceof RplEndOfMotdCommand)
+            event((RplEndOfMotdCommand) stanza);
+        else if(stanza instanceof RplNameReplyCommand)
+            event((RplNameReplyCommand) stanza);
+        else if(stanza instanceof UserNoticeCommand)
+            event((UserNoticeCommand) stanza);
+        else if(stanza instanceof UserStateCommand)
+            event((UserStateCommand) stanza);
+        else
+            throw new IllegalStateException("Unknown IrcStanza: " + stanza.getClass().getCanonicalName());
     }
 
     private void event(ClearChatCommand clearChatCommand) {
-        event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand.getChannel()), getUser(clearChatCommand.getNickname(), null), clearChatCommand));
+        event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand.getChannel()), getUser(clearChatCommand.getNickname()), clearChatCommand));
     }
 
     private void event(GlobalUserStateCommand globalUserStateCommand) {
@@ -165,6 +238,78 @@ public class TmiBot implements Runnable {
 
     private void event(HostTargetCommand hostTargetCommand) {
         event(new TwitchHostEvent(module, getChannel(hostTargetCommand.getChannel()), getChannel(hostTargetCommand.getTargetChannel()), hostTargetCommand));
+    }
+
+    private void event(JoinCommand joinCommand) {
+        event(new TwitchChatJoinEvent(module, getUser(joinCommand), getChannel(joinCommand.getChannel()), joinCommand));
+    }
+
+    private void event(ModeCommand modeCommand) {
+        for(String username : modeCommand.getNicknames())
+            event(new TwitchUserModChangeEvent(module, getChannel(modeCommand.getChannel()), getUser(username), modeCommand.getModeString().startsWith("+"), modeCommand));
+    }
+
+    private void event(NoticeCommand noticeCommand) {
+        event(new TwitchChannelEvent(module, getChannel(noticeCommand.getChannel()), noticeCommand.getMessage(), noticeCommand));
+    }
+
+    private void event(PartCommand partCommand) {
+        event(new TwitchChatPartEvent(module, getUser(partCommand), getChannel(partCommand.getChannel()), partCommand));
+    }
+
+    private void event(PingCommand pingCommand) {
+        event(new TwitchPingEvent(module, pingCommand.getToken(), pingCommand));
+    }
+
+    private void event(PrivmsgCommand privmsgCommand) {
+        TwitchChannel channel = getChannel(privmsgCommand.getChannel());
+        TwitchUser user = getUser(privmsgCommand);
+        event(new TwitchChatMessageEvent(module, new ChatMessage(channel, user, privmsgCommand.getMessage(), getPermissions(channel.getTenant(), user.getGlobalUser())), privmsgCommand));
+    }
+
+    private void event(ReconnectCommand reconnectCommand) {
+        event(new TwitchReconnectEvent(module, bot, reconnectCommand));
+    }
+
+    private void event(RoomStateCommand roomStateCommand) {
+        event(new TwitchRoomStateEvent(module, getChannel(roomStateCommand.getChannel()), roomStateCommand));
+    }
+
+    private void event(RplEndOfMotdCommand rplEndOfMotdCommand) {
+        event(new TwitchBotConnectedEvent(module, bot, rplEndOfMotdCommand));
+    }
+
+    private void event(RplNameReplyCommand rplNameReplyCommand) {
+        event(new TwitchChannelUsersEvent(module, getChannel(rplNameReplyCommand.getChannel()), rplNameReplyCommand.getMembers().stream().map(member -> getUser(member.getNickname())).collect(Collectors.toList()), rplNameReplyCommand));
+    }
+
+    private void event(UserNoticeCommand userNoticeCommand) {
+        event(new TwitchUserEvent(module, getChannel(userNoticeCommand.getChannel()), getUser(userNoticeCommand.getLogin()), userNoticeCommand.getMessage(), userNoticeCommand));
+    }
+
+    private void event(UserStateCommand userStateCommand) {
+        event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand.getChannel()), bot, userStateCommand));
+    }
+
+    private List<Permission> getPermissions(Tenant tenant, GlobalUser globalUser) {
+        try {
+            return permissionCache.get(new Pair<>(tenant, globalUser));
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private TwitchUser getUser(IrcStanza stanza) {
+        IrcSource source = stanza.getSource();
+        if(source instanceof IrcUser)
+            return getUser(((IrcUser) source).getNickname(), stanza.getTags().get("display-name"));
+        else if(stanza.getTags().containsKey("login"))
+            return getUser(stanza.getTags().get("login"), stanza.getTags().get("display-name"));
+        throw new IllegalArgumentException("Not able to find a TwitchUser in stanza: " + stanza.getRawLine());
+    }
+
+    private TwitchUser getUser(String id) {
+        return getUser(id, null);
     }
 
     private TwitchUser getUser(String id, String displayName) {

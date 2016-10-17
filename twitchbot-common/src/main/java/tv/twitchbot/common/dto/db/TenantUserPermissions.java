@@ -1,9 +1,6 @@
 package tv.twitchbot.common.dto.db;
 
-import com.datastax.driver.mapping.annotations.ClusteringColumn;
-import com.datastax.driver.mapping.annotations.PartitionKey;
-import com.datastax.driver.mapping.annotations.Table;
-import com.datastax.driver.mapping.annotations.UDT;
+import com.datastax.driver.mapping.annotations.*;
 import tv.twitchbot.common.dto.core.Permission;
 
 import java.util.List;
@@ -48,8 +45,10 @@ public class TenantUserPermissions {
     }
 
     @PartitionKey
+    @Column(name = "tenant_id")
     private UUID tenantId;
     @ClusteringColumn
+    @Column(name = "user_id")
     private UUID userId;
     private List<Permission> permissions;
 
