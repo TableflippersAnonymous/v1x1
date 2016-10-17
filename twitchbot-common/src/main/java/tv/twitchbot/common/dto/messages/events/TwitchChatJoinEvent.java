@@ -9,7 +9,8 @@ import tv.twitchbot.common.dto.irc.commands.JoinCommand;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by cobi on 10/10/2016.
+ * Fired when a {@link tv.twitchbot.common.dto.core.TwitchUser} joins a {@link tv.twitchbot.common.dto.core.TwitchChannel}
+ * @author Cobi
  */
 public class TwitchChatJoinEvent extends ChatJoinEvent {
     public static TwitchChatJoinEvent fromProto(Module module, UUID uuid, long timestamp, User user, Channel channel, EventOuterClass.TwitchChatJoinEvent twitchChatJoinEvent) {

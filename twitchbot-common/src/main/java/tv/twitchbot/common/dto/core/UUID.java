@@ -3,7 +3,9 @@ package tv.twitchbot.common.dto.core;
 import tv.twitchbot.common.dto.proto.core.UUIDOuterClass;
 
 /**
- * Created by cobi on 10/6/2016.
+ * Represents a {@link java.util.UUID}.
+ * Don't know what else you expected.
+ * @author Cobi
  */
 public class UUID {
     public static UUID fromProto(UUIDOuterClass.UUID uuid) {
