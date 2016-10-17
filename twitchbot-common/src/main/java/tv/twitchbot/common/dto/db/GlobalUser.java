@@ -5,7 +5,6 @@ import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 import com.datastax.driver.mapping.annotations.UDT;
 import tv.twitchbot.common.dto.core.*;
-import tv.twitchbot.common.dto.core.TwitchChannel;
 
 import java.util.ArrayList;
 import java.util.List;

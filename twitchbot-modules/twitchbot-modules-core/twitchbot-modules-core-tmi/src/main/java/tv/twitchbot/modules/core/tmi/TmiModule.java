@@ -12,8 +12,6 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
 
     }
 
-
-
     @Override
     public String getName() {
         return "tmi";
