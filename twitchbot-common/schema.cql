@@ -27,7 +27,7 @@ CREATE TYPE global_user_entry (
 
 CREATE TABLE global_user (
     id uuid,
-    entries list<global_user_entry>,
+    "entries" list<frozen<global_user_entry>>,
     PRIMARY KEY (id)
 );
 
@@ -46,7 +46,7 @@ CREATE TYPE tenant_entry (
 
 CREATE TABLE tenant (
     id uuid,
-    entries list<tenant_entry>,
+    "entries" list<frozen<tenant_entry>>,
     PRIMARY KEY (id)
 );
 
@@ -57,7 +57,7 @@ CREATE TYPE permission (
 CREATE TABLE tenant_user_permissions (
     tenant_id uuid,
     user_id uuid,
-    permissions list<permission>,
+    permissions list<frozen<permission>>,
     PRIMARY KEY (tenant_id, user_id)
 );
 
