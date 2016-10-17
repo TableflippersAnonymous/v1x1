@@ -11,7 +11,8 @@ import tv.twitchbot.common.modules.TenantConfiguration;
 import java.util.concurrent.Future;
 
 /**
- * Created by cobi on 10/8/2016.
+ * Interfaces with chat modules to send messages
+ * @author Cobi
  */
 public class ChatRouterServiceClient extends ServiceClient<SendMessageRequest, SendMessageResponse> {
 

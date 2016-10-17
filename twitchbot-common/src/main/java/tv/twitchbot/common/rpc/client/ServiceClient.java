@@ -17,7 +17,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Created by cobi on 10/8/2016.
+ * If you want to tell another module to do something, you extend this
  */
 public abstract class ServiceClient<T extends Request, U extends Response<T>> {
     private final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module;
