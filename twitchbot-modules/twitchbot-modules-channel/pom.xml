@@ -16,6 +16,7 @@
 
   <modules>
     <module>twitchbot-modules-channel-hello_world</module>
+    <module>../twitchbot-modules-channel-echo</module>
   </modules>
 
   <dependencies>
