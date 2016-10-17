@@ -9,7 +9,7 @@ import tv.twitchbot.common.modules.eventhandler.EventListener;
 /**
  * @author Josh
  */
-public class EchoListener extends EventListener {
+public class EchoListener implements EventListener {
 
     Echo echo;
 
