@@ -45,4 +45,20 @@ public class Tenant {
     public tv.twitchbot.common.dto.db.Tenant toDB() {
         return new tv.twitchbot.common.dto.db.Tenant(id.getValue(), channels.stream().map(Channel::toDBTenant).collect(Collectors.toList()));
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Tenant tenant = (Tenant) o;
+
+        return id != null ? id.equals(tenant.id) : tenant.id == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return id != null ? id.hashCode() : 0;
+    }
 }
