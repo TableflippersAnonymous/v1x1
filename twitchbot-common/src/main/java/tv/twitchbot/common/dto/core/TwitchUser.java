@@ -5,7 +5,8 @@ import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
 import tv.twitchbot.common.dto.proto.core.UserOuterClass;
 
 /**
- * Created by cobi on 10/5/16.
+ * Represents a {@link User} on the Twitch platform
+ * @author Cobi
  */
 public class TwitchUser extends User {
     public static TwitchUser fromProto(UserOuterClass.User user) {

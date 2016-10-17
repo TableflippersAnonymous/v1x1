@@ -7,7 +7,9 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by cobi on 10/9/2016.
+ * Fired when a notice from TMI regarding a {@link TwitchChannel} is received
+ * @author Cobi
+ * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#notice">Twitch-API Documentation</a>
  */
 public class TwitchChannelEvent extends Event {
     public static TwitchChannelEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchChannelEvent twitchChannelEvent) {

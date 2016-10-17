@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by cobi on 10/5/16.
+ * Represents a single chat message from a {@link User} that the bot received
+ * @author Cobi
  */
 public class ChatMessage {
     public static ChatMessage fromProto(ChatMessageOuterClass.ChatMessage message) {

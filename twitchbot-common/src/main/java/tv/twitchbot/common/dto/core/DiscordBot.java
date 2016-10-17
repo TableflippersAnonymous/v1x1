@@ -3,7 +3,8 @@ package tv.twitchbot.common.dto.core;
 import tv.twitchbot.common.dto.proto.core.BotOuterClass;
 
 /**
- * Created by cobi on 10/10/2016.
+ * Represents a {@link Bot} on the Discord platform
+ * @author Cobi
  */
 public class DiscordBot extends Bot {
     public static DiscordBot fromProto(String name, BotOuterClass.DiscordBot discordBot) {
