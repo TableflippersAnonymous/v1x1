@@ -1,16 +1,22 @@
 package tv.twitchbot.modules.core.tmi;
 
-import tv.twitchbot.common.dto.core.Module;
-import tv.twitchbot.common.dto.core.TwitchBot;
-import tv.twitchbot.common.dto.core.TwitchChannel;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
+import tv.twitchbot.common.dto.core.*;
+import tv.twitchbot.common.dto.db.Platform;
 import tv.twitchbot.common.dto.irc.IrcStanza;
 import tv.twitchbot.common.dto.irc.commands.ClearChatCommand;
+import tv.twitchbot.common.dto.irc.commands.GlobalUserStateCommand;
+import tv.twitchbot.common.dto.irc.commands.HostTargetCommand;
 import tv.twitchbot.common.dto.irc.commands.PingCommand;
-import tv.twitchbot.common.dto.irc.commands.PrivmsgCommand;
 import tv.twitchbot.common.dto.messages.Event;
+import tv.twitchbot.common.dto.messages.events.TwitchBotGlobalStateEvent;
+import tv.twitchbot.common.dto.messages.events.TwitchHostEvent;
 import tv.twitchbot.common.dto.messages.events.TwitchRawMessageEvent;
 import tv.twitchbot.common.dto.messages.events.TwitchTimeoutEvent;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
+import tv.twitchbot.common.services.persistence.DAOManager;
 import tv.twitchbot.common.services.queue.MessageQueue;
 
 import java.io.*;
@@ -18,8 +24,8 @@ import java.net.Socket;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by cobi on 10/8/2016.
@@ -38,21 +44,45 @@ public class TmiBot implements Runnable {
     private final UUID botId = UUID.randomUUID();
     private final LoadBalancingDistributor channelDistributor;
     private final MessageQueue messageQueue;
+    private final DAOManager daoManager;
     private Set<String> channels = new ConcurrentSkipListSet<>();
+    private final LoadingCache<String, Tenant> tenantCache;
+    private final LoadingCache<String, GlobalUser> globalUserCache;
 
-    public TmiBot(String username, String oauthToken, LoadBalancingDistributor distributor, MessageQueue queue, Module module) {
+    public TmiBot(String username, String oauthToken, LoadBalancingDistributor distributor, MessageQueue queue, Module module, DAOManager daoManager) {
         this.oauthToken = oauthToken;
         this.username = username;
         this.module = module;
         this.channelDistributor = distributor;
         this.messageQueue = queue;
+        this.daoManager = daoManager;
         this.bot = new TwitchBot(username);
         listener = (instanceId, entries) -> {
             if (botId.equals(instanceId.getValue())) {
-                setChannels(entries);
+                try {
+                    setChannels(entries);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             }
         };
         channelDistributor.addListener(listener);
+        this.tenantCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(30, TimeUnit.SECONDS)
+                .build(new CacheLoader<String, Tenant>() {
+                    @Override
+                    public Tenant load(String s) throws Exception {
+                        return daoManager.getDaoTenant().getByChannel(Platform.TWITCH, s).toCore();
+                    }
+                });
+        this.globalUserCache = CacheBuilder.newBuilder()
+                .expireAfterWrite(30, TimeUnit.SECONDS)
+                .build(new CacheLoader<String, GlobalUser>() {
+                    @Override
+                    public GlobalUser load(String s) throws Exception {
+                        return daoManager.getDaoGlobalUser().getByUser(Platform.TWITCH, s).toCore();
+                    }
+                });
     }
 
     @Override
@@ -117,8 +147,48 @@ public class TmiBot implements Runnable {
 
     private void event(IrcStanza stanza) {
         event(new TwitchRawMessageEvent(module, bot, stanza));
-        //if(stanza instanceof ClearChatCommand)
-            //event(new TwitchTimeoutEvent(module, new TwitchChannel((ClearChatCommand) stanza).getChannel(), ))
+        if(stanza instanceof ClearChatCommand)
+            event((ClearChatCommand) stanza);
+        else if(stanza instanceof GlobalUserStateCommand)
+            event((GlobalUserStateCommand) stanza);
+        else if(stanza instanceof HostTargetCommand)
+            event((HostTargetCommand) stanza);
+    }
+
+    private void event(ClearChatCommand clearChatCommand) {
+        event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand.getChannel()), getUser(clearChatCommand.getNickname(), null), clearChatCommand));
+    }
+
+    private void event(GlobalUserStateCommand globalUserStateCommand) {
+        event(new TwitchBotGlobalStateEvent(module, bot, globalUserStateCommand));
+    }
+
+    private void event(HostTargetCommand hostTargetCommand) {
+        event(new TwitchHostEvent(module, getChannel(hostTargetCommand.getChannel()), getChannel(hostTargetCommand.getTargetChannel()), hostTargetCommand));
+    }
+
+    private TwitchUser getUser(String id, String displayName) {
+        return new TwitchUser(id, getGlobalUser(id), displayName == null ? id : displayName);
+    }
+
+    private GlobalUser getGlobalUser(String id) {
+        try {
+            return globalUserCache.get(id);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private TwitchChannel getChannel(String id) {
+        return new TwitchChannel(id, getTenant(id), id);
+    }
+
+    private Tenant getTenant(String id) {
+        try {
+            return tenantCache.get(id);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void connect() throws IOException {
@@ -148,6 +218,11 @@ public class TmiBot implements Runnable {
         sendLine("JOIN " + channel);
     }
 
+    private void part(String channel) throws IOException {
+        channels.remove(channel);
+        sendLine("PART " + channel);
+    }
+
     private void quit() throws IOException {
         channels.clear();
         sendLine("QUIT :Disconnecting.");
@@ -162,7 +237,16 @@ public class TmiBot implements Runnable {
         quit();
     }
 
-    private void setChannels(Set<String> channels) {
+    public void sendMessage(String channel, String text) throws IOException {
+        sendLine("PRIVMSG " + channel + " :" + text);
+    }
 
+    private void setChannels(Set<String> channels) throws IOException {
+        for(String channel : this.channels)
+            if(!channels.contains(channel))
+                part(channel);
+        for(String channel : channels)
+            if(!this.channels.contains(channel))
+                join(channel);
     }
 }

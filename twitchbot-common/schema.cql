@@ -61,3 +61,9 @@ CREATE TABLE tenant_user_permissions (
     PRIMARY KEY (tenant_id, user_id)
 );
 
+CREATE TABLE key_value_entry (
+    name text,
+    key blob,
+    value blob,
+    PRIMARY KEY ((name, key))
+);
