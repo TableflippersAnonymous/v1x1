@@ -15,8 +15,8 @@ import java.util.List;
  */
 public abstract class RegisteredThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends ThreadedModule<T, U, V> {
 
-    EventListener listener;
-    List<Method> handlers;
+    private EventListener listener;
+    private List<Method> handlers;
 
     protected void registerListener(EventListener listener) {
         this.listener = listener;
