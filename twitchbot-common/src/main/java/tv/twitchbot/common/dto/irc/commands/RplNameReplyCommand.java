@@ -43,6 +43,14 @@ public class RplNameReplyCommand extends IrcStanza {
             this.isOp = isOp;
         }
 
+        public String getNickname() {
+            return nickname;
+        }
+
+        public boolean isOp() {
+            return isOp;
+        }
+
         public IRC.RplNameReplyCommand.Member toProto() {
             return IRC.RplNameReplyCommand.Member.newBuilder()
                     .setNickname(nickname)
