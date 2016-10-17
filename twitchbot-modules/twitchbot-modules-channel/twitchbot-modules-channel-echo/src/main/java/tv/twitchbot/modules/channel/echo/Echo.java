@@ -9,6 +9,10 @@ import tv.twitchbot.common.rpc.client.ChatRouterServiceClient;
 public class Echo extends RegisteredThreadedModule<EchoModuleSettings, EchoGlobalConfiguration, EchoTenantConfiguration> {
     ChatRouterServiceClient crsc;
 
+    public static void main(String[] args) throws Exception {
+        new Echo().entryPoint(args);
+    }
+    
     @Override
     public String getName() {
         return "echo";
