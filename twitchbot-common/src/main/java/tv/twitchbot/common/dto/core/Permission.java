@@ -4,7 +4,8 @@ package tv.twitchbot.common.dto.core;
 import tv.twitchbot.common.dto.proto.core.PermissionOuterClass;
 
 /**
- * Created by cobi on 10/5/16.
+ * Represents a permission node to attach to an entity
+ * @author Cobi
  */
 public class Permission {
     public static Permission fromProto(PermissionOuterClass.Permission proto) {
