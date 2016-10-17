@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired each time we receive part of a /NAMES response
+ * @author Naomi
+ * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#names">Twitch-API Documentation</a>
  */
 public class TwitchChannelUsersEvent extends Event {
     @SuppressWarnings("unchecked")

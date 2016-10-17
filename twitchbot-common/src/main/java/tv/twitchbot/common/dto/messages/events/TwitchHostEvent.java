@@ -9,7 +9,8 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 import java.util.stream.Collectors;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when a {@link TwitchChannel} starts hosting the video feed of another channel or stops hosting other channels
+ * @author Naomi
  */
 public class TwitchHostEvent extends Event {
     public static TwitchHostEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchHostEvent twitchHostEvent) {

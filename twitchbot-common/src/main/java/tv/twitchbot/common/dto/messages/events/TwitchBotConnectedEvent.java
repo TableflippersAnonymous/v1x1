@@ -7,7 +7,8 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when a {@link TwitchBot} connecting to TMI is ready to send commands
+ * @author Naomi
  */
 public class TwitchBotConnectedEvent extends Event {
     public static TwitchBotConnectedEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchBotConnectedEvent twitchBotConnectedEvent) {

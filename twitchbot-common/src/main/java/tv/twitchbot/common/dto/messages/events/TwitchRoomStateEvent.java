@@ -7,7 +7,9 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when we receive the information about a {@link TwitchChannel}
+ * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#roomstate-1">Twitch-API Documentation</a>
+ * @author Naomi
  */
 public class TwitchRoomStateEvent extends Event {
     public static TwitchRoomStateEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchRoomStateEvent twitchRoomStateEvent) {

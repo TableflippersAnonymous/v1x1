@@ -9,7 +9,8 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired for each line ingested from the socket connecting to TMI
+ * @author Naomi
  */
 public class TwitchRawMessageEvent extends Event {
     public static TwitchRawMessageEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchRawMessageEvent twitchRawMessageEvent) {

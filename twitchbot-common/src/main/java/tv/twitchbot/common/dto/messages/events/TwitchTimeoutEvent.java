@@ -7,7 +7,9 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when a {@link TwitchUser} has been timed out and chat purged or when all chat for a channel has been purged
+ * @author Naomi
+ * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#clearchat-1">Twitch-API Documentation</a>
  */
 public class TwitchTimeoutEvent extends Event {
     public static TwitchTimeoutEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchTimeoutEvent twitchTimeoutEvent) {

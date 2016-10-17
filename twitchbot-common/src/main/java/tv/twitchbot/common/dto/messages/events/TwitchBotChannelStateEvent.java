@@ -7,7 +7,9 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when the state of a {@link TwitchBot} in a {@link TwitchChannel} is sent
+ * @author Naomi
+ * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#userstate-1">Twitch-API documentation</a>
  */
 public class TwitchBotChannelStateEvent extends Event {
     public static TwitchBotChannelStateEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchBotChannelStateEvent twitchBotChannelStateEvent) {

@@ -8,7 +8,8 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/9/2016.
+ * Fired when a {@link User} joining a {@link Channel}
+ * @author Naomi
  */
 public abstract class ChatJoinEvent extends Event {
     public static ChatJoinEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.ChatJoinEvent chatJoinEvent) {
@@ -23,12 +24,19 @@ public abstract class ChatJoinEvent extends Event {
     private User user;
     private Channel channel;
 
+    /**
+     * Construct a new event using the current time and a random UUID
+     */
     public ChatJoinEvent(Module from, User user, Channel channel) {
         super(from);
         this.user = user;
         this.channel = channel;
     }
 
+    /**
+     * Construct a new event using your own UUID and time
+     * For example, for deserialization of a saved event
+     */
     public ChatJoinEvent(Module from, UUID messageId, long timestamp, User user, Channel channel) {
         super(from, messageId, timestamp);
         this.user = user;

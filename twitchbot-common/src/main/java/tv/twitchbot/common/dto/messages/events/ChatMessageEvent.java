@@ -7,7 +7,8 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
- * Created by naomi on 10/5/16.
+ * Fired when the ingestion of a chat message from a platform is complete
+ * @author Naomi
  */
 public abstract class ChatMessageEvent extends Event {
     public static ChatMessageEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.ChatMessageEvent chatMessageEvent) {

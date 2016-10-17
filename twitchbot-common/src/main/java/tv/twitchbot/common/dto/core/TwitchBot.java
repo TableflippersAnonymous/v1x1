@@ -3,7 +3,8 @@ package tv.twitchbot.common.dto.core;
 import tv.twitchbot.common.dto.proto.core.BotOuterClass;
 
 /**
- * Created by naomi on 10/10/2016.
+ * Represents a {@link Bot} on the Twitch platform
+ * @author Naomi
  */
 public class TwitchBot extends Bot {
     public static TwitchBot fromProto(String name, BotOuterClass.TwitchBot twitchBot) {

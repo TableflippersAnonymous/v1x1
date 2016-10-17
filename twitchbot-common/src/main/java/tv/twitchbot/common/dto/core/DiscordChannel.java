@@ -5,7 +5,8 @@ import tv.twitchbot.common.dto.proto.core.ChannelOuterClass;
 import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
 
 /**
- * Created by naomi on 10/5/16.
+ * Represents a {@link Channel} on the Discord platform
+ * @author Naomi
  */
 public class DiscordChannel extends Channel {
     public static DiscordChannel fromProto(ChannelOuterClass.Channel channel) {
