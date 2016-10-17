@@ -51,6 +51,10 @@ public abstract class Service<T extends Request, U extends Response<T>> {
         });
     }
 
+    protected Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> getModule() {
+        return module;
+    }
+
     public void shutdown() {
         executorService.shutdownNow();
     }

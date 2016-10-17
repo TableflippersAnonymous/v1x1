@@ -27,12 +27,22 @@ public class DAOGlobalUser {
         return globalUserMapper.get(id);
     }
 
-    public InverseGlobalUser getByUser(Platform platform, String userId) {
+    public InverseGlobalUser getUser(Platform platform, String userId) {
         return inverseGlobalUserMapper.get(platform, userId);
     }
 
+    public GlobalUser getByUser(Platform platform, String userId) {
+        return getByUser(getUser(platform, userId));
+    }
+
+    public GlobalUser getByUser(InverseGlobalUser inverseGlobalUser) {
+        if(inverseGlobalUser == null)
+            return null;
+        return getById(inverseGlobalUser.getGlobalUserId());
+    }
+
     public GlobalUser getOrCreate(Platform platform, String userId, String displayName) {
-        InverseGlobalUser inverseGlobalUser = getByUser(platform, userId);
+        InverseGlobalUser inverseGlobalUser = getUser(platform, userId);
         if(inverseGlobalUser != null) {
             GlobalUser globalUser = getById(inverseGlobalUser.getGlobalUserId());
             if(globalUser == null)
@@ -68,7 +78,7 @@ public class DAOGlobalUser {
         BatchStatement b = new BatchStatement();
         if(globalUser.getEntries().removeIf(entry -> entry.getPlatform() == platform && entry.getUserId().equals(userId)))
             b.add(globalUserMapper.saveQuery(globalUser));
-        InverseGlobalUser inverseGlobalUser = getByUser(platform, userId);
+        InverseGlobalUser inverseGlobalUser = getUser(platform, userId);
         if(inverseGlobalUser != null)
             b.add(inverseGlobalUserMapper.deleteQuery(inverseGlobalUser));
         if(b.size() > 0)
@@ -80,7 +90,7 @@ public class DAOGlobalUser {
         BatchStatement b = new BatchStatement();
         b.add(globalUserMapper.deleteQuery(globalUser));
         for(GlobalUser.Entry entry : globalUser.getEntries()) {
-            InverseGlobalUser inverseGlobalUser = getByUser(entry.getPlatform(), entry.getUserId());
+            InverseGlobalUser inverseGlobalUser = getUser(entry.getPlatform(), entry.getUserId());
             if(inverseGlobalUser != null)
                 b.add(inverseGlobalUserMapper.deleteQuery(inverseGlobalUser));
         }

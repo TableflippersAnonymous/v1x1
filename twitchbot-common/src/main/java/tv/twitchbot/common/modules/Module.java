@@ -166,6 +166,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         cassandraSession = cassandraCluster.connect();
         mappingManager = new MappingManager(cassandraSession);
         daoManager = new DAOManager(mappingManager);
+
+        persistentGlobalKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry());
+        persistentKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry(), toDto());
     }
 
     /* ******************************* CALL THIS FROM main() ******************************* */
@@ -348,7 +351,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     protected String getMainQueueForModule(tv.twitchbot.common.dto.core.Module module) {
-        return "inbound|module|" + module.getName();
+        return "Module|" + module.getName();
     }
 
     /* ******************************* PRIVATE METHODS ******************************* */

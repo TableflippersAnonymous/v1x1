@@ -41,7 +41,7 @@ public class EventRouterModule extends ThreadedModule<EventRouterSettings, Event
 
     @Override
     public String getName() {
-        return "EventRouter";
+        return "event_router";
     }
 
     @Override

@@ -8,7 +8,7 @@ import tv.twitchbot.common.modules.ServiceModule;
 public class ChatRouterModule extends ServiceModule<ChatRouterSettings, ChatRouterGlobalConfiguration, ChatRouterTenantConfiguration> {
     @Override
     public String getName() {
-        return "ChatRouter";
+        return "chat_router";
     }
 
     @Override

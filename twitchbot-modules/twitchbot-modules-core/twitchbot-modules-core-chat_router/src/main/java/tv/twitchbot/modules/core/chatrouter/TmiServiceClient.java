@@ -24,7 +24,7 @@ public class TmiServiceClient extends ServiceClient<SendMessageRequest, SendMess
 
     @Override
     protected String getServiceName() {
-        return "Core|TMI|channel|" + channel;
+        return "Core|TMI|Channel|" + channel;
     }
 
     public Future<SendMessageResponse> sendMessage(Channel channel, String text) {
