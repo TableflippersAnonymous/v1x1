@@ -164,7 +164,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
                 )
                 .build();
         cassandraSession = cassandraCluster.connect();
-        cassandraSession.execute(cassandraSession.prepare("USE ?").bind(cassandraConfig.getKeyspace()));
+        cassandraSession.execute(new SimpleStatement("USE " + cassandraConfig.getKeyspace()));
         mappingManager = new MappingManager(cassandraSession);
         daoManager = new DAOManager(mappingManager);
 
