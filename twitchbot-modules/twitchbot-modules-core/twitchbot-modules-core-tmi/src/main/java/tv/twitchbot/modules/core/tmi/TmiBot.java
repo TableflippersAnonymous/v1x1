@@ -14,7 +14,9 @@ import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.messages.events.*;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
 import tv.twitchbot.common.services.persistence.DAOManager;
+import tv.twitchbot.common.services.persistence.Deduplicator;
 import tv.twitchbot.common.services.queue.MessageQueue;
+import tv.twitchbot.common.util.ratelimiter.RateLimiter;
 
 import java.io.*;
 import java.net.Socket;
@@ -82,24 +84,30 @@ public class TmiBot implements Runnable {
     private final LoadBalancingDistributor channelDistributor;
     private final MessageQueue messageQueue;
     private final DAOManager daoManager;
-    private Set<String> channels = new ConcurrentSkipListSet<>();
+    private final Set<String> channels = new ConcurrentSkipListSet<>();
     private final LoadingCache<String, Tenant> tenantCache;
     private final LoadingCache<String, GlobalUser> globalUserCache;
     private final LoadingCache<Pair<Tenant, GlobalUser>, List<Permission>> permissionCache;
+    private final RateLimiter joinLimiter;
+    private final RateLimiter messageLimiter;
+    private final Deduplicator deduplicator;
 
-    public TmiBot(String username, String oauthToken, LoadBalancingDistributor distributor, MessageQueue queue, Module module, DAOManager daoManager) {
+    public TmiBot(String username, String oauthToken, LoadBalancingDistributor distributor, MessageQueue queue, Module module, DAOManager daoManager, RateLimiter joinLimiter, RateLimiter messageLimiter, Deduplicator deduplicator) {
         this.oauthToken = oauthToken;
         this.username = username;
         this.module = module;
         this.channelDistributor = distributor;
         this.messageQueue = queue;
         this.daoManager = daoManager;
+        this.joinLimiter = joinLimiter;
+        this.messageLimiter = messageLimiter;
+        this.deduplicator = deduplicator;
         this.bot = new TwitchBot(username);
         listener = (instanceId, entries) -> {
             if (botId.equals(instanceId.getValue())) {
                 try {
                     setChannels(entries);
-                } catch (IOException e) {
+                } catch (IOException | InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -185,6 +193,8 @@ public class TmiBot implements Runnable {
         IrcStanza stanza = IrcParser.parse(line);
         if(stanza instanceof PingCommand)
             sendLine("PONG :" + ((PingCommand) stanza).getToken());
+        if(stanza.getTags().containsKey("id") && deduplicator.seenAndAdd(new tv.twitchbot.common.dto.core.UUID(UUID.fromString(stanza.getTags().get("id")))))
+            return;
         event(stanza);
     }
 
@@ -358,9 +368,15 @@ public class TmiBot implements Runnable {
         channelDistributor.addInstance(new tv.twitchbot.common.dto.core.UUID(botId));
     }
 
-    private void join(String channel) throws IOException {
-        channels.add(channel);
-        sendLine("JOIN " + channel);
+    private void join(String channel) throws IOException, InterruptedException {
+        joinLimiter.submitAndWait(() -> {
+            channels.add(channel);
+            try {
+                sendLine("JOIN " + channel);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void part(String channel) throws IOException {
@@ -382,11 +398,17 @@ public class TmiBot implements Runnable {
         quit();
     }
 
-    public void sendMessage(String channel, String text) throws IOException {
-        sendLine("PRIVMSG " + channel + " :" + text);
+    public void sendMessage(String channel, String text) throws IOException, InterruptedException {
+        messageLimiter.submitAndWait(() -> {
+            try {
+                sendLine("PRIVMSG " + channel + " :" + text);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
-    private void setChannels(Set<String> channels) throws IOException {
+    private void setChannels(Set<String> channels) throws IOException, InterruptedException {
         for(String channel : this.channels)
             if(!channels.contains(channel))
                 part(channel);
