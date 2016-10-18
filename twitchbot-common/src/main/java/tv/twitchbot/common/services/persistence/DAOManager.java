@@ -1,10 +1,7 @@
 package tv.twitchbot.common.services.persistence;
 
 import com.datastax.driver.mapping.MappingManager;
-import tv.twitchbot.common.dao.DAOGlobalUser;
-import tv.twitchbot.common.dao.DAOKeyValueEntry;
-import tv.twitchbot.common.dao.DAOTenant;
-import tv.twitchbot.common.dao.DAOTenantUserPermissions;
+import tv.twitchbot.common.dao.*;
 
 /**
  * Created by cobi on 10/16/2016.
@@ -14,12 +11,16 @@ public class DAOManager {
     private DAOGlobalUser daoGlobalUser;
     private DAOTenantUserPermissions daoTenantUserPermissions;
     private DAOKeyValueEntry daoKeyValueEntry;
+    private DAOTenantConfiguration daoTenantConfiguration;
+    private DAOGlobalConfiguration daoGlobalConfiguration;
 
     public DAOManager(MappingManager mappingManager) {
         daoTenant = new DAOTenant(mappingManager);
         daoGlobalUser = new DAOGlobalUser(mappingManager);
         daoTenantUserPermissions = new DAOTenantUserPermissions(mappingManager);
         daoKeyValueEntry = new DAOKeyValueEntry(mappingManager);
+        daoTenantConfiguration = new DAOTenantConfiguration(mappingManager);
+        daoGlobalConfiguration = new DAOGlobalConfiguration(mappingManager);
     }
 
     public DAOTenant getDaoTenant() {
@@ -36,5 +37,13 @@ public class DAOManager {
 
     public DAOKeyValueEntry getDaoKeyValueEntry() {
         return daoKeyValueEntry;
+    }
+
+    public DAOTenantConfiguration getDaoTenantConfiguration() {
+        return daoTenantConfiguration;
+    }
+
+    public DAOGlobalConfiguration getDaoGlobalConfiguration() {
+        return daoGlobalConfiguration;
     }
 }
