@@ -175,6 +175,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     /* ******************************* CALL THIS FROM main() ******************************* */
     protected void entryPoint(final String[] args) throws Exception {
         parseArgs(args);
+        if(settings.getWaitStartMs() > 0) {
+            System.out.println("Waiting " + settings.getWaitStartMs() + "ms before starting up...");
+            Thread.sleep(settings.getWaitStartMs());
+        }
         initializeInternal();
         initialize();
         try {

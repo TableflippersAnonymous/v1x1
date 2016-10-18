@@ -10,6 +10,7 @@ public class ModuleSettings {
     private Config redissonConfig;
     private String zookeeperConnectionString;
     private CassandraConfig cassandraConfig;
+    private long waitStartMs = 0;
 
     @JsonProperty("redisson")
     public Config getRedissonConfig() {
@@ -39,5 +40,15 @@ public class ModuleSettings {
     @JsonProperty("cassandra")
     public void setCassandraConfig(CassandraConfig cassandraConfig) {
         this.cassandraConfig = cassandraConfig;
+    }
+
+    @JsonProperty("wait_start_ms")
+    public long getWaitStartMs() {
+        return waitStartMs;
+    }
+
+    @JsonProperty("wait_start_ms")
+    public void setWaitStartMs(long waitStartMs) {
+        this.waitStartMs = waitStartMs;
     }
 }
