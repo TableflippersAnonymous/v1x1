@@ -54,7 +54,8 @@ import java.util.concurrent.TimeUnit;
 public abstract class Module<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> {
     /* Config */
     private T settings;
-    private U globalConfig;
+    private ConfigurationProvider<U> globalConfigProvider;
+    private TenantConfigurationProvider<V> tenantConfigProvider;
     private UUID instanceId = UUID.randomUUID();
 
     /* Queues */
@@ -170,6 +171,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
         persistentGlobalKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry());
         persistentKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry(), toDto());
+
+        globalConfigProvider = new ConfigurationProvider<U>(toDto(), daoManager, getGlobalConfigurationClass());
+        tenantConfigProvider = new TenantConfigurationProvider<V>(toDto(), daoManager, getTenantConfigurationClass());
     }
 
     /* ******************************* CALL THIS FROM main() ******************************* */
@@ -240,12 +244,12 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return settings;
     }
 
-    protected U getGlobalConfiguration() {
-        return globalConfig;
+    public ConfigurationProvider<U> getGlobalConfigProvider() {
+        return globalConfigProvider;
     }
 
-    protected V getTenantConfiguration(Tenant tenant) {
-        return null;
+    public TenantConfigurationProvider<V> getTenantConfigProvider() {
+        return tenantConfigProvider;
     }
 
     protected KeyValueStore getTemporaryKeyValueStore() {
@@ -332,6 +336,14 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
             loadBalancingDistributorMap.put(path, loadBalancingDistributor);
         }
         return loadBalancingDistributorMap.get(path);
+    }
+
+    protected U getGlobalConfiguration() {
+        return getGlobalConfigProvider().getConfiguration();
+    }
+
+    protected V getTenantConfiguration(Tenant tenant) {
+        return getTenantConfigProvider().getTenantConfiguration(tenant);
     }
 
     /* ******************************* UTILITY METHODS ******************************* */

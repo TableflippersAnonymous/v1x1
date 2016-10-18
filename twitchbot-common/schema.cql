@@ -67,3 +67,16 @@ CREATE TABLE key_value_entry (
     value blob,
     PRIMARY KEY ((name, key))
 );
+
+CREATE TABLE global_configuration (
+    module text,
+    json text,
+    PRIMARY KEY (module)
+);
+
+CREATE TABLE tenant_configuration (
+    module text,
+    tenant_id uuid,
+    json text,
+    PRIMARY KEY ((module, tenant_id))
+);
