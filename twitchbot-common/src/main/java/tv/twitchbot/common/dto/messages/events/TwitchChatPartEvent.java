@@ -6,6 +6,7 @@ import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.core.User;
 import tv.twitchbot.common.dto.irc.IrcStanza;
 import tv.twitchbot.common.dto.irc.commands.PartCommand;
+import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
@@ -37,7 +38,7 @@ public class TwitchChatPartEvent extends ChatPartEvent {
     @Override
     protected EventOuterClass.ChatPartEvent.Builder toProtoChatPart() {
         return super.toProtoChatPart()
-                .setType(EventOuterClass.ChatPartEvent.Type.TWITCH)
+                .setType(PlatformOuterClass.Platform.TWITCH)
                 .setExtension(EventOuterClass.TwitchChatPartEvent.data, EventOuterClass.TwitchChatPartEvent.newBuilder()
                         .setPartCommand(partCommand.toProto())
                         .build()
