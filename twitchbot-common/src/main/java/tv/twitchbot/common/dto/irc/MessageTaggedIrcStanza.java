@@ -3,6 +3,8 @@ package tv.twitchbot.common.dto.irc;
 import tv.twitchbot.common.dto.proto.core.IRC;
 
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -88,7 +90,14 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
     public MessageTaggedIrcStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcCommand command, String rawArgs, String[] args) {
         super(rawLine, tags, source, command, rawArgs, args);
         if(tags.containsKey("badges") && !tags.get("badges").isEmpty())
-            badges = Arrays.asList(tags.get("badges").split(",")).stream().map(String::toUpperCase).map(Badge::valueOf).collect(Collectors.toSet());
+            badges = Arrays.asList(tags.get("badges").split(",")).stream().map(String::toUpperCase).map(s -> s.split("/")[0]).map(s -> {
+                try {
+                    return Badge.valueOf(s);
+                } catch(IllegalArgumentException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+            }).filter(badge -> badge != null).collect(Collectors.toSet());
         if(tags.containsKey("emotes") && !tags.get("emotes").isEmpty())
             emotes = Arrays.asList(tags.get("emotes").split("/")).stream().map(Emote::new).collect(Collectors.toList());
         if(tags.containsKey("room-id") && !tags.get("room-id").isEmpty())
