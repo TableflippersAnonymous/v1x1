@@ -8,9 +8,11 @@ import "Channel.proto";
 import "User.proto";
 import "IRC.proto";
 import "Bot.proto";
+import "Platform.proto";
 
 message Event {
     enum EventType {
+        UNKNOWN = 0;
         CHAT_MESSAGE = 1;
         CHAT_JOIN = 2;
         CHAT_PART = 3;
@@ -45,12 +47,8 @@ message ChatMessageEvent {
         optional ChatMessageEvent data = 101;
     }
 
-    enum Type {
-        TWITCH = 1;
-    }
-
     required core.ChatMessage chat_message = 1;
-    required Type type = 2;
+    required Platform type = 2;
 }
 
 message ChatJoinEvent {
@@ -60,13 +58,9 @@ message ChatJoinEvent {
         optional ChatJoinEvent data = 102;
     }
 
-    enum Type {
-        TWITCH = 1;
-    }
-
     required core.User user = 1;
     required core.Channel channel = 2;
-    required Type type = 3;
+    required Platform type = 3;
 }
 
 message ChatPartEvent {
@@ -76,13 +70,9 @@ message ChatPartEvent {
         optional ChatPartEvent data = 103;
     }
 
-    enum Type {
-        TWITCH = 1;
-    }
-
     required core.User user = 1;
     required core.Channel channel = 2;
-    required Type type = 3;
+    required Platform type = 3;
 }
 
 message TwitchBotChannelStateEvent {

@@ -8,6 +8,7 @@ message IrcStanza {
     extensions 100 to max;
 
     enum IrcCommand {
+        UNKNOWN = 0;
         CLEARCHAT = 1;
         GLOBALUSERSTATE = 2;
         HOSTTARGET = 3;
@@ -37,6 +38,7 @@ message IrcSource {
     extensions 100 to max;
 
     enum Type {
+        UNKNOWN = 0;
         SERVER = 1;
         USER = 2;
     }
@@ -64,6 +66,7 @@ message IrcUser {
 
 message TaggedIrcStanza {
     enum UserType {
+        UNKNOWN = 0;
         MOD = 1;
         GLOBAL_MOD = 2;
         ADMIN = 3;
@@ -85,12 +88,15 @@ message EmoteSetIrcStanza {
 
 message MessageTaggedIrcStanza {
     enum Badge {
+        UNKNOWN = 0;
         STAFF = 1;
         ADMIN = 2;
         GLOBAL_MOD = 3;
         MODERATOR = 4;
         SUBSCRIBER = 5;
         TURBO = 6;
+        PREMIUM = 7;
+        BITS = 8;
     }
 
     message Emote {
@@ -165,6 +171,7 @@ message NoticeCommand {
     }
 
     enum MessageId {
+        UNKNOWN = 0;
         SUBS_ON = 1;
         ALREADY_SUBS_ON = 2;
         SUBS_OFF = 3;
@@ -272,6 +279,7 @@ message UserNoticeCommand {
     }
 
     enum MessageId {
+        UNKNOWN = 0;
         RESUB = 1;
     }
 

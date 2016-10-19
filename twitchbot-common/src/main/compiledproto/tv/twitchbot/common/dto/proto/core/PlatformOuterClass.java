@@ -20,6 +20,10 @@ public final class PlatformOuterClass {
   public enum Platform
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
+     * <code>UNKNOWN = 0;</code>
+     */
+    UNKNOWN(0),
+    /**
      * <code>TWITCH = 1;</code>
      */
     TWITCH(1),
@@ -29,6 +33,10 @@ public final class PlatformOuterClass {
     DISCORD(2),
     ;
 
+    /**
+     * <code>UNKNOWN = 0;</code>
+     */
+    public static final int UNKNOWN_VALUE = 0;
     /**
      * <code>TWITCH = 1;</code>
      */
@@ -53,6 +61,7 @@ public final class PlatformOuterClass {
 
     public static Platform forNumber(int value) {
       switch (value) {
+        case 0: return UNKNOWN;
         case 1: return TWITCH;
         case 2: return DISCORD;
         default: return null;
@@ -114,8 +123,8 @@ public final class PlatformOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\016Platform.proto\022\"tv.twitchbot.common.dt" +
-      "o.proto.core*#\n\010Platform\022\n\n\006TWITCH\020\001\022\013\n\007" +
-      "DISCORD\020\002"
+      "o.proto.core*0\n\010Platform\022\013\n\007UNKNOWN\020\000\022\n\n" +
+      "\006TWITCH\020\001\022\013\n\007DISCORD\020\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

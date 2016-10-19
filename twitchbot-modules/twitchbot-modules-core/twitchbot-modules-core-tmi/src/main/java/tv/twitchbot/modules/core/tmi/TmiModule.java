@@ -96,7 +96,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         scheduledExecutorService = Executors.newScheduledThreadPool(getSettings().getMaxConnections());
         joinLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi/" + myIp, 48, 15);
         eventRouter = getMessageQueueManager().forName(getMainQueueForModule(new Module("event_router")));
-        channelDistributor = getLoadBalancingDistributor("/channels", getGlobalConfiguration().getConnectionsPerChannel());
+        channelDistributor = getLoadBalancingDistributor("/twitchbot/tmi/channels", getGlobalConfiguration().getConnectionsPerChannel());
         channelDistributor.addListener(new LoadBalancingDistributor.Listener() {
             @Override
             public void notify(UUID instanceId, Set<String> entries) {
