@@ -26,6 +26,10 @@ public final class RequestOuterClass {
   public enum RequestType
       implements com.google.protobuf.ProtocolMessageEnum {
     /**
+     * <code>UNKNOWN = 0;</code>
+     */
+    UNKNOWN(0),
+    /**
      * <code>MODULE_SHUTDOWN = 1;</code>
      */
     MODULE_SHUTDOWN(1),
@@ -35,6 +39,10 @@ public final class RequestOuterClass {
     SEND_MESSAGE(2),
     ;
 
+    /**
+     * <code>UNKNOWN = 0;</code>
+     */
+    public static final int UNKNOWN_VALUE = 0;
     /**
      * <code>MODULE_SHUTDOWN = 1;</code>
      */
@@ -59,6 +67,7 @@ public final class RequestOuterClass {
 
     public static RequestType forNumber(int value) {
       switch (value) {
+        case 0: return UNKNOWN;
         case 1: return MODULE_SHUTDOWN;
         case 2: return SEND_MESSAGE;
         default: return null;
@@ -151,7 +160,7 @@ public final class RequestOuterClass {
       super(builder);
     }
     private Request() {
-      type_ = 1;
+      type_ = 0;
       responseQueueName_ = "";
     }
 
@@ -238,7 +247,7 @@ public final class RequestOuterClass {
      */
     public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType getType() {
       tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType result = tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.MODULE_SHUTDOWN : result;
+      return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.UNKNOWN : result;
     }
 
     public static final int RESPONSE_QUEUE_NAME_FIELD_NUMBER = 2;
@@ -500,7 +509,7 @@ public final class RequestOuterClass {
       }
       public Builder clear() {
         super.clear();
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
         responseQueueName_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -647,7 +656,7 @@ public final class RequestOuterClass {
       }
       private int bitField0_;
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
        * <code>required .tv.twitchbot.common.dto.proto.messages.RequestType type = 1;</code>
        */
@@ -659,7 +668,7 @@ public final class RequestOuterClass {
        */
       public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType getType() {
         tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType result = tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.MODULE_SHUTDOWN : result;
+        return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.UNKNOWN : result;
       }
       /**
        * <code>required .tv.twitchbot.common.dto.proto.messages.RequestType type = 1;</code>
@@ -678,7 +687,7 @@ public final class RequestOuterClass {
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -860,7 +869,7 @@ public final class RequestOuterClass {
       super(builder);
     }
     private Response() {
-      type_ = 1;
+      type_ = 0;
     }
 
     @java.lang.Override
@@ -953,7 +962,7 @@ public final class RequestOuterClass {
      */
     public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType getType() {
       tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType result = tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.MODULE_SHUTDOWN : result;
+      return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.UNKNOWN : result;
     }
 
     public static final int REQUEST_MESSAGE_ID_FIELD_NUMBER = 2;
@@ -1200,7 +1209,7 @@ public final class RequestOuterClass {
       }
       public Builder clear() {
         super.clear();
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (requestMessageIdBuilder_ == null) {
           requestMessageId_ = null;
@@ -1356,7 +1365,7 @@ public final class RequestOuterClass {
       }
       private int bitField0_;
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
        * <code>required .tv.twitchbot.common.dto.proto.messages.RequestType type = 1;</code>
        */
@@ -1368,7 +1377,7 @@ public final class RequestOuterClass {
        */
       public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType getType() {
         tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType result = tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.MODULE_SHUTDOWN : result;
+        return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.RequestType.UNKNOWN : result;
       }
       /**
        * <code>required .tv.twitchbot.common.dto.proto.messages.RequestType type = 1;</code>
@@ -1387,7 +1396,7 @@ public final class RequestOuterClass {
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -3577,8 +3586,8 @@ public final class RequestOuterClass {
       "\004data\0220.tv.twitchbot.common.dto.proto.me",
       "ssages.Response\030f \001(\0132;.tv.twitchbot.com" +
       "mon.dto.proto.messages.SendMessageRespon" +
-      "se*4\n\013RequestType\022\023\n\017MODULE_SHUTDOWN\020\001\022\020" +
-      "\n\014SEND_MESSAGE\020\002"
+      "se*A\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\023\n\017MODULE" +
+      "_SHUTDOWN\020\001\022\020\n\014SEND_MESSAGE\020\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

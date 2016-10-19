@@ -6,6 +6,7 @@ import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.core.User;
 import tv.twitchbot.common.dto.irc.IrcStanza;
 import tv.twitchbot.common.dto.irc.commands.JoinCommand;
+import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
@@ -37,7 +38,7 @@ public class TwitchChatJoinEvent extends ChatJoinEvent {
     @Override
     protected EventOuterClass.ChatJoinEvent.Builder toProtoChatJoin() {
         return super.toProtoChatJoin()
-                .setType(EventOuterClass.ChatJoinEvent.Type.TWITCH)
+                .setType(PlatformOuterClass.Platform.TWITCH)
                 .setExtension(EventOuterClass.TwitchChatJoinEvent.data, EventOuterClass.TwitchChatJoinEvent.newBuilder()
                         .setJoinCommand(joinCommand.toProto())
                         .build()
