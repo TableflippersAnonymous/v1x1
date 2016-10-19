@@ -173,33 +173,38 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
     }
 
     private void join(String channel) {
-        if(bots.containsKey(channel))
-            return;
-        System.out.println("Joining " + channel);
-        System.out.println("Getting tenant for " + channel);
-        Tenant tenant = getTenant(channel);
-        System.out.println("Getting tenant configuration for " + channel);
-        TmiTenantConfiguration tenantConfiguration = getTenantConfiguration(tenant);
-        String oauthToken;
-        String username = tenantConfiguration.getBotName();
-        if(tenantConfiguration.isCustomBot()) {
-            oauthToken = tenantConfiguration.getOauthToken();
-        } else {
-            if(username == null || !getGlobalConfiguration().getGlobalBots().containsKey(username))
-                username = getGlobalConfiguration().getDefaultUsername();
-            oauthToken = getGlobalConfiguration().getGlobalBots().get(username);
-        }
-        System.out.println("channel: " + channel + " username: " + username + " oauth: " + oauthToken);
-        RateLimiter messageLimiter = new LocalRateLimiter(scheduledExecutorService, 18, 30);
-        System.out.println("Built messageLimiter for " + channel);
-        TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel);
-        scheduledExecutorService.submit(tmiBot);
-        TmiBot oldTmiBot = bots.put(channel, tmiBot);
         try {
-            if(oldTmiBot != null)
-                oldTmiBot.shutdown();
-        } catch (IOException e) {
+            if (bots.containsKey(channel))
+                return;
+            System.out.println("Joining " + channel);
+            System.out.println("Getting tenant for " + channel);
+            Tenant tenant = getTenant(channel);
+            System.out.println("Getting tenant configuration for " + channel);
+            TmiTenantConfiguration tenantConfiguration = getTenantConfiguration(tenant);
+            String oauthToken;
+            String username = tenantConfiguration.getBotName();
+            if (tenantConfiguration.isCustomBot()) {
+                oauthToken = tenantConfiguration.getOauthToken();
+            } else {
+                if (username == null || !getGlobalConfiguration().getGlobalBots().containsKey(username))
+                    username = getGlobalConfiguration().getDefaultUsername();
+                oauthToken = getGlobalConfiguration().getGlobalBots().get(username);
+            }
+            System.out.println("channel: " + channel + " username: " + username + " oauth: " + oauthToken);
+            RateLimiter messageLimiter = new LocalRateLimiter(scheduledExecutorService, 18, 30);
+            System.out.println("Built messageLimiter for " + channel);
+            TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel);
+            scheduledExecutorService.submit(tmiBot);
+            TmiBot oldTmiBot = bots.put(channel, tmiBot);
+            try {
+                if (oldTmiBot != null)
+                    oldTmiBot.shutdown();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
