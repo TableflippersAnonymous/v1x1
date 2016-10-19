@@ -48,7 +48,7 @@ message ChatMessageEvent {
     }
 
     required core.ChatMessage chat_message = 1;
-    required Platform type = 2;
+    required core.Platform type = 2;
 }
 
 message ChatJoinEvent {
@@ -60,7 +60,7 @@ message ChatJoinEvent {
 
     required core.User user = 1;
     required core.Channel channel = 2;
-    required Platform type = 3;
+    required core.Platform type = 3;
 }
 
 message ChatPartEvent {
@@ -72,7 +72,7 @@ message ChatPartEvent {
 
     required core.User user = 1;
     required core.Channel channel = 2;
-    required Platform type = 3;
+    required core.Platform type = 3;
 }
 
 message TwitchBotChannelStateEvent {
