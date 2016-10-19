@@ -3,12 +3,13 @@ package tv.twitchbot.common.modules;
 import tv.twitchbot.common.rpc.services.Service;
 
 import java.util.Set;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * Created by cobi on 10/8/2016.
  */
 public abstract class ServiceModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends DefaultModule<T, U, V> {
-    private Set<Service> services;
+    private Set<Service> services = new ConcurrentSkipListSet<>();
 
     protected void registerService(Service service) {
         services.add(service);
