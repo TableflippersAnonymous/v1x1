@@ -36,6 +36,7 @@ public class TmiBot implements Runnable {
     private TmiService service;
     private final TmiModule tmiModule;
     private final String channel;
+    private final UUID id = UUID.randomUUID();
 
     public TmiBot(String username, String oauthToken, MessageQueue queue,
                   Module module, RateLimiter joinLimiter, RateLimiter messageLimiter,
@@ -93,6 +94,7 @@ public class TmiBot implements Runnable {
     }
 
     private void processLine(String line) throws IOException {
+        System.out.println("[" + username + ":" + id.toString() + "] [" + channel + "] Read: " + line);
         IrcStanza stanza = IrcParser.parse(line);
         if(stanza instanceof PingCommand)
             sendLine("PONG :" + ((PingCommand) stanza).getToken());
@@ -259,6 +261,7 @@ public class TmiBot implements Runnable {
     }
 
     private void sendLine(String line) throws IOException {
+        System.out.println("[" + username + ":" + id.toString() + "] [" + channel + "] Write: " + line);
         outputStream.write((line + "\r\n").getBytes());
         outputStream.flush();
     }
