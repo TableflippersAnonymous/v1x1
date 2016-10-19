@@ -9,7 +9,7 @@ import java.util.Set;
  * Created by cobi on 10/10/2016.
  */
 public interface LoadBalancingDistributor {
-    interface Listener {
+    interface Listener extends Comparable<Listener> {
         void notify(UUID instanceId, Set<String> entries);
     }
 
