@@ -16,7 +16,7 @@ import java.util.concurrent.Executors;
 /**
  * Created by naomi on 10/8/2016.
  */
-public abstract class Service<T extends Request, U extends Response<T>> {
+public abstract class Service<T extends Request, U extends Response<T>> implements Comparable<Service<T, U>> {
     private Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private String serviceName;
@@ -63,5 +63,10 @@ public abstract class Service<T extends Request, U extends Response<T>> {
 
     private String getServiceQueue() {
         return "Service|" + serviceName;
+    }
+
+    @Override
+    public int compareTo(Service<T, U> o) {
+        return serviceName.compareTo(o.serviceName);
     }
 }
