@@ -64,7 +64,7 @@ public class IrcParser {
 
     private static String[] splitIrcLine(String line) {
         if(!line.startsWith(":"))
-            throw new RuntimeException("Unparsable TMI line: " + line);
+            line = ":tmi.twitch.tv " + line;
         return line.substring(1).split(" ", 3);
     }
 
