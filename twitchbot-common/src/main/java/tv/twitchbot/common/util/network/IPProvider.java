@@ -16,7 +16,7 @@ public class IPProvider {
     public static String getMyIp() throws IOException {
         CloseableHttpClient client = HttpClients.createDefault();
         try {
-            HttpGet get = new HttpGet("http://ipinfo.io");
+            HttpGet get = new HttpGet("http://ipinfo.io/ip");
             CloseableHttpResponse response = client.execute(get);
             try {
                 HttpEntity entity = response.getEntity();
