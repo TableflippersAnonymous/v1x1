@@ -5,6 +5,7 @@ import tv.twitchbot.common.dto.core.Module;
 import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.irc.IrcStanza;
 import tv.twitchbot.common.dto.irc.commands.PrivmsgCommand;
+import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 
 /**
@@ -36,7 +37,7 @@ public class TwitchChatMessageEvent extends ChatMessageEvent {
     @Override
     protected EventOuterClass.ChatMessageEvent.Builder toProtoChatMessage() {
         return super.toProtoChatMessage()
-                .setType(EventOuterClass.ChatMessageEvent.Type.TWITCH)
+                .setType(PlatformOuterClass.Platform.TWITCH)
                 .setExtension(EventOuterClass.TwitchChatMessageEvent.data, EventOuterClass.TwitchChatMessageEvent.newBuilder()
                         .setPrivmsgCommand(privmsgCommand.toProto())
                         .build()

@@ -61,7 +61,7 @@ public final class EventOuterClass {
       super(builder);
     }
     private Event() {
-      type_ = 1;
+      type_ = 0;
     }
 
     @java.lang.Override
@@ -133,6 +133,10 @@ public final class EventOuterClass {
     public enum EventType
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
+      /**
        * <code>CHAT_MESSAGE = 1;</code>
        */
       CHAT_MESSAGE(1),
@@ -198,6 +202,10 @@ public final class EventOuterClass {
       TWITCH_USER_MOD_CHANGE(16),
       ;
 
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
       /**
        * <code>CHAT_MESSAGE = 1;</code>
        */
@@ -278,6 +286,7 @@ public final class EventOuterClass {
 
       public static EventType forNumber(int value) {
         switch (value) {
+          case 0: return UNKNOWN;
           case 1: return CHAT_MESSAGE;
           case 2: return CHAT_JOIN;
           case 3: return CHAT_PART;
@@ -357,7 +366,7 @@ public final class EventOuterClass {
      */
     public tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType getType() {
       tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType result = tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType.CHAT_MESSAGE : result;
+      return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType.UNKNOWN : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -558,7 +567,7 @@ public final class EventOuterClass {
       }
       public Builder clear() {
         super.clear();
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
@@ -691,7 +700,7 @@ public final class EventOuterClass {
       }
       private int bitField0_;
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
        * <code>required .tv.twitchbot.common.dto.proto.messages.Event.EventType type = 1;</code>
        */
@@ -703,7 +712,7 @@ public final class EventOuterClass {
        */
       public tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType getType() {
         tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType result = tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType.CHAT_MESSAGE : result;
+        return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event.EventType.UNKNOWN : result;
       }
       /**
        * <code>required .tv.twitchbot.common.dto.proto.messages.Event.EventType type = 1;</code>
@@ -722,7 +731,7 @@ public final class EventOuterClass {
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -807,13 +816,13 @@ public final class EventOuterClass {
     tv.twitchbot.common.dto.proto.core.ChatMessageOuterClass.ChatMessageOrBuilder getChatMessageOrBuilder();
 
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
      */
     boolean hasType();
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
      */
-    tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type getType();
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType();
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ChatMessageEvent}
@@ -828,7 +837,7 @@ public final class EventOuterClass {
       super(builder);
     }
     private ChatMessageEvent() {
-      type_ = 1;
+      type_ = 0;
     }
 
     @java.lang.Override
@@ -874,7 +883,7 @@ public final class EventOuterClass {
             }
             case 16: {
               int rawValue = input.readEnum();
-              tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type value = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type.valueOf(rawValue);
+              tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
@@ -907,87 +916,6 @@ public final class EventOuterClass {
               tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.class, tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Builder.class);
     }
 
-    /**
-     * Protobuf enum {@code tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type}
-     */
-    public enum Type
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      TWITCH(1),
-      ;
-
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      public static final int TWITCH_VALUE = 1;
-
-
-      public final int getNumber() {
-        return value;
-      }
-
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static Type valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static Type forNumber(int value) {
-        switch (value) {
-          case 1: return TWITCH;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<Type>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          Type> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<Type>() {
-              public Type findValueByNumber(int number) {
-                return Type.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final Type[] VALUES = values();
-
-      public static Type valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private Type(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type)
-    }
-
     private int bitField0_;
     public static final int CHAT_MESSAGE_FIELD_NUMBER = 1;
     private tv.twitchbot.common.dto.proto.core.ChatMessageOuterClass.ChatMessage chatMessage_;
@@ -1013,17 +941,17 @@ public final class EventOuterClass {
     public static final int TYPE_FIELD_NUMBER = 2;
     private int type_;
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
      */
-    public tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type getType() {
-      tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type result = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type.TWITCH : result;
+    public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+      tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -1255,7 +1183,7 @@ public final class EventOuterClass {
           chatMessageBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
@@ -1523,24 +1451,24 @@ public final class EventOuterClass {
         return chatMessageBuilder_;
       }
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
        */
-      public tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type getType() {
-        tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type result = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type.TWITCH : result;
+      public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+        tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
        */
-      public Builder setType(tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatMessageEvent.Type value) {
+      public Builder setType(tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1550,11 +1478,11 @@ public final class EventOuterClass {
         return this;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatMessageEvent.Type type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -1652,13 +1580,13 @@ public final class EventOuterClass {
     tv.twitchbot.common.dto.proto.core.ChannelOuterClass.ChannelOrBuilder getChannelOrBuilder();
 
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type type = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
      */
     boolean hasType();
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type type = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
      */
-    tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type getType();
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType();
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ChatJoinEvent}
@@ -1673,7 +1601,7 @@ public final class EventOuterClass {
       super(builder);
     }
     private ChatJoinEvent() {
-      type_ = 1;
+      type_ = 0;
     }
 
     @java.lang.Override
@@ -1732,7 +1660,7 @@ public final class EventOuterClass {
             }
             case 24: {
               int rawValue = input.readEnum();
-              tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type value = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type.valueOf(rawValue);
+              tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(3, rawValue);
               } else {
@@ -1763,87 +1691,6 @@ public final class EventOuterClass {
       return tv.twitchbot.common.dto.proto.messages.EventOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ChatJoinEvent_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.class, tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Builder.class);
-    }
-
-    /**
-     * Protobuf enum {@code tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type}
-     */
-    public enum Type
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      TWITCH(1),
-      ;
-
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      public static final int TWITCH_VALUE = 1;
-
-
-      public final int getNumber() {
-        return value;
-      }
-
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static Type valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static Type forNumber(int value) {
-        switch (value) {
-          case 1: return TWITCH;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<Type>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          Type> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<Type>() {
-              public Type findValueByNumber(int number) {
-                return Type.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final Type[] VALUES = values();
-
-      public static Type valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private Type(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type)
     }
 
     private int bitField0_;
@@ -1892,17 +1739,17 @@ public final class EventOuterClass {
     public static final int TYPE_FIELD_NUMBER = 3;
     private int type_;
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type type = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type type = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
      */
-    public tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type getType() {
-      tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type result = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type.TWITCH : result;
+    public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+      tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -2165,7 +2012,7 @@ public final class EventOuterClass {
           channelBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
@@ -2568,24 +2415,24 @@ public final class EventOuterClass {
         return channelBuilder_;
       }
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type type = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type type = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
        */
-      public tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type getType() {
-        tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type result = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type.TWITCH : result;
+      public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+        tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type type = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
        */
-      public Builder setType(tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatJoinEvent.Type value) {
+      public Builder setType(tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2595,11 +2442,11 @@ public final class EventOuterClass {
         return this;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatJoinEvent.Type type = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -2697,13 +2544,13 @@ public final class EventOuterClass {
     tv.twitchbot.common.dto.proto.core.ChannelOuterClass.ChannelOrBuilder getChannelOrBuilder();
 
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type type = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
      */
     boolean hasType();
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type type = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
      */
-    tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type getType();
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType();
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ChatPartEvent}
@@ -2718,7 +2565,7 @@ public final class EventOuterClass {
       super(builder);
     }
     private ChatPartEvent() {
-      type_ = 1;
+      type_ = 0;
     }
 
     @java.lang.Override
@@ -2777,7 +2624,7 @@ public final class EventOuterClass {
             }
             case 24: {
               int rawValue = input.readEnum();
-              tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type value = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type.valueOf(rawValue);
+              tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(3, rawValue);
               } else {
@@ -2808,87 +2655,6 @@ public final class EventOuterClass {
       return tv.twitchbot.common.dto.proto.messages.EventOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ChatPartEvent_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.class, tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Builder.class);
-    }
-
-    /**
-     * Protobuf enum {@code tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type}
-     */
-    public enum Type
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      TWITCH(1),
-      ;
-
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      public static final int TWITCH_VALUE = 1;
-
-
-      public final int getNumber() {
-        return value;
-      }
-
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static Type valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static Type forNumber(int value) {
-        switch (value) {
-          case 1: return TWITCH;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<Type>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          Type> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<Type>() {
-              public Type findValueByNumber(int number) {
-                return Type.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final Type[] VALUES = values();
-
-      public static Type valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private Type(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type)
     }
 
     private int bitField0_;
@@ -2937,17 +2703,17 @@ public final class EventOuterClass {
     public static final int TYPE_FIELD_NUMBER = 3;
     private int type_;
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type type = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type type = 3;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
      */
-    public tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type getType() {
-      tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type result = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type.TWITCH : result;
+    public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+      tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -3210,7 +2976,7 @@ public final class EventOuterClass {
           channelBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
@@ -3613,24 +3379,24 @@ public final class EventOuterClass {
         return channelBuilder_;
       }
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type type = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type type = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
        */
-      public tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type getType() {
-        tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type result = tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type.TWITCH : result;
+      public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+        tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type type = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
        */
-      public Builder setType(tv.twitchbot.common.dto.proto.messages.EventOuterClass.ChatPartEvent.Type value) {
+      public Builder setType(tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3640,11 +3406,11 @@ public final class EventOuterClass {
         return this;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.messages.ChatPartEvent.Type type = 3;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 3;</code>
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -18109,165 +17875,163 @@ public final class EventOuterClass {
       "\n\013Event.proto\022&tv.twitchbot.common.dto.p" +
       "roto.messages\032\rMessage.proto\032\021ChatMessag" +
       "e.proto\032\rChannel.proto\032\nUser.proto\032\tIRC." +
-      "proto\032\tBot.proto\"\265\004\n\005Event\022E\n\004type\030\001 \002(\016" +
-      "27.tv.twitchbot.common.dto.proto.message" +
-      "s.Event.EventType\"\354\002\n\tEventType\022\020\n\014CHAT_" +
-      "MESSAGE\020\001\022\r\n\tCHAT_JOIN\020\002\022\r\n\tCHAT_PART\020\003\022" +
-      "\034\n\030TWITCH_BOT_CHANNEL_STATE\020\004\022\030\n\024TWITCH_" +
-      "BOT_CONNECTED\020\005\022\033\n\027TWITCH_BOT_GLOBAL_STA" +
-      "TE\020\006\022\030\n\024TWITCH_CHANNEL_EVENT\020\007\022\030\n\024TWITCH",
-      "_CHANNEL_USERS\020\010\022\017\n\013TWITCH_HOST\020\t\022\017\n\013TWI" +
-      "TCH_PING\020\n\022\026\n\022TWITCH_RAW_MESSAGE\020\013\022\024\n\020TW" +
-      "ITCH_RECONNECT\020\014\022\025\n\021TWITCH_ROOM_STATE\020\r\022" +
-      "\022\n\016TWITCH_TIMEOUT\020\016\022\017\n\013TWITCH_USER\020\017\022\032\n\026" +
-      "TWITCH_USER_MOD_CHANGE\020\020*\010\010d\020\200\200\200\200\0022l\n\004da" +
-      "ta\022/.tv.twitchbot.common.dto.proto.messa" +
-      "ges.Message\030e \001(\0132-.tv.twitchbot.common." +
-      "dto.proto.messages.Event\"\273\002\n\020ChatMessage" +
-      "Event\022E\n\014chat_message\030\001 \002(\0132/.tv.twitchb" +
-      "ot.common.dto.proto.core.ChatMessage\022K\n\004",
-      "type\030\002 \002(\0162=.tv.twitchbot.common.dto.pro" +
-      "to.messages.ChatMessageEvent.Type\"\022\n\004Typ" +
-      "e\022\n\n\006TWITCH\020\001*\010\010d\020\200\200\200\200\0022u\n\004data\022-.tv.twi" +
-      "tchbot.common.dto.proto.messages.Event\030e" +
-      " \001(\01328.tv.twitchbot.common.dto.proto.mes" +
-      "sages.ChatMessageEvent\"\341\002\n\rChatJoinEvent" +
-      "\0226\n\004user\030\001 \002(\0132(.tv.twitchbot.common.dto" +
-      ".proto.core.User\022<\n\007channel\030\002 \002(\0132+.tv.t" +
-      "witchbot.common.dto.proto.core.Channel\022H" +
-      "\n\004type\030\003 \002(\0162:.tv.twitchbot.common.dto.p",
-      "roto.messages.ChatJoinEvent.Type\"\022\n\004Type" +
-      "\022\n\n\006TWITCH\020\001*\010\010d\020\200\200\200\200\0022r\n\004data\022-.tv.twit" +
-      "chbot.common.dto.proto.messages.Event\030f " +
+      "proto\032\tBot.proto\032\016Platform.proto\"\302\004\n\005Eve" +
+      "nt\022E\n\004type\030\001 \002(\01627.tv.twitchbot.common.d" +
+      "to.proto.messages.Event.EventType\"\371\002\n\tEv" +
+      "entType\022\013\n\007UNKNOWN\020\000\022\020\n\014CHAT_MESSAGE\020\001\022\r" +
+      "\n\tCHAT_JOIN\020\002\022\r\n\tCHAT_PART\020\003\022\034\n\030TWITCH_B" +
+      "OT_CHANNEL_STATE\020\004\022\030\n\024TWITCH_BOT_CONNECT" +
+      "ED\020\005\022\033\n\027TWITCH_BOT_GLOBAL_STATE\020\006\022\030\n\024TWI",
+      "TCH_CHANNEL_EVENT\020\007\022\030\n\024TWITCH_CHANNEL_US" +
+      "ERS\020\010\022\017\n\013TWITCH_HOST\020\t\022\017\n\013TWITCH_PING\020\n\022" +
+      "\026\n\022TWITCH_RAW_MESSAGE\020\013\022\024\n\020TWITCH_RECONN" +
+      "ECT\020\014\022\025\n\021TWITCH_ROOM_STATE\020\r\022\022\n\016TWITCH_T" +
+      "IMEOUT\020\016\022\017\n\013TWITCH_USER\020\017\022\032\n\026TWITCH_USER" +
+      "_MOD_CHANGE\020\020*\010\010d\020\200\200\200\200\0022l\n\004data\022/.tv.twi" +
+      "tchbot.common.dto.proto.messages.Message" +
+      "\030e \001(\0132-.tv.twitchbot.common.dto.proto.m" +
+      "essages.Event\"\226\002\n\020ChatMessageEvent\022E\n\014ch" +
+      "at_message\030\001 \002(\0132/.tv.twitchbot.common.d",
+      "to.proto.core.ChatMessage\022:\n\004type\030\002 \002(\0162" +
+      ",.tv.twitchbot.common.dto.proto.core.Pla" +
+      "tform*\010\010d\020\200\200\200\200\0022u\n\004data\022-.tv.twitchbot.c" +
+      "ommon.dto.proto.messages.Event\030e \001(\01328.t" +
+      "v.twitchbot.common.dto.proto.messages.Ch" +
+      "atMessageEvent\"\277\002\n\rChatJoinEvent\0226\n\004user" +
+      "\030\001 \002(\0132(.tv.twitchbot.common.dto.proto.c" +
+      "ore.User\022<\n\007channel\030\002 \002(\0132+.tv.twitchbot" +
+      ".common.dto.proto.core.Channel\022:\n\004type\030\003" +
+      " \002(\0162,.tv.twitchbot.common.dto.proto.cor",
+      "e.Platform*\010\010d\020\200\200\200\200\0022r\n\004data\022-.tv.twitch" +
+      "bot.common.dto.proto.messages.Event\030f \001(" +
+      "\01325.tv.twitchbot.common.dto.proto.messag" +
+      "es.ChatJoinEvent\"\277\002\n\rChatPartEvent\0226\n\004us" +
+      "er\030\001 \002(\0132(.tv.twitchbot.common.dto.proto" +
+      ".core.User\022<\n\007channel\030\002 \002(\0132+.tv.twitchb" +
+      "ot.common.dto.proto.core.Channel\022:\n\004type" +
+      "\030\003 \002(\0162,.tv.twitchbot.common.dto.proto.c" +
+      "ore.Platform*\010\010d\020\200\200\200\200\0022r\n\004data\022-.tv.twit" +
+      "chbot.common.dto.proto.messages.Event\030g ",
       "\001(\01325.tv.twitchbot.common.dto.proto.mess" +
-      "ages.ChatJoinEvent\"\341\002\n\rChatPartEvent\0226\n\004" +
-      "user\030\001 \002(\0132(.tv.twitchbot.common.dto.pro" +
-      "to.core.User\022<\n\007channel\030\002 \002(\0132+.tv.twitc" +
-      "hbot.common.dto.proto.core.Channel\022H\n\004ty" +
-      "pe\030\003 \002(\0162:.tv.twitchbot.common.dto.proto" +
-      ".messages.ChatPartEvent.Type\"\022\n\004Type\022\n\n\006",
-      "TWITCH\020\001*\010\010d\020\200\200\200\200\0022r\n\004data\022-.tv.twitchbo" +
-      "t.common.dto.proto.messages.Event\030g \001(\0132" +
-      "5.tv.twitchbot.common.dto.proto.messages" +
-      ".ChatPartEvent\"\334\002\n\032TwitchBotChannelState" +
-      "Event\022<\n\007channel\030\001 \002(\0132+.tv.twitchbot.co" +
-      "mmon.dto.proto.core.Channel\0224\n\003bot\030\002 \002(\013" +
-      "2\'.tv.twitchbot.common.dto.proto.core.Bo" +
-      "t\022I\n\022user_state_command\030\003 \002(\0132-.tv.twitc" +
-      "hbot.common.dto.proto.core.IrcStanza2\177\n\004" +
-      "data\022-.tv.twitchbot.common.dto.proto.mes",
-      "sages.Event\030h \001(\0132B.tv.twitchbot.common." +
-      "dto.proto.messages.TwitchBotChannelState" +
-      "Event\"\235\002\n\027TwitchBotConnectedEvent\0224\n\003bot" +
-      "\030\001 \002(\0132\'.tv.twitchbot.common.dto.proto.c" +
-      "ore.Bot\022N\n\027rpl_end_of_motd_command\030\002 \002(\013" +
-      "2-.tv.twitchbot.common.dto.proto.core.Ir" +
-      "cStanza2|\n\004data\022-.tv.twitchbot.common.dt" +
-      "o.proto.messages.Event\030i \001(\0132?.tv.twitch" +
-      "bot.common.dto.proto.messages.TwitchBotC" +
-      "onnectedEvent\"\243\002\n\031TwitchBotGlobalStateEv",
-      "ent\0224\n\003bot\030\001 \002(\0132\'.tv.twitchbot.common.d" +
-      "to.proto.core.Bot\022P\n\031global_user_state_c" +
-      "ommand\030\002 \002(\0132-.tv.twitchbot.common.dto.p" +
-      "roto.core.IrcStanza2~\n\004data\022-.tv.twitchb" +
-      "ot.common.dto.proto.messages.Event\030j \001(\013" +
-      "2A.tv.twitchbot.common.dto.proto.message" +
-      "s.TwitchBotGlobalStateEvent\"\243\002\n\022TwitchCh" +
-      "annelEvent\022<\n\007channel\030\001 \002(\0132+.tv.twitchb" +
-      "ot.common.dto.proto.core.Channel\022\017\n\007mess" +
-      "age\030\002 \002(\t\022E\n\016notice_command\030\003 \002(\0132-.tv.t",
+      "ages.ChatPartEvent\"\334\002\n\032TwitchBotChannelS" +
+      "tateEvent\022<\n\007channel\030\001 \002(\0132+.tv.twitchbo" +
+      "t.common.dto.proto.core.Channel\0224\n\003bot\030\002" +
+      " \002(\0132\'.tv.twitchbot.common.dto.proto.cor" +
+      "e.Bot\022I\n\022user_state_command\030\003 \002(\0132-.tv.t" +
       "witchbot.common.dto.proto.core.IrcStanza" +
-      "2w\n\004data\022-.tv.twitchbot.common.dto.proto" +
-      ".messages.Event\030k \001(\0132:.tv.twitchbot.com" +
-      "mon.dto.proto.messages.TwitchChannelEven" +
-      "t\"\335\002\n\027TwitchChannelUsersEvent\022<\n\007channel" +
-      "\030\001 \002(\0132+.tv.twitchbot.common.dto.proto.c" +
-      "ore.Channel\0227\n\005users\030\002 \003(\0132(.tv.twitchbo" +
-      "t.common.dto.proto.core.User\022M\n\026rpl_name" +
-      "_reply_command\030\003 \002(\0132-.tv.twitchbot.comm" +
-      "on.dto.proto.core.IrcStanza2|\n\004data\022-.tv",
-      ".twitchbot.common.dto.proto.messages.Eve" +
-      "nt\030l \001(\0132?.tv.twitchbot.common.dto.proto" +
-      ".messages.TwitchChannelUsersEvent\"\335\001\n\023Tw" +
-      "itchChatJoinEvent\022C\n\014join_command\030\001 \002(\0132" +
-      "-.tv.twitchbot.common.dto.proto.core.Irc" +
-      "Stanza2\200\001\n\004data\0225.tv.twitchbot.common.dt" +
-      "o.proto.messages.ChatJoinEvent\030e \001(\0132;.t" +
-      "v.twitchbot.common.dto.proto.messages.Tw" +
-      "itchChatJoinEvent\"\351\001\n\026TwitchChatMessageE" +
-      "vent\022F\n\017privmsg_command\030\001 \002(\0132-.tv.twitc",
-      "hbot.common.dto.proto.core.IrcStanza2\206\001\n" +
-      "\004data\0228.tv.twitchbot.common.dto.proto.me" +
-      "ssages.ChatMessageEvent\030e \001(\0132>.tv.twitc" +
-      "hbot.common.dto.proto.messages.TwitchCha" +
-      "tMessageEvent\"\335\001\n\023TwitchChatPartEvent\022C\n" +
-      "\014part_command\030\001 \002(\0132-.tv.twitchbot.commo" +
-      "n.dto.proto.core.IrcStanza2\200\001\n\004data\0225.tv" +
-      ".twitchbot.common.dto.proto.messages.Cha" +
-      "tPartEvent\030e \001(\0132;.tv.twitchbot.common.d" +
-      "to.proto.messages.TwitchChatPartEvent\"\326\002",
-      "\n\017TwitchHostEvent\022<\n\007channel\030\001 \002(\0132+.tv." +
-      "twitchbot.common.dto.proto.core.Channel\022" +
-      "C\n\016target_channel\030\002 \001(\0132+.tv.twitchbot.c" +
-      "ommon.dto.proto.core.Channel\022J\n\023host_tar" +
-      "get_command\030\003 \002(\0132-.tv.twitchbot.common." +
-      "dto.proto.core.IrcStanza2t\n\004data\022-.tv.tw" +
-      "itchbot.common.dto.proto.messages.Event\030" +
-      "m \001(\01327.tv.twitchbot.common.dto.proto.me" +
-      "ssages.TwitchHostEvent\"\333\001\n\017TwitchPingEve" +
-      "nt\022\r\n\005token\030\001 \002(\t\022C\n\014ping_command\030\002 \002(\0132",
-      "-.tv.twitchbot.common.dto.proto.core.Irc" +
-      "Stanza2t\n\004data\022-.tv.twitchbot.common.dto" +
-      ".proto.messages.Event\030n \001(\01327.tv.twitchb" +
-      "ot.common.dto.proto.messages.TwitchPingE" +
-      "vent\"\214\002\n\025TwitchRawMessageEvent\0224\n\003bot\030\001 " +
-      "\002(\0132\'.tv.twitchbot.common.dto.proto.core" +
-      ".Bot\022A\n\nirc_stanza\030\002 \002(\0132-.tv.twitchbot." +
-      "common.dto.proto.core.IrcStanza2z\n\004data\022" +
-      "-.tv.twitchbot.common.dto.proto.messages" +
-      ".Event\030o \001(\0132=.tv.twitchbot.common.dto.p",
-      "roto.messages.TwitchRawMessageEvent\"\221\002\n\024" +
-      "TwitchReconnectEvent\0224\n\003bot\030\001 \002(\0132\'.tv.t" +
-      "witchbot.common.dto.proto.core.Bot\022H\n\021re" +
-      "connect_command\030\002 \002(\0132-.tv.twitchbot.com" +
-      "mon.dto.proto.core.IrcStanza2y\n\004data\022-.t" +
-      "v.twitchbot.common.dto.proto.messages.Ev" +
-      "ent\030p \001(\0132<.tv.twitchbot.common.dto.prot" +
-      "o.messages.TwitchReconnectEvent\"\232\002\n\024Twit" +
-      "chRoomStateEvent\022<\n\007channel\030\001 \002(\0132+.tv.t" +
-      "witchbot.common.dto.proto.core.Channel\022I",
-      "\n\022room_state_command\030\002 \002(\0132-.tv.twitchbo" +
-      "t.common.dto.proto.core.IrcStanza2y\n\004dat" +
-      "a\022-.tv.twitchbot.common.dto.proto.messag" +
-      "es.Event\030q \001(\0132<.tv.twitchbot.common.dto" +
-      ".proto.messages.TwitchRoomStateEvent\"\316\002\n" +
-      "\022TwitchTimeoutEvent\022<\n\007channel\030\001 \002(\0132+.t" +
-      "v.twitchbot.common.dto.proto.core.Channe" +
-      "l\0226\n\004user\030\002 \002(\0132(.tv.twitchbot.common.dt" +
-      "o.proto.core.User\022I\n\022clear_chat_command\030" +
-      "\003 \002(\0132-.tv.twitchbot.common.dto.proto.co",
-      "re.IrcStanza2w\n\004data\022-.tv.twitchbot.comm" +
-      "on.dto.proto.messages.Event\030r \001(\0132:.tv.t" +
-      "witchbot.common.dto.proto.messages.Twitc" +
-      "hTimeoutEvent\"\332\002\n\017TwitchUserEvent\022<\n\007cha" +
-      "nnel\030\001 \002(\0132+.tv.twitchbot.common.dto.pro" +
-      "to.core.Channel\0226\n\004user\030\002 \002(\0132(.tv.twitc" +
-      "hbot.common.dto.proto.core.User\022\017\n\007messa" +
-      "ge\030\003 \002(\t\022J\n\023user_notice_command\030\004 \002(\0132-." +
+      "2\177\n\004data\022-.tv.twitchbot.common.dto.proto" +
+      ".messages.Event\030h \001(\0132B.tv.twitchbot.com" +
+      "mon.dto.proto.messages.TwitchBotChannelS",
+      "tateEvent\"\235\002\n\027TwitchBotConnectedEvent\0224\n" +
+      "\003bot\030\001 \002(\0132\'.tv.twitchbot.common.dto.pro" +
+      "to.core.Bot\022N\n\027rpl_end_of_motd_command\030\002" +
+      " \002(\0132-.tv.twitchbot.common.dto.proto.cor" +
+      "e.IrcStanza2|\n\004data\022-.tv.twitchbot.commo" +
+      "n.dto.proto.messages.Event\030i \001(\0132?.tv.tw" +
+      "itchbot.common.dto.proto.messages.Twitch" +
+      "BotConnectedEvent\"\243\002\n\031TwitchBotGlobalSta" +
+      "teEvent\0224\n\003bot\030\001 \002(\0132\'.tv.twitchbot.comm" +
+      "on.dto.proto.core.Bot\022P\n\031global_user_sta",
+      "te_command\030\002 \002(\0132-.tv.twitchbot.common.d" +
+      "to.proto.core.IrcStanza2~\n\004data\022-.tv.twi" +
+      "tchbot.common.dto.proto.messages.Event\030j" +
+      " \001(\0132A.tv.twitchbot.common.dto.proto.mes" +
+      "sages.TwitchBotGlobalStateEvent\"\243\002\n\022Twit" +
+      "chChannelEvent\022<\n\007channel\030\001 \002(\0132+.tv.twi" +
+      "tchbot.common.dto.proto.core.Channel\022\017\n\007" +
+      "message\030\002 \002(\t\022E\n\016notice_command\030\003 \002(\0132-." +
       "tv.twitchbot.common.dto.proto.core.IrcSt" +
-      "anza2t\n\004data\022-.tv.twitchbot.common.dto.p",
-      "roto.messages.Event\030s \001(\01327.tv.twitchbot" +
-      ".common.dto.proto.messages.TwitchUserEve" +
-      "nt\"\350\002\n\030TwitchUserModChangeEvent\022<\n\007chann" +
-      "el\030\001 \002(\0132+.tv.twitchbot.common.dto.proto" +
-      ".core.Channel\0226\n\004user\030\002 \002(\0132(.tv.twitchb" +
-      "ot.common.dto.proto.core.User\022\022\n\nis_now_" +
-      "mod\030\003 \002(\010\022C\n\014mode_command\030\004 \002(\0132-.tv.twi" +
-      "tchbot.common.dto.proto.core.IrcStanza2}" +
-      "\n\004data\022-.tv.twitchbot.common.dto.proto.m" +
-      "essages.Event\030t \001(\0132@.tv.twitchbot.commo",
-      "n.dto.proto.messages.TwitchUserModChange" +
-      "Event"
+      "anza2w\n\004data\022-.tv.twitchbot.common.dto.p",
+      "roto.messages.Event\030k \001(\0132:.tv.twitchbot" +
+      ".common.dto.proto.messages.TwitchChannel" +
+      "Event\"\335\002\n\027TwitchChannelUsersEvent\022<\n\007cha" +
+      "nnel\030\001 \002(\0132+.tv.twitchbot.common.dto.pro" +
+      "to.core.Channel\0227\n\005users\030\002 \003(\0132(.tv.twit" +
+      "chbot.common.dto.proto.core.User\022M\n\026rpl_" +
+      "name_reply_command\030\003 \002(\0132-.tv.twitchbot." +
+      "common.dto.proto.core.IrcStanza2|\n\004data\022" +
+      "-.tv.twitchbot.common.dto.proto.messages" +
+      ".Event\030l \001(\0132?.tv.twitchbot.common.dto.p",
+      "roto.messages.TwitchChannelUsersEvent\"\335\001" +
+      "\n\023TwitchChatJoinEvent\022C\n\014join_command\030\001 " +
+      "\002(\0132-.tv.twitchbot.common.dto.proto.core" +
+      ".IrcStanza2\200\001\n\004data\0225.tv.twitchbot.commo" +
+      "n.dto.proto.messages.ChatJoinEvent\030e \001(\013" +
+      "2;.tv.twitchbot.common.dto.proto.message" +
+      "s.TwitchChatJoinEvent\"\351\001\n\026TwitchChatMess" +
+      "ageEvent\022F\n\017privmsg_command\030\001 \002(\0132-.tv.t" +
+      "witchbot.common.dto.proto.core.IrcStanza" +
+      "2\206\001\n\004data\0228.tv.twitchbot.common.dto.prot",
+      "o.messages.ChatMessageEvent\030e \001(\0132>.tv.t" +
+      "witchbot.common.dto.proto.messages.Twitc" +
+      "hChatMessageEvent\"\335\001\n\023TwitchChatPartEven" +
+      "t\022C\n\014part_command\030\001 \002(\0132-.tv.twitchbot.c" +
+      "ommon.dto.proto.core.IrcStanza2\200\001\n\004data\022" +
+      "5.tv.twitchbot.common.dto.proto.messages" +
+      ".ChatPartEvent\030e \001(\0132;.tv.twitchbot.comm" +
+      "on.dto.proto.messages.TwitchChatPartEven" +
+      "t\"\326\002\n\017TwitchHostEvent\022<\n\007channel\030\001 \002(\0132+" +
+      ".tv.twitchbot.common.dto.proto.core.Chan",
+      "nel\022C\n\016target_channel\030\002 \001(\0132+.tv.twitchb" +
+      "ot.common.dto.proto.core.Channel\022J\n\023host" +
+      "_target_command\030\003 \002(\0132-.tv.twitchbot.com" +
+      "mon.dto.proto.core.IrcStanza2t\n\004data\022-.t" +
+      "v.twitchbot.common.dto.proto.messages.Ev" +
+      "ent\030m \001(\01327.tv.twitchbot.common.dto.prot" +
+      "o.messages.TwitchHostEvent\"\333\001\n\017TwitchPin" +
+      "gEvent\022\r\n\005token\030\001 \002(\t\022C\n\014ping_command\030\002 " +
+      "\002(\0132-.tv.twitchbot.common.dto.proto.core" +
+      ".IrcStanza2t\n\004data\022-.tv.twitchbot.common",
+      ".dto.proto.messages.Event\030n \001(\01327.tv.twi" +
+      "tchbot.common.dto.proto.messages.TwitchP" +
+      "ingEvent\"\214\002\n\025TwitchRawMessageEvent\0224\n\003bo" +
+      "t\030\001 \002(\0132\'.tv.twitchbot.common.dto.proto." +
+      "core.Bot\022A\n\nirc_stanza\030\002 \002(\0132-.tv.twitch" +
+      "bot.common.dto.proto.core.IrcStanza2z\n\004d" +
+      "ata\022-.tv.twitchbot.common.dto.proto.mess" +
+      "ages.Event\030o \001(\0132=.tv.twitchbot.common.d" +
+      "to.proto.messages.TwitchRawMessageEvent\"" +
+      "\221\002\n\024TwitchReconnectEvent\0224\n\003bot\030\001 \002(\0132\'.",
+      "tv.twitchbot.common.dto.proto.core.Bot\022H" +
+      "\n\021reconnect_command\030\002 \002(\0132-.tv.twitchbot" +
+      ".common.dto.proto.core.IrcStanza2y\n\004data" +
+      "\022-.tv.twitchbot.common.dto.proto.message" +
+      "s.Event\030p \001(\0132<.tv.twitchbot.common.dto." +
+      "proto.messages.TwitchReconnectEvent\"\232\002\n\024" +
+      "TwitchRoomStateEvent\022<\n\007channel\030\001 \002(\0132+." +
+      "tv.twitchbot.common.dto.proto.core.Chann" +
+      "el\022I\n\022room_state_command\030\002 \002(\0132-.tv.twit" +
+      "chbot.common.dto.proto.core.IrcStanza2y\n",
+      "\004data\022-.tv.twitchbot.common.dto.proto.me" +
+      "ssages.Event\030q \001(\0132<.tv.twitchbot.common" +
+      ".dto.proto.messages.TwitchRoomStateEvent" +
+      "\"\316\002\n\022TwitchTimeoutEvent\022<\n\007channel\030\001 \002(\013" +
+      "2+.tv.twitchbot.common.dto.proto.core.Ch" +
+      "annel\0226\n\004user\030\002 \002(\0132(.tv.twitchbot.commo" +
+      "n.dto.proto.core.User\022I\n\022clear_chat_comm" +
+      "and\030\003 \002(\0132-.tv.twitchbot.common.dto.prot" +
+      "o.core.IrcStanza2w\n\004data\022-.tv.twitchbot." +
+      "common.dto.proto.messages.Event\030r \001(\0132:.",
+      "tv.twitchbot.common.dto.proto.messages.T" +
+      "witchTimeoutEvent\"\332\002\n\017TwitchUserEvent\022<\n" +
+      "\007channel\030\001 \002(\0132+.tv.twitchbot.common.dto" +
+      ".proto.core.Channel\0226\n\004user\030\002 \002(\0132(.tv.t" +
+      "witchbot.common.dto.proto.core.User\022\017\n\007m" +
+      "essage\030\003 \002(\t\022J\n\023user_notice_command\030\004 \002(" +
+      "\0132-.tv.twitchbot.common.dto.proto.core.I" +
+      "rcStanza2t\n\004data\022-.tv.twitchbot.common.d" +
+      "to.proto.messages.Event\030s \001(\01327.tv.twitc" +
+      "hbot.common.dto.proto.messages.TwitchUse",
+      "rEvent\"\350\002\n\030TwitchUserModChangeEvent\022<\n\007c" +
+      "hannel\030\001 \002(\0132+.tv.twitchbot.common.dto.p" +
+      "roto.core.Channel\0226\n\004user\030\002 \002(\0132(.tv.twi" +
+      "tchbot.common.dto.proto.core.User\022\022\n\nis_" +
+      "now_mod\030\003 \002(\010\022C\n\014mode_command\030\004 \002(\0132-.tv" +
+      ".twitchbot.common.dto.proto.core.IrcStan" +
+      "za2}\n\004data\022-.tv.twitchbot.common.dto.pro" +
+      "to.messages.Event\030t \001(\0132@.tv.twitchbot.c" +
+      "ommon.dto.proto.messages.TwitchUserModCh" +
+      "angeEvent"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -18286,6 +18050,7 @@ public final class EventOuterClass {
           tv.twitchbot.common.dto.proto.core.UserOuterClass.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.IRC.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.BotOuterClass.getDescriptor(),
+          tv.twitchbot.common.dto.proto.core.PlatformOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_messages_Event_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -18413,6 +18178,7 @@ public final class EventOuterClass {
     tv.twitchbot.common.dto.proto.core.UserOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.IRC.getDescriptor();
     tv.twitchbot.common.dto.proto.core.BotOuterClass.getDescriptor();
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

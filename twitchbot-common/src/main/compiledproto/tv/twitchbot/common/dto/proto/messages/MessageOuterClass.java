@@ -76,7 +76,7 @@ public final class MessageOuterClass {
       super(builder);
     }
     private Message() {
-      type_ = 1;
+      type_ = 0;
       timestamp_ = 0L;
     }
 
@@ -180,6 +180,10 @@ public final class MessageOuterClass {
     public enum MessageType
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
+      /**
        * <code>EVENT = 1;</code>
        */
       EVENT(1),
@@ -193,6 +197,10 @@ public final class MessageOuterClass {
       RESPONSE(3),
       ;
 
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
       /**
        * <code>EVENT = 1;</code>
        */
@@ -221,6 +229,7 @@ public final class MessageOuterClass {
 
       public static MessageType forNumber(int value) {
         switch (value) {
+          case 0: return UNKNOWN;
           case 1: return EVENT;
           case 2: return REQUEST;
           case 3: return RESPONSE;
@@ -287,7 +296,7 @@ public final class MessageOuterClass {
      */
     public tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType getType() {
       tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType result = tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType.EVENT : result;
+      return result == null ? tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType.UNKNOWN : result;
     }
 
     public static final int FROM_FIELD_NUMBER = 2;
@@ -616,7 +625,7 @@ public final class MessageOuterClass {
       }
       public Builder clear() {
         super.clear();
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (fromBuilder_ == null) {
           from_ = null;
@@ -807,7 +816,7 @@ public final class MessageOuterClass {
       }
       private int bitField0_;
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
        * <code>required .tv.twitchbot.common.dto.proto.messages.Message.MessageType type = 1;</code>
        */
@@ -819,7 +828,7 @@ public final class MessageOuterClass {
        */
       public tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType getType() {
         tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType result = tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType.EVENT : result;
+        return result == null ? tv.twitchbot.common.dto.proto.messages.MessageOuterClass.Message.MessageType.UNKNOWN : result;
       }
       /**
        * <code>required .tv.twitchbot.common.dto.proto.messages.Message.MessageType type = 1;</code>
@@ -838,7 +847,7 @@ public final class MessageOuterClass {
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -1175,14 +1184,14 @@ public final class MessageOuterClass {
     java.lang.String[] descriptorData = {
       "\n\rMessage.proto\022&tv.twitchbot.common.dto" +
       ".proto.messages\032\014Module.proto\032\nUUID.prot" +
-      "o\"\236\002\n\007Message\022I\n\004type\030\001 \002(\0162;.tv.twitchb" +
+      "o\"\253\002\n\007Message\022I\n\004type\030\001 \002(\0162;.tv.twitchb" +
       "ot.common.dto.proto.messages.Message.Mes" +
       "sageType\0228\n\004from\030\002 \002(\0132*.tv.twitchbot.co" +
       "mmon.dto.proto.core.Module\022<\n\nmessage_id" +
       "\030\003 \002(\0132(.tv.twitchbot.common.dto.proto.c" +
-      "ore.UUID\022\021\n\ttimestamp\030\004 \002(\003\"3\n\013MessageTy" +
-      "pe\022\t\n\005EVENT\020\001\022\013\n\007REQUEST\020\002\022\014\n\010RESPONSE\020\003" +
-      "*\010\010d\020\200\200\200\200\002"
+      "ore.UUID\022\021\n\ttimestamp\030\004 \002(\003\"@\n\013MessageTy" +
+      "pe\022\013\n\007UNKNOWN\020\000\022\t\n\005EVENT\020\001\022\013\n\007REQUEST\020\002\022" +
+      "\014\n\010RESPONSE\020\003*\010\010d\020\200\200\200\200\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
