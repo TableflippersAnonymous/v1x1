@@ -84,6 +84,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 try {
                     setChannels(entries);
                 } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
                     throw new RuntimeException(e);
                 }
             }
