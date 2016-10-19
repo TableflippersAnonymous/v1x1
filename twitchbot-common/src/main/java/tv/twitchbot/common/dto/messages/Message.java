@@ -14,7 +14,9 @@ import java.util.Date;
  */
 public abstract class Message {
     public static Message fromBytes(byte[] bytes) throws InvalidProtocolBufferException {
-        return fromProto(MessageOuterClass.Message.parseFrom(bytes));
+        MessageOuterClass.Message message = MessageOuterClass.Message.parseFrom(bytes);
+        System.out.println("Got message: " + message.toString());
+        return fromProto(message);
     }
 
     public static Message fromProto(MessageOuterClass.Message message) {

@@ -82,7 +82,7 @@ public final class ChannelOuterClass {
     private Channel() {
       id_ = "";
       displayName_ = "";
-      platform_ = 1;
+      platform_ = 0;
     }
 
     @java.lang.Override
@@ -271,7 +271,7 @@ public final class ChannelOuterClass {
      */
     public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
       tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.TWITCH : result;
+      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
     }
 
     public static final int TENANT_FIELD_NUMBER = 4;
@@ -547,7 +547,7 @@ public final class ChannelOuterClass {
         bitField0_ = (bitField0_ & ~0x00000001);
         displayName_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        platform_ = 1;
+        platform_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
         if (tenantBuilder_ == null) {
           tenant_ = null;
@@ -852,7 +852,7 @@ public final class ChannelOuterClass {
         return this;
       }
 
-      private int platform_ = 1;
+      private int platform_ = 0;
       /**
        * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 3;</code>
        */
@@ -864,7 +864,7 @@ public final class ChannelOuterClass {
        */
       public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
         tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.TWITCH : result;
+        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
       }
       /**
        * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 3;</code>
@@ -883,7 +883,7 @@ public final class ChannelOuterClass {
        */
       public Builder clearPlatform() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        platform_ = 1;
+        platform_ = 0;
         onChanged();
         return this;
       }
@@ -2078,7 +2078,7 @@ public final class ChannelOuterClass {
     }
     private TenantEntry() {
       id_ = "";
-      platform_ = 1;
+      platform_ = 0;
       displayName_ = "";
     }
 
@@ -2213,7 +2213,7 @@ public final class ChannelOuterClass {
      */
     public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
       tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.TWITCH : result;
+      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
     }
 
     public static final int DISPLAY_NAME_FIELD_NUMBER = 3;
@@ -2483,7 +2483,7 @@ public final class ChannelOuterClass {
         super.clear();
         id_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        platform_ = 1;
+        platform_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
         displayName_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -2691,7 +2691,7 @@ public final class ChannelOuterClass {
         return this;
       }
 
-      private int platform_ = 1;
+      private int platform_ = 0;
       /**
        * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
        */
@@ -2703,7 +2703,7 @@ public final class ChannelOuterClass {
        */
       public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
         tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.TWITCH : result;
+        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
       }
       /**
        * <code>required .tv.twitchbot.common.dto.proto.core.Platform platform = 2;</code>
@@ -2722,7 +2722,7 @@ public final class ChannelOuterClass {
        */
       public Builder clearPlatform() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        platform_ = 1;
+        platform_ = 0;
         onChanged();
         return this;
       }

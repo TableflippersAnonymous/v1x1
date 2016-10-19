@@ -1,6 +1,7 @@
 package tv.twitchbot.common.dto.core;
 
 import tv.twitchbot.common.dto.proto.core.BotOuterClass;
+import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
 
 /**
  * Represents a {@link Bot} on the Discord platform
@@ -18,7 +19,7 @@ public class DiscordBot extends Bot {
     @Override
     protected BotOuterClass.Bot.Builder toProtoBuilder() {
         return super.toProtoBuilder()
-                .setType(BotOuterClass.Bot.Type.DISCORD)
+                .setType(PlatformOuterClass.Platform.DISCORD)
                 .setExtension(BotOuterClass.DiscordBot.data, toProtoDiscordBot());
     }
 

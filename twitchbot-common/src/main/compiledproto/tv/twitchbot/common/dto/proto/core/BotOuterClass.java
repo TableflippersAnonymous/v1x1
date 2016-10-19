@@ -36,13 +36,13 @@ public final class BotOuterClass {
         getNameBytes();
 
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.core.Bot.Type type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
      */
     boolean hasType();
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.core.Bot.Type type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
      */
-    tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type getType();
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType();
   }
   /**
    * Protobuf type {@code tv.twitchbot.common.dto.proto.core.Bot}
@@ -58,7 +58,7 @@ public final class BotOuterClass {
     }
     private Bot() {
       name_ = "";
-      type_ = 1;
+      type_ = 0;
     }
 
     @java.lang.Override
@@ -97,7 +97,7 @@ public final class BotOuterClass {
             }
             case 16: {
               int rawValue = input.readEnum();
-              tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type value = tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type.valueOf(rawValue);
+              tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
@@ -128,96 +128,6 @@ public final class BotOuterClass {
       return tv.twitchbot.common.dto.proto.core.BotOuterClass.internal_static_tv_twitchbot_common_dto_proto_core_Bot_fieldAccessorTable
           .ensureFieldAccessorsInitialized(
               tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.class, tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Builder.class);
-    }
-
-    /**
-     * Protobuf enum {@code tv.twitchbot.common.dto.proto.core.Bot.Type}
-     */
-    public enum Type
-        implements com.google.protobuf.ProtocolMessageEnum {
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      TWITCH(1),
-      /**
-       * <code>DISCORD = 2;</code>
-       */
-      DISCORD(2),
-      ;
-
-      /**
-       * <code>TWITCH = 1;</code>
-       */
-      public static final int TWITCH_VALUE = 1;
-      /**
-       * <code>DISCORD = 2;</code>
-       */
-      public static final int DISCORD_VALUE = 2;
-
-
-      public final int getNumber() {
-        return value;
-      }
-
-      /**
-       * @deprecated Use {@link #forNumber(int)} instead.
-       */
-      @java.lang.Deprecated
-      public static Type valueOf(int value) {
-        return forNumber(value);
-      }
-
-      public static Type forNumber(int value) {
-        switch (value) {
-          case 1: return TWITCH;
-          case 2: return DISCORD;
-          default: return null;
-        }
-      }
-
-      public static com.google.protobuf.Internal.EnumLiteMap<Type>
-          internalGetValueMap() {
-        return internalValueMap;
-      }
-      private static final com.google.protobuf.Internal.EnumLiteMap<
-          Type> internalValueMap =
-            new com.google.protobuf.Internal.EnumLiteMap<Type>() {
-              public Type findValueByNumber(int number) {
-                return Type.forNumber(number);
-              }
-            };
-
-      public final com.google.protobuf.Descriptors.EnumValueDescriptor
-          getValueDescriptor() {
-        return getDescriptor().getValues().get(ordinal());
-      }
-      public final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptorForType() {
-        return getDescriptor();
-      }
-      public static final com.google.protobuf.Descriptors.EnumDescriptor
-          getDescriptor() {
-        return tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.getDescriptor().getEnumTypes().get(0);
-      }
-
-      private static final Type[] VALUES = values();
-
-      public static Type valueOf(
-          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-        if (desc.getType() != getDescriptor()) {
-          throw new java.lang.IllegalArgumentException(
-            "EnumValueDescriptor is not for this type.");
-        }
-        return VALUES[desc.getIndex()];
-      }
-
-      private final int value;
-
-      private Type(int value) {
-        this.value = value;
-      }
-
-      // @@protoc_insertion_point(enum_scope:tv.twitchbot.common.dto.proto.core.Bot.Type)
     }
 
     private int bitField0_;
@@ -266,17 +176,17 @@ public final class BotOuterClass {
     public static final int TYPE_FIELD_NUMBER = 2;
     private int type_;
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.core.Bot.Type type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required .tv.twitchbot.common.dto.proto.core.Bot.Type type = 2;</code>
+     * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
      */
-    public tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type getType() {
-      tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type result = tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type.TWITCH : result;
+    public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+      tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+      return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -498,7 +408,7 @@ public final class BotOuterClass {
         super.clear();
         name_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
@@ -719,24 +629,24 @@ public final class BotOuterClass {
         return this;
       }
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.core.Bot.Type type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.core.Bot.Type type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
        */
-      public tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type getType() {
-        tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type result = tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type.TWITCH : result;
+      public tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+        tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform result = tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+        return result == null ? tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.core.Bot.Type type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
        */
-      public Builder setType(tv.twitchbot.common.dto.proto.core.BotOuterClass.Bot.Type value) {
+      public Builder setType(tv.twitchbot.common.dto.proto.core.PlatformOuterClass.Platform value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -746,11 +656,11 @@ public final class BotOuterClass {
         return this;
       }
       /**
-       * <code>required .tv.twitchbot.common.dto.proto.core.Bot.Type type = 2;</code>
+       * <code>required .tv.twitchbot.common.dto.proto.core.Platform type = 2;</code>
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000002);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -1600,16 +1510,15 @@ public final class BotOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\tBot.proto\022\"tv.twitchbot.common.dto.pro" +
-      "to.core\"z\n\003Bot\022\014\n\004name\030\001 \002(\t\022:\n\004type\030\002 \002" +
-      "(\0162,.tv.twitchbot.common.dto.proto.core." +
-      "Bot.Type\"\037\n\004Type\022\n\n\006TWITCH\020\001\022\013\n\007DISCORD\020" +
-      "\002*\010\010d\020\200\200\200\200\002\"q\n\tTwitchBot2d\n\004data\022\'.tv.tw" +
-      "itchbot.common.dto.proto.core.Bot\030e \001(\0132" +
-      "-.tv.twitchbot.common.dto.proto.core.Twi" +
-      "tchBot\"s\n\nDiscordBot2e\n\004data\022\'.tv.twitch" +
-      "bot.common.dto.proto.core.Bot\030f \001(\0132..tv" +
-      ".twitchbot.common.dto.proto.core.Discord",
-      "Bot"
+      "to.core\032\016Platform.proto\"Y\n\003Bot\022\014\n\004name\030\001" +
+      " \002(\t\022:\n\004type\030\002 \002(\0162,.tv.twitchbot.common" +
+      ".dto.proto.core.Platform*\010\010d\020\200\200\200\200\002\"q\n\tTw" +
+      "itchBot2d\n\004data\022\'.tv.twitchbot.common.dt" +
+      "o.proto.core.Bot\030e \001(\0132-.tv.twitchbot.co" +
+      "mmon.dto.proto.core.TwitchBot\"s\n\nDiscord" +
+      "Bot2e\n\004data\022\'.tv.twitchbot.common.dto.pr" +
+      "oto.core.Bot\030f \001(\0132..tv.twitchbot.common" +
+      ".dto.proto.core.DiscordBot"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1622,6 +1531,7 @@ public final class BotOuterClass {
     com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
+          tv.twitchbot.common.dto.proto.core.PlatformOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_core_Bot_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -1641,6 +1551,7 @@ public final class BotOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_twitchbot_common_dto_proto_core_DiscordBot_descriptor,
         new java.lang.String[] { });
+    tv.twitchbot.common.dto.proto.core.PlatformOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

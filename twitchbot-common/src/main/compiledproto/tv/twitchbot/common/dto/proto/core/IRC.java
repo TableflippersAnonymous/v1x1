@@ -153,7 +153,7 @@ public final class IRC {
     }
     private IrcStanza() {
       rawLine_ = "";
-      command_ = 1;
+      command_ = 0;
       rawArgs_ = "";
       args_ = com.google.protobuf.LazyStringArrayList.EMPTY;
     }
@@ -287,6 +287,10 @@ public final class IRC {
     public enum IrcCommand
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
+      /**
        * <code>CLEARCHAT = 1;</code>
        */
       CLEARCHAT(1),
@@ -348,6 +352,10 @@ public final class IRC {
       USERSTATE(15),
       ;
 
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
       /**
        * <code>CLEARCHAT = 1;</code>
        */
@@ -424,6 +432,7 @@ public final class IRC {
 
       public static IrcCommand forNumber(int value) {
         switch (value) {
+          case 0: return UNKNOWN;
           case 1: return CLEARCHAT;
           case 2: return GLOBALUSERSTATE;
           case 3: return HOSTTARGET;
@@ -641,7 +650,7 @@ public final class IRC {
      */
     public tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand getCommand() {
       tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand result = tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand.valueOf(command_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand.CLEARCHAT : result;
+      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand.UNKNOWN : result;
     }
 
     public static final int RAW_ARGS_FIELD_NUMBER = 5;
@@ -1045,7 +1054,7 @@ public final class IRC {
           sourceBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000004);
-        command_ = 1;
+        command_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
         rawArgs_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -1552,7 +1561,7 @@ public final class IRC {
         return sourceBuilder_;
       }
 
-      private int command_ = 1;
+      private int command_ = 0;
       /**
        * <code>required .tv.twitchbot.common.dto.proto.core.IrcStanza.IrcCommand command = 4;</code>
        */
@@ -1564,7 +1573,7 @@ public final class IRC {
        */
       public tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand getCommand() {
         tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand result = tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand.valueOf(command_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand.CLEARCHAT : result;
+        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.IrcStanza.IrcCommand.UNKNOWN : result;
       }
       /**
        * <code>required .tv.twitchbot.common.dto.proto.core.IrcStanza.IrcCommand command = 4;</code>
@@ -1583,7 +1592,7 @@ public final class IRC {
        */
       public Builder clearCommand() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        command_ = 1;
+        command_ = 0;
         onChanged();
         return this;
       }
@@ -1832,7 +1841,7 @@ public final class IRC {
       super(builder);
     }
     private IrcSource() {
-      type_ = 1;
+      type_ = 0;
     }
 
     @java.lang.Override
@@ -1904,6 +1913,10 @@ public final class IRC {
     public enum Type
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
+      /**
        * <code>SERVER = 1;</code>
        */
       SERVER(1),
@@ -1913,6 +1926,10 @@ public final class IRC {
       USER(2),
       ;
 
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
       /**
        * <code>SERVER = 1;</code>
        */
@@ -1937,6 +1954,7 @@ public final class IRC {
 
       public static Type forNumber(int value) {
         switch (value) {
+          case 0: return UNKNOWN;
           case 1: return SERVER;
           case 2: return USER;
           default: return null;
@@ -2002,7 +2020,7 @@ public final class IRC {
      */
     public tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type getType() {
       tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type result = tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type.valueOf(type_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type.SERVER : result;
+      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type.UNKNOWN : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -2203,7 +2221,7 @@ public final class IRC {
       }
       public Builder clear() {
         super.clear();
-        type_ = 1;
+        type_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
@@ -2336,7 +2354,7 @@ public final class IRC {
       }
       private int bitField0_;
 
-      private int type_ = 1;
+      private int type_ = 0;
       /**
        * <code>required .tv.twitchbot.common.dto.proto.core.IrcSource.Type type = 1;</code>
        */
@@ -2348,7 +2366,7 @@ public final class IRC {
        */
       public tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type getType() {
         tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type result = tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type.valueOf(type_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type.SERVER : result;
+        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.IrcSource.Type.UNKNOWN : result;
       }
       /**
        * <code>required .tv.twitchbot.common.dto.proto.core.IrcSource.Type type = 1;</code>
@@ -2367,7 +2385,7 @@ public final class IRC {
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 1;
+        type_ = 0;
         onChanged();
         return this;
       }
@@ -3977,7 +3995,7 @@ public final class IRC {
       mod_ = false;
       subscriber_ = false;
       turbo_ = false;
-      userType_ = 1;
+      userType_ = 0;
     }
 
     @java.lang.Override
@@ -4076,6 +4094,10 @@ public final class IRC {
     public enum UserType
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
+      /**
        * <code>MOD = 1;</code>
        */
       MOD(1),
@@ -4093,6 +4115,10 @@ public final class IRC {
       STAFF(4),
       ;
 
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
       /**
        * <code>MOD = 1;</code>
        */
@@ -4125,6 +4151,7 @@ public final class IRC {
 
       public static UserType forNumber(int value) {
         switch (value) {
+          case 0: return UNKNOWN;
           case 1: return MOD;
           case 2: return GLOBAL_MOD;
           case 3: return ADMIN;
@@ -4321,7 +4348,7 @@ public final class IRC {
      */
     public tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType getUserType() {
       tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType result = tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType.valueOf(userType_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType.MOD : result;
+      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType.UNKNOWN : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -4596,7 +4623,7 @@ public final class IRC {
         bitField0_ = (bitField0_ & ~0x00000008);
         turbo_ = false;
         bitField0_ = (bitField0_ & ~0x00000010);
-        userType_ = 1;
+        userType_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
@@ -4986,7 +5013,7 @@ public final class IRC {
         return this;
       }
 
-      private int userType_ = 1;
+      private int userType_ = 0;
       /**
        * <code>optional .tv.twitchbot.common.dto.proto.core.TaggedIrcStanza.UserType user_type = 6;</code>
        */
@@ -4998,7 +5025,7 @@ public final class IRC {
        */
       public tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType getUserType() {
         tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType result = tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType.valueOf(userType_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType.MOD : result;
+        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.TaggedIrcStanza.UserType.UNKNOWN : result;
       }
       /**
        * <code>optional .tv.twitchbot.common.dto.proto.core.TaggedIrcStanza.UserType user_type = 6;</code>
@@ -5017,7 +5044,7 @@ public final class IRC {
        */
       public Builder clearUserType() {
         bitField0_ = (bitField0_ & ~0x00000020);
-        userType_ = 1;
+        userType_ = 0;
         onChanged();
         return this;
       }
@@ -6035,6 +6062,10 @@ public final class IRC {
     public enum Badge
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
+      /**
        * <code>STAFF = 1;</code>
        */
       STAFF(1),
@@ -6058,8 +6089,20 @@ public final class IRC {
        * <code>TURBO = 6;</code>
        */
       TURBO(6),
+      /**
+       * <code>PREMIUM = 7;</code>
+       */
+      PREMIUM(7),
+      /**
+       * <code>BITS = 8;</code>
+       */
+      BITS(8),
       ;
 
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
       /**
        * <code>STAFF = 1;</code>
        */
@@ -6084,6 +6127,14 @@ public final class IRC {
        * <code>TURBO = 6;</code>
        */
       public static final int TURBO_VALUE = 6;
+      /**
+       * <code>PREMIUM = 7;</code>
+       */
+      public static final int PREMIUM_VALUE = 7;
+      /**
+       * <code>BITS = 8;</code>
+       */
+      public static final int BITS_VALUE = 8;
 
 
       public final int getNumber() {
@@ -6100,12 +6151,15 @@ public final class IRC {
 
       public static Badge forNumber(int value) {
         switch (value) {
+          case 0: return UNKNOWN;
           case 1: return STAFF;
           case 2: return ADMIN;
           case 3: return GLOBAL_MOD;
           case 4: return MODERATOR;
           case 5: return SUBSCRIBER;
           case 6: return TURBO;
+          case 7: return PREMIUM;
+          case 8: return BITS;
           default: return null;
         }
       }
@@ -7660,7 +7714,7 @@ public final class IRC {
                 java.lang.Integer, tv.twitchbot.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Badge>() {
               public tv.twitchbot.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Badge convert(java.lang.Integer from) {
                 tv.twitchbot.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Badge result = tv.twitchbot.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Badge.valueOf(from);
-                return result == null ? tv.twitchbot.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Badge.STAFF : result;
+                return result == null ? tv.twitchbot.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Badge.UNKNOWN : result;
               }
             };
     /**
@@ -12709,7 +12763,7 @@ public final class IRC {
     private NoticeCommand() {
       channel_ = "";
       message_ = "";
-      messageId_ = 1;
+      messageId_ = 0;
     }
 
     @java.lang.Override
@@ -12792,6 +12846,10 @@ public final class IRC {
      */
     public enum MessageId
         implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
       /**
        * <code>SUBS_ON = 1;</code>
        */
@@ -12894,6 +12952,10 @@ public final class IRC {
       UNRECOGNIZED_COMMAND(25),
       ;
 
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
       /**
        * <code>SUBS_ON = 1;</code>
        */
@@ -13010,6 +13072,7 @@ public final class IRC {
 
       public static MessageId forNumber(int value) {
         switch (value) {
+          case 0: return UNKNOWN;
           case 1: return SUBS_ON;
           case 2: return ALREADY_SUBS_ON;
           case 3: return SUBS_OFF;
@@ -13182,7 +13245,7 @@ public final class IRC {
      */
     public tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId getMessageId() {
       tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId result = tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId.valueOf(messageId_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId.SUBS_ON : result;
+      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId.UNKNOWN : result;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -13408,7 +13471,7 @@ public final class IRC {
         bitField0_ = (bitField0_ & ~0x00000001);
         message_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        messageId_ = 1;
+        messageId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
@@ -13687,7 +13750,7 @@ public final class IRC {
         return this;
       }
 
-      private int messageId_ = 1;
+      private int messageId_ = 0;
       /**
        * <code>optional .tv.twitchbot.common.dto.proto.core.NoticeCommand.MessageId message_id = 3;</code>
        */
@@ -13699,7 +13762,7 @@ public final class IRC {
        */
       public tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId getMessageId() {
         tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId result = tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId.valueOf(messageId_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId.SUBS_ON : result;
+        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.NoticeCommand.MessageId.UNKNOWN : result;
       }
       /**
        * <code>optional .tv.twitchbot.common.dto.proto.core.NoticeCommand.MessageId message_id = 3;</code>
@@ -13718,7 +13781,7 @@ public final class IRC {
        */
       public Builder clearMessageId() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        messageId_ = 1;
+        messageId_ = 0;
         onChanged();
         return this;
       }
@@ -19608,7 +19671,7 @@ public final class IRC {
     private UserNoticeCommand() {
       channel_ = "";
       message_ = "";
-      messageId_ = 1;
+      messageId_ = 0;
       months_ = 0;
       systemMessage_ = "";
       login_ = "";
@@ -19725,11 +19788,19 @@ public final class IRC {
     public enum MessageId
         implements com.google.protobuf.ProtocolMessageEnum {
       /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
+      /**
        * <code>RESUB = 1;</code>
        */
       RESUB(1),
       ;
 
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
       /**
        * <code>RESUB = 1;</code>
        */
@@ -19750,6 +19821,7 @@ public final class IRC {
 
       public static MessageId forNumber(int value) {
         switch (value) {
+          case 0: return UNKNOWN;
           case 1: return RESUB;
           default: return null;
         }
@@ -19898,7 +19970,7 @@ public final class IRC {
      */
     public tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId getMessageId() {
       tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId result = tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId.valueOf(messageId_);
-      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId.RESUB : result;
+      return result == null ? tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId.UNKNOWN : result;
     }
 
     public static final int MONTHS_FIELD_NUMBER = 4;
@@ -20315,7 +20387,7 @@ public final class IRC {
         bitField0_ = (bitField0_ & ~0x00000001);
         message_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        messageId_ = 1;
+        messageId_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
         months_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
@@ -20648,7 +20720,7 @@ public final class IRC {
         return this;
       }
 
-      private int messageId_ = 1;
+      private int messageId_ = 0;
       /**
        * <code>optional .tv.twitchbot.common.dto.proto.core.UserNoticeCommand.MessageId message_id = 3;</code>
        */
@@ -20660,7 +20732,7 @@ public final class IRC {
        */
       public tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId getMessageId() {
         tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId result = tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId.valueOf(messageId_);
-        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId.RESUB : result;
+        return result == null ? tv.twitchbot.common.dto.proto.core.IRC.UserNoticeCommand.MessageId.UNKNOWN : result;
       }
       /**
        * <code>optional .tv.twitchbot.common.dto.proto.core.UserNoticeCommand.MessageId message_id = 3;</code>
@@ -20679,7 +20751,7 @@ public final class IRC {
        */
       public Builder clearMessageId() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        messageId_ = 1;
+        messageId_ = 0;
         onChanged();
         return this;
       }
@@ -21964,7 +22036,7 @@ public final class IRC {
   static {
     java.lang.String[] descriptorData = {
       "\n\tIRC.proto\022\"tv.twitchbot.common.dto.pro" +
-      "to.core\032\nUUID.proto\"\253\004\n\tIrcStanza\022\020\n\010raw" +
+      "to.core\032\nUUID.proto\"\270\004\n\tIrcStanza\022\020\n\010raw" +
       "_line\030\001 \002(\t\022E\n\004tags\030\002 \003(\01327.tv.twitchbot" +
       ".common.dto.proto.core.IrcStanza.TagsEnt" +
       "ry\022=\n\006source\030\003 \002(\0132-.tv.twitchbot.common" +
@@ -21972,140 +22044,143 @@ public final class IRC {
       "(\01628.tv.twitchbot.common.dto.proto.core." +
       "IrcStanza.IrcCommand\022\020\n\010raw_args\030\005 \001(\t\022\014" +
       "\n\004args\030\006 \003(\t\032+\n\tTagsEntry\022\013\n\003key\030\001 \001(\t\022\r" +
-      "\n\005value\030\002 \001(\t:\0028\001\"\343\001\n\nIrcCommand\022\r\n\tCLEA",
-      "RCHAT\020\001\022\023\n\017GLOBALUSERSTATE\020\002\022\016\n\nHOSTTARG" +
-      "ET\020\003\022\010\n\004JOIN\020\004\022\010\n\004MODE\020\005\022\n\n\006NOTICE\020\006\022\010\n\004" +
-      "PART\020\007\022\010\n\004PING\020\010\022\013\n\007PRIVMSG\020\t\022\r\n\tRECONNE" +
-      "CT\020\n\022\r\n\tROOMSTATE\020\013\022\021\n\rRPL_ENDOFMOTD\020\014\022\020" +
-      "\n\014RPL_NAMREPLY\020\r\022\016\n\nUSERNOTICE\020\016\022\r\n\tUSER" +
-      "STATE\020\017*\010\010d\020\200\200\200\200\002\"u\n\tIrcSource\022@\n\004type\030\001" +
-      " \002(\01622.tv.twitchbot.common.dto.proto.cor" +
-      "e.IrcSource.Type\"\034\n\004Type\022\n\n\006SERVER\020\001\022\010\n\004" +
-      "USER\020\002*\010\010d\020\200\200\200\200\002\"\205\001\n\tIrcServer\022\014\n\004name\030\001" +
-      " \002(\t2j\n\004data\022-.tv.twitchbot.common.dto.p",
-      "roto.core.IrcSource\030e \001(\0132-.tv.twitchbot" +
-      ".common.dto.proto.core.IrcServer\"\251\001\n\007Irc" +
-      "User\022\020\n\010nickname\030\001 \002(\t\022\020\n\010username\030\002 \002(\t" +
-      "\022\020\n\010hostname\030\003 \002(\t2h\n\004data\022-.tv.twitchbo" +
-      "t.common.dto.proto.core.IrcSource\030f \001(\0132" +
-      "+.tv.twitchbot.common.dto.proto.core.Irc" +
-      "User\"\362\001\n\017TaggedIrcStanza\022\r\n\005color\030\001 \001(\t\022" +
-      "\024\n\014display_name\030\002 \001(\t\022\013\n\003mod\030\003 \001(\010\022\022\n\nsu" +
-      "bscriber\030\004 \001(\010\022\r\n\005turbo\030\005 \001(\010\022O\n\tuser_ty" +
-      "pe\030\006 \001(\0162<.tv.twitchbot.common.dto.proto",
-      ".core.TaggedIrcStanza.UserType\"9\n\010UserTy" +
-      "pe\022\007\n\003MOD\020\001\022\016\n\nGLOBAL_MOD\020\002\022\t\n\005ADMIN\020\003\022\t" +
+      "\n\005value\030\002 \001(\t:\0028\001\"\360\001\n\nIrcCommand\022\013\n\007UNKN",
+      "OWN\020\000\022\r\n\tCLEARCHAT\020\001\022\023\n\017GLOBALUSERSTATE\020" +
+      "\002\022\016\n\nHOSTTARGET\020\003\022\010\n\004JOIN\020\004\022\010\n\004MODE\020\005\022\n\n" +
+      "\006NOTICE\020\006\022\010\n\004PART\020\007\022\010\n\004PING\020\010\022\013\n\007PRIVMSG" +
+      "\020\t\022\r\n\tRECONNECT\020\n\022\r\n\tROOMSTATE\020\013\022\021\n\rRPL_" +
+      "ENDOFMOTD\020\014\022\020\n\014RPL_NAMREPLY\020\r\022\016\n\nUSERNOT" +
+      "ICE\020\016\022\r\n\tUSERSTATE\020\017*\010\010d\020\200\200\200\200\002\"\202\001\n\tIrcSo" +
+      "urce\022@\n\004type\030\001 \002(\01622.tv.twitchbot.common" +
+      ".dto.proto.core.IrcSource.Type\")\n\004Type\022\013" +
+      "\n\007UNKNOWN\020\000\022\n\n\006SERVER\020\001\022\010\n\004USER\020\002*\010\010d\020\200\200" +
+      "\200\200\002\"\205\001\n\tIrcServer\022\014\n\004name\030\001 \002(\t2j\n\004data\022",
+      "-.tv.twitchbot.common.dto.proto.core.Irc" +
+      "Source\030e \001(\0132-.tv.twitchbot.common.dto.p" +
+      "roto.core.IrcServer\"\251\001\n\007IrcUser\022\020\n\010nickn" +
+      "ame\030\001 \002(\t\022\020\n\010username\030\002 \002(\t\022\020\n\010hostname\030" +
+      "\003 \002(\t2h\n\004data\022-.tv.twitchbot.common.dto." +
+      "proto.core.IrcSource\030f \001(\0132+.tv.twitchbo" +
+      "t.common.dto.proto.core.IrcUser\"\377\001\n\017Tagg" +
+      "edIrcStanza\022\r\n\005color\030\001 \001(\t\022\024\n\014display_na" +
+      "me\030\002 \001(\t\022\013\n\003mod\030\003 \001(\010\022\022\n\nsubscriber\030\004 \001(" +
+      "\010\022\r\n\005turbo\030\005 \001(\010\022O\n\tuser_type\030\006 \001(\0162<.tv",
+      ".twitchbot.common.dto.proto.core.TaggedI" +
+      "rcStanza.UserType\"F\n\010UserType\022\013\n\007UNKNOWN" +
+      "\020\000\022\007\n\003MOD\020\001\022\016\n\nGLOBAL_MOD\020\002\022\t\n\005ADMIN\020\003\022\t" +
       "\n\005STAFF\020\004\"r\n\021EmoteSetIrcStanza\022\021\n\temote_" +
       "set\030\001 \003(\005\022J\n\rtagged_stanza\030\002 \002(\01323.tv.tw" +
       "itchbot.common.dto.proto.core.TaggedIrcS" +
-      "tanza\"\242\004\n\026MessageTaggedIrcStanza\022P\n\006badg" +
+      "tanza\"\306\004\n\026MessageTaggedIrcStanza\022P\n\006badg" +
       "es\030\001 \003(\0162@.tv.twitchbot.common.dto.proto" +
       ".core.MessageTaggedIrcStanza.Badge\022P\n\006em" +
-      "otes\030\002 \003(\0132@.tv.twitchbot.common.dto.pro" +
-      "to.core.MessageTaggedIrcStanza.Emote\022\017\n\007",
+      "otes\030\002 \003(\0132@.tv.twitchbot.common.dto.pro",
+      "to.core.MessageTaggedIrcStanza.Emote\022\017\n\007" +
       "room_id\030\003 \001(\005\022\017\n\007user_id\030\004 \001(\005\022J\n\rtagged" +
       "_stanza\030\005 \002(\01323.tv.twitchbot.common.dto." +
       "proto.core.TaggedIrcStanza\032\234\001\n\005Emote\022\n\n\002" +
       "id\030\001 \002(\t\022V\n\006ranges\030\002 \003(\0132F.tv.twitchbot." +
       "common.dto.proto.core.MessageTaggedIrcSt" +
       "anza.Emote.Range\032/\n\005Range\022\023\n\013begin_index" +
-      "\030\001 \002(\005\022\021\n\tend_index\030\002 \002(\005\"W\n\005Badge\022\t\n\005ST" +
-      "AFF\020\001\022\t\n\005ADMIN\020\002\022\016\n\nGLOBAL_MOD\020\003\022\r\n\tMODE" +
-      "RATOR\020\004\022\016\n\nSUBSCRIBER\020\005\022\t\n\005TURBO\020\006\"\322\001\n\020C" +
-      "learChatCommand\022\017\n\007channel\030\001 \002(\t\022\020\n\010nick",
-      "name\030\002 \001(\t\022\024\n\014ban_duration\030\003 \001(\005\022\022\n\nban_" +
-      "reason\030\004 \001(\t2q\n\004data\022-.tv.twitchbot.comm" +
-      "on.dto.proto.core.IrcStanza\030e \001(\01324.tv.t" +
-      "witchbot.common.dto.proto.core.ClearChat" +
-      "Command\"\363\001\n\026GlobalUserStateCommand\022\017\n\007us" +
-      "er_id\030\001 \002(\005\022O\n\020emote_set_stanza\030\002 \002(\01325." +
-      "tv.twitchbot.common.dto.proto.core.Emote" +
-      "SetIrcStanza2w\n\004data\022-.tv.twitchbot.comm" +
-      "on.dto.proto.core.IrcStanza\030f \001(\0132:.tv.t" +
-      "witchbot.common.dto.proto.core.GlobalUse",
-      "rStateCommand\"\260\001\n\021HostTargetCommand\022\017\n\007c" +
-      "hannel\030\001 \002(\t\022\026\n\016target_channel\030\002 \001(\t2r\n\004" +
-      "data\022-.tv.twitchbot.common.dto.proto.cor" +
-      "e.IrcStanza\030g \001(\01325.tv.twitchbot.common." +
-      "dto.proto.core.HostTargetCommand\"\214\001\n\013Joi" +
-      "nCommand\022\017\n\007channel\030\001 \002(\t2l\n\004data\022-.tv.t" +
-      "witchbot.common.dto.proto.core.IrcStanza" +
-      "\030h \001(\0132/.tv.twitchbot.common.dto.proto.c" +
-      "ore.JoinCommand\"\264\001\n\013ModeCommand\022\017\n\007chann" +
-      "el\030\001 \002(\t\022\023\n\013mode_string\030\002 \001(\t\022\021\n\tnicknam",
-      "es\030\003 \003(\t2l\n\004data\022-.tv.twitchbot.common.d" +
-      "to.proto.core.IrcStanza\030i \001(\0132/.tv.twitc" +
-      "hbot.common.dto.proto.core.ModeCommand\"\337" +
-      "\005\n\rNoticeCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007mes" +
-      "sage\030\002 \002(\t\022O\n\nmessage_id\030\003 \001(\0162;.tv.twit" +
-      "chbot.common.dto.proto.core.NoticeComman" +
-      "d.MessageId\"\352\003\n\tMessageId\022\013\n\007SUBS_ON\020\001\022\023" +
-      "\n\017ALREADY_SUBS_ON\020\002\022\014\n\010SUBS_OFF\020\003\022\024\n\020ALR" +
-      "EADY_SUBS_OFF\020\004\022\013\n\007SLOW_ON\020\005\022\014\n\010SLOW_OFF" +
-      "\020\006\022\n\n\006R9K_ON\020\007\022\022\n\016ALREADY_R9K_ON\020\010\022\013\n\007R9",
-      "K_OFF\020\t\022\023\n\017ALREADY_R9K_OFF\020\n\022\013\n\007HOST_ON\020" +
-      "\013\022\024\n\020BAD_HOST_HOSTING\020\014\022\014\n\010HOST_OFF\020\r\022\023\n" +
-      "\017HOSTS_REMAINING\020\016\022\021\n\rEMOTE_ONLY_ON\020\017\022\031\n" +
-      "\025ALREADY_EMOTE_ONLY_ON\020\020\022\022\n\016EMOTE_ONLY_O" +
-      "FF\020\021\022\032\n\026ALREADY_EMOTE_ONLY_OFF\020\022\022\031\n\025MSG_" +
-      "CHANNEL_SUSPENDED\020\023\022\023\n\017TIMEOUT_SUCCESS\020\024" +
-      "\022\017\n\013BAN_SUCCESS\020\025\022\021\n\rUNBAN_SUCCESS\020\026\022\024\n\020" +
-      "BAD_UNBAN_NO_BAN\020\027\022\022\n\016ALREADY_BANNED\020\030\022\030" +
-      "\n\024UNRECOGNIZED_COMMAND\020\0312n\n\004data\022-.tv.tw" +
-      "itchbot.common.dto.proto.core.IrcStanza\030",
-      "j \001(\01321.tv.twitchbot.common.dto.proto.co" +
-      "re.NoticeCommand\"\214\001\n\013PartCommand\022\017\n\007chan" +
-      "nel\030\001 \002(\t2l\n\004data\022-.tv.twitchbot.common." +
-      "dto.proto.core.IrcStanza\030k \001(\0132/.tv.twit" +
-      "chbot.common.dto.proto.core.PartCommand\"" +
-      "\212\001\n\013PingCommand\022\r\n\005token\030\001 \001(\t2l\n\004data\022-" +
-      ".tv.twitchbot.common.dto.proto.core.IrcS" +
-      "tanza\030l \001(\0132/.tv.twitchbot.common.dto.pr" +
-      "oto.core.PingCommand\"\302\002\n\016PrivmsgCommand\022" +
-      "\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\0224\n\002id\030",
-      "\003 \001(\0132(.tv.twitchbot.common.dto.proto.co" +
-      "re.UUID\022\014\n\004bits\030\004 \001(\005\022Y\n\025message_tagged_" +
-      "stanza\030\005 \002(\0132:.tv.twitchbot.common.dto.p" +
-      "roto.core.MessageTaggedIrcStanza2o\n\004data" +
+      "\030\001 \002(\005\022\021\n\tend_index\030\002 \002(\005\"{\n\005Badge\022\013\n\007UN" +
+      "KNOWN\020\000\022\t\n\005STAFF\020\001\022\t\n\005ADMIN\020\002\022\016\n\nGLOBAL_" +
+      "MOD\020\003\022\r\n\tMODERATOR\020\004\022\016\n\nSUBSCRIBER\020\005\022\t\n\005",
+      "TURBO\020\006\022\013\n\007PREMIUM\020\007\022\010\n\004BITS\020\010\"\322\001\n\020Clear" +
+      "ChatCommand\022\017\n\007channel\030\001 \002(\t\022\020\n\010nickname" +
+      "\030\002 \001(\t\022\024\n\014ban_duration\030\003 \001(\005\022\022\n\nban_reas" +
+      "on\030\004 \001(\t2q\n\004data\022-.tv.twitchbot.common.d" +
+      "to.proto.core.IrcStanza\030e \001(\01324.tv.twitc" +
+      "hbot.common.dto.proto.core.ClearChatComm" +
+      "and\"\363\001\n\026GlobalUserStateCommand\022\017\n\007user_i" +
+      "d\030\001 \002(\005\022O\n\020emote_set_stanza\030\002 \002(\01325.tv.t" +
+      "witchbot.common.dto.proto.core.EmoteSetI" +
+      "rcStanza2w\n\004data\022-.tv.twitchbot.common.d",
+      "to.proto.core.IrcStanza\030f \001(\0132:.tv.twitc" +
+      "hbot.common.dto.proto.core.GlobalUserSta" +
+      "teCommand\"\260\001\n\021HostTargetCommand\022\017\n\007chann" +
+      "el\030\001 \002(\t\022\026\n\016target_channel\030\002 \001(\t2r\n\004data" +
       "\022-.tv.twitchbot.common.dto.proto.core.Ir" +
-      "cStanza\030m \001(\01322.tv.twitchbot.common.dto." +
-      "proto.core.PrivmsgCommand\"\205\001\n\020ReconnectC" +
-      "ommand2q\n\004data\022-.tv.twitchbot.common.dto" +
-      ".proto.core.IrcStanza\030n \001(\01324.tv.twitchb" +
-      "ot.common.dto.proto.core.ReconnectComman",
-      "d\"\342\001\n\020RoomStateCommand\022\017\n\007channel\030\001 \002(\t\022" +
-      "\034\n\024broadcaster_language\030\002 \001(\t\022\013\n\003r9k\030\003 \001" +
-      "(\010\022\021\n\tsubs_only\030\004 \001(\010\022\014\n\004slow\030\005 \001(\0052q\n\004d" +
-      "ata\022-.tv.twitchbot.common.dto.proto.core" +
-      ".IrcStanza\030o \001(\01324.tv.twitchbot.common.d" +
-      "to.proto.core.RoomStateCommand\"\213\001\n\023RplEn" +
-      "dOfMotdCommand2t\n\004data\022-.tv.twitchbot.co" +
-      "mmon.dto.proto.core.IrcStanza\030p \001(\01327.tv" +
-      ".twitchbot.common.dto.proto.core.RplEndO" +
-      "fMotdCommand\"\227\002\n\023RplNameReplyCommand\022\017\n\007",
-      "channel\030\001 \002(\t\022O\n\007members\030\002 \003(\0132>.tv.twit" +
-      "chbot.common.dto.proto.core.RplNameReply" +
-      "Command.Member\032(\n\006Member\022\020\n\010nickname\030\001 \002" +
-      "(\t\022\014\n\004isOp\030\002 \002(\0102t\n\004data\022-.tv.twitchbot." +
-      "common.dto.proto.core.IrcStanza\030q \001(\01327." +
-      "tv.twitchbot.common.dto.proto.core.RplNa" +
-      "meReplyCommand\"\250\003\n\021UserNoticeCommand\022\017\n\007" +
-      "channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022S\n\nmessag" +
-      "e_id\030\003 \001(\0162?.tv.twitchbot.common.dto.pro" +
-      "to.core.UserNoticeCommand.MessageId\022\016\n\006m",
-      "onths\030\004 \001(\005\022\026\n\016system_message\030\005 \001(\t\022\r\n\005l" +
-      "ogin\030\006 \001(\t\022Y\n\025message_tagged_stanza\030\007 \002(" +
-      "\0132:.tv.twitchbot.common.dto.proto.core.M" +
-      "essageTaggedIrcStanza\"\026\n\tMessageId\022\t\n\005RE" +
-      "SUB\020\0012r\n\004data\022-.tv.twitchbot.common.dto." +
-      "proto.core.IrcStanza\030r \001(\01325.tv.twitchbo" +
-      "t.common.dto.proto.core.UserNoticeComman" +
-      "d\"\347\001\n\020UserStateCommand\022\017\n\007channel\030\001 \002(\t\022" +
-      "O\n\020emote_set_stanza\030\002 \002(\01325.tv.twitchbot" +
-      ".common.dto.proto.core.EmoteSetIrcStanza",
-      "2q\n\004data\022-.tv.twitchbot.common.dto.proto" +
-      ".core.IrcStanza\030s \001(\01324.tv.twitchbot.com" +
-      "mon.dto.proto.core.UserStateCommand"
+      "cStanza\030g \001(\01325.tv.twitchbot.common.dto." +
+      "proto.core.HostTargetCommand\"\214\001\n\013JoinCom" +
+      "mand\022\017\n\007channel\030\001 \002(\t2l\n\004data\022-.tv.twitc" +
+      "hbot.common.dto.proto.core.IrcStanza\030h \001" +
+      "(\0132/.tv.twitchbot.common.dto.proto.core.",
+      "JoinCommand\"\264\001\n\013ModeCommand\022\017\n\007channel\030\001" +
+      " \002(\t\022\023\n\013mode_string\030\002 \001(\t\022\021\n\tnicknames\030\003" +
+      " \003(\t2l\n\004data\022-.tv.twitchbot.common.dto.p" +
+      "roto.core.IrcStanza\030i \001(\0132/.tv.twitchbot" +
+      ".common.dto.proto.core.ModeCommand\"\354\005\n\rN" +
+      "oticeCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message" +
+      "\030\002 \002(\t\022O\n\nmessage_id\030\003 \001(\0162;.tv.twitchbo" +
+      "t.common.dto.proto.core.NoticeCommand.Me" +
+      "ssageId\"\367\003\n\tMessageId\022\013\n\007UNKNOWN\020\000\022\013\n\007SU" +
+      "BS_ON\020\001\022\023\n\017ALREADY_SUBS_ON\020\002\022\014\n\010SUBS_OFF",
+      "\020\003\022\024\n\020ALREADY_SUBS_OFF\020\004\022\013\n\007SLOW_ON\020\005\022\014\n" +
+      "\010SLOW_OFF\020\006\022\n\n\006R9K_ON\020\007\022\022\n\016ALREADY_R9K_O" +
+      "N\020\010\022\013\n\007R9K_OFF\020\t\022\023\n\017ALREADY_R9K_OFF\020\n\022\013\n" +
+      "\007HOST_ON\020\013\022\024\n\020BAD_HOST_HOSTING\020\014\022\014\n\010HOST" +
+      "_OFF\020\r\022\023\n\017HOSTS_REMAINING\020\016\022\021\n\rEMOTE_ONL" +
+      "Y_ON\020\017\022\031\n\025ALREADY_EMOTE_ONLY_ON\020\020\022\022\n\016EMO" +
+      "TE_ONLY_OFF\020\021\022\032\n\026ALREADY_EMOTE_ONLY_OFF\020" +
+      "\022\022\031\n\025MSG_CHANNEL_SUSPENDED\020\023\022\023\n\017TIMEOUT_" +
+      "SUCCESS\020\024\022\017\n\013BAN_SUCCESS\020\025\022\021\n\rUNBAN_SUCC" +
+      "ESS\020\026\022\024\n\020BAD_UNBAN_NO_BAN\020\027\022\022\n\016ALREADY_B",
+      "ANNED\020\030\022\030\n\024UNRECOGNIZED_COMMAND\020\0312n\n\004dat" +
+      "a\022-.tv.twitchbot.common.dto.proto.core.I" +
+      "rcStanza\030j \001(\01321.tv.twitchbot.common.dto" +
+      ".proto.core.NoticeCommand\"\214\001\n\013PartComman" +
+      "d\022\017\n\007channel\030\001 \002(\t2l\n\004data\022-.tv.twitchbo" +
+      "t.common.dto.proto.core.IrcStanza\030k \001(\0132" +
+      "/.tv.twitchbot.common.dto.proto.core.Par" +
+      "tCommand\"\212\001\n\013PingCommand\022\r\n\005token\030\001 \001(\t2" +
+      "l\n\004data\022-.tv.twitchbot.common.dto.proto." +
+      "core.IrcStanza\030l \001(\0132/.tv.twitchbot.comm",
+      "on.dto.proto.core.PingCommand\"\302\002\n\016Privms" +
+      "gCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002" +
+      "(\t\0224\n\002id\030\003 \001(\0132(.tv.twitchbot.common.dto" +
+      ".proto.core.UUID\022\014\n\004bits\030\004 \001(\005\022Y\n\025messag" +
+      "e_tagged_stanza\030\005 \002(\0132:.tv.twitchbot.com" +
+      "mon.dto.proto.core.MessageTaggedIrcStanz" +
+      "a2o\n\004data\022-.tv.twitchbot.common.dto.prot" +
+      "o.core.IrcStanza\030m \001(\01322.tv.twitchbot.co" +
+      "mmon.dto.proto.core.PrivmsgCommand\"\205\001\n\020R" +
+      "econnectCommand2q\n\004data\022-.tv.twitchbot.c",
+      "ommon.dto.proto.core.IrcStanza\030n \001(\01324.t" +
+      "v.twitchbot.common.dto.proto.core.Reconn" +
+      "ectCommand\"\342\001\n\020RoomStateCommand\022\017\n\007chann" +
+      "el\030\001 \002(\t\022\034\n\024broadcaster_language\030\002 \001(\t\022\013" +
+      "\n\003r9k\030\003 \001(\010\022\021\n\tsubs_only\030\004 \001(\010\022\014\n\004slow\030\005" +
+      " \001(\0052q\n\004data\022-.tv.twitchbot.common.dto.p" +
+      "roto.core.IrcStanza\030o \001(\01324.tv.twitchbot" +
+      ".common.dto.proto.core.RoomStateCommand\"" +
+      "\213\001\n\023RplEndOfMotdCommand2t\n\004data\022-.tv.twi" +
+      "tchbot.common.dto.proto.core.IrcStanza\030p",
+      " \001(\01327.tv.twitchbot.common.dto.proto.cor" +
+      "e.RplEndOfMotdCommand\"\227\002\n\023RplNameReplyCo" +
+      "mmand\022\017\n\007channel\030\001 \002(\t\022O\n\007members\030\002 \003(\0132" +
+      ">.tv.twitchbot.common.dto.proto.core.Rpl" +
+      "NameReplyCommand.Member\032(\n\006Member\022\020\n\010nic" +
+      "kname\030\001 \002(\t\022\014\n\004isOp\030\002 \002(\0102t\n\004data\022-.tv.t" +
+      "witchbot.common.dto.proto.core.IrcStanza" +
+      "\030q \001(\01327.tv.twitchbot.common.dto.proto.c" +
+      "ore.RplNameReplyCommand\"\265\003\n\021UserNoticeCo" +
+      "mmand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022",
+      "S\n\nmessage_id\030\003 \001(\0162?.tv.twitchbot.commo" +
+      "n.dto.proto.core.UserNoticeCommand.Messa" +
+      "geId\022\016\n\006months\030\004 \001(\005\022\026\n\016system_message\030\005" +
+      " \001(\t\022\r\n\005login\030\006 \001(\t\022Y\n\025message_tagged_st" +
+      "anza\030\007 \002(\0132:.tv.twitchbot.common.dto.pro" +
+      "to.core.MessageTaggedIrcStanza\"#\n\tMessag" +
+      "eId\022\013\n\007UNKNOWN\020\000\022\t\n\005RESUB\020\0012r\n\004data\022-.tv" +
+      ".twitchbot.common.dto.proto.core.IrcStan" +
+      "za\030r \001(\01325.tv.twitchbot.common.dto.proto" +
+      ".core.UserNoticeCommand\"\347\001\n\020UserStateCom",
+      "mand\022\017\n\007channel\030\001 \002(\t\022O\n\020emote_set_stanz" +
+      "a\030\002 \002(\01325.tv.twitchbot.common.dto.proto." +
+      "core.EmoteSetIrcStanza2q\n\004data\022-.tv.twit" +
+      "chbot.common.dto.proto.core.IrcStanza\030s " +
+      "\001(\01324.tv.twitchbot.common.dto.proto.core" +
+      ".UserStateCommand"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
