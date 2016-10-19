@@ -40,8 +40,11 @@ public class LocalRateLimiter implements RateLimiter {
     }
 
     private void run(Runnable task) {
-        task.run();
-        scheduleRelease();
+        try {
+            task.run();
+        } finally {
+            scheduleRelease();
+        }
     }
 
     private void scheduleRelease() {

@@ -28,6 +28,8 @@ public class TmiService extends Service<SendMessageRequest, SendMessageResponse>
             return new SendMessageResponse(getModule().toDto(), request.getMessageId());
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 }
