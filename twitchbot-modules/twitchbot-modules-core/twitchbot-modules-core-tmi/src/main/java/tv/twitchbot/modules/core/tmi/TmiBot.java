@@ -51,6 +51,7 @@ public class TmiBot implements Runnable {
         this.tmiModule = tmiModule;
         this.channel = channel;
         this.bot = new TwitchBot(username);
+        log("Init: Constructed!");
     }
 
     @Override
