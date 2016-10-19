@@ -31,6 +31,7 @@ import tv.twitchbot.common.dto.messages.Request;
 import tv.twitchbot.common.dto.messages.Response;
 import tv.twitchbot.common.dto.messages.requests.ModuleShutdownRequest;
 import tv.twitchbot.common.dto.messages.responses.ModuleShutdownResponse;
+import tv.twitchbot.common.i18n.I18n;
 import tv.twitchbot.common.rpc.client.ServiceClient;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributorImpl;
@@ -82,6 +83,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
     private Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
     private StatsCollector statsCollector;
+    private I18n i18n;
 
     /* Third-Party Clients */
     private CuratorFramework curatorFramework;
@@ -179,6 +181,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
         globalConfigProvider = new ConfigurationProvider<U>(toDto(), daoManager, getGlobalConfigurationClass());
         tenantConfigProvider = new TenantConfigurationProvider<V>(toDto(), daoManager, getTenantConfigurationClass());
+        i18n = new I18n(daoManager);
     }
 
     /* ******************************* CALL THIS FROM main() ******************************* */
@@ -303,6 +306,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public CuratorFramework getCuratorFramework() {
         return curatorFramework;
+    }
+
+    protected I18n getI18n() {
+        return i18n;
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */
