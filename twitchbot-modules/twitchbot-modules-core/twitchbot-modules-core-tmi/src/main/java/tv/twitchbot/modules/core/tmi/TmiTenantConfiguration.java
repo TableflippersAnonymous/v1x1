@@ -7,7 +7,7 @@ import tv.twitchbot.common.modules.TenantConfiguration;
  * Created by cobi on 10/8/2016.
  */
 public class TmiTenantConfiguration extends TenantConfiguration {
-    private boolean customBot;
+    private boolean customBot = false;
     private String botName;
     private String oauthToken;
 
