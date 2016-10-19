@@ -55,6 +55,7 @@ public class Tenant {
 
     @PartitionKey
     private UUID id;
+    @Column(caseSensitive = true, name = "entries")
     private List<Entry> entries;
 
     public Tenant() {
