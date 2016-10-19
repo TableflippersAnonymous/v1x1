@@ -3,6 +3,7 @@ package tv.twitchbot.modules.core.tmi;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.common.collect.ImmutableList;
 import tv.twitchbot.common.dto.core.*;
 import tv.twitchbot.common.dto.db.Platform;
 import tv.twitchbot.common.dto.db.TenantUserPermissions;
@@ -41,7 +42,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 .build(new CacheLoader<String, Tenant>() {
                     @Override
                     public Tenant load(String s) throws Exception {
-                        return getDaoManager().getDaoTenant().getByChannel(Platform.TWITCH, s).toCore();
+                        return getDaoManager().getDaoTenant().getOrCreate(Platform.TWITCH, s, s).toCore();
                     }
                 });
         this.globalUserCache = CacheBuilder.newBuilder()
@@ -49,7 +50,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 .build(new CacheLoader<String, GlobalUser>() {
                     @Override
                     public GlobalUser load(String s) throws Exception {
-                        return getDaoManager().getDaoGlobalUser().getByUser(Platform.TWITCH, s).toCore();
+                        return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.TWITCH, s, s).toCore();
                     }
                 });
         this.permissionCache = CacheBuilder.newBuilder()
@@ -58,6 +59,8 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     @Override
                     public List<Permission> load(Pair<Tenant, GlobalUser> tenantGlobalUserPair) throws Exception {
                         TenantUserPermissions permissions = getDaoManager().getDaoTenantUserPermissions().getByTenantAndUser(tenantGlobalUserPair.getFirst().getId().getValue(), tenantGlobalUserPair.getSecond().getId().getValue());
+                        if(permissions == null)
+                            return ImmutableList.of();
                         return permissions.getPermissions().stream().map(TenantUserPermissions.Permission::toCore).collect(Collectors.toList());
                     }
                 });
