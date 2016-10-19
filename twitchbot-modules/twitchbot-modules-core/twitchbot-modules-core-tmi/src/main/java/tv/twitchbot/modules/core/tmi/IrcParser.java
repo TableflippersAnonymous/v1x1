@@ -21,6 +21,8 @@ public class IrcParser {
         String[] parts = splitIrcLine(tagParts[1]);
         IrcSource source = parseSource(parts[0]);
         IrcStanza.IrcCommand command = parseCommand(parts[1]);
+        if(command == null)
+            return null;
         String rawArgs = parts[2];
         List<String> args = parseArgs(rawArgs);
         return buildStanza(line, tagMap, source, command, rawArgs, args.toArray(new String[] {}));
@@ -52,7 +54,12 @@ public class IrcParser {
             return IrcStanza.IrcCommand.RPL_NAMREPLY;
         if(command.equals("376"))
             return IrcStanza.IrcCommand.RPL_ENDOFMOTD;
-        return IrcStanza.IrcCommand.valueOf(command.toUpperCase());
+        try {
+            return IrcStanza.IrcCommand.valueOf(command.toUpperCase());
+        } catch(IllegalArgumentException e) {
+            /* Unsupported IRC command. */
+            return null;
+        }
     }
 
     private static String[] splitIrcLine(String line) {
