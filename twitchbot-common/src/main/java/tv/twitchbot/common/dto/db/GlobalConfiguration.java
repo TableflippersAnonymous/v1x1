@@ -12,6 +12,9 @@ public class GlobalConfiguration {
     private String module;
     private String json;
 
+    public GlobalConfiguration() {
+    }
+
     public GlobalConfiguration(String module, String json) {
         this.module = module;
         this.json = json;

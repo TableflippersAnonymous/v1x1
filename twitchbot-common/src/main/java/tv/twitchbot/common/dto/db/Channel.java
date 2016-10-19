@@ -17,6 +17,9 @@ public abstract class Channel {
     @Column(name = "tenant_id")
     private UUID tenantId;
 
+    public Channel() {
+    }
+
     public Channel(String id, String displayName, UUID tenantId) {
         this.id = id;
         this.displayName = displayName;

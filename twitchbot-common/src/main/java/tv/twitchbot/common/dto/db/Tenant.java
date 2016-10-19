@@ -23,6 +23,9 @@ public class Tenant {
         @Field(name = "channel_id")
         private String channelId;
 
+        public Entry() {
+        }
+
         public Entry(Platform platform, String displayName, String channelId) {
             this.platform = platform;
             this.displayName = displayName;
@@ -53,6 +56,9 @@ public class Tenant {
     @PartitionKey
     private UUID id;
     private List<Entry> entries;
+
+    public Tenant() {
+    }
 
     public Tenant(UUID id, List<Entry> entries) {
         this.id = id;

@@ -18,6 +18,9 @@ public class TenantConfiguration {
     private UUID tenantId;
     private String json;
 
+    public TenantConfiguration() {
+    }
+
     public TenantConfiguration(String module, UUID tenantId, String json) {
         this.module = module;
         this.tenantId = tenantId;

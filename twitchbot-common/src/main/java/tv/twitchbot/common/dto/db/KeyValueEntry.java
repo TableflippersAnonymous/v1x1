@@ -14,6 +14,9 @@ public class KeyValueEntry {
     private byte[] key;
     private byte[] value;
 
+    public KeyValueEntry() {
+    }
+
     public KeyValueEntry(String name, byte[] key, byte[] value) {
         this.name = name;
         this.key = key;

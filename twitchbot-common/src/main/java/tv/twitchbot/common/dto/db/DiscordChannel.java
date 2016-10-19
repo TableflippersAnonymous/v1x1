@@ -13,6 +13,9 @@ public class DiscordChannel extends Channel {
         super(id, displayName, tenantId);
     }
 
+    public DiscordChannel() {
+    }
+
     @Override
     public tv.twitchbot.common.dto.core.DiscordChannel toCore(TenantAccessor accessor) {
         return new tv.twitchbot.common.dto.core.DiscordChannel(getId(), accessor.getById(getTenantId()).toCore(), getDisplayName());

@@ -15,6 +15,9 @@ public class TenantUserPermissions {
     public static class Permission {
         private String node;
 
+        public Permission() {
+        }
+
         public Permission(String node) {
             this.node = node;
         }
@@ -51,6 +54,9 @@ public class TenantUserPermissions {
     @Column(name = "user_id")
     private UUID userId;
     private List<Permission> permissions;
+
+    public TenantUserPermissions() {
+    }
 
     public TenantUserPermissions(UUID tenantId, UUID userId, List<Permission> permissions) {
         this.tenantId = tenantId;

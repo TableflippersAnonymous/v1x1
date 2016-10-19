@@ -19,6 +19,9 @@ public class InverseGlobalUser {
     @Column(name = "global_user_id")
     private UUID globalUserId;
 
+    public InverseGlobalUser() {
+    }
+
     public InverseGlobalUser(Platform platform, String userId, UUID globalUserId) {
         this.platform = platform;
         this.userId = userId;
