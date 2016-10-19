@@ -104,6 +104,8 @@ public class TmiBot implements Runnable {
     private void processLine(String line) throws IOException {
         log("Read: " + line);
         IrcStanza stanza = IrcParser.parse(line);
+        if(stanza == null)
+            return;
         if(stanza instanceof PingCommand)
             sendLine("PONG :" + ((PingCommand) stanza).getToken());
         if(stanza instanceof JoinCommand)
@@ -277,7 +279,7 @@ public class TmiBot implements Runnable {
     private void authenticate() throws IOException, InterruptedException {
         joinLimiter.submitAndWait(() -> {
             try {
-                sendLine("PASS oauth:" + oauthToken);
+                sendLine("PASS :" + oauthToken);
                 sendLine("USER " + username + " \"twitchbot.tv\" \"irc.chat.twitch.tv\" :" + username);
                 sendLine("NICK " + username);
             } catch (IOException e) {
