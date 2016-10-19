@@ -34,7 +34,7 @@ public class IrcParser {
             case GLOBALUSERSTATE: return new GlobalUserStateCommand(rawLine, tags, source, rawArgs, args);
             case HOSTTARGET: return new HostTargetCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
             case JOIN: return new JoinCommand(rawLine, tags, source, rawArgs, args, args[0]);
-            case MODE: return new ModeCommand(rawLine, tags, source, rawArgs, args, args[0], args[1], Arrays.asList(Arrays.copyOfRange(args, 2, args.length + 1)));
+            case MODE: return new ModeCommand(rawLine, tags, source, rawArgs, args, args[0], args[1], Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
             case NOTICE: return new NoticeCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
             case PART: return new PartCommand(rawLine, tags, source, rawArgs, args, args[0]);
             case PING: return new PingCommand(rawLine, tags, source, rawArgs, args, args[0]);
@@ -42,7 +42,7 @@ public class IrcParser {
             case RECONNECT: return new ReconnectCommand(rawLine, tags, source, rawArgs, args);
             case ROOMSTATE: return new RoomStateCommand(rawLine, tags, source, rawArgs, args, args[0]);
             case RPL_ENDOFMOTD: return new RplEndOfMotdCommand(rawLine, tags, source, rawArgs, args);
-            case RPL_NAMREPLY: return new RplNameReplyCommand(rawLine, tags, source, rawArgs, args, args[0], Arrays.asList(Arrays.copyOfRange(args, 1, args.length + 1)).stream().map(RplNameReplyCommand.Member::new).collect(Collectors.toList()));
+            case RPL_NAMREPLY: return new RplNameReplyCommand(rawLine, tags, source, rawArgs, args, args[0], Arrays.asList(Arrays.copyOfRange(args, 1, args.length)).stream().map(RplNameReplyCommand.Member::new).collect(Collectors.toList()));
             case USERNOTICE: return new UserNoticeCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
             case USERSTATE: return new UserStateCommand(rawLine, tags, source, rawArgs, args, args[0]);
             default: throw new IllegalStateException("Unknown command: " + command);
