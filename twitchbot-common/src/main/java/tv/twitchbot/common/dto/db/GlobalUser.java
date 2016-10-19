@@ -23,6 +23,9 @@ public class GlobalUser {
         @Field(name = "user_id")
         private String userId;
 
+        public Entry() {
+        }
+
         public Entry(Platform platform, String displayName, String userId) {
             this.platform = platform;
             this.displayName = displayName;
@@ -53,6 +56,9 @@ public class GlobalUser {
     @PartitionKey
     private UUID id;
     private List<Entry> entries;
+
+    public GlobalUser() {
+    }
 
     public GlobalUser(UUID id, List<Entry> entries) {
         this.id = id;
