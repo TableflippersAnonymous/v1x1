@@ -137,6 +137,8 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
 
     private void recalculateEntries() throws Exception {
         List<InstanceId> instances = instanceDiscovery.queryForInstances(INSTANCE_NAME).stream().map(this::instanceIdFor).collect(Collectors.toList());
+        if(instances.size() == 0)
+            return;
         List<String> entries = entryCache.getCurrentData().stream().map(ChildData::getData).map(String::new).collect(Collectors.toList());
         TreeMap<java.util.UUID, InstanceId> instanceLookupTable = new TreeMap<>();
         Map<InstanceId, Set<String>> newEntriesByInstance = new HashMap<>();
