@@ -80,3 +80,4 @@ CREATE TABLE tenant_configuration (
     json text,
     PRIMARY KEY ((module, tenant_id))
 );
+

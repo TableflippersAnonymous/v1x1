@@ -296,6 +296,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return deduplicator;
     }
 
+    public CuratorFramework getCuratorFramework() {
+        return curatorFramework;
+    }
+
     /* ******************************* COMPLEX GETTERS ******************************* */
     protected KeyValueStore getTemporaryTenantKeyValueStore(Tenant tenant) {
         return new TenantKeyValueStoreImpl(tenant, temporaryKeyValueStore);
