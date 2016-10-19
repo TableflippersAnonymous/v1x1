@@ -45,4 +45,9 @@ public class UUID {
     public int hashCode() {
         return value != null ? value.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

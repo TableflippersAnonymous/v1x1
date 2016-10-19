@@ -47,7 +47,7 @@ public abstract class ChatPartEvent extends Event {
     @Override
     protected EventOuterClass.Event.Builder toProtoEvent() {
         return super.toProtoEvent()
-                .setType(EventOuterClass.Event.EventType.CHAT_JOIN)
+                .setType(EventOuterClass.Event.EventType.CHAT_PART)
                 .setExtension(EventOuterClass.ChatPartEvent.data, toProtoChatPart().build());
     }
 

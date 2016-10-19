@@ -2,16 +2,13 @@ syntax = "proto2";
 
 package tv.twitchbot.common.dto.proto.core;
 
+import "Platform.proto";
+
 message Bot {
     extensions 100 to max;
 
-    enum Type {
-        TWITCH = 1;
-        DISCORD = 2;
-    }
-
     required string name = 1;
-    required Type type = 2;
+    required Platform type = 2;
 }
 
 message TwitchBot {
