@@ -79,14 +79,22 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         joinLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi/" + myIp, 48, 15);
         eventRouter = getMessageQueueManager().forName(getMainQueueForModule(new Module("event_router")));
         channelDistributor = getLoadBalancingDistributor("/channels", getGlobalConfiguration().getConnectionsPerChannel());
-        channelDistributor.addListener((instanceId, entries) -> {
-            if (getInstanceId().equals(instanceId.getValue())) {
-                try {
-                    setChannels(entries);
-                } catch (IOException | InterruptedException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
+        channelDistributor.addListener(new LoadBalancingDistributor.Listener() {
+            @Override
+            public void notify(UUID instanceId, Set<String> entries) {
+                if (getInstanceId().equals(instanceId.getValue())) {
+                    try {
+                        setChannels(entries);
+                    } catch (IOException | InterruptedException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
                 }
+            }
+
+            @Override
+            public int compareTo(LoadBalancingDistributor.Listener o) {
+                return hashCode() - o.hashCode();
             }
         });
         try {
