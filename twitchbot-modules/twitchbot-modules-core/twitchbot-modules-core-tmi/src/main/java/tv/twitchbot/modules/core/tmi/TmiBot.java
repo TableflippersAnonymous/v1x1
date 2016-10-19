@@ -55,12 +55,17 @@ public class TmiBot implements Runnable {
 
     @Override
     public void run() {
+        log("Init: Hello, World!");
         running = true;
         while(running) {
             try {
+                log("Init: Attempting connect");
                 connect();
+                log("Init: Attempting auth");
                 authenticate();
+                log("Init: Attempting caps");
                 requestCaps();
+                log("Init: Attempting join");
                 joinChannels();
                 for(;;) {
                     String line = getLine();
@@ -68,10 +73,12 @@ public class TmiBot implements Runnable {
                         break;
                     processLine(line);
                 }
+                log("Init: Attempting disconnect");
                 disconnect();
             } catch (Exception e) {
                 e.printStackTrace();
             } finally {
+                log("Init: Attempting cleanup");
                 cleanup();
             }
         }
@@ -94,7 +101,7 @@ public class TmiBot implements Runnable {
     }
 
     private void processLine(String line) throws IOException {
-        System.out.println("[" + username + ":" + id.toString() + "] [" + channel + "] Read: " + line);
+        log("Read: " + line);
         IrcStanza stanza = IrcParser.parse(line);
         if(stanza instanceof PingCommand)
             sendLine("PONG :" + ((PingCommand) stanza).getToken());
@@ -261,7 +268,7 @@ public class TmiBot implements Runnable {
     }
 
     private void sendLine(String line) throws IOException {
-        System.out.println("[" + username + ":" + id.toString() + "] [" + channel + "] Write: " + line);
+        log("Write: " + line);
         outputStream.write((line + "\r\n").getBytes());
         outputStream.flush();
     }
@@ -327,5 +334,9 @@ public class TmiBot implements Runnable {
     private void unregisterService() {
         if(service != null)
             service.shutdown();
+    }
+
+    private void log(String m) {
+        System.out.println("[" + username + ":" + id.toString() + "] [" + channel + "] " + m);
     }
 }
