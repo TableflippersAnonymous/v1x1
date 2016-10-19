@@ -1,76 +1,25 @@
 package tv.twitchbot.modules.core.tmi;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import tv.twitchbot.common.dto.core.*;
-import tv.twitchbot.common.dto.db.Platform;
-import tv.twitchbot.common.dto.db.TenantUserPermissions;
 import tv.twitchbot.common.dto.irc.IrcSource;
 import tv.twitchbot.common.dto.irc.IrcStanza;
 import tv.twitchbot.common.dto.irc.IrcUser;
 import tv.twitchbot.common.dto.irc.commands.*;
 import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.messages.events.*;
-import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
-import tv.twitchbot.common.services.persistence.DAOManager;
 import tv.twitchbot.common.services.persistence.Deduplicator;
 import tv.twitchbot.common.services.queue.MessageQueue;
 import tv.twitchbot.common.util.ratelimiter.RateLimiter;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentSkipListSet;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
  * Created by cobi on 10/8/2016.
  */
 public class TmiBot implements Runnable {
-    private static class Pair<A, B> {
-        private A first;
-        private B second;
-
-        public Pair(A first, B second) {
-            this.first = first;
-            this.second = second;
-        }
-
-        public A getFirst() {
-            return first;
-        }
-
-        public B getSecond() {
-            return second;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            Pair<?, ?> pair = (Pair<?, ?>) o;
-
-            if (first != null ? !first.equals(pair.first) : pair.first != null) return false;
-            return second != null ? second.equals(pair.second) : pair.second == null;
-
-        }
-
-        @Override
-        public int hashCode() {
-            int result = first != null ? first.hashCode() : 0;
-            result = 31 * result + (second != null ? second.hashCode() : 0);
-            return result;
-        }
-    }
-
-    private final LoadBalancingDistributor.Listener listener;
     private volatile boolean running;
     private volatile Socket socket;
     private volatile InputStream inputStream;
@@ -80,64 +29,27 @@ public class TmiBot implements Runnable {
     private final String username;
     private final Module module;
     private final TwitchBot bot;
-    private final UUID botId = UUID.randomUUID();
-    private final LoadBalancingDistributor channelDistributor;
     private final MessageQueue messageQueue;
-    private final DAOManager daoManager;
-    private final Set<String> channels = new ConcurrentSkipListSet<>();
-    private final LoadingCache<String, Tenant> tenantCache;
-    private final LoadingCache<String, GlobalUser> globalUserCache;
-    private final LoadingCache<Pair<Tenant, GlobalUser>, List<Permission>> permissionCache;
     private final RateLimiter joinLimiter;
     private final RateLimiter messageLimiter;
     private final Deduplicator deduplicator;
+    private TmiService service;
+    private final TmiModule tmiModule;
+    private final String channel;
 
-    public TmiBot(String username, String oauthToken, LoadBalancingDistributor distributor, MessageQueue queue, Module module, DAOManager daoManager, RateLimiter joinLimiter, RateLimiter messageLimiter, Deduplicator deduplicator) {
+    public TmiBot(String username, String oauthToken, MessageQueue queue,
+                  Module module, RateLimiter joinLimiter, RateLimiter messageLimiter,
+                  Deduplicator deduplicator, TmiModule tmiModule, String channel) {
         this.oauthToken = oauthToken;
         this.username = username;
         this.module = module;
-        this.channelDistributor = distributor;
         this.messageQueue = queue;
-        this.daoManager = daoManager;
         this.joinLimiter = joinLimiter;
         this.messageLimiter = messageLimiter;
         this.deduplicator = deduplicator;
+        this.tmiModule = tmiModule;
+        this.channel = channel;
         this.bot = new TwitchBot(username);
-        listener = (instanceId, entries) -> {
-            if (botId.equals(instanceId.getValue())) {
-                try {
-                    setChannels(entries);
-                } catch (IOException | InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        };
-        channelDistributor.addListener(listener);
-        this.tenantCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(30, TimeUnit.SECONDS)
-                .build(new CacheLoader<String, Tenant>() {
-                    @Override
-                    public Tenant load(String s) throws Exception {
-                        return daoManager.getDaoTenant().getByChannel(Platform.TWITCH, s).toCore();
-                    }
-                });
-        this.globalUserCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(30, TimeUnit.SECONDS)
-                .build(new CacheLoader<String, GlobalUser>() {
-                    @Override
-                    public GlobalUser load(String s) throws Exception {
-                        return daoManager.getDaoGlobalUser().getByUser(Platform.TWITCH, s).toCore();
-                    }
-                });
-        this.permissionCache = CacheBuilder.newBuilder()
-                .expireAfterWrite(30, TimeUnit.SECONDS)
-                .build(new CacheLoader<Pair<Tenant, GlobalUser>, List<Permission>>() {
-                    @Override
-                    public List<Permission> load(Pair<Tenant, GlobalUser> tenantGlobalUserPair) throws Exception {
-                        TenantUserPermissions permissions = daoManager.getDaoTenantUserPermissions().getByTenantAndUser(tenantGlobalUserPair.getFirst().getId().getValue(), tenantGlobalUserPair.getSecond().getId().getValue());
-                        return permissions.getPermissions().stream().map(TenantUserPermissions.Permission::toCore).collect(Collectors.toList());
-                    }
-                });
     }
 
     @Override
@@ -162,23 +74,14 @@ public class TmiBot implements Runnable {
                 cleanup();
             }
         }
-        channelDistributor.removeListener(listener);
     }
 
     private void cleanup() {
-        try {
-            channelDistributor.removeInstance(new tv.twitchbot.common.dto.core.UUID(botId));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        unregisterService();
     }
 
     private void disconnect() throws IOException {
-        try {
-            channelDistributor.removeInstance(new tv.twitchbot.common.dto.core.UUID(botId));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        unregisterService();
         quit();
         socket.close();
     }
@@ -193,9 +96,35 @@ public class TmiBot implements Runnable {
         IrcStanza stanza = IrcParser.parse(line);
         if(stanza instanceof PingCommand)
             sendLine("PONG :" + ((PingCommand) stanza).getToken());
+        if(stanza instanceof JoinCommand)
+            handleJoin((JoinCommand) stanza);
+        if(stanza instanceof PartCommand)
+            handlePart((PartCommand) stanza);
         if(stanza.getTags().containsKey("id") && deduplicator.seenAndAdd(new tv.twitchbot.common.dto.core.UUID(UUID.fromString(stanza.getTags().get("id")))))
             return;
         event(stanza);
+    }
+
+    private void handleJoin(JoinCommand stanza) {
+        if(!(stanza.getSource() instanceof IrcUser))
+            return;
+        IrcUser user = (IrcUser) stanza.getSource();
+        if(!user.getNickname().equals(username))
+            return;
+        if(!stanza.getChannel().equals(channel))
+            return;
+        registerService();
+    }
+
+    private void handlePart(PartCommand stanza) {
+        if(!(stanza.getSource() instanceof IrcUser))
+            return;
+        IrcUser user = (IrcUser) stanza.getSource();
+        if(!user.getNickname().equals(username))
+            return;
+        if(!stanza.getChannel().equals(channel))
+            return;
+        unregisterService();
     }
 
     private void event(Event event) {
@@ -274,7 +203,7 @@ public class TmiBot implements Runnable {
     private void event(PrivmsgCommand privmsgCommand) {
         TwitchChannel channel = getChannel(privmsgCommand.getChannel());
         TwitchUser user = getUser(privmsgCommand);
-        event(new TwitchChatMessageEvent(module, new ChatMessage(channel, user, privmsgCommand.getMessage(), getPermissions(channel.getTenant(), user.getGlobalUser())), privmsgCommand));
+        event(new TwitchChatMessageEvent(module, new ChatMessage(channel, user, privmsgCommand.getMessage(), tmiModule.getPermissions(channel.getTenant(), user.getGlobalUser())), privmsgCommand));
     }
 
     private void event(ReconnectCommand reconnectCommand) {
@@ -301,14 +230,6 @@ public class TmiBot implements Runnable {
         event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand.getChannel()), bot, userStateCommand));
     }
 
-    private List<Permission> getPermissions(Tenant tenant, GlobalUser globalUser) {
-        try {
-            return permissionCache.get(new Pair<>(tenant, globalUser));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     private TwitchUser getUser(IrcStanza stanza) {
         IrcSource source = stanza.getSource();
         if(source instanceof IrcUser)
@@ -323,27 +244,11 @@ public class TmiBot implements Runnable {
     }
 
     private TwitchUser getUser(String id, String displayName) {
-        return new TwitchUser(id, getGlobalUser(id), displayName == null ? id : displayName);
-    }
-
-    private GlobalUser getGlobalUser(String id) {
-        try {
-            return globalUserCache.get(id);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return new TwitchUser(id, tmiModule.getGlobalUser(id), displayName == null ? id : displayName);
     }
 
     private TwitchChannel getChannel(String id) {
-        return new TwitchChannel(id, getTenant(id), id);
-    }
-
-    private Tenant getTenant(String id) {
-        try {
-            return tenantCache.get(id);
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return new TwitchChannel(id, tmiModule.getTenant(id), id);
     }
 
     private void connect() throws IOException {
@@ -358,19 +263,24 @@ public class TmiBot implements Runnable {
         outputStream.flush();
     }
 
-    private void authenticate() throws IOException {
-        sendLine("PASS oauth:" + oauthToken);
-        sendLine("USER " + username + " \"twitchbot.tv\" \"irc.chat.twitch.tv\" :" + username);
-        sendLine("NICK " + username);
+    private void authenticate() throws IOException, InterruptedException {
+        joinLimiter.submitAndWait(() -> {
+            try {
+                sendLine("PASS oauth:" + oauthToken);
+                sendLine("USER " + username + " \"twitchbot.tv\" \"irc.chat.twitch.tv\" :" + username);
+                sendLine("NICK " + username);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void joinChannels() throws Exception {
-        channelDistributor.addInstance(new tv.twitchbot.common.dto.core.UUID(botId));
+        join(channel);
     }
 
     private void join(String channel) throws IOException, InterruptedException {
         joinLimiter.submitAndWait(() -> {
-            channels.add(channel);
             try {
                 sendLine("JOIN " + channel);
             } catch (IOException e) {
@@ -380,12 +290,10 @@ public class TmiBot implements Runnable {
     }
 
     private void part(String channel) throws IOException {
-        channels.remove(channel);
         sendLine("PART " + channel);
     }
 
     private void quit() throws IOException {
-        channels.clear();
         sendLine("QUIT :Disconnecting.");
     }
 
@@ -408,12 +316,13 @@ public class TmiBot implements Runnable {
         });
     }
 
-    private void setChannels(Set<String> channels) throws IOException, InterruptedException {
-        for(String channel : this.channels)
-            if(!channels.contains(channel))
-                part(channel);
-        for(String channel : channels)
-            if(!this.channels.contains(channel))
-                join(channel);
+    private void registerService() {
+        service = new TmiService(tmiModule, channel, this);
+        service.start();
+    }
+
+    private void unregisterService() {
+        if(service != null)
+            service.shutdown();
     }
 }

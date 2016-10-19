@@ -12,6 +12,7 @@ import java.util.Map;
 public class TmiGlobalConfiguration extends GlobalConfiguration {
     private Map<String, String> globalBots = new HashMap<>();
     private int connectionsPerChannel = 3;
+    private String defaultUsername = "v1x1";
 
     @JsonProperty("global_bots")
     public Map<String, String> getGlobalBots() {
@@ -31,5 +32,15 @@ public class TmiGlobalConfiguration extends GlobalConfiguration {
     @JsonProperty("connections_per_channel")
     public void setConnectionsPerChannel(int connectionsPerChannel) {
         this.connectionsPerChannel = connectionsPerChannel;
+    }
+
+    @JsonProperty("default_username")
+    public String getDefaultUsername() {
+        return defaultUsername;
+    }
+
+    @JsonProperty("default_username")
+    public void setDefaultUsername(String defaultUsername) {
+        this.defaultUsername = defaultUsername;
     }
 }
