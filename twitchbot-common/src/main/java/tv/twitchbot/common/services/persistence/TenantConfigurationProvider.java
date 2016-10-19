@@ -33,6 +33,8 @@ public class TenantConfigurationProvider<T extends TenantConfiguration> {
                     @Override
                     public T load(Tenant tenant) throws Exception {
                         tv.twitchbot.common.dto.db.TenantConfiguration tenantConfiguration = daoTenantConfiguration.get(module, tenant);
+                        if(tenantConfiguration == null)
+                            return mapper.readValue("{}", clazz);
                         return mapper.readValue(tenantConfiguration.getJson(), clazz);
                     }
                 });
