@@ -3,8 +3,10 @@ package tv.twitchbot.modules.channel.hello_world;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.google.common.collect.ImmutableMap;
 import tv.twitchbot.common.dto.core.ChatMessage;
 import tv.twitchbot.common.dto.core.Permission;
+import tv.twitchbot.common.i18n.I18n;
 import tv.twitchbot.common.util.commands.Command;
 
 import java.lang.invoke.MethodHandles;
@@ -33,7 +35,7 @@ public class HelloWorldCommand extends Command {
 
     @Override
     public void run(ChatMessage chatMessage, String command, List<String> args) {
-        LOG.debug("Got hello command");
-        module.crsc.sendMessage(chatMessage.getChannel(), "Hello World");
+        String resp = module.language.message(module.toDto(), "hello", ImmutableMap.of("user", chatMessage.getSender().getDisplayName()));
+        module.crsc.sendMessage(chatMessage.getChannel(), resp);
     }
 }

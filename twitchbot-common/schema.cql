@@ -81,3 +81,10 @@ CREATE TABLE tenant_configuration (
     PRIMARY KEY ((module, tenant_id))
 );
 
+CREATE TABLE persistent_language (
+    id uuid,
+    parent_id uuid,
+    name text,
+    strings map<text, text>,
+    PRIMARY KEY (id)
+);
