@@ -33,7 +33,7 @@ public class ConfigurationProvider<T extends GlobalConfiguration> {
                     public T load(Module module1) throws Exception {
                         tv.twitchbot.common.dto.db.GlobalConfiguration globalConfiguration = daoGlobalConfiguration.get(module);
                         if(globalConfiguration == null)
-                            mapper.readValue("{}", clazz);
+                            return mapper.readValue("{}", clazz);
                         return mapper.readValue(globalConfiguration.getJson(), clazz);
                     }
                 });
