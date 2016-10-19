@@ -23,7 +23,7 @@ public class IPProvider {
                 if (entity == null)
                     throw new RuntimeException("Error getting IP");
                 String body = EntityUtils.toString(entity);
-                return body;
+                return body.trim();
             } finally {
                 response.close();
             }
