@@ -9,6 +9,9 @@ import java.util.UUID;
  */
 @Table(name = "twitch_channel")
 public class TwitchChannel extends Channel {
+    public TwitchChannel() {
+    }
+
     public TwitchChannel(String id, String displayName, UUID tenantId) {
         super(id, displayName, tenantId);
     }
