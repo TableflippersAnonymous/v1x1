@@ -13,6 +13,7 @@ public class DAOManager {
     private DAOKeyValueEntry daoKeyValueEntry;
     private DAOTenantConfiguration daoTenantConfiguration;
     private DAOGlobalConfiguration daoGlobalConfiguration;
+    private DAOLanguage daoLanguage;
 
     public DAOManager(MappingManager mappingManager) {
         daoTenant = new DAOTenant(mappingManager);
@@ -21,6 +22,7 @@ public class DAOManager {
         daoKeyValueEntry = new DAOKeyValueEntry(mappingManager);
         daoTenantConfiguration = new DAOTenantConfiguration(mappingManager);
         daoGlobalConfiguration = new DAOGlobalConfiguration(mappingManager);
+        daoLanguage = new DAOLanguage(mappingManager);
     }
 
     public DAOTenant getDaoTenant() {
@@ -45,5 +47,13 @@ public class DAOManager {
 
     public DAOGlobalConfiguration getDaoGlobalConfiguration() {
         return daoGlobalConfiguration;
+    }
+
+    public DAOLanguage getDaoLanguage() {
+        return daoLanguage;
+    }
+
+    public void setDaoLanguage(DAOLanguage daoLanguage) {
+        this.daoLanguage = daoLanguage;
     }
 }
