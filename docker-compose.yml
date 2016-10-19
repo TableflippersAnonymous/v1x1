@@ -39,3 +39,9 @@ services:
       - redis
       - zoo1
       - chat_router
+  i18n_test:
+    image: v1x1-i18n_test:latest
+    depends_on:
+      - redis
+      - zoo1
+      - chat_router
