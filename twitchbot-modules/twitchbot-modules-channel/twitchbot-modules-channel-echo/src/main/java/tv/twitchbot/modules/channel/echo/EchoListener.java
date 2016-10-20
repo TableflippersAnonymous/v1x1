@@ -37,9 +37,10 @@ public class EchoListener implements EventListener {
 
     @EventHandler
     public void onChatMessage(ChatMessageEvent ev) {
+        System.out.println("Got chat message event");
         StringBuilder sb = new StringBuilder();
         sb.append("Echo: ");
         sb.append(ev.getChatMessage().getText());
-        echo.crsc.sendMessage(ev.getChatMessage().getChannel(), ev.getChatMessage().getText());
+        echo.crsc.sendMessage(ev.getChatMessage().getChannel(), sb.toString());
     }
 }
