@@ -42,11 +42,11 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
                         }
                         T request = (T) m;
                         handleRequest(request);
-                    } catch (InvalidProtocolBufferException e) {
-                        e.printStackTrace();
-                        continue;
                     } catch (InterruptedException e) {
                         break;
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        continue;
                     }
                 }
             }
