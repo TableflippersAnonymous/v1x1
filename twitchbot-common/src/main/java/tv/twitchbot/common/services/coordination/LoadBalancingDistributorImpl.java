@@ -139,6 +139,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         List<InstanceId> instances = instanceDiscovery.queryForInstances(INSTANCE_NAME).stream().map(this::instanceIdFor).collect(Collectors.toList());
         if(instances.size() == 0)
             return;
+        int realisticRedundancy = Math.min(redundancy, instances.size());
         List<String> entries = entryCache.getCurrentData().stream().map(ChildData::getData).map(String::new).collect(Collectors.toList());
         TreeMap<java.util.UUID, InstanceId> instanceLookupTable = new TreeMap<>();
         Map<InstanceId, Set<String>> newEntriesByInstance = new HashMap<>();
@@ -154,10 +155,12 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         Map<String, Set<InstanceId>> newInstancesByEntry = new HashMap<>();
         for(String entry : entries) {
             java.util.UUID key = java.util.UUID.nameUUIDFromBytes(entry.getBytes());
-            for(int i = 0; i < redundancy; i++) {
-                key = getNext(instanceLookupTable, key);
-                InstanceId instanceId = instanceLookupTable.get(key);
-                newEntriesByInstance.get(instanceId).add(entry);
+            for(int i = 0; i < realisticRedundancy; i++) {
+                InstanceId instanceId;
+                do {
+                    key = getNext(instanceLookupTable, key);
+                    instanceId = instanceLookupTable.get(key);
+                } while(!newEntriesByInstance.get(instanceId).add(entry));
                 if(!newInstancesByEntry.containsKey(entry))
                     newInstancesByEntry.put(entry, new HashSet<>());
                 newInstancesByEntry.get(entry).add(instanceId);
