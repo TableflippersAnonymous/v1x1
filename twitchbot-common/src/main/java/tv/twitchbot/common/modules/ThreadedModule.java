@@ -25,11 +25,20 @@ public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalC
         executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth));
     }
 
+    private void processMessageWrapper(Message message) {
+        try {
+            processMessage(message);
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
     protected abstract void processMessage(Message message);
 
     @Override
     protected void handle(final Message message) {
-        executorService.submit(() -> processMessage(message));
+        executorService.submit(() -> processMessageWrapper(message));
     }
 
     @Override
