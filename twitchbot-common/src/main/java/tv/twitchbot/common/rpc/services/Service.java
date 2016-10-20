@@ -36,8 +36,10 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
                 for(;;) {
                     try {
                         Message m = messageQueue.get();
-                        if(!requestClass.isInstance(m))
+                        if(!requestClass.isInstance(m)) {
+                            System.out.println("Invalid class seen on request queue: " + m.getClass().getCanonicalName() + " expected: " + requestClass.getCanonicalName());
                             continue;
+                        }
                         T request = (T) m;
                         handleRequest(request);
                     } catch (InvalidProtocolBufferException e) {
