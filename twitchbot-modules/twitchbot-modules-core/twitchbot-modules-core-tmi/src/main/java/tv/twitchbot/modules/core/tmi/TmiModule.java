@@ -214,6 +214,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
     private void part(String channel) {
         if(!bots.containsKey(channel))
             return;
+        LOG.info("Leaving {}", channel);
         TmiBot oldTmiBot = bots.remove(channel);
         try {
             if(oldTmiBot != null)
