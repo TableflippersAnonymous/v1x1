@@ -39,6 +39,7 @@ public class ChatRouterService extends Service<SendMessageRequest, SendMessageRe
     @Override
     protected SendMessageResponse call(SendMessageRequest request) {
         try {
+            System.out.println("Forwarding message=" + request.getText() + " to " + request.getDestination().getDisplayName());
             SendMessageResponse response = tmiCache.get(request.getDestination().getId()).sendMessage(request.getDestination(), request.getText()).get();
             return new SendMessageResponse(getModule().toDto(), request.getMessageId());
         } catch (InterruptedException e) {
