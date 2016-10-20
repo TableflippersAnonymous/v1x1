@@ -29,6 +29,7 @@ public class HelloWorldCommand extends Command {
 
     @Override
     public void run(ChatMessage chatMessage, String command, List<String> args) {
+        System.out.println("Got hello command!");
         module.crsc.sendMessage(chatMessage.getChannel(), "Hello World");
     }
 }
