@@ -13,6 +13,7 @@ public class CommandParser {
     public static ParsedCommand parse(ChatMessageEvent chatMessageEvent, String prefix) {
         String msg = chatMessageEvent.getChatMessage().getText();
         if(msg == null) return null;
+        System.out.println("[Command Parser] prefix=" + prefix + " msg=" + msg);
         if(msg.startsWith(prefix)) {
             List<String> args = Arrays.asList(msg.substring(prefix.length()).split(" "));
             String command = args.remove(0);
