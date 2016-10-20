@@ -9,10 +9,13 @@ import org.apache.curator.x.discovery.*;
 import org.apache.curator.x.discovery.details.InstanceSerializer;
 import org.apache.curator.x.discovery.details.ServiceCacheListener;
 import org.apache.zookeeper.CreateMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.proto.core.UUIDOuterClass;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
@@ -23,7 +26,7 @@ import java.util.stream.Collectors;
  * Created by cobi on 10/10/2016.
  */
 public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
-
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static final String INSTANCE_NAME = "INSTANCE";
 
     public static class InstanceId {
@@ -136,6 +139,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     }
 
     private void recalculateEntries() throws Exception {
+        LOG.info("Recalculating entries.");
         List<InstanceId> instances = instanceDiscovery.queryForInstances(INSTANCE_NAME).stream().map(this::instanceIdFor).collect(Collectors.toList());
         if(instances.size() == 0)
             return;
