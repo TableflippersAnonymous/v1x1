@@ -29,6 +29,7 @@ public abstract class RegisteredThreadedModule<T extends ModuleSettings, U exten
             if(m.isAnnotationPresent(EventHandler.class)) {
                 if(m.getParameterCount() == 1 && Event.class.isAssignableFrom(m.getParameters()[0].getType())) {
                     handlers.add(m);
+                    //System.out.println("Added event handler: " + listener.getClass().getCanonicalName() + "; " + m.getName());
                 }
             }
         }
@@ -38,15 +39,11 @@ public abstract class RegisteredThreadedModule<T extends ModuleSettings, U exten
     protected void processMessage(Message message) {
         if(message instanceof Event) {
             for(Method m : handlers) {
-                if(m.getParameters()[0].getType().equals(message.getClass())) {
+                if(m.getParameters()[0].getType().isInstance(message)) {
                     try {
                         m.invoke(listener, message);
-                    } catch (IllegalAccessException e) {
+                    } catch (IllegalAccessException | InvocationTargetException e) {
                         LOG.warn("Failure calling handler for module", e);
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        LOG.warn("Failure calling handler for module", e);
-                        e.printStackTrace();
                     }
                 }
             }
