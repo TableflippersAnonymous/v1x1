@@ -1,5 +1,6 @@
 package tv.twitchbot.modules.core.tmi;
 
+import com.google.common.base.Joiner;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -173,15 +174,16 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
     }
 
     private void setChannels(Set<String> channels) throws IOException, InterruptedException {
-        this.channels.stream().filter(channel -> !channels.contains(channel)).forEach(channel -> part(channel));
-        channels.stream().filter(channel -> !this.channels.contains(channel)).forEach(channel -> join(channel));
+        LOG.info("Channels: {}", Joiner.on(", ").join(channels));
+        this.channels.stream().filter(channel -> !channels.contains(channel)).forEach(this::part);
+        channels.stream().filter(channel -> !this.channels.contains(channel)).forEach(this::join);
     }
 
     private void join(String channel) {
         try {
+            LOG.info("Joining {}", channel);
             if (bots.containsKey(channel))
                 return;
-            LOG.info("Joining {}", channel);
             Tenant tenant = getTenant(channel);
             LOG.debug("Getting tenant configuration for {}", channel);
             TmiTenantConfiguration tenantConfiguration = getTenantConfiguration(tenant);
@@ -212,15 +214,18 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
     }
 
     private void part(String channel) {
-        if(!bots.containsKey(channel))
-            return;
-        LOG.info("Leaving {}", channel);
-        TmiBot oldTmiBot = bots.remove(channel);
         try {
-            if(oldTmiBot != null)
-                oldTmiBot.shutdown();
-        } catch (IOException e) {
+            LOG.info("Leaving {}", channel);
+            TmiBot oldTmiBot = bots.remove(channel);
+            try {
+                if (oldTmiBot != null)
+                    oldTmiBot.shutdown();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
             e.printStackTrace();
+            throw e;
         }
     }
 
