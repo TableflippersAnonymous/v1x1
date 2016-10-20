@@ -31,6 +31,7 @@ public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlob
     @Override
     protected void processChatMessageEvent(ChatMessageEvent chatMessageEvent) {
         super.processChatMessageEvent(chatMessageEvent);
+        System.out.println("Got chat message: " + chatMessageEvent.getChatMessage().getText());
         delegator.handleChatMessage(chatMessageEvent);
     }
 }

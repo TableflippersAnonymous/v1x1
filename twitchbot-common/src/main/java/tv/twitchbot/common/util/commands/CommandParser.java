@@ -14,7 +14,7 @@ public class CommandParser {
         String msg = chatMessageEvent.getChatMessage().getText();
         if(msg == null) return null;
         if(msg.startsWith(prefix)) {
-            List<String> args = Arrays.asList(msg.substring(prefix.length()).split(" ", 2));
+            List<String> args = Arrays.asList(msg.substring(prefix.length()).split(" "));
             String command = args.remove(0);
             return new ParsedCommand(command, args);
         }
