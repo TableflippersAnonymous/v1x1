@@ -35,7 +35,6 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
     private final LoadingCache<String, Tenant> tenantCache;
     private final LoadingCache<String, GlobalUser> globalUserCache;
     private final LoadingCache<Pair<Tenant, GlobalUser>, List<Permission>> permissionCache;
-    private final Set<String> channels = new ConcurrentSkipListSet<>();
     private LoadBalancingDistributor channelDistributor;
     private final Map<String, TmiBot> bots = new ConcurrentHashMap<>();
     private ScheduledExecutorService scheduledExecutorService;
@@ -175,8 +174,9 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
 
     private void setChannels(Set<String> channels) throws IOException, InterruptedException {
         LOG.info("Channels: {}", Joiner.on(", ").join(channels));
-        this.channels.stream().filter(channel -> !channels.contains(channel)).forEach(this::part);
-        channels.stream().filter(channel -> !this.channels.contains(channel)).forEach(this::join);
+        LOG.info("this.channels: {}", Joiner.on(", ").join(bots.keySet()));
+        bots.keySet().stream().filter(channel -> !channels.contains(channel)).forEach(this::part);
+        channels.stream().filter(channel -> !bots.keySet().contains(channel)).forEach(this::join);
     }
 
     private void join(String channel) {
