@@ -69,7 +69,7 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
     public enum Badge {
         STAFF, ADMIN, GLOBAL_MOD,
         MODERATOR, SUBSCRIBER, TURBO,
-        PREMIUM, BITS;
+        PREMIUM, BITS, BROADCASTER;
 
         public IRC.MessageTaggedIrcStanza.Badge toProto() {
             switch(this) {
@@ -81,6 +81,7 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
                 case TURBO: return IRC.MessageTaggedIrcStanza.Badge.TURBO;
                 case PREMIUM: return IRC.MessageTaggedIrcStanza.Badge.PREMIUM;
                 case BITS: return IRC.MessageTaggedIrcStanza.Badge.BITS;
+                case BROADCASTER: return IRC.MessageTaggedIrcStanza.Badge.BROADCASTER;
                 default: throw new IllegalStateException("Unknown Badge: " + this);
             }
         }
