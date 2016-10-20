@@ -3,6 +3,8 @@ package tv.twitchbot.common.dto.messages;
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.core.Module;
 import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.proto.core.BotOuterClass;
@@ -11,12 +13,14 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 import tv.twitchbot.common.dto.proto.messages.MessageOuterClass;
 import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Date;
 
 /**
  * Created by cobi on 10/4/16.
  */
 public abstract class Message {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static ExtensionRegistry extensionRegistry = ExtensionRegistry.newInstance();
 
     static {
@@ -87,8 +91,7 @@ public abstract class Message {
         try {
             return fromProto(message);
         } catch(Exception e) {
-            System.err.println("Exception converting: " + message.toString());
-            e.printStackTrace();
+            LOG.error("Exception converting: {}", message, e);
             throw e;
         }
     }

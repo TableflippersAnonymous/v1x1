@@ -1,5 +1,7 @@
 package tv.twitchbot.modules.core.tmi;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.core.*;
 import tv.twitchbot.common.dto.irc.IrcSource;
 import tv.twitchbot.common.dto.irc.IrcStanza;
@@ -12,6 +14,7 @@ import tv.twitchbot.common.services.queue.MessageQueue;
 import tv.twitchbot.common.util.ratelimiter.RateLimiter;
 
 import java.io.*;
+import java.lang.invoke.MethodHandles;
 import java.net.Socket;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
  * Created by cobi on 10/8/2016.
  */
 public class TmiBot implements Runnable {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private volatile boolean running;
     private volatile Socket socket;
     private volatile InputStream inputStream;
@@ -340,6 +345,6 @@ public class TmiBot implements Runnable {
     }
 
     private void log(String m) {
-        System.out.println("[" + username + ":" + id.toString() + "] [" + channel + "] " + m);
+        LOG.info("[{}:{}] [{}] {}", username, id, channel, m);
     }
 }
