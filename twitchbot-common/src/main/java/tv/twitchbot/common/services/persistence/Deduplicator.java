@@ -24,9 +24,6 @@ public class Deduplicator {
 
     public boolean seenAndAdd(UUID uuid) {
         byte[] bytes = uuid.toProto().toByteArray();
-        if(setCache.contains(bytes))
-            return true;
-        setCache.add(bytes, 5, TimeUnit.MINUTES);
-        return false;
+        return !setCache.add(bytes, 5, TimeUnit.MINUTES);
     }
 }
