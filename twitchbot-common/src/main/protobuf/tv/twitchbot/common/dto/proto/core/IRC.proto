@@ -97,6 +97,7 @@ message MessageTaggedIrcStanza {
         TURBO = 6;
         PREMIUM = 7;
         BITS = 8;
+        BROADCASTER = 9;
     }
 
     message Emote {
