@@ -1,8 +1,12 @@
 package tv.twitchbot.common.dto.messages;
 
+import com.google.protobuf.ExtensionRegistry;
+import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
 import tv.twitchbot.common.dto.core.Module;
 import tv.twitchbot.common.dto.core.UUID;
+import tv.twitchbot.common.dto.proto.core.BotOuterClass;
+import tv.twitchbot.common.dto.proto.core.IRC;
 import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
 import tv.twitchbot.common.dto.proto.messages.MessageOuterClass;
 import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
@@ -13,8 +17,67 @@ import java.util.Date;
  * Created by naomi on 10/4/16.
  */
 public abstract class Message {
+    private static ExtensionRegistry extensionRegistry = ExtensionRegistry.newInstance();
+
+    static {
+        /* On Message */
+        Message.register(EventOuterClass.Event.data);
+        Message.register(RequestOuterClass.Request.data);
+        Message.register(RequestOuterClass.Response.data);
+
+        /* On Event */
+        Message.register(EventOuterClass.ChatJoinEvent.data);
+        Message.register(EventOuterClass.ChatMessageEvent.data);
+        Message.register(EventOuterClass.ChatPartEvent.data);
+        Message.register(EventOuterClass.TwitchBotChannelStateEvent.data);
+        Message.register(EventOuterClass.TwitchBotConnectedEvent.data);
+        Message.register(EventOuterClass.TwitchBotGlobalStateEvent.data);
+        Message.register(EventOuterClass.TwitchChannelEvent.data);
+        Message.register(EventOuterClass.TwitchChannelUsersEvent.data);
+        Message.register(EventOuterClass.TwitchHostEvent.data);
+        Message.register(EventOuterClass.TwitchPingEvent.data);
+        Message.register(EventOuterClass.TwitchRawMessageEvent.data);
+        Message.register(EventOuterClass.TwitchReconnectEvent.data);
+        Message.register(EventOuterClass.TwitchRoomStateEvent.data);
+        Message.register(EventOuterClass.TwitchTimeoutEvent.data);
+        Message.register(EventOuterClass.TwitchUserEvent.data);
+        Message.register(EventOuterClass.TwitchUserModChangeEvent.data);
+
+        /* On independent events */
+        Message.register(EventOuterClass.TwitchChatJoinEvent.data);
+        Message.register(EventOuterClass.TwitchChatMessageEvent.data);
+        Message.register(EventOuterClass.TwitchChatPartEvent.data);
+
+        /* On Bot */
+        Message.register(BotOuterClass.TwitchBot.data);
+        Message.register(BotOuterClass.DiscordBot.data);
+
+        /* On IRC */
+        Message.register(IRC.IrcServer.data);
+        Message.register(IRC.IrcUser.data);
+        Message.register(IRC.ClearChatCommand.data);
+        Message.register(IRC.GlobalUserStateCommand.data);
+        Message.register(IRC.HostTargetCommand.data);
+        Message.register(IRC.JoinCommand.data);
+        Message.register(IRC.ModeCommand.data);
+        Message.register(IRC.NoticeCommand.data);
+        Message.register(IRC.PartCommand.data);
+        Message.register(IRC.PingCommand.data);
+        Message.register(IRC.PrivmsgCommand.data);
+        Message.register(IRC.ReconnectCommand.data);
+        Message.register(IRC.RoomStateCommand.data);
+        Message.register(IRC.RplNameReplyCommand.data);
+        Message.register(IRC.RplEndOfMotdCommand.data);
+        Message.register(IRC.UserNoticeCommand.data);
+        Message.register(IRC.UserStateCommand.data);
+    }
+
+    public static void register(GeneratedMessage.GeneratedExtension<?, ?> field) {
+        extensionRegistry.add(field);
+    }
+
     public static Message fromBytes(byte[] bytes) throws InvalidProtocolBufferException {
-        MessageOuterClass.Message message = MessageOuterClass.Message.parseFrom(bytes);
+        MessageOuterClass.Message message = MessageOuterClass.Message.parseFrom(bytes, extensionRegistry);
         System.out.println("Got message: " + message.toString());
         return fromProto(message);
     }
