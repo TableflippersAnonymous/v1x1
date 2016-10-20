@@ -6,7 +6,9 @@
         </layout>
     </appender>
 
-    <root level="debug">
+    <logger name="tv.twitchbot" level="trace" />
+
+    <root level="info">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>
