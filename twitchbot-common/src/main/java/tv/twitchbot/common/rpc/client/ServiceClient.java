@@ -33,8 +33,10 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
             for (; !Thread.interrupted(); ) {
                 try {
                     Message m = messageQueue.get();
-                    if (!responseClass.isInstance(m))
+                    if (!responseClass.isInstance(m)) {
+                        System.out.println("Invalid class seen on response queue: " + m.getClass().getCanonicalName() + " expected: " + responseClass.getCanonicalName());
                         continue;
+                    }
                     U response = (U) m;
                     ServiceFuture<U> future = futureMap.remove(response.getRequestMessageId());
                     if (future == null)
@@ -42,7 +44,7 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
                     future.set(response);
                 } catch (InterruptedException e) {
                     break;
-                } catch (InvalidProtocolBufferException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                     continue;
                 }
