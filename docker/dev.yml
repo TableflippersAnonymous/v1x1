@@ -11,4 +11,3 @@ cassandra:
   - "cass1"
   authenticated: false
 zookeeper_connection_string: zoo1:2181
-wait_start_ms: 40000
