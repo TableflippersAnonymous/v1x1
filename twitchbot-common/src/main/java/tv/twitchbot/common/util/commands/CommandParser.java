@@ -15,7 +15,7 @@ public class CommandParser {
         if(msg == null) return null;
         System.out.println("[Command Parser] prefix=" + prefix + " msg=" + msg);
         if(msg.startsWith(prefix)) {
-            List<String> args = Arrays.asList(msg.substring(prefix.length()).split(" "));
+            List<String> args = new ArrayList<>(Arrays.asList(msg.substring(prefix.length()).split(" ")));
             String command = args.remove(0);
             return new ParsedCommand(command, args);
         }
