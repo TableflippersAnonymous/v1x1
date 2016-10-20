@@ -1,6 +1,7 @@
 package tv.twitchbot.common.rpc.services;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.messages.Message;
 import tv.twitchbot.common.dto.messages.Request;
 import tv.twitchbot.common.dto.messages.Response;
@@ -10,6 +11,7 @@ import tv.twitchbot.common.modules.ModuleSettings;
 import tv.twitchbot.common.modules.TenantConfiguration;
 import tv.twitchbot.common.services.queue.MessageQueue;
 
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -17,6 +19,7 @@ import java.util.concurrent.Executors;
  * Created by cobi on 10/8/2016.
  */
 public abstract class Service<T extends Request, U extends Response<T>> implements Comparable<Service<T, U>> {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module;
     private ExecutorService executorService = Executors.newSingleThreadExecutor();
     private String serviceName;
@@ -37,7 +40,7 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
                     try {
                         Message m = messageQueue.get();
                         if(!requestClass.isInstance(m)) {
-                            System.out.println("Invalid class seen on request queue: " + m.getClass().getCanonicalName() + " expected: " + requestClass.getCanonicalName());
+                            LOG.warn("Invalid class seen on request queue: {} expected: {}", m.getClass().getCanonicalName(), requestClass.getCanonicalName());
                             continue;
                         }
                         T request = (T) m;
@@ -57,7 +60,7 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
         try {
             module.send(request.getResponseQueueName(), call(request));
         } catch(Exception e) {
-            System.out.println("Got exception while responding to request.");
+            LOG.warn("Got exception while responding to request.", e);
             throw e;
         }
     }

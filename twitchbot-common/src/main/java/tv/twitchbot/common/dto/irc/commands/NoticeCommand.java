@@ -1,15 +1,20 @@
 package tv.twitchbot.common.dto.irc.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.irc.IrcSource;
 import tv.twitchbot.common.dto.irc.IrcStanza;
 import tv.twitchbot.common.dto.proto.core.IRC;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 
 /**
  * Created by cobi on 10/8/2016.
  */
 public class NoticeCommand extends IrcStanza {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     public static NoticeCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.NoticeCommand noticeCommand) {
         String channel = noticeCommand.getChannel();
         String message = noticeCommand.getMessage();
@@ -40,7 +45,7 @@ public class NoticeCommand extends IrcStanza {
             try {
                 messageId = MessageId.valueOf(tags.get("msg-id").toUpperCase());
             } catch(IllegalArgumentException e) {
-                System.out.println("Unknown msg-id: " + tags.get("msg-id"));
+                LOG.warn("Unknown msg-id: {}", tags.get("msg-id"), e);
             }
     }
 

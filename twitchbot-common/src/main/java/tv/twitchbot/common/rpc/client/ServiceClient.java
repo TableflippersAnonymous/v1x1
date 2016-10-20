@@ -1,6 +1,7 @@
 package tv.twitchbot.common.rpc.client;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.messages.Message;
 import tv.twitchbot.common.dto.messages.Request;
 import tv.twitchbot.common.dto.messages.Response;
@@ -10,6 +11,7 @@ import tv.twitchbot.common.modules.ModuleSettings;
 import tv.twitchbot.common.modules.TenantConfiguration;
 import tv.twitchbot.common.services.queue.MessageQueue;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -20,6 +22,7 @@ import java.util.concurrent.Executors;
  * If you want to tell another module to do something, you extend this
  */
 public abstract class ServiceClient<T extends Request, U extends Response<T>> {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module;
     private final String queueName;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
@@ -34,7 +37,7 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
                 try {
                     Message m = messageQueue.get();
                     if (!responseClass.isInstance(m)) {
-                        System.out.println("Invalid class seen on response queue: " + m.getClass().getCanonicalName() + " expected: " + responseClass.getCanonicalName());
+                        LOG.warn("Invalid class seen on response queue: {} expected: {}", m.getClass().getCanonicalName(), responseClass.getCanonicalName());
                         continue;
                     }
                     U response = (U) m;
