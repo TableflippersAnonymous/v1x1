@@ -36,14 +36,20 @@ public class CommandDelegator {
      */
     public void handleChatMessage(ChatMessageEvent chatMessageEvent) {
         ParsedCommand parsedCmd = CommandParser.parse(chatMessageEvent, prefix);
-        if(parsedCmd == null) return;
-        boolean isFound = false;
+        if(parsedCmd == null)
+            return;
+        System.out.println("Got parsedCommand: " + parsedCmd.getCommand());
         for(Command command : registeredCommands) {
+            boolean isFound = false;
             for(String commandAlias : command.getCommands())
-                if(parsedCmd.getCommand().equalsIgnoreCase(commandAlias)) isFound = true;
-            if(!isFound) return;
-            if(parsedCmd.getArgs().size() <= command.getMinArgs()) return;
-            if(command.getMaxArgs() != -1 && parsedCmd.getArgs().size() >= command.getMaxArgs()) return;
+                if(parsedCmd.getCommand().equalsIgnoreCase(commandAlias))
+                    isFound = true;
+            if(!isFound)
+                continue;
+            if(parsedCmd.getArgs().size() < command.getMinArgs())
+                continue;
+            if(command.getMaxArgs() != -1 && parsedCmd.getArgs().size() > command.getMaxArgs())
+                continue;
             command.run(chatMessageEvent.getChatMessage(), parsedCmd.getCommand(), parsedCmd.getArgs());
         }
     }
