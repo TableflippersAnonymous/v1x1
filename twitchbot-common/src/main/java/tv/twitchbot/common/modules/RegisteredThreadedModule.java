@@ -1,10 +1,13 @@
 package tv.twitchbot.common.modules;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.messages.Event;
 import tv.twitchbot.common.dto.messages.Message;
 import tv.twitchbot.common.modules.eventhandler.EventHandler;
 import tv.twitchbot.common.modules.eventhandler.EventListener;
 
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -14,6 +17,7 @@ import java.util.List;
  * @author Josh
  */
 public abstract class RegisteredThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends ThreadedModule<T, U, V> {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private EventListener listener;
     private List<Method> handlers;
@@ -38,10 +42,10 @@ public abstract class RegisteredThreadedModule<T extends ModuleSettings, U exten
                     try {
                         m.invoke(listener, message);
                     } catch (IllegalAccessException e) {
-                        System.out.println("Failure calling handler for module");
+                        LOG.warn("Failure calling handler for module", e);
                         e.printStackTrace();
                     } catch (InvocationTargetException e) {
-                        System.out.println("Failure calling handler for module");
+                        LOG.warn("Failure calling handler for module", e);
                         e.printStackTrace();
                     }
                 }

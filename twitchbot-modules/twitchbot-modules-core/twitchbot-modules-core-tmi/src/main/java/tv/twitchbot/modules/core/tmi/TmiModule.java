@@ -4,6 +4,8 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.core.*;
 import tv.twitchbot.common.dto.db.Platform;
 import tv.twitchbot.common.dto.db.TenantUserPermissions;
@@ -16,6 +18,7 @@ import tv.twitchbot.common.util.ratelimiter.LocalRateLimiter;
 import tv.twitchbot.common.util.ratelimiter.RateLimiter;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,6 +29,8 @@ import java.util.stream.Collectors;
  * Created by naomi on 10/8/2016.
  */
 public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration, TmiTenantConfiguration> {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final LoadingCache<String, Tenant> tenantCache;
     private final LoadingCache<String, GlobalUser> globalUserCache;
     private final LoadingCache<Pair<Tenant, GlobalUser>, List<Permission>> permissionCache;
@@ -43,7 +48,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     @Override
                     public Tenant load(String s) throws Exception {
                         try {
-                            System.out.println("Loading tenant for " + s);
+                            LOG.debug("Loading tenant for {}", s);
                             return getDaoManager().getDaoTenant().getOrCreate(Platform.TWITCH, s, s).toCore();
                         } catch(Exception e) {
                             e.printStackTrace();
@@ -57,7 +62,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     @Override
                     public GlobalUser load(String s) throws Exception {
                         try {
-                            System.out.println("Loading global user for " + s);
+                            LOG.debug("Loading global user for {}", s);
                             return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.TWITCH, s, s).toCore();
                         } catch(Exception e) {
                             e.printStackTrace();
@@ -71,7 +76,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     @Override
                     public List<Permission> load(Pair<Tenant, GlobalUser> tenantGlobalUserPair) throws Exception {
                         try {
-                            System.out.println("Loading tenant permissions for tenant=" + tenantGlobalUserPair.getFirst().getId() + " globalUser=" + tenantGlobalUserPair.getSecond().getId());
+                            LOG.debug("Loading tenant permissions for tenant={} globalUser={}", tenantGlobalUserPair.getFirst().getId(), tenantGlobalUserPair.getSecond().getId());
                             TenantUserPermissions permissions = getDaoManager().getDaoTenantUserPermissions().getByTenantAndUser(tenantGlobalUserPair.getFirst().getId().getValue(), tenantGlobalUserPair.getSecond().getId().getValue());
                             if(permissions == null)
                                 return ImmutableList.of();
@@ -176,10 +181,9 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         try {
             if (bots.containsKey(channel))
                 return;
-            System.out.println("Joining " + channel);
-            System.out.println("Getting tenant for " + channel);
+            LOG.info("Joining {}", channel);
             Tenant tenant = getTenant(channel);
-            System.out.println("Getting tenant configuration for " + channel);
+            LOG.debug("Getting tenant configuration for {}", channel);
             TmiTenantConfiguration tenantConfiguration = getTenantConfiguration(tenant);
             String oauthToken;
             String username = tenantConfiguration.getBotName();
@@ -190,9 +194,8 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     username = getGlobalConfiguration().getDefaultUsername();
                 oauthToken = getGlobalConfiguration().getGlobalBots().get(username);
             }
-            System.out.println("channel: " + channel + " username: " + username + " oauth: " + oauthToken);
+            LOG.debug("Connecting to {} with username={} password={}", channel, username, oauthToken);
             RateLimiter messageLimiter = new LocalRateLimiter(scheduledExecutorService, 18, 30);
-            System.out.println("Built messageLimiter for " + channel);
             TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel);
             scheduledExecutorService.submit(tmiBot);
             TmiBot oldTmiBot = bots.put(channel, tmiBot);

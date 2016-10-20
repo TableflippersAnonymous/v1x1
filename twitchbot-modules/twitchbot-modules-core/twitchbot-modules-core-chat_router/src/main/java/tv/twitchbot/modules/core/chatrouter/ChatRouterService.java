@@ -1,6 +1,8 @@
 package tv.twitchbot.modules.core.chatrouter;
 
 import com.google.common.cache.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.messages.requests.SendMessageRequest;
 import tv.twitchbot.common.dto.messages.responses.SendMessageResponse;
 import tv.twitchbot.common.modules.GlobalConfiguration;
@@ -9,6 +11,7 @@ import tv.twitchbot.common.modules.ModuleSettings;
 import tv.twitchbot.common.modules.TenantConfiguration;
 import tv.twitchbot.common.rpc.services.ThreadedService;
 
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -17,6 +20,7 @@ import java.util.concurrent.TimeoutException;
  * Created by naomi on 10/16/2016.
  */
 public class ChatRouterService extends ThreadedService<SendMessageRequest, SendMessageResponse> {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private LoadingCache<String, TmiServiceClient> tmiCache;
 
     public ChatRouterService(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
@@ -40,7 +44,7 @@ public class ChatRouterService extends ThreadedService<SendMessageRequest, SendM
     @Override
     protected SendMessageResponse call(SendMessageRequest request) {
         try {
-            System.out.println("Forwarding message=" + request.getText() + " to " + request.getDestination().getDisplayName());
+            LOG.info("Forwarding message={} to {}", request.getText(), request.getDestination().getDisplayName());
             SendMessageResponse response = tmiCache.get(request.getDestination().getId()).sendMessage(request.getDestination(), request.getText()).get(10, TimeUnit.SECONDS);
             return new SendMessageResponse(getModule().toDto(), request.getMessageId());
         } catch (InterruptedException | TimeoutException e) {

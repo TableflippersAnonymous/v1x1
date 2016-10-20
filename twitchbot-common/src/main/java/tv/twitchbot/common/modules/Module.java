@@ -21,6 +21,8 @@ import org.redisson.config.MasterSlaveServersConfig;
 import org.redisson.config.SingleServerConfig;
 import org.redisson.connection.balancer.LoadBalancer;
 import org.redisson.liveobject.provider.ResolverProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.core.ModuleInstance;
 import tv.twitchbot.common.dto.core.Tenant;
 import tv.twitchbot.common.dto.db.Platform;
@@ -42,6 +44,7 @@ import tv.twitchbot.common.services.stats.StatsCollector;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.UUID;
@@ -52,6 +55,8 @@ import java.util.concurrent.TimeUnit;
  * Created by naomi on 10/4/16.
  */
 public abstract class Module<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     /* Config */
     private T settings;
     private ConfigurationProvider<U> globalConfigProvider;
@@ -90,7 +95,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     /* ******************************* Initialization ******************************* */
     private void parseArgs(final String[] args) throws IOException {
         if(args.length != 1) {
-            System.err.println("Error.  Expected 1 argument: config.yml");
+            LOG.error("Expected 1 argument: config.yml");
             throw new RuntimeException("Error.  Expected 1 argument: config.yml");
         }
         loadConfig(args[0]);
@@ -180,7 +185,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     protected void entryPoint(final String[] args) throws Exception {
         parseArgs(args);
         if(settings.getWaitStartMs() > 0) {
-            System.out.println("Waiting " + settings.getWaitStartMs() + "ms before starting up...");
+            LOG.info("Waiting {}ms before starting up...", settings.getWaitStartMs());
             Thread.sleep(settings.getWaitStartMs());
         }
         initializeInternal();

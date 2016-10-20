@@ -1,7 +1,10 @@
 package tv.twitchbot.common.util.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.messages.events.ChatMessageEvent;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +12,8 @@ import java.util.List;
  * Created by Josh on 2016-10-06.
  */
 public class CommandDelegator {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private String prefix;
     private List<Command> registeredCommands;
 
@@ -38,7 +43,7 @@ public class CommandDelegator {
         ParsedCommand parsedCmd = CommandParser.parse(chatMessageEvent, prefix);
         if(parsedCmd == null)
             return;
-        System.out.println("Got parsedCommand: " + parsedCmd.getCommand());
+        LOG.debug("Got parsedCommand: {}", parsedCmd.getCommand());
         for(Command command : registeredCommands) {
             boolean isFound = false;
             for(String commandAlias : command.getCommands())
