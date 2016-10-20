@@ -42,7 +42,7 @@ public class IrcParser {
             case RECONNECT: return new ReconnectCommand(rawLine, tags, source, rawArgs, args);
             case ROOMSTATE: return new RoomStateCommand(rawLine, tags, source, rawArgs, args, args[0]);
             case RPL_ENDOFMOTD: return new RplEndOfMotdCommand(rawLine, tags, source, rawArgs, args);
-            case RPL_NAMREPLY: return new RplNameReplyCommand(rawLine, tags, source, rawArgs, args, args[0], Arrays.asList(Arrays.copyOfRange(args, 1, args.length)).stream().map(RplNameReplyCommand.Member::new).collect(Collectors.toList()));
+            case RPL_NAMREPLY: return new RplNameReplyCommand(rawLine, tags, source, rawArgs, args, args[2], Arrays.asList(Arrays.copyOfRange(args, 3, args.length)).stream().map(RplNameReplyCommand.Member::new).collect(Collectors.toList()));
             case USERNOTICE: return new UserNoticeCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
             case USERSTATE: return new UserStateCommand(rawLine, tags, source, rawArgs, args, args[0]);
             default: throw new IllegalStateException("Unknown command: " + command);
