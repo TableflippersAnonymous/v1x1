@@ -197,6 +197,8 @@ message NoticeCommand {
         BAD_UNBAN_NO_BAN = 23;
         ALREADY_BANNED = 24;
         UNRECOGNIZED_COMMAND = 25;
+        MSG_DUPLICATE = 26;
+        MSG_RATELIMIT = 27;
     }
 
     required string channel = 1;
