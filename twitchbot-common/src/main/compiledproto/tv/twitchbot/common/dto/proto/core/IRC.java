@@ -12950,6 +12950,14 @@ public final class IRC {
        * <code>UNRECOGNIZED_COMMAND = 25;</code>
        */
       UNRECOGNIZED_COMMAND(25),
+      /**
+       * <code>MSG_DUPLICATE = 26;</code>
+       */
+      MSG_DUPLICATE(26),
+      /**
+       * <code>MSG_RATELIMIT = 27;</code>
+       */
+      MSG_RATELIMIT(27),
       ;
 
       /**
@@ -13056,6 +13064,14 @@ public final class IRC {
        * <code>UNRECOGNIZED_COMMAND = 25;</code>
        */
       public static final int UNRECOGNIZED_COMMAND_VALUE = 25;
+      /**
+       * <code>MSG_DUPLICATE = 26;</code>
+       */
+      public static final int MSG_DUPLICATE_VALUE = 26;
+      /**
+       * <code>MSG_RATELIMIT = 27;</code>
+       */
+      public static final int MSG_RATELIMIT_VALUE = 27;
 
 
       public final int getNumber() {
@@ -13098,6 +13114,8 @@ public final class IRC {
           case 23: return BAD_UNBAN_NO_BAN;
           case 24: return ALREADY_BANNED;
           case 25: return UNRECOGNIZED_COMMAND;
+          case 26: return MSG_DUPLICATE;
+          case 27: return MSG_RATELIMIT;
           default: return null;
         }
       }
@@ -22109,11 +22127,11 @@ public final class IRC {
       " \002(\t\022\023\n\013mode_string\030\002 \001(\t\022\021\n\tnicknames\030\003" +
       " \003(\t2l\n\004data\022-.tv.twitchbot.common.dto.p" +
       "roto.core.IrcStanza\030i \001(\0132/.tv.twitchbot" +
-      ".common.dto.proto.core.ModeCommand\"\354\005\n\rN" +
+      ".common.dto.proto.core.ModeCommand\"\222\006\n\rN" +
       "oticeCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message" +
       "\030\002 \002(\t\022O\n\nmessage_id\030\003 \001(\0162;.tv.twitchbo" +
       "t.common.dto.proto.core.NoticeCommand.Me" +
-      "ssageId\"\367\003\n\tMessageId\022\013\n\007UNKNOWN\020\000\022\013\n\007SU" +
+      "ssageId\"\235\004\n\tMessageId\022\013\n\007UNKNOWN\020\000\022\013\n\007SU" +
       "BS_ON\020\001\022\023\n\017ALREADY_SUBS_ON\020\002\022\014\n\010SUBS_OFF",
       "\020\003\022\024\n\020ALREADY_SUBS_OFF\020\004\022\013\n\007SLOW_ON\020\005\022\014\n" +
       "\010SLOW_OFF\020\006\022\n\n\006R9K_ON\020\007\022\022\n\016ALREADY_R9K_O" +
@@ -22125,62 +22143,63 @@ public final class IRC {
       "\022\022\031\n\025MSG_CHANNEL_SUSPENDED\020\023\022\023\n\017TIMEOUT_" +
       "SUCCESS\020\024\022\017\n\013BAN_SUCCESS\020\025\022\021\n\rUNBAN_SUCC" +
       "ESS\020\026\022\024\n\020BAD_UNBAN_NO_BAN\020\027\022\022\n\016ALREADY_B",
-      "ANNED\020\030\022\030\n\024UNRECOGNIZED_COMMAND\020\0312n\n\004dat" +
-      "a\022-.tv.twitchbot.common.dto.proto.core.I" +
-      "rcStanza\030j \001(\01321.tv.twitchbot.common.dto" +
-      ".proto.core.NoticeCommand\"\214\001\n\013PartComman" +
-      "d\022\017\n\007channel\030\001 \002(\t2l\n\004data\022-.tv.twitchbo" +
-      "t.common.dto.proto.core.IrcStanza\030k \001(\0132" +
-      "/.tv.twitchbot.common.dto.proto.core.Par" +
-      "tCommand\"\212\001\n\013PingCommand\022\r\n\005token\030\001 \001(\t2" +
-      "l\n\004data\022-.tv.twitchbot.common.dto.proto." +
-      "core.IrcStanza\030l \001(\0132/.tv.twitchbot.comm",
-      "on.dto.proto.core.PingCommand\"\302\002\n\016Privms" +
-      "gCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002" +
-      "(\t\0224\n\002id\030\003 \001(\0132(.tv.twitchbot.common.dto" +
-      ".proto.core.UUID\022\014\n\004bits\030\004 \001(\005\022Y\n\025messag" +
-      "e_tagged_stanza\030\005 \002(\0132:.tv.twitchbot.com" +
-      "mon.dto.proto.core.MessageTaggedIrcStanz" +
-      "a2o\n\004data\022-.tv.twitchbot.common.dto.prot" +
-      "o.core.IrcStanza\030m \001(\01322.tv.twitchbot.co" +
-      "mmon.dto.proto.core.PrivmsgCommand\"\205\001\n\020R" +
-      "econnectCommand2q\n\004data\022-.tv.twitchbot.c",
-      "ommon.dto.proto.core.IrcStanza\030n \001(\01324.t" +
-      "v.twitchbot.common.dto.proto.core.Reconn" +
-      "ectCommand\"\342\001\n\020RoomStateCommand\022\017\n\007chann" +
-      "el\030\001 \002(\t\022\034\n\024broadcaster_language\030\002 \001(\t\022\013" +
-      "\n\003r9k\030\003 \001(\010\022\021\n\tsubs_only\030\004 \001(\010\022\014\n\004slow\030\005" +
-      " \001(\0052q\n\004data\022-.tv.twitchbot.common.dto.p" +
-      "roto.core.IrcStanza\030o \001(\01324.tv.twitchbot" +
-      ".common.dto.proto.core.RoomStateCommand\"" +
-      "\213\001\n\023RplEndOfMotdCommand2t\n\004data\022-.tv.twi" +
-      "tchbot.common.dto.proto.core.IrcStanza\030p",
+      "ANNED\020\030\022\030\n\024UNRECOGNIZED_COMMAND\020\031\022\021\n\rMSG" +
+      "_DUPLICATE\020\032\022\021\n\rMSG_RATELIMIT\020\0332n\n\004data\022" +
+      "-.tv.twitchbot.common.dto.proto.core.Irc" +
+      "Stanza\030j \001(\01321.tv.twitchbot.common.dto.p" +
+      "roto.core.NoticeCommand\"\214\001\n\013PartCommand\022" +
+      "\017\n\007channel\030\001 \002(\t2l\n\004data\022-.tv.twitchbot." +
+      "common.dto.proto.core.IrcStanza\030k \001(\0132/." +
+      "tv.twitchbot.common.dto.proto.core.PartC" +
+      "ommand\"\212\001\n\013PingCommand\022\r\n\005token\030\001 \001(\t2l\n" +
+      "\004data\022-.tv.twitchbot.common.dto.proto.co",
+      "re.IrcStanza\030l \001(\0132/.tv.twitchbot.common" +
+      ".dto.proto.core.PingCommand\"\302\002\n\016PrivmsgC" +
+      "ommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t" +
+      "\0224\n\002id\030\003 \001(\0132(.tv.twitchbot.common.dto.p" +
+      "roto.core.UUID\022\014\n\004bits\030\004 \001(\005\022Y\n\025message_" +
+      "tagged_stanza\030\005 \002(\0132:.tv.twitchbot.commo" +
+      "n.dto.proto.core.MessageTaggedIrcStanza2" +
+      "o\n\004data\022-.tv.twitchbot.common.dto.proto." +
+      "core.IrcStanza\030m \001(\01322.tv.twitchbot.comm" +
+      "on.dto.proto.core.PrivmsgCommand\"\205\001\n\020Rec",
+      "onnectCommand2q\n\004data\022-.tv.twitchbot.com" +
+      "mon.dto.proto.core.IrcStanza\030n \001(\01324.tv." +
+      "twitchbot.common.dto.proto.core.Reconnec" +
+      "tCommand\"\342\001\n\020RoomStateCommand\022\017\n\007channel" +
+      "\030\001 \002(\t\022\034\n\024broadcaster_language\030\002 \001(\t\022\013\n\003" +
+      "r9k\030\003 \001(\010\022\021\n\tsubs_only\030\004 \001(\010\022\014\n\004slow\030\005 \001" +
+      "(\0052q\n\004data\022-.tv.twitchbot.common.dto.pro" +
+      "to.core.IrcStanza\030o \001(\01324.tv.twitchbot.c" +
+      "ommon.dto.proto.core.RoomStateCommand\"\213\001" +
+      "\n\023RplEndOfMotdCommand2t\n\004data\022-.tv.twitc",
+      "hbot.common.dto.proto.core.IrcStanza\030p \001" +
+      "(\01327.tv.twitchbot.common.dto.proto.core." +
+      "RplEndOfMotdCommand\"\227\002\n\023RplNameReplyComm" +
+      "and\022\017\n\007channel\030\001 \002(\t\022O\n\007members\030\002 \003(\0132>." +
+      "tv.twitchbot.common.dto.proto.core.RplNa" +
+      "meReplyCommand.Member\032(\n\006Member\022\020\n\010nickn" +
+      "ame\030\001 \002(\t\022\014\n\004isOp\030\002 \002(\0102t\n\004data\022-.tv.twi" +
+      "tchbot.common.dto.proto.core.IrcStanza\030q" +
       " \001(\01327.tv.twitchbot.common.dto.proto.cor" +
-      "e.RplEndOfMotdCommand\"\227\002\n\023RplNameReplyCo" +
-      "mmand\022\017\n\007channel\030\001 \002(\t\022O\n\007members\030\002 \003(\0132" +
-      ">.tv.twitchbot.common.dto.proto.core.Rpl" +
-      "NameReplyCommand.Member\032(\n\006Member\022\020\n\010nic" +
-      "kname\030\001 \002(\t\022\014\n\004isOp\030\002 \002(\0102t\n\004data\022-.tv.t" +
+      "e.RplNameReplyCommand\"\265\003\n\021UserNoticeComm",
+      "and\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022S\n" +
+      "\nmessage_id\030\003 \001(\0162?.tv.twitchbot.common." +
+      "dto.proto.core.UserNoticeCommand.Message" +
+      "Id\022\016\n\006months\030\004 \001(\005\022\026\n\016system_message\030\005 \001" +
+      "(\t\022\r\n\005login\030\006 \001(\t\022Y\n\025message_tagged_stan" +
+      "za\030\007 \002(\0132:.tv.twitchbot.common.dto.proto" +
+      ".core.MessageTaggedIrcStanza\"#\n\tMessageI" +
+      "d\022\013\n\007UNKNOWN\020\000\022\t\n\005RESUB\020\0012r\n\004data\022-.tv.t" +
       "witchbot.common.dto.proto.core.IrcStanza" +
-      "\030q \001(\01327.tv.twitchbot.common.dto.proto.c" +
-      "ore.RplNameReplyCommand\"\265\003\n\021UserNoticeCo" +
-      "mmand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022",
-      "S\n\nmessage_id\030\003 \001(\0162?.tv.twitchbot.commo" +
-      "n.dto.proto.core.UserNoticeCommand.Messa" +
-      "geId\022\016\n\006months\030\004 \001(\005\022\026\n\016system_message\030\005" +
-      " \001(\t\022\r\n\005login\030\006 \001(\t\022Y\n\025message_tagged_st" +
-      "anza\030\007 \002(\0132:.tv.twitchbot.common.dto.pro" +
-      "to.core.MessageTaggedIrcStanza\"#\n\tMessag" +
-      "eId\022\013\n\007UNKNOWN\020\000\022\t\n\005RESUB\020\0012r\n\004data\022-.tv" +
-      ".twitchbot.common.dto.proto.core.IrcStan" +
-      "za\030r \001(\01325.tv.twitchbot.common.dto.proto" +
-      ".core.UserNoticeCommand\"\347\001\n\020UserStateCom",
-      "mand\022\017\n\007channel\030\001 \002(\t\022O\n\020emote_set_stanz" +
-      "a\030\002 \002(\01325.tv.twitchbot.common.dto.proto." +
-      "core.EmoteSetIrcStanza2q\n\004data\022-.tv.twit" +
-      "chbot.common.dto.proto.core.IrcStanza\030s " +
-      "\001(\01324.tv.twitchbot.common.dto.proto.core" +
-      ".UserStateCommand"
+      "\030r \001(\01325.tv.twitchbot.common.dto.proto.c",
+      "ore.UserNoticeCommand\"\347\001\n\020UserStateComma" +
+      "nd\022\017\n\007channel\030\001 \002(\t\022O\n\020emote_set_stanza\030" +
+      "\002 \002(\01325.tv.twitchbot.common.dto.proto.co" +
+      "re.EmoteSetIrcStanza2q\n\004data\022-.tv.twitch" +
+      "bot.common.dto.proto.core.IrcStanza\030s \001(" +
+      "\01324.tv.twitchbot.common.dto.proto.core.U" +
+      "serStateCommand"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
