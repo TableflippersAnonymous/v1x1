@@ -70,6 +70,12 @@ public abstract class Message {
         Message.register(IRC.RplEndOfMotdCommand.data);
         Message.register(IRC.UserNoticeCommand.data);
         Message.register(IRC.UserStateCommand.data);
+
+        /* On Request & Response */
+        Message.register(RequestOuterClass.ModuleShutdownRequest.data);
+        Message.register(RequestOuterClass.ModuleShutdownResponse.data);
+        Message.register(RequestOuterClass.SendMessageRequest.data);
+        Message.register(RequestOuterClass.SendMessageResponse.data);
     }
 
     public static void register(GeneratedMessage.GeneratedExtension<?, ?> field) {
