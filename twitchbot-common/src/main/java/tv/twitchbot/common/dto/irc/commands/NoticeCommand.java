@@ -24,7 +24,7 @@ public class NoticeCommand extends IrcStanza {
         EMOTE_ONLY_ON, ALREADY_EMOTE_ONLY_ON, EMOTE_ONLY_OFF, ALREADY_EMOTE_ONLY_OFF,
         MSG_CHANNEL_SUSPENDED,
         TIMEOUT_SUCCESS, BAN_SUCCESS, UNBAN_SUCCESS, BAD_UNBAN_NO_BAN, ALREADY_BANNED,
-        UNRECOGNIZED_COMMAND;
+        UNRECOGNIZED_COMMAND, MSG_DUPLICATE, MSG_RATELIMIT;
     }
 
     private String channel;
@@ -37,7 +37,11 @@ public class NoticeCommand extends IrcStanza {
         this.channel = channel;
         this.message = message;
         if(tags.containsKey("msg-id") && !tags.get("msg-id").isEmpty())
-            messageId = MessageId.valueOf(tags.get("msg-id").toUpperCase());
+            try {
+                messageId = MessageId.valueOf(tags.get("msg-id").toUpperCase());
+            } catch(IllegalArgumentException e) {
+                System.out.println("Unknown msg-id: " + tags.get("msg-id"));
+            }
     }
 
     public String getChannel() {
