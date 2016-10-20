@@ -39,7 +39,7 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
                         if(!requestClass.isInstance(m))
                             continue;
                         T request = (T) m;
-                        module.send(request.getResponseQueueName(), call(request));
+                        handleRequest(request);
                     } catch (InvalidProtocolBufferException e) {
                         e.printStackTrace();
                         continue;
@@ -49,6 +49,15 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
                 }
             }
         });
+    }
+
+    protected void handleRequest(T request) {
+        try {
+            module.send(request.getResponseQueueName(), call(request));
+        } catch(Exception e) {
+            System.out.println("Got exception while responding to request.");
+            throw e;
+        }
     }
 
     protected Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> getModule() {

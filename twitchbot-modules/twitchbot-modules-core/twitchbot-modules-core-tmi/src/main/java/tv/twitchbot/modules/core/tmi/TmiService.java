@@ -24,6 +24,7 @@ public class TmiService extends Service<SendMessageRequest, SendMessageResponse>
     @Override
     protected SendMessageResponse call(SendMessageRequest request) {
         try {
+            System.out.println("Got SendMessageRequest: " + request.getText());
             bot.sendMessage(request.getDestination().getId(), request.getText());
             return new SendMessageResponse(getModule().toDto(), request.getMessageId());
         } catch (IOException e) {
