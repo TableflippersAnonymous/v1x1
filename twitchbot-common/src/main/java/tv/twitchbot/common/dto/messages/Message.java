@@ -78,7 +78,6 @@ public abstract class Message {
 
     public static Message fromBytes(byte[] bytes) throws InvalidProtocolBufferException {
         MessageOuterClass.Message message = MessageOuterClass.Message.parseFrom(bytes, extensionRegistry);
-        System.out.println("Got message: " + message.toString());
         return fromProto(message);
     }
 
