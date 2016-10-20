@@ -220,6 +220,8 @@ public class TmiBot implements Runnable {
     private void event(PrivmsgCommand privmsgCommand) {
         TwitchChannel channel = getChannel(privmsgCommand.getChannel());
         TwitchUser user = getUser(privmsgCommand);
+        if(user.getId().equals(username))
+            return;
         event(new TwitchChatMessageEvent(module, new ChatMessage(channel, user, privmsgCommand.getMessage(), tmiModule.getPermissions(channel.getTenant(), user.getGlobalUser())), privmsgCommand));
     }
 
