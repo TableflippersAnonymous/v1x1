@@ -11,6 +11,7 @@ import tv.twitchbot.common.dto.proto.messages.MessageOuterClass;
  */
 public abstract class Event extends Message {
     public static Event fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.Event event) {
+        System.out.println(event.toString());
         switch(event.getType()) {
             case CHAT_JOIN: return ChatJoinEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatJoinEvent.data));
             case CHAT_MESSAGE: return ChatMessageEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatMessageEvent.data));
