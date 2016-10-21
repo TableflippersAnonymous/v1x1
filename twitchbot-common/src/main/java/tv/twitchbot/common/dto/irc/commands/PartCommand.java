@@ -10,14 +10,14 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class PartCommand extends IrcStanza {
-    public static PartCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.PartCommand partCommand) {
-        String channel = partCommand.getChannel();
+    public static PartCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.PartCommandOrBuilder partCommand) {
+        final String channel = partCommand.getChannel();
         return new PartCommand(rawLine, tags, source, rawArgs, args, channel);
     }
 
-    private String channel;
+    private final String channel;
 
-    public PartCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, String channel) {
+    public PartCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel) {
         super(rawLine, tags, source, IrcCommand.PART, rawArgs, args);
         this.channel = channel;
     }

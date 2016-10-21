@@ -1,7 +1,6 @@
 package tv.twitchbot.common.services.persistence;
 
 
-import tv.twitchbot.common.dto.core.Channel;
 import tv.twitchbot.common.dto.core.Tenant;
 
 import java.io.ByteArrayOutputStream;
@@ -12,32 +11,32 @@ import java.io.IOException;
  * Created by cobi on 10/5/16.
  */
 public class TenantKeyValueStoreImpl implements KeyValueStore {
-    private Tenant tenant;
-    private KeyValueStore keyValueStore;
+    private final Tenant tenant;
+    private final KeyValueStore keyValueStore;
 
-    public TenantKeyValueStoreImpl(Tenant tenant, KeyValueStore keyValueStore) {
+    public TenantKeyValueStoreImpl(final Tenant tenant, final KeyValueStore keyValueStore) {
         this.tenant = tenant;
         this.keyValueStore = keyValueStore;
     }
 
     @Override
-    public void put(byte[] key, byte[] value) {
+    public void put(final byte[] key, final byte[] value) {
         keyValueStore.put(compositeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}), value);
     }
 
     @Override
-    public byte[] get(byte[] key) {
+    public byte[] get(final byte[] key) {
         return keyValueStore.get(compositeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}));
     }
 
     @Override
-    public void delete(byte[] key) {
+    public void delete(final byte[] key) {
         keyValueStore.delete(compositeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}));
     }
 
-    private byte[] compositeKey(byte[][] keys) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        DataOutputStream dos = new DataOutputStream(bos);
+    private byte[] compositeKey(final byte[][] keys) {
+        final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        final DataOutputStream dos = new DataOutputStream(bos);
         try {
             dos.writeInt(keys.length);
             for (int idx = 0; idx < keys.length; idx++) {
@@ -45,7 +44,7 @@ public class TenantKeyValueStoreImpl implements KeyValueStore {
                 dos.write(keys[idx]);
             }
             dos.close();
-        } catch (IOException ex) {
+        } catch (final IOException ex) {
             /* Shouldn't be possible, but convert to RuntimeException if it does */
             throw new RuntimeException(ex);
         }

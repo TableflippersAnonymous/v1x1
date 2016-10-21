@@ -6,18 +6,18 @@ import tv.twitchbot.common.dto.proto.core.IRC;
  * Created by cobi on 10/8/2016.
  */
 public class IrcUser extends IrcSource {
-    public static IrcUser fromProto(IRC.IrcUser user) {
-        String nickname = user.getNickname();
-        String username = user.getUsername();
-        String hostname = user.getHostname();
+    public static IrcUser fromProto(final IRC.IrcUserOrBuilder user) {
+        final String nickname = user.getNickname();
+        final String username = user.getUsername();
+        final String hostname = user.getHostname();
         return new IrcUser(nickname, username, hostname);
     }
 
-    private String nickname;
-    private String username;
-    private String hostname;
+    private final String nickname;
+    private final String username;
+    private final String hostname;
 
-    public IrcUser(String nickname, String username, String hostname) {
+    public IrcUser(final String nickname, final String username, final String hostname) {
         this.nickname = nickname;
         this.username = username;
         this.hostname = hostname;

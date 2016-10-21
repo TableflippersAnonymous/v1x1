@@ -10,11 +10,11 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class ReconnectCommand extends IrcStanza {
-    public static ReconnectCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.ReconnectCommand reconnectCommand) {
+    public static ReconnectCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.ReconnectCommand reconnectCommand) {
         return new ReconnectCommand(rawLine, tags, source, rawArgs, args);
     }
 
-    public ReconnectCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args) {
+    public ReconnectCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args) {
         super(rawLine, tags, source, IrcCommand.RECONNECT, rawArgs, args);
     }
 

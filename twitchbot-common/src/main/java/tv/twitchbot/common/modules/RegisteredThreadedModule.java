@@ -22,10 +22,10 @@ public abstract class RegisteredThreadedModule<T extends ModuleSettings, U exten
     private EventListener listener;
     private List<Method> handlers;
 
-    protected void registerListener(EventListener listener) {
+    protected void registerListener(final EventListener listener) {
         this.listener = listener;
         handlers.clear();
-        for(Method m : listener.getClass().getDeclaredMethods()) {
+        for(final Method m : listener.getClass().getDeclaredMethods()) {
             if(m.isAnnotationPresent(EventHandler.class)) {
                 if(m.getParameterCount() == 1 && Event.class.isAssignableFrom(m.getParameters()[0].getType())) {
                     handlers.add(m);
@@ -36,9 +36,9 @@ public abstract class RegisteredThreadedModule<T extends ModuleSettings, U exten
     }
 
     @Override
-    protected void processMessage(Message message) {
+    protected void processMessage(final Message message) {
         if(message instanceof Event) {
-            for(Method m : handlers) {
+            for(final Method m : handlers) {
                 if(m.getParameters()[0].getType().isInstance(message)) {
                     try {
                         m.invoke(listener, message);

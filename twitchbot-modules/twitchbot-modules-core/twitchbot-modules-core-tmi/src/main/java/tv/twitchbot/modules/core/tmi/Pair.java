@@ -4,10 +4,10 @@ package tv.twitchbot.modules.core.tmi;
  * Created by cobi on 10/19/2016.
  */
 class Pair<A, B> {
-    private A first;
-    private B second;
+    private final A first;
+    private final B second;
 
-    public Pair(A first, B second) {
+    public Pair(final A first, final B second) {
         this.first = first;
         this.second = second;
     }
@@ -21,11 +21,11 @@ class Pair<A, B> {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Pair<?, ?> pair = (Pair<?, ?>) o;
+        final Pair<?, ?> pair = (Pair<?, ?>) o;
 
         if (first != null ? !first.equals(pair.first) : pair.first != null) return false;
         return second != null ? second.equals(pair.second) : pair.second == null;

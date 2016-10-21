@@ -17,6 +17,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * If you want to tell another module to do something, you extend this
@@ -28,35 +29,34 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Map<tv.twitchbot.common.dto.core.UUID, ServiceFuture<U>> futureMap = new ConcurrentHashMap<>();
 
-    public ServiceClient(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, final Class<U> responseClass) {
+    public ServiceClient(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, final Class<U> responseClass) {
         this.module = module;
         this.queueName = "ServiceResponse|" + module.getName() + "|" + getClass().getCanonicalName() + "|" + UUID.randomUUID().toString();
         final MessageQueue messageQueue = module.getMessageQueueManager().forName(queueName);
         executorService.submit(() -> {
-            for (; !Thread.interrupted(); ) {
+            while(!Thread.interrupted()) {
                 try {
-                    Message m = messageQueue.get();
+                    final Message m = messageQueue.get();
                     if (!responseClass.isInstance(m)) {
                         LOG.warn("Invalid class seen on response queue: {} expected: {}", m.getClass().getCanonicalName(), responseClass.getCanonicalName());
                         continue;
                     }
-                    U response = (U) m;
-                    ServiceFuture<U> future = futureMap.remove(response.getRequestMessageId());
+                    @SuppressWarnings("unchecked") final U response = (U) m;
+                    final ServiceFuture<U> future = futureMap.remove(response.getRequestMessageId());
                     if (future == null)
                         continue;
                     future.set(response);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     break;
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     e.printStackTrace();
-                    continue;
                 }
             }
         });
     }
 
-    protected ServiceFuture<U> send(T request) {
-        ServiceFuture<U> future = new ServiceFuture<>();
+    protected Future<U> send(final T request) {
+        final ServiceFuture<U> future = new ServiceFuture<>();
         futureMap.put(request.getMessageId(), future);
         module.send("Service|" + getServiceName(), request);
         return future;

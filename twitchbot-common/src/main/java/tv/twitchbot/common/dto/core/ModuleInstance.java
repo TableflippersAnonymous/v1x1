@@ -1,5 +1,6 @@
 package tv.twitchbot.common.dto.core;
 
+import com.google.protobuf.MessageLite;
 import tv.twitchbot.common.dto.proto.core.ModuleOuterClass;
 
 /**
@@ -7,16 +8,16 @@ import tv.twitchbot.common.dto.proto.core.ModuleOuterClass;
  * @author Cobi
  */
 public class ModuleInstance {
-    public static ModuleInstance fromProto(ModuleOuterClass.ModuleInstance moduleInstance) {
-        Module module = Module.fromProto(moduleInstance.getModule());
-        UUID uuid = UUID.fromProto(moduleInstance.getId());
+    public static ModuleInstance fromProto(final ModuleOuterClass.ModuleInstanceOrBuilder moduleInstance) {
+        final Module module = Module.fromProto(moduleInstance.getModule());
+        final UUID uuid = UUID.fromProto(moduleInstance.getId());
         return new ModuleInstance(uuid, module);
     }
 
-    private UUID id;
-    private Module module;
+    private final UUID id;
+    private final Module module;
 
-    public ModuleInstance(UUID id, Module module) {
+    public ModuleInstance(final UUID id, final Module module) {
         this.id = id;
         this.module = module;
     }
@@ -29,7 +30,7 @@ public class ModuleInstance {
         return module;
     }
 
-    public ModuleOuterClass.ModuleInstance toProto() {
+    public MessageLite toProto() {
         return ModuleOuterClass.ModuleInstance.newBuilder()
                 .setId(id.toProto())
                 .setModule(module.toProto())

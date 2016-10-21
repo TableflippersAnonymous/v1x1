@@ -21,7 +21,7 @@ public class TenantConfiguration {
     public TenantConfiguration() {
     }
 
-    public TenantConfiguration(String module, UUID tenantId, String json) {
+    public TenantConfiguration(final String module, final UUID tenantId, final String json) {
         this.module = module;
         this.tenantId = tenantId;
         this.json = json;

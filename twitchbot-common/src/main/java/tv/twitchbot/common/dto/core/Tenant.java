@@ -11,18 +11,18 @@ import java.util.stream.Collectors;
  * @author Cobi
  */
 public class Tenant {
-    public static Tenant fromProto(ChannelOuterClass.Tenant proto) {
-        UUID uuid = UUID.fromProto(proto.getId());
-        List<Channel> channels = new ArrayList<>();
-        Tenant tenant = new Tenant(uuid, channels);
+    public static Tenant fromProto(final ChannelOuterClass.TenantOrBuilder proto) {
+        final UUID uuid = UUID.fromProto(proto.getId());
+        final List<Channel> channels = new ArrayList<>();
+        final Tenant tenant = new Tenant(uuid, channels);
         channels.addAll(proto.getEntriesList().stream().map(entry -> Channel.fromProto(tenant, entry)).collect(Collectors.toList()));
         return tenant;
     }
 
-    private UUID id;
-    private List<Channel> channels;
+    private final UUID id;
+    private final List<Channel> channels;
 
-    public Tenant(UUID id, List<Channel> channels) {
+    public Tenant(final UUID id, final List<Channel> channels) {
         this.id = id;
         this.channels = channels;
     }
@@ -47,11 +47,11 @@ public class Tenant {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Tenant tenant = (Tenant) o;
+        final Tenant tenant = (Tenant) o;
 
         return id != null ? id.equals(tenant.id) : tenant.id == null;
 

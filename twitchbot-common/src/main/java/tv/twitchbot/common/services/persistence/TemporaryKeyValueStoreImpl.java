@@ -11,28 +11,28 @@ import java.util.concurrent.TimeUnit;
  * Created by cobi on 10/7/2016.
  */
 public class TemporaryKeyValueStoreImpl implements KeyValueStore {
-    private RMapCache<byte[], byte[]> mapCache;
+    private final RMapCache<byte[], byte[]> mapCache;
 
-    public TemporaryKeyValueStoreImpl(RedissonClient client, Module module) {
+    public TemporaryKeyValueStoreImpl(final RedissonClient client, final Module module) {
         mapCache = client.getMapCache("TemporaryKeyValueStore|" + module.getName(), ByteArrayCodec.INSTANCE);
     }
 
-    public TemporaryKeyValueStoreImpl(RedissonClient client) {
+    public TemporaryKeyValueStoreImpl(final RedissonClient client) {
         mapCache = client.getMapCache("TemporaryKeyValueStore", ByteArrayCodec.INSTANCE);
     }
 
     @Override
-    public void put(byte[] key, byte[] value) {
+    public void put(final byte[] key, final byte[] value) {
         mapCache.put(key, value, 7, TimeUnit.DAYS);
     }
 
     @Override
-    public byte[] get(byte[] key) {
+    public byte[] get(final byte[] key) {
         return mapCache.get(key);
     }
 
     @Override
-    public void delete(byte[] key) {
+    public void delete(final byte[] key) {
         mapCache.remove(key);
     }
 }

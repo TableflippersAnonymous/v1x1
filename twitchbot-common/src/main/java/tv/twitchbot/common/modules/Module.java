@@ -62,7 +62,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private T settings;
     private ConfigurationProvider<U> globalConfigProvider;
     private TenantConfigurationProvider<V> tenantConfigProvider;
-    private UUID instanceId = UUID.randomUUID();
+    private final UUID instanceId = UUID.randomUUID();
 
     /* Queues */
     private MessageQueueManager messageQueueManager;
@@ -80,8 +80,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* Services */
     private ModuleRegistry moduleRegistry;
-    private Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
-    private Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
+    private final Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
+    private final Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
     private StatsCollector statsCollector;
     private I18n i18n;
 
@@ -103,8 +103,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         loadConfig(args[0]);
     }
 
-    private void loadConfig(String filename) throws IOException {
-        ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
+    private void loadConfig(final String filename) throws IOException {
+        final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
         /* Redisson support */
         mapper.addMixIn(MasterSlaveServersConfig.class, ConfigSupport.MasterSlaveServersConfigMixIn.class);
@@ -120,8 +120,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     private void initializeInternal() {
-        Config redissonConfig = settings.getRedissonConfig();
-        RedissonClient client = Redisson.create(redissonConfig);
+        final Config redissonConfig = settings.getRedissonConfig();
+        final RedissonClient client = Redisson.create(redissonConfig);
         messageQueueManager = new MessageQueueManagerImpl(client);
 
         temporaryKeyValueStore = new TemporaryKeyValueStoreImpl(client, toDto());
@@ -133,7 +133,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         moduleRegistry = new ModuleRegistry(curatorFramework, toModuleInstance());
         statsCollector = new NoopStatsCollector();
 
-        CassandraConfig cassandraConfig = settings.getCassandraConfig();
+        final CassandraConfig cassandraConfig = settings.getCassandraConfig();
         cassandraCluster = Cluster.builder() /* Yay, options! */
                 .withClusterName(cassandraConfig.getClusterName())
                 .addContactPoints(cassandraConfig.getContactPoints().toArray(new String[] {}))
@@ -203,20 +203,20 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* ******************************* MAIN LOOP ******************************* */
     private void run() throws Exception {
-        MessageQueueManager mqm = getMessageQueueManager();
-        MessageQueue mq = mqm.forName(getQueueName());
+        final MessageQueueManager mqm = getMessageQueueManager();
+        final MessageQueue mq = mqm.forName(getQueueName());
         for(;;) {
             try {
-                Message message = mq.get();
+                final Message message = mq.get();
                 if(deduplicator.seenAndAdd(message.getMessageId()))
                     continue;
                 if(message instanceof ModuleShutdownRequest) {
-                    ModuleShutdownRequest msr = (ModuleShutdownRequest) message;
+                    final ModuleShutdownRequest msr = (ModuleShutdownRequest) message;
                     reply(msr, new ModuleShutdownResponse(toDto(), msr.getMessageId()));
                     break;
                 }
                 handle(message);
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
                 throw e;
             }
@@ -227,17 +227,17 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private void cleanup() {
         cassandraSession.close();
         cassandraCluster.close();
-        for(Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
+        for(final Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
             try {
                 entry.getValue().shutdown();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
-        for(Map.Entry<Class<? extends ServiceClient>, ServiceClient> entry : serviceClientMap.entrySet())
+        for(final Map.Entry<Class<? extends ServiceClient>, ServiceClient> entry : serviceClientMap.entrySet())
             entry.getValue().shutdown();
         try {
             moduleRegistry.shutdown();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
         }
         curatorFramework.close();
@@ -313,24 +313,24 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */
-    protected KeyValueStore getTemporaryTenantKeyValueStore(Tenant tenant) {
+    protected KeyValueStore getTemporaryTenantKeyValueStore(final Tenant tenant) {
         return new TenantKeyValueStoreImpl(tenant, temporaryKeyValueStore);
     }
 
-    protected KeyValueStore getTemporaryGlobalTenantKeyValueStore(Tenant tenant) {
+    protected KeyValueStore getTemporaryGlobalTenantKeyValueStore(final Tenant tenant) {
         return new TenantKeyValueStoreImpl(tenant, temporaryGlobalKeyValueStore);
     }
 
-    protected KeyValueStore getPersistentTenantKeyValueStore(Tenant tenant) {
+    protected KeyValueStore getPersistentTenantKeyValueStore(final Tenant tenant) {
         return new TenantKeyValueStoreImpl(tenant, persistentKeyValueStore);
     }
 
-    protected KeyValueStore getPersistentGlobalTenantKeyValueStore(Tenant tenant) {
+    protected KeyValueStore getPersistentGlobalTenantKeyValueStore(final Tenant tenant) {
         return new TenantKeyValueStoreImpl(tenant, persistentGlobalKeyValueStore);
     }
 
     @SuppressWarnings("unchecked")
-    protected <W extends ServiceClient<? extends Request, ? extends Response<? extends Request>>> W getServiceClient(Class<W> serviceClass) {
+    protected <W extends ServiceClient<? extends Request, ? extends Response<? extends Request>>> W getServiceClient(final Class<W> serviceClass) {
         if(!serviceClientMap.containsKey(serviceClass)) {
             try {
                 serviceClientMap.put(serviceClass, serviceClass.getConstructor(Module.class).newInstance(this));
@@ -341,12 +341,12 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return (W) serviceClientMap.get(serviceClass);
     }
 
-    protected LoadBalancingDistributor getLoadBalancingDistributor(String path, int redundancy) {
+    protected LoadBalancingDistributor getLoadBalancingDistributor(final String path, final int redundancy) {
         if(!loadBalancingDistributorMap.containsKey(path)) {
-            LoadBalancingDistributor loadBalancingDistributor = new LoadBalancingDistributorImpl(curatorFramework, path, redundancy);
+            final LoadBalancingDistributor loadBalancingDistributor = new LoadBalancingDistributorImpl(curatorFramework, path, redundancy);
             try {
                 loadBalancingDistributor.start();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 throw new RuntimeException(e);
             }
             loadBalancingDistributorMap.put(path, loadBalancingDistributor);
@@ -358,7 +358,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return getGlobalConfigProvider().getConfiguration();
     }
 
-    protected V getTenantConfiguration(Tenant tenant) {
+    protected V getTenantConfiguration(final Tenant tenant) {
         return getTenantConfigProvider().getTenantConfiguration(tenant);
     }
 
@@ -371,11 +371,11 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return new ModuleInstance(new tv.twitchbot.common.dto.core.UUID(instanceId), toDto());
     }
 
-    public void send(String queueName, Message message) {
+    public void send(final String queueName, final Message message) {
         getMessageQueueManager().forName(queueName).add(message);
     }
 
-    public void reply(Request request, Response response) {
+    public void reply(final Request request, final Response response) {
         send(request.getResponseQueueName(), response);
     }
 
@@ -383,7 +383,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return getMainQueueForModule(toDto());
     }
 
-    protected String getMainQueueForModule(tv.twitchbot.common.dto.core.Module module) {
+    protected String getMainQueueForModule(final tv.twitchbot.common.dto.core.Module module) {
         return "Module|" + module.getName();
     }
 

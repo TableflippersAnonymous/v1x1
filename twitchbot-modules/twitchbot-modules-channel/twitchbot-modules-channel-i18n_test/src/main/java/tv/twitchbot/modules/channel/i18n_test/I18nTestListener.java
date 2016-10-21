@@ -10,12 +10,12 @@ import tv.twitchbot.common.modules.eventhandler.EventListener;
 public class I18nTestListener implements EventListener {
     I18nTest module;
 
-    I18nTestListener(I18nTest module) {
+    I18nTestListener(final I18nTest module) {
         this.module = module;
     }
 
     @EventHandler
-    public void onChatMessage(ChatMessageEvent ev) {
+    public void onChatMessage(final ChatMessageEvent ev) {
         module.delegator.handleChatMessage(ev);
     }
 }

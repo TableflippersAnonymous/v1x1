@@ -10,113 +10,113 @@ import tv.twitchbot.common.dto.messages.responses.SendMessageResponse;
  */
 public abstract class DefaultModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends EasyThreadedModule<T, U, V> {
     @Override
-    protected void processChatMessageEvent(ChatMessageEvent chatMessageEvent) {
+    protected void processChatMessageEvent(final ChatMessageEvent chatMessageEvent) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchChatPartEvent(TwitchChatPartEvent event) {
+    protected void processTwitchChatPartEvent(final TwitchChatPartEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchChatJoinEvent(TwitchChatJoinEvent event) {
+    protected void processTwitchChatJoinEvent(final TwitchChatJoinEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchChatMessageEvent(TwitchChatMessageEvent event) {
+    protected void processTwitchChatMessageEvent(final TwitchChatMessageEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchUserModChangeEvent(TwitchUserModChangeEvent event) {
+    protected void processTwitchUserModChangeEvent(final TwitchUserModChangeEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchUserEvent(TwitchUserEvent event) {
+    protected void processTwitchUserEvent(final TwitchUserEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchTimeoutEvent(TwitchTimeoutEvent event) {
+    protected void processTwitchTimeoutEvent(final TwitchTimeoutEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchRoomStateEvent(TwitchRoomStateEvent event) {
+    protected void processTwitchRoomStateEvent(final TwitchRoomStateEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchReconnectEvent(TwitchReconnectEvent event) {
+    protected void processTwitchReconnectEvent(final TwitchReconnectEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchRawMessageEvent(TwitchRawMessageEvent event) {
+    protected void processTwitchRawMessageEvent(final TwitchRawMessageEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchPingEvent(TwitchPingEvent event) {
+    protected void processTwitchPingEvent(final TwitchPingEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchHostEvent(TwitchHostEvent event) {
+    protected void processTwitchHostEvent(final TwitchHostEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchChannelUsersEvent(TwitchChannelUsersEvent event) {
+    protected void processTwitchChannelUsersEvent(final TwitchChannelUsersEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchChannelEvent(TwitchChannelEvent event) {
+    protected void processTwitchChannelEvent(final TwitchChannelEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchBotGlobalStateEvent(TwitchBotGlobalStateEvent event) {
+    protected void processTwitchBotGlobalStateEvent(final TwitchBotGlobalStateEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchBotConnectedEvent(TwitchBotConnectedEvent event) {
+    protected void processTwitchBotConnectedEvent(final TwitchBotConnectedEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processTwitchBotChannelStateEvent(TwitchBotChannelStateEvent event) {
+    protected void processTwitchBotChannelStateEvent(final TwitchBotChannelStateEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processChatPartEvent(ChatPartEvent event) {
+    protected void processChatPartEvent(final ChatPartEvent event) {
         /* No action */
     }
 
     @Override
-    protected void processChatJoinEvent(ChatJoinEvent event) {
+    protected void processChatJoinEvent(final ChatJoinEvent event) {
         /* No action */
     }
 
 
     @Override
-    protected void processSendMessageRequest(SendMessageRequest sendMessageRequest) {
+    protected void processSendMessageRequest(final SendMessageRequest sendMessageRequest) {
         /* No action */
     }
 
     @Override
-    protected void processModuleShutdownResponse(ModuleShutdownResponse moduleShutdownResponse) {
+    protected void processModuleShutdownResponse(final ModuleShutdownResponse moduleShutdownResponse) {
         /* No action */
     }
 
     @Override
-    protected void processSendMessageResponse(SendMessageResponse sendMessageResponse) {
+    protected void processSendMessageResponse(final SendMessageResponse sendMessageResponse) {
         /* No action */
     }
 

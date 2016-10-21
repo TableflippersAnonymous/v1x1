@@ -7,14 +7,14 @@ import org.redisson.client.codec.ByteArrayCodec;
  * Created by cobi on 10/6/2016.
  */
 public class MessageQueueManagerImpl implements MessageQueueManager {
-    private RedissonClient redissonClient;
+    private final RedissonClient redissonClient;
 
-    public MessageQueueManagerImpl(RedissonClient redissonClient) {
+    public MessageQueueManagerImpl(final RedissonClient redissonClient) {
         this.redissonClient = redissonClient;
     }
 
     @Override
-    public MessageQueue forName(String name) {
+    public MessageQueue forName(final String name) {
         return new MessageQueueImpl(redissonClient.getBlockingQueue(name, ByteArrayCodec.INSTANCE));
     }
 }

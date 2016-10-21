@@ -4,28 +4,25 @@ import tv.twitchbot.common.dto.db.Platform;
 import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
 import tv.twitchbot.common.dto.proto.core.UserOuterClass;
 
-import java.util.Set;
-import java.util.stream.Collectors;
-
 /**
  * Represents a {@link User} on Discord
  * @author Cobi
  */
 public class DiscordUser extends User {
-    public static DiscordUser fromProto(UserOuterClass.User user) {
-        String id = user.getId();
-        GlobalUser globalUser = GlobalUser.fromProto(user.getGlobalUser());
-        String displayName = user.getDisplayName();
+    public static DiscordUser fromProto(final UserOuterClass.UserOrBuilder user) {
+        final String id = user.getId();
+        final GlobalUser globalUser = GlobalUser.fromProto(user.getGlobalUser());
+        final String displayName = user.getDisplayName();
         return new DiscordUser(id, globalUser, displayName);
     }
 
-    public static DiscordUser fromProto(GlobalUser globalUser, UserOuterClass.GlobalUserEntry globalUserEntry) {
-        String id = globalUserEntry.getId();
-        String displayName = globalUserEntry.getDisplayName();
+    public static DiscordUser fromProto(final GlobalUser globalUser, final UserOuterClass.GlobalUserEntryOrBuilder globalUserEntry) {
+        final String id = globalUserEntry.getId();
+        final String displayName = globalUserEntry.getDisplayName();
         return new DiscordUser(id, globalUser, displayName);
     }
 
-    public DiscordUser(String id, GlobalUser globalUser, String displayName) {
+    public DiscordUser(final String id, final GlobalUser globalUser, final String displayName) {
         super(id, globalUser, displayName);
     }
 

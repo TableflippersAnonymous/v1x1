@@ -9,7 +9,7 @@ import javax.annotation.Nullable;
  */
 public class ServiceFuture<U> extends AbstractFuture<U> {
     @Override
-    public boolean set(@Nullable U value) {
+    public boolean set(@Nullable final U value) {
         return super.set(value);
     }
 }

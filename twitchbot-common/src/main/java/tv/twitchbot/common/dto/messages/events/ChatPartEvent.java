@@ -12,25 +12,25 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public abstract class ChatPartEvent extends Event {
-    public static ChatPartEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.ChatPartEvent chatPartEvent) {
-        User user = User.fromProto(chatPartEvent.getUser());
-        Channel channel = Channel.fromProto(chatPartEvent.getChannel());
+    public static ChatPartEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.ChatPartEvent chatPartEvent) {
+        final User user = User.fromProto(chatPartEvent.getUser());
+        final Channel channel = Channel.fromProto(chatPartEvent.getChannel());
         switch(chatPartEvent.getType()) {
             case TWITCH: return TwitchChatPartEvent.fromProto(module, uuid, timestamp, user, channel, chatPartEvent.getExtension(EventOuterClass.TwitchChatPartEvent.data));
             default: throw new IllegalStateException("Unknown ChatPartEvent type: " + chatPartEvent.getType());
         }
     }
 
-    private User user;
-    private Channel channel;
+    private final User user;
+    private final Channel channel;
 
-    public ChatPartEvent(Module from, User user, Channel channel) {
+    public ChatPartEvent(final Module from, final User user, final Channel channel) {
         super(from);
         this.user = user;
         this.channel = channel;
     }
 
-    public ChatPartEvent(Module from, UUID messageId, long timestamp, User user, Channel channel) {
+    public ChatPartEvent(final Module from, final UUID messageId, final long timestamp, final User user, final Channel channel) {
         super(from, messageId, timestamp);
         this.user = user;
         this.channel = channel;

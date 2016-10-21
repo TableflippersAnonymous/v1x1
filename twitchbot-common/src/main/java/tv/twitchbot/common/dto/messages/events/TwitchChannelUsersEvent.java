@@ -16,26 +16,26 @@ import java.util.stream.Collectors;
  */
 public class TwitchChannelUsersEvent extends Event {
     @SuppressWarnings("unchecked")
-    public static TwitchChannelUsersEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchChannelUsersEvent twitchChannelUsersEvent) {
-        TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelUsersEvent.getChannel());
-        List<TwitchUser> users = (List<TwitchUser>) (List) twitchChannelUsersEvent.getUsersList().stream().map(User::fromProto).collect(Collectors.toList());
-        RplNameReplyCommand rplNameReplyCommand = (RplNameReplyCommand) IrcStanza.fromProto(twitchChannelUsersEvent.getRplNameReplyCommand());
+    public static TwitchChannelUsersEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchChannelUsersEventOrBuilder twitchChannelUsersEvent) {
+        final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelUsersEvent.getChannel());
+        final List<TwitchUser> users = (List<TwitchUser>) (List) twitchChannelUsersEvent.getUsersList().stream().map(User::fromProto).collect(Collectors.toList());
+        final RplNameReplyCommand rplNameReplyCommand = (RplNameReplyCommand) IrcStanza.fromProto(twitchChannelUsersEvent.getRplNameReplyCommand());
         return new TwitchChannelUsersEvent(module, uuid, timestamp, channel, users, rplNameReplyCommand);
     }
 
-    private TwitchChannel channel;
-    private List<TwitchUser> users;
+    private final TwitchChannel channel;
+    private final List<TwitchUser> users;
 
-    private RplNameReplyCommand rplNameReplyCommand;
+    private final RplNameReplyCommand rplNameReplyCommand;
 
-    public TwitchChannelUsersEvent(Module from, TwitchChannel channel, List<TwitchUser> users, RplNameReplyCommand rplNameReplyCommand) {
+    public TwitchChannelUsersEvent(final Module from, final TwitchChannel channel, final List<TwitchUser> users, final RplNameReplyCommand rplNameReplyCommand) {
         super(from);
         this.channel = channel;
         this.users = users;
         this.rplNameReplyCommand = rplNameReplyCommand;
     }
 
-    public TwitchChannelUsersEvent(Module from, UUID messageId, long timestamp, TwitchChannel channel, List<TwitchUser> users, RplNameReplyCommand rplNameReplyCommand) {
+    public TwitchChannelUsersEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final List<TwitchUser> users, final RplNameReplyCommand rplNameReplyCommand) {
         super(from, messageId, timestamp);
         this.channel = channel;
         this.users = users;

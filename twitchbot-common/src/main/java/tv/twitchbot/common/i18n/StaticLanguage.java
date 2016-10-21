@@ -9,19 +9,19 @@ import java.util.Map;
  * @author Josh
  */
 public class StaticLanguage extends Language {
-    private Map<String, String> strings;
+    private final Map<String, String> strings;
 
     public StaticLanguage() {
         strings = new HashMap<>();
     }
 
     @Override
-    public String message(Module module, String key, Map<String, Object> parameters) {
+    public String message(final Module module, final String key, final Map<String, Object> parameters) {
         return format(strings.get(getKey(module, key)), parameters);
     }
 
     @Override
-    public void set(Module module, String key, String message) {
+    public void set(final Module module, final String key, final String message) {
         strings.put(getKey(module, key), message);
     }
 }

@@ -18,7 +18,7 @@ public class ModuleSettings {
     }
 
     @JsonProperty("redisson")
-    public void setRedissonConfig(Config redissonConfig) {
+    public void setRedissonConfig(final Config redissonConfig) {
         this.redissonConfig = redissonConfig;
     }
 
@@ -28,7 +28,7 @@ public class ModuleSettings {
     }
 
     @JsonProperty("zookeeper_connection_string")
-    public void setZookeeperConnectionString(String zookeeperConnectionString) {
+    public void setZookeeperConnectionString(final String zookeeperConnectionString) {
         this.zookeeperConnectionString = zookeeperConnectionString;
     }
 
@@ -38,7 +38,7 @@ public class ModuleSettings {
     }
 
     @JsonProperty("cassandra")
-    public void setCassandraConfig(CassandraConfig cassandraConfig) {
+    public void setCassandraConfig(final CassandraConfig cassandraConfig) {
         this.cassandraConfig = cassandraConfig;
     }
 
@@ -48,7 +48,7 @@ public class ModuleSettings {
     }
 
     @JsonProperty("wait_start_ms")
-    public void setWaitStartMs(long waitStartMs) {
+    public void setWaitStartMs(final long waitStartMs) {
         this.waitStartMs = waitStartMs;
     }
 }

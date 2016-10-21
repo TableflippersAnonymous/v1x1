@@ -9,7 +9,7 @@ import java.util.UUID;
  */
 @Table(name = "discord_channel")
 public class DiscordChannel extends Channel {
-    public DiscordChannel(String id, String displayName, UUID tenantId) {
+    public DiscordChannel(final String id, final String displayName, final UUID tenantId) {
         super(id, displayName, tenantId);
     }
 
@@ -17,7 +17,7 @@ public class DiscordChannel extends Channel {
     }
 
     @Override
-    public tv.twitchbot.common.dto.core.DiscordChannel toCore(TenantAccessor accessor) {
+    public tv.twitchbot.common.dto.core.DiscordChannel toCore(final TenantAccessor accessor) {
         return new tv.twitchbot.common.dto.core.DiscordChannel(getId(), accessor.getById(getTenantId()).toCore(), getDisplayName());
     }
 }

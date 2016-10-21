@@ -10,18 +10,18 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class RoomStateCommand extends IrcStanza {
-    public static RoomStateCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.RoomStateCommand roomStateCommand) {
-        String channel = roomStateCommand.getChannel();
+    public static RoomStateCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.RoomStateCommandOrBuilder roomStateCommand) {
+        final String channel = roomStateCommand.getChannel();
         return new RoomStateCommand(rawLine, tags, source, rawArgs, args, channel);
     }
 
-    private String channel;
+    private final String channel;
 
     private String broadcasterLanguage;
     private boolean r9k, subsOnly;
     private int slow;
 
-    public RoomStateCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, String channel) {
+    public RoomStateCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel) {
         super(rawLine, tags, source, IrcCommand.ROOMSTATE, rawArgs, args);
         this.channel = channel;
         if(tags.containsKey("broadcaster-lang") && !tags.get("broadcaster-lang").isEmpty())
@@ -62,7 +62,7 @@ public class RoomStateCommand extends IrcStanza {
     }
 
     private IRC.RoomStateCommand toProtoCommand() {
-        IRC.RoomStateCommand.Builder builder = IRC.RoomStateCommand.newBuilder()
+        final IRC.RoomStateCommand.Builder builder = IRC.RoomStateCommand.newBuilder()
                 .setChannel(channel);
         if(broadcasterLanguage != null)
             builder.setBroadcasterLanguage(broadcasterLanguage);
