@@ -12,18 +12,18 @@ import java.util.concurrent.TimeUnit;
  * Created by cobi on 10/16/2016.
  */
 public class Deduplicator {
-    private RSetCache<byte[]> setCache;
+    private final RSetCache<byte[]> setCache;
 
-    public Deduplicator(RedissonClient client, Module module) {
+    public Deduplicator(final RedissonClient client, final Module module) {
         this(client, "Module|" + module.getName());
     }
 
-    public Deduplicator(RedissonClient client, String name) {
+    public Deduplicator(final RedissonClient client, final String name) {
         setCache = client.getSetCache("Deduplicator|" + name, ByteArrayCodec.INSTANCE);
     }
 
-    public boolean seenAndAdd(UUID uuid) {
-        byte[] bytes = uuid.toProto().toByteArray();
+    public boolean seenAndAdd(final UUID uuid) {
+        final byte[] bytes = uuid.toProto().toByteArray();
         return !setCache.add(bytes, 5, TimeUnit.MINUTES);
     }
 }

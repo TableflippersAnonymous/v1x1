@@ -17,20 +17,20 @@ import java.util.UUID;
 @Table(name = "persistent_language")
 public class PersistentLanguage extends Language {
     @PartitionKey
-    private UUID id;
+    private final UUID id;
     @Column(name = "parent_id")
-    private UUID parentId;
-    private String name;
+    private final UUID parentId;
+    private final String name;
     private Map<String, String> strings;
     @Transient
     private Language parent;
-    public PersistentLanguage(UUID parentLanguage) {
+    public PersistentLanguage(final UUID parentLanguage) {
         id = UUID.randomUUID();
         parentId = parentLanguage;
         name = null;
     }
 
-    public String message(Module module, String key, Map<String, Object> parameters) {
+    public String message(final Module module, final String key, final Map<String, Object> parameters) {
         if(strings.containsKey(getKey(module, key)))
             return format(strings.get(getKey(module, key)), parameters);
         if(parent == null) {
@@ -44,7 +44,7 @@ public class PersistentLanguage extends Language {
     }
 
     @Override
-    public void set(Module module, String key, String message) {
+    public void set(final Module module, final String key, final String message) {
         // XXX: Stub
     }
 }

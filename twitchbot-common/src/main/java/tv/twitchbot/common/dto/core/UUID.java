@@ -8,14 +8,14 @@ import tv.twitchbot.common.dto.proto.core.UUIDOuterClass;
  * @author Cobi
  */
 public class UUID {
-    public static UUID fromProto(UUIDOuterClass.UUID uuid) {
-        java.util.UUID realUuid = new java.util.UUID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits());
+    public static UUID fromProto(final UUIDOuterClass.UUIDOrBuilder uuid) {
+        final java.util.UUID realUuid = new java.util.UUID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits());
         return new UUID(realUuid);
     }
 
-    private java.util.UUID value;
+    private final java.util.UUID value;
 
-    public UUID(java.util.UUID value) {
+    public UUID(final java.util.UUID value) {
         this.value = value;
     }
 
@@ -31,11 +31,11 @@ public class UUID {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UUID uuid = (UUID) o;
+        final UUID uuid = (UUID) o;
 
         return value != null ? value.equals(uuid.value) : uuid.value == null;
 

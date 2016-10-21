@@ -6,6 +6,7 @@ import tv.twitchbot.common.dto.core.DiscordChannel;
 import tv.twitchbot.common.dto.core.TwitchChannel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class Tenant {
         public Entry() {
         }
 
-        public Entry(Platform platform, String displayName, String channelId) {
+        public Entry(final Platform platform, final String displayName, final String channelId) {
             this.platform = platform;
             this.displayName = displayName;
             this.channelId = channelId;
@@ -44,7 +45,7 @@ public class Tenant {
             return channelId;
         }
 
-        public tv.twitchbot.common.dto.core.Channel toCore(tv.twitchbot.common.dto.core.Tenant tenant) {
+        public tv.twitchbot.common.dto.core.Channel toCore(final tv.twitchbot.common.dto.core.Tenant tenant) {
             switch(platform) {
                 case DISCORD: return new DiscordChannel(channelId, tenant, displayName);
                 case TWITCH: return new TwitchChannel(channelId, tenant, displayName);
@@ -61,7 +62,7 @@ public class Tenant {
     public Tenant() {
     }
 
-    public Tenant(UUID id, List<Entry> entries) {
+    public Tenant(final UUID id, final List<Entry> entries) {
         this.id = id;
         this.entries = entries;
     }
@@ -70,13 +71,13 @@ public class Tenant {
         return id;
     }
 
-    public List<Entry> getEntries() {
+    public Collection<Entry> getEntries() {
         return entries;
     }
 
     public tv.twitchbot.common.dto.core.Tenant toCore() {
-        List<Channel> channels = new ArrayList<>();
-        tv.twitchbot.common.dto.core.Tenant tenant = new tv.twitchbot.common.dto.core.Tenant(
+        final List<Channel> channels = new ArrayList<>();
+        final tv.twitchbot.common.dto.core.Tenant tenant = new tv.twitchbot.common.dto.core.Tenant(
                 new tv.twitchbot.common.dto.core.UUID(id),
                 channels
         );

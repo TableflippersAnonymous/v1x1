@@ -4,6 +4,7 @@ import com.datastax.driver.mapping.annotations.*;
 import tv.twitchbot.common.dto.core.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,7 +27,7 @@ public class GlobalUser {
         public Entry() {
         }
 
-        public Entry(Platform platform, String displayName, String userId) {
+        public Entry(final Platform platform, final String displayName, final String userId) {
             this.platform = platform;
             this.displayName = displayName;
             this.userId = userId;
@@ -44,7 +45,7 @@ public class GlobalUser {
             return userId;
         }
 
-        public User toCore(tv.twitchbot.common.dto.core.GlobalUser globalUser) {
+        public User toCore(final tv.twitchbot.common.dto.core.GlobalUser globalUser) {
             switch(platform) {
                 case DISCORD: return new DiscordUser(userId, globalUser, displayName);
                 case TWITCH: return new TwitchUser(userId, globalUser, displayName);
@@ -61,7 +62,7 @@ public class GlobalUser {
     public GlobalUser() {
     }
 
-    public GlobalUser(UUID id, List<Entry> entries) {
+    public GlobalUser(final UUID id, final List<Entry> entries) {
         this.id = id;
         this.entries = entries;
     }
@@ -70,13 +71,13 @@ public class GlobalUser {
         return id;
     }
 
-    public List<Entry> getEntries() {
+    public Collection<Entry> getEntries() {
         return entries;
     }
 
     public tv.twitchbot.common.dto.core.GlobalUser toCore() {
-        List<User> users = new ArrayList<>();
-        tv.twitchbot.common.dto.core.GlobalUser globalUser = new tv.twitchbot.common.dto.core.GlobalUser(
+        final List<User> users = new ArrayList<>();
+        final tv.twitchbot.common.dto.core.GlobalUser globalUser = new tv.twitchbot.common.dto.core.GlobalUser(
                 new tv.twitchbot.common.dto.core.UUID(id),
                 users
         );

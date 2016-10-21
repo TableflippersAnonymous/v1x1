@@ -18,7 +18,7 @@ import java.lang.invoke.MethodHandles;
 public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlobalConfiguration, HelloWorldTenantConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     static {
-        Module module = new Module("hello_world");
+        final Module module = new Module("hello_world");
         I18n.registerDefault(module, "hello", "Hi there, %user%!");
     }
 
@@ -26,7 +26,7 @@ public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlob
     ChatRouterServiceClient crsc;
     Language language;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         new HelloWorld().entryPoint(args);
     }
 
@@ -45,7 +45,7 @@ public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlob
     }
 
     @Override
-    protected void processChatMessageEvent(ChatMessageEvent chatMessageEvent) {
+    protected void processChatMessageEvent(final ChatMessageEvent chatMessageEvent) {
         super.processChatMessageEvent(chatMessageEvent);
         LOG.debug("Got chat message: {}", chatMessageEvent.getChatMessage().getText());
         delegator.handleChatMessage(chatMessageEvent);

@@ -13,22 +13,22 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchRawMessageEvent extends Event {
-    public static TwitchRawMessageEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchRawMessageEvent twitchRawMessageEvent) {
-        TwitchBot bot = (TwitchBot) Bot.fromProto(twitchRawMessageEvent.getBot());
-        IrcStanza ircStanza = IrcStanza.fromProto(twitchRawMessageEvent.getIrcStanza());
+    public static TwitchRawMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchRawMessageEventOrBuilder twitchRawMessageEvent) {
+        final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchRawMessageEvent.getBot());
+        final IrcStanza ircStanza = IrcStanza.fromProto(twitchRawMessageEvent.getIrcStanza());
         return new TwitchRawMessageEvent(module, uuid, timestamp, bot, ircStanza);
     }
 
-    private TwitchBot bot;
-    private IrcStanza ircStanza;
+    private final TwitchBot bot;
+    private final IrcStanza ircStanza;
 
-    public TwitchRawMessageEvent(Module from, TwitchBot bot, IrcStanza ircStanza) {
+    public TwitchRawMessageEvent(final Module from, final TwitchBot bot, final IrcStanza ircStanza) {
         super(from);
         this.bot = bot;
         this.ircStanza = ircStanza;
     }
 
-    public TwitchRawMessageEvent(Module from, UUID messageId, long timestamp, TwitchBot bot, IrcStanza ircStanza) {
+    public TwitchRawMessageEvent(final Module from, final UUID messageId, final long timestamp, final TwitchBot bot, final IrcStanza ircStanza) {
         super(from, messageId, timestamp);
         this.bot = bot;
         this.ircStanza = ircStanza;

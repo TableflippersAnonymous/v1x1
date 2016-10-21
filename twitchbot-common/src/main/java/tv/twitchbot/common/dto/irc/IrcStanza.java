@@ -10,12 +10,12 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public abstract class IrcStanza {
-    public static IrcStanza fromProto(IRC.IrcStanza stanza) {
-        String rawLine = stanza.getRawLine();
-        Map<String, String> tags = stanza.getTagsMap();
-        IrcSource source = IrcSource.fromProto(stanza.getSource());
-        String rawArgs = stanza.getRawArgs();
-        String[] args = stanza.getArgsList().toArray(new String[] {});
+    public static IrcStanza fromProto(final IRC.IrcStanza stanza) {
+        final String rawLine = stanza.getRawLine();
+        final Map<String, String> tags = stanza.getTagsMap();
+        final IrcSource source = IrcSource.fromProto(stanza.getSource());
+        final String rawArgs = stanza.getRawArgs();
+        final String[] args = stanza.getArgsList().toArray(new String[] {});
         switch(stanza.getCommand()) {
             case CLEARCHAT: return ClearChatCommand.fromProto(rawLine, tags, source, rawArgs, args, stanza.getExtension(IRC.ClearChatCommand.data));
             case GLOBALUSERSTATE: return GlobalUserStateCommand.fromProto(rawLine, tags, source, rawArgs, args, stanza.getExtension(IRC.GlobalUserStateCommand.data));
@@ -43,17 +43,17 @@ public abstract class IrcStanza {
         CLEARCHAT, USERSTATE,
         RECONNECT, ROOMSTATE,
         USERNOTICE, GLOBALUSERSTATE,
-        PING;
+        PING
     }
 
-    private String rawLine;
-    private Map<String, String> tags;
-    private IrcSource source;
-    private IrcCommand command;
-    private String rawArgs;
-    private String[] args;
+    private final String rawLine;
+    private final Map<String, String> tags;
+    private final IrcSource source;
+    private final IrcCommand command;
+    private final String rawArgs;
+    private final String[] args;
 
-    public IrcStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcCommand command, String rawArgs, String[] args) {
+    public IrcStanza(final String rawLine, final Map<String, String> tags, final IrcSource source, final IrcCommand command, final String rawArgs, final String[] args) {
         this.rawLine = rawLine;
         this.tags = tags;
         this.source = source;

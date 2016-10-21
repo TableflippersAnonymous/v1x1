@@ -14,19 +14,19 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchChatPartEvent extends ChatPartEvent {
-    public static TwitchChatPartEvent fromProto(Module module, UUID uuid, long timestamp, User user, Channel channel, EventOuterClass.TwitchChatPartEvent twitchChatPartEvent) {
-        PartCommand partCommand = (PartCommand) IrcStanza.fromProto(twitchChatPartEvent.getPartCommand());
+    public static TwitchChatPartEvent fromProto(final Module module, final UUID uuid, final long timestamp, final User user, final Channel channel, final EventOuterClass.TwitchChatPartEventOrBuilder twitchChatPartEvent) {
+        final PartCommand partCommand = (PartCommand) IrcStanza.fromProto(twitchChatPartEvent.getPartCommand());
         return new TwitchChatPartEvent(module, uuid, timestamp, user, channel, partCommand);
     }
 
-    private PartCommand partCommand;
+    private final PartCommand partCommand;
 
-    public TwitchChatPartEvent(Module from, User user, Channel channel, PartCommand partCommand) {
+    public TwitchChatPartEvent(final Module from, final User user, final Channel channel, final PartCommand partCommand) {
         super(from, user, channel);
         this.partCommand = partCommand;
     }
 
-    public TwitchChatPartEvent(Module from, UUID messageId, long timestamp, User user, Channel channel, PartCommand partCommand) {
+    public TwitchChatPartEvent(final Module from, final UUID messageId, final long timestamp, final User user, final Channel channel, final PartCommand partCommand) {
         super(from, messageId, timestamp, user, channel);
         this.partCommand = partCommand;
     }

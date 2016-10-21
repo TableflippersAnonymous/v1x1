@@ -42,7 +42,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("cluster_name")
-    public void setClusterName(String clusterName) {
+    public void setClusterName(final String clusterName) {
         this.clusterName = clusterName;
     }
 
@@ -52,7 +52,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("keyspace")
-    public void setKeyspace(String keyspace) {
+    public void setKeyspace(final String keyspace) {
         this.keyspace = keyspace;
     }
 
@@ -62,7 +62,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("contact_points")
-    public void setContactPoints(List<String> contactPoints) {
+    public void setContactPoints(final List<String> contactPoints) {
         this.contactPoints = contactPoints;
     }
 
@@ -72,7 +72,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("port")
-    public void setPort(int port) {
+    public void setPort(final int port) {
         this.port = port;
     }
 
@@ -82,7 +82,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("authenticated")
-    public void setAuthenticated(boolean authenticated) {
+    public void setAuthenticated(final boolean authenticated) {
         this.authenticated = authenticated;
     }
 
@@ -92,7 +92,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("username")
-    public void setUsername(String username) {
+    public void setUsername(final String username) {
         this.username = username;
     }
 
@@ -102,7 +102,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("password")
-    public void setPassword(String password) {
+    public void setPassword(final String password) {
         this.password = password;
     }
 
@@ -112,7 +112,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("exclusion_threshold")
-    public void setExclusionThreshold(double exclusionThreshold) {
+    public void setExclusionThreshold(final double exclusionThreshold) {
         this.exclusionThreshold = exclusionThreshold;
     }
 
@@ -122,7 +122,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("scale_ms")
-    public void setScaleMs(long scaleMs) {
+    public void setScaleMs(final long scaleMs) {
         this.scaleMs = scaleMs;
     }
 
@@ -132,7 +132,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("retry_ms")
-    public void setRetryMs(long retryMs) {
+    public void setRetryMs(final long retryMs) {
         this.retryMs = retryMs;
     }
 
@@ -142,7 +142,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("update_ms")
-    public void setUpdateMs(long updateMs) {
+    public void setUpdateMs(final long updateMs) {
         this.updateMs = updateMs;
     }
 
@@ -152,7 +152,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("minimum_measurements")
-    public void setMinimumMeasurements(int minimumMeasurements) {
+    public void setMinimumMeasurements(final int minimumMeasurements) {
         this.minimumMeasurements = minimumMeasurements;
     }
 
@@ -162,7 +162,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("consistency_level")
-    public void setConsistencyLevel(String consistencyLevel) {
+    public void setConsistencyLevel(final String consistencyLevel) {
         this.consistencyLevel = consistencyLevel;
     }
 
@@ -172,7 +172,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("serial_consistency_level")
-    public void setSerialConsistencyLevel(String serialConsistencyLevel) {
+    public void setSerialConsistencyLevel(final String serialConsistencyLevel) {
         this.serialConsistencyLevel = serialConsistencyLevel;
     }
 
@@ -182,7 +182,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("fetch_size")
-    public void setFetchSize(int fetchSize) {
+    public void setFetchSize(final int fetchSize) {
         this.fetchSize = fetchSize;
     }
 
@@ -192,7 +192,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("reconnect_base_delay_ms")
-    public void setReconnectBaseDelayMs(long reconnectBaseDelayMs) {
+    public void setReconnectBaseDelayMs(final long reconnectBaseDelayMs) {
         this.reconnectBaseDelayMs = reconnectBaseDelayMs;
     }
 
@@ -202,7 +202,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("reconnect_max_delay_ms")
-    public void setReconnectMaxDelayMs(long reconnectMaxDelayMs) {
+    public void setReconnectMaxDelayMs(final long reconnectMaxDelayMs) {
         this.reconnectMaxDelayMs = reconnectMaxDelayMs;
     }
 
@@ -212,7 +212,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("connect_timeout_ms")
-    public void setConnectTimeoutMs(int connectTimeoutMs) {
+    public void setConnectTimeoutMs(final int connectTimeoutMs) {
         this.connectTimeoutMs = connectTimeoutMs;
     }
 
@@ -222,7 +222,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("tcp_keep_alive")
-    public void setTcpKeepAlive(boolean tcpKeepAlive) {
+    public void setTcpKeepAlive(final boolean tcpKeepAlive) {
         this.tcpKeepAlive = tcpKeepAlive;
     }
 
@@ -232,7 +232,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("highest_trackable_latency_ms")
-    public void setHighestTrackableLatencyMs(long highestTrackableLatencyMs) {
+    public void setHighestTrackableLatencyMs(final long highestTrackableLatencyMs) {
         this.highestTrackableLatencyMs = highestTrackableLatencyMs;
     }
 
@@ -242,7 +242,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("speculative_retry_percentile")
-    public void setSpeculativeRetryPercentile(double speculativeRetryPercentile) {
+    public void setSpeculativeRetryPercentile(final double speculativeRetryPercentile) {
         this.speculativeRetryPercentile = speculativeRetryPercentile;
     }
 
@@ -252,7 +252,7 @@ public class CassandraConfig {
     }
 
     @JsonProperty("speculative_max_retries")
-    public void setSpeculativeMaxRetries(int speculativeMaxRetries) {
+    public void setSpeculativeMaxRetries(final int speculativeMaxRetries) {
         this.speculativeMaxRetries = speculativeMaxRetries;
     }
 }

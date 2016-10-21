@@ -10,15 +10,15 @@ import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
  * Created by cobi on 10/5/16.
  */
 public class ModuleShutdownResponse extends Response<ModuleShutdownRequest> {
-    public static ModuleShutdownResponse fromProto(Module module, UUID uuid, long timestamp, UUID requestMessageId, RequestOuterClass.ModuleShutdownResponse extension) {
+    public static ModuleShutdownResponse fromProto(final Module module, final UUID uuid, final long timestamp, final UUID requestMessageId, final RequestOuterClass.ModuleShutdownResponse extension) {
         return new ModuleShutdownResponse(module, uuid, timestamp, requestMessageId);
     }
 
-    public ModuleShutdownResponse(Module from, UUID requestMessageId) {
+    public ModuleShutdownResponse(final Module from, final UUID requestMessageId) {
         super(from, requestMessageId);
     }
 
-    public ModuleShutdownResponse(Module from, UUID messageId, long timestamp, UUID requestMessageId) {
+    public ModuleShutdownResponse(final Module from, final UUID messageId, final long timestamp, final UUID requestMessageId) {
         super(from, messageId, timestamp, requestMessageId);
     }
 

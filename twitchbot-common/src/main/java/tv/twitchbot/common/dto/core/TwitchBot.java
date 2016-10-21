@@ -8,11 +8,11 @@ import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
  * @author Cobi
  */
 public class TwitchBot extends Bot {
-    public static TwitchBot fromProto(String name, BotOuterClass.TwitchBot twitchBot) {
+    public static TwitchBot fromProto(final String name, final BotOuterClass.TwitchBot twitchBot) {
         return new TwitchBot(name);
     }
 
-    public TwitchBot(String name) {
+    public TwitchBot(final String name) {
         super(name);
     }
 

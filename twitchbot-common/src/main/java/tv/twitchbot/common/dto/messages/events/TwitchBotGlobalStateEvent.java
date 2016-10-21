@@ -15,23 +15,23 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#globaluserstate">Twitch-API documentation</a>
  */
 public class TwitchBotGlobalStateEvent extends Event {
-    public static TwitchBotGlobalStateEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchBotGlobalStateEvent twitchBotGlobalStateEvent) {
-        TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotGlobalStateEvent.getBot());
-        GlobalUserStateCommand globalUserStateCommand = (GlobalUserStateCommand) IrcStanza.fromProto(twitchBotGlobalStateEvent.getGlobalUserStateCommand());
+    public static TwitchBotGlobalStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotGlobalStateEventOrBuilder twitchBotGlobalStateEvent) {
+        final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotGlobalStateEvent.getBot());
+        final GlobalUserStateCommand globalUserStateCommand = (GlobalUserStateCommand) IrcStanza.fromProto(twitchBotGlobalStateEvent.getGlobalUserStateCommand());
         return new TwitchBotGlobalStateEvent(module, uuid, timestamp, bot, globalUserStateCommand);
     }
 
-    private TwitchBot bot;
+    private final TwitchBot bot;
 
-    private GlobalUserStateCommand globalUserStateCommand;
+    private final GlobalUserStateCommand globalUserStateCommand;
 
-    public TwitchBotGlobalStateEvent(Module from, TwitchBot bot, GlobalUserStateCommand globalUserStateCommand) {
+    public TwitchBotGlobalStateEvent(final Module from, final TwitchBot bot, final GlobalUserStateCommand globalUserStateCommand) {
         super(from);
         this.bot = bot;
         this.globalUserStateCommand = globalUserStateCommand;
     }
 
-    public TwitchBotGlobalStateEvent(Module from, UUID messageId, long timestamp, TwitchBot bot, GlobalUserStateCommand globalUserStateCommand) {
+    public TwitchBotGlobalStateEvent(final Module from, final UUID messageId, final long timestamp, final TwitchBot bot, final GlobalUserStateCommand globalUserStateCommand) {
         super(from, messageId, timestamp);
         this.bot = bot;
         this.globalUserStateCommand = globalUserStateCommand;

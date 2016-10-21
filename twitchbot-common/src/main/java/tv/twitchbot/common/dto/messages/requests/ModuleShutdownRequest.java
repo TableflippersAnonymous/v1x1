@@ -9,15 +9,15 @@ import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
  * Created by cobi on 10/5/16.
  */
 public class ModuleShutdownRequest extends Request {
-    public static ModuleShutdownRequest fromProto(Module module, UUID uuid, long timestamp, String responseQueueName, RequestOuterClass.ModuleShutdownRequest moduleShutdownRequest) {
+    public static ModuleShutdownRequest fromProto(final Module module, final UUID uuid, final long timestamp, final String responseQueueName, final RequestOuterClass.ModuleShutdownRequest moduleShutdownRequest) {
         return new ModuleShutdownRequest(module, uuid, timestamp, responseQueueName);
     }
 
-    public ModuleShutdownRequest(Module from, String responseQueueName) {
+    public ModuleShutdownRequest(final Module from, final String responseQueueName) {
         super(from, responseQueueName);
     }
 
-    public ModuleShutdownRequest(Module from, UUID messageId, long timestamp, String responseQueueName) {
+    public ModuleShutdownRequest(final Module from, final UUID messageId, final long timestamp, final String responseQueueName) {
         super(from, messageId, timestamp, responseQueueName);
     }
 

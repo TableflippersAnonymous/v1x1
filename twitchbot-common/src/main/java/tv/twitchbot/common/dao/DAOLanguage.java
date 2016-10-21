@@ -10,21 +10,21 @@ import java.util.UUID;
  * @author Josh
  */
 public class DAOLanguage {
-    private Mapper<PersistentLanguage> mapper;
+    private final Mapper<PersistentLanguage> mapper;
 
-    public DAOLanguage(MappingManager mappingManager) {
+    public DAOLanguage(final MappingManager mappingManager) {
         mapper = mappingManager.mapper(PersistentLanguage.class);
     }
 
-    public void put(PersistentLanguage language) {
+    public void put(final PersistentLanguage language) {
         mapper.save(language);
     }
 
-    public PersistentLanguage get(UUID id) {
+    public PersistentLanguage get(final UUID id) {
         return mapper.get(id);
     }
 
-    public void delete(UUID id) {
+    public void delete(final UUID id) {
         mapper.delete(id);
     }
 }

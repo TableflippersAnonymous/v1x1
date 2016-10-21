@@ -15,13 +15,13 @@ import java.util.List;
 public class CommandParser {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static ParsedCommand parse(ChatMessageEvent chatMessageEvent, String prefix) {
-        String msg = chatMessageEvent.getChatMessage().getText();
+    public static ParsedCommand parse(final ChatMessageEvent chatMessageEvent, final String prefix) {
+        final String msg = chatMessageEvent.getChatMessage().getText();
         if(msg == null) return null;
         LOG.debug("prefix={} msg={}", prefix, msg);
         if(msg.startsWith(prefix)) {
-            List<String> args = new ArrayList<>(Arrays.asList(msg.substring(prefix.length()).split(" ")));
-            String command = args.remove(0);
+            final List<String> args = new ArrayList<>(Arrays.asList(msg.substring(prefix.length()).split(" ")));
+            final String command = args.remove(0);
             return new ParsedCommand(command, args);
         }
         return null;

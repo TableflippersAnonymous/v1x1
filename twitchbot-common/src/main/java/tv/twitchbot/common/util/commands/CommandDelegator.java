@@ -14,14 +14,14 @@ import java.util.List;
 public class CommandDelegator {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private String prefix;
-    private List<Command> registeredCommands;
+    private final String prefix;
+    private final List<Command> registeredCommands;
 
     /**
      * CommandDelegator tracks {@link Command Commands} to be run
      * @param prefix
      */
-    public CommandDelegator(String prefix) {
+    public CommandDelegator(final String prefix) {
         this.prefix = prefix;
         registeredCommands = new ArrayList<>();
     }
@@ -31,7 +31,7 @@ public class CommandDelegator {
      * @see Command
      * @param command
      */
-    public void registerCommand(Command command) {
+    public void registerCommand(final Command command) {
         registeredCommands.add(command);
     }
 
@@ -39,14 +39,14 @@ public class CommandDelegator {
      * Interpret chat message for commands and args, then execute found commands
      * @param chatMessageEvent
      */
-    public void handleChatMessage(ChatMessageEvent chatMessageEvent) {
-        ParsedCommand parsedCmd = CommandParser.parse(chatMessageEvent, prefix);
+    public void handleChatMessage(final ChatMessageEvent chatMessageEvent) {
+        final ParsedCommand parsedCmd = CommandParser.parse(chatMessageEvent, prefix);
         if(parsedCmd == null)
             return;
         LOG.debug("Got parsedCommand: {}", parsedCmd.getCommand());
-        for(Command command : registeredCommands) {
+        for(final Command command : registeredCommands) {
             boolean isFound = false;
-            for(String commandAlias : command.getCommands())
+            for(final String commandAlias : command.getCommands())
                 if(parsedCmd.getCommand().equalsIgnoreCase(commandAlias))
                     isFound = true;
             if(!isFound)

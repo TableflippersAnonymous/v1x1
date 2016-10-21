@@ -10,19 +10,19 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class ClearChatCommand extends IrcStanza {
-    public static ClearChatCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.ClearChatCommand clearChatCommand) {
-        String channel = clearChatCommand.getChannel();
-        String nickname = clearChatCommand.getNickname();
+    public static ClearChatCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.ClearChatCommandOrBuilder clearChatCommand) {
+        final String channel = clearChatCommand.getChannel();
+        final String nickname = clearChatCommand.getNickname();
         return new ClearChatCommand(rawLine, tags, source, rawArgs, args, channel, nickname);
     }
 
-    private String channel;
-    private String nickname;
+    private final String channel;
+    private final String nickname;
 
     private int banDuration;
     private String banReason;
 
-    public ClearChatCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, String channel, String nickname) {
+    public ClearChatCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel, final String nickname) {
         super(rawLine, tags, source, IrcCommand.CLEARCHAT, rawArgs, args);
         this.channel = channel;
         this.nickname = nickname;
@@ -56,7 +56,7 @@ public class ClearChatCommand extends IrcStanza {
     }
 
     private IRC.ClearChatCommand toProtoCommand() {
-        IRC.ClearChatCommand.Builder builder = IRC.ClearChatCommand.newBuilder()
+        final IRC.ClearChatCommand.Builder builder = IRC.ClearChatCommand.newBuilder()
                 .setChannel(channel)
                 .setNickname(nickname)
                 .setBanDuration(banDuration);

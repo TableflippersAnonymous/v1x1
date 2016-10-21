@@ -13,7 +13,7 @@ public class I18nTest extends RegisteredThreadedModule<I18nTestSettings, I18nTes
     CommandDelegator delegator;
     Language language;
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         new I18nTest().entryPoint(args);
     }
 

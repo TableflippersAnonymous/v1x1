@@ -10,13 +10,13 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class GlobalUserStateCommand extends EmoteSetIrcStanza {
-    public static GlobalUserStateCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.GlobalUserStateCommand globalUserStateCommand) {
+    public static GlobalUserStateCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.GlobalUserStateCommand globalUserStateCommand) {
         return new GlobalUserStateCommand(rawLine, tags, source, rawArgs, args);
     }
 
     private int userId;
 
-    public GlobalUserStateCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args) {
+    public GlobalUserStateCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args) {
         super(rawLine, tags, source, IrcCommand.GLOBALUSERSTATE, rawArgs, args);
         if(tags.containsKey("user-id") && !tags.get("user-id").isEmpty())
             userId = Integer.valueOf(tags.get("user-id"));

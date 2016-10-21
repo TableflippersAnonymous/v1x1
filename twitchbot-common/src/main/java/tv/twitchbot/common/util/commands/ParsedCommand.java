@@ -6,10 +6,10 @@ import java.util.List;
  * Created by Josh on 2016-10-06.
  */
 public class ParsedCommand {
-    private String command;
-    private List<String> args;
+    private final String command;
+    private final List<String> args;
 
-    ParsedCommand(String command, List<String> args) {
+    ParsedCommand(final String command, final List<String> args) {
         this.command = command;
         this.args = args;
     }

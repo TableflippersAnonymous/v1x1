@@ -15,9 +15,9 @@ import java.util.concurrent.Future;
  * Created by cobi on 10/16/2016.
  */
 public class TmiServiceClient extends ServiceClient<SendMessageRequest, SendMessageResponse> {
-    private String channel;
+    private final String channel;
 
-    public TmiServiceClient(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, String channel) {
+    public TmiServiceClient(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, final String channel) {
         super(module, SendMessageResponse.class);
         this.channel = channel;
     }
@@ -27,7 +27,7 @@ public class TmiServiceClient extends ServiceClient<SendMessageRequest, SendMess
         return "Core|TMI|Channel|" + channel;
     }
 
-    public Future<SendMessageResponse> sendMessage(Channel channel, String text) {
+    public Future<SendMessageResponse> sendMessage(final Channel channel, final String text) {
         return send(new SendMessageRequest(getModule(), getQueueName(), channel, text));
     }
 }

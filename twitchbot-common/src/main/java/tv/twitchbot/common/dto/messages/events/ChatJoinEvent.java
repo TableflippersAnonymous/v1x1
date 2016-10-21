@@ -12,22 +12,22 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public abstract class ChatJoinEvent extends Event {
-    public static ChatJoinEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.ChatJoinEvent chatJoinEvent) {
-        User user = User.fromProto(chatJoinEvent.getUser());
-        Channel channel = Channel.fromProto(chatJoinEvent.getChannel());
+    public static ChatJoinEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.ChatJoinEvent chatJoinEvent) {
+        final User user = User.fromProto(chatJoinEvent.getUser());
+        final Channel channel = Channel.fromProto(chatJoinEvent.getChannel());
         switch(chatJoinEvent.getType()) {
             case TWITCH: return TwitchChatJoinEvent.fromProto(module, uuid, timestamp, user, channel, chatJoinEvent.getExtension(EventOuterClass.TwitchChatJoinEvent.data));
             default: throw new IllegalStateException("Unknown ChatJoinEvent type: " + chatJoinEvent.getType());
         }
     }
 
-    private User user;
-    private Channel channel;
+    private final User user;
+    private final Channel channel;
 
     /**
      * Construct a new event using the current time and a random UUID
      */
-    public ChatJoinEvent(Module from, User user, Channel channel) {
+    public ChatJoinEvent(final Module from, final User user, final Channel channel) {
         super(from);
         this.user = user;
         this.channel = channel;
@@ -37,7 +37,7 @@ public abstract class ChatJoinEvent extends Event {
      * Construct a new event using your own UUID and time
      * For example, for deserialization of a saved event
      */
-    public ChatJoinEvent(Module from, UUID messageId, long timestamp, User user, Channel channel) {
+    public ChatJoinEvent(final Module from, final UUID messageId, final long timestamp, final User user, final Channel channel) {
         super(from, messageId, timestamp);
         this.user = user;
         this.channel = channel;

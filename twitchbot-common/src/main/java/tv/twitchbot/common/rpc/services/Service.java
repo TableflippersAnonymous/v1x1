@@ -20,12 +20,12 @@ import java.util.concurrent.Executors;
  */
 public abstract class Service<T extends Request, U extends Response<T>> implements Comparable<Service<T, U>> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module;
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
-    private String serviceName;
-    private Class<T> requestClass;
+    private final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module;
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final String serviceName;
+    private final Class<T> requestClass;
 
-    public Service(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, String serviceName, final Class<T> requestClass) {
+    public Service(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, final String serviceName, final Class<T> requestClass) {
         this.module = module;
         this.serviceName = serviceName;
         this.requestClass = requestClass;
@@ -35,31 +35,30 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
         executorService.submit(new Runnable() {
             @Override
             public void run() {
-                MessageQueue messageQueue = module.getMessageQueueManager().forName(getServiceQueue());
+                final MessageQueue messageQueue = module.getMessageQueueManager().forName(getServiceQueue());
                 for(;;) {
                     try {
-                        Message m = messageQueue.get();
+                        final Message m = messageQueue.get();
                         if(!requestClass.isInstance(m)) {
                             LOG.warn("Invalid class seen on request queue: {} expected: {}", m.getClass().getCanonicalName(), requestClass.getCanonicalName());
                             continue;
                         }
-                        T request = (T) m;
+                        @SuppressWarnings("unchecked") final T request = (T) m;
                         handleRequest(request);
-                    } catch (InterruptedException e) {
+                    } catch (final InterruptedException e) {
                         break;
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         e.printStackTrace();
-                        continue;
                     }
                 }
             }
         });
     }
 
-    protected void handleRequest(T request) {
+    protected void handleRequest(final T request) {
         try {
             module.send(request.getResponseQueueName(), call(request));
-        } catch(Exception e) {
+        } catch(final Exception e) {
             LOG.warn("Got exception while responding to request.", e);
             throw e;
         }
@@ -80,7 +79,7 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
     }
 
     @Override
-    public int compareTo(Service<T, U> o) {
+    public int compareTo(final Service<T, U> o) {
         return serviceName.compareTo(o.serviceName);
     }
 }

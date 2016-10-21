@@ -8,34 +8,34 @@ import tv.twitchbot.common.dto.db.KeyValueEntry;
  * Created by cobi on 10/17/2016.
  */
 public class PersistentKeyValueStoreImpl implements KeyValueStore {
-    private DAOKeyValueEntry daoKeyValueEntry;
-    private String name;
+    private final DAOKeyValueEntry daoKeyValueEntry;
+    private final String name;
 
-    public PersistentKeyValueStoreImpl(DAOKeyValueEntry daoKeyValueEntry, String name) {
+    public PersistentKeyValueStoreImpl(final DAOKeyValueEntry daoKeyValueEntry, final String name) {
         this.daoKeyValueEntry = daoKeyValueEntry;
         this.name = name;
     }
 
-    public PersistentKeyValueStoreImpl(DAOKeyValueEntry daoKeyValueEntry, Module module) {
+    public PersistentKeyValueStoreImpl(final DAOKeyValueEntry daoKeyValueEntry, final Module module) {
         this(daoKeyValueEntry, "Module|" + module.getName());
     }
 
-    public PersistentKeyValueStoreImpl(DAOKeyValueEntry daoKeyValueEntry) {
+    public PersistentKeyValueStoreImpl(final DAOKeyValueEntry daoKeyValueEntry) {
         this(daoKeyValueEntry, "__GLOBAL__");
     }
 
     @Override
-    public void put(byte[] key, byte[] value) {
+    public void put(final byte[] key, final byte[] value) {
         daoKeyValueEntry.put(new KeyValueEntry(name, key, value));
     }
 
     @Override
-    public byte[] get(byte[] key) {
+    public byte[] get(final byte[] key) {
         return daoKeyValueEntry.get(name, key).getValue();
     }
 
     @Override
-    public void delete(byte[] key) {
+    public void delete(final byte[] key) {
         daoKeyValueEntry.delete(new KeyValueEntry(name, key, null));
     }
 }

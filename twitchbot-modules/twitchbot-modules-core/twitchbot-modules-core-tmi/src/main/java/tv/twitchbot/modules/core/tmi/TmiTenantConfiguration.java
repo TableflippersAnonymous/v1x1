@@ -17,7 +17,7 @@ public class TmiTenantConfiguration extends TenantConfiguration {
     }
 
     @JsonProperty("custom_bot")
-    public void setCustomBot(boolean customBot) {
+    public void setCustomBot(final boolean customBot) {
         this.customBot = customBot;
     }
 
@@ -27,7 +27,7 @@ public class TmiTenantConfiguration extends TenantConfiguration {
     }
 
     @JsonProperty("bot_name")
-    public void setBotName(String botName) {
+    public void setBotName(final String botName) {
         this.botName = botName;
     }
 
@@ -37,7 +37,7 @@ public class TmiTenantConfiguration extends TenantConfiguration {
     }
 
     @JsonProperty("oauth_token")
-    public void setOauthToken(String oauthToken) {
+    public void setOauthToken(final String oauthToken) {
         this.oauthToken = oauthToken;
     }
 }

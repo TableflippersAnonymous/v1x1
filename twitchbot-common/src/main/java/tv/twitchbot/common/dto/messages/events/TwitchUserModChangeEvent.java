@@ -11,21 +11,21 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchUserModChangeEvent extends Event {
-    public static TwitchUserModChangeEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchUserModChangeEvent twitchUserModChangeEvent) {
-        TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchUserModChangeEvent.getChannel());
-        TwitchUser user = (TwitchUser) User.fromProto(twitchUserModChangeEvent.getUser());
-        boolean isNowMod = twitchUserModChangeEvent.getIsNowMod();
-        ModeCommand modeCommand = (ModeCommand) IrcStanza.fromProto(twitchUserModChangeEvent.getModeCommand());
+    public static TwitchUserModChangeEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchUserModChangeEventOrBuilder twitchUserModChangeEvent) {
+        final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchUserModChangeEvent.getChannel());
+        final TwitchUser user = (TwitchUser) User.fromProto(twitchUserModChangeEvent.getUser());
+        final boolean isNowMod = twitchUserModChangeEvent.getIsNowMod();
+        final ModeCommand modeCommand = (ModeCommand) IrcStanza.fromProto(twitchUserModChangeEvent.getModeCommand());
         return new TwitchUserModChangeEvent(module, uuid, timestamp, channel, user, isNowMod, modeCommand);
     }
 
-    private TwitchChannel channel;
-    private TwitchUser user;
-    private boolean isNowMod;
+    private final TwitchChannel channel;
+    private final TwitchUser user;
+    private final boolean isNowMod;
 
-    private ModeCommand modeCommand;
+    private final ModeCommand modeCommand;
 
-    public TwitchUserModChangeEvent(Module from, TwitchChannel channel, TwitchUser user, boolean isNowMod, ModeCommand modeCommand) {
+    public TwitchUserModChangeEvent(final Module from, final TwitchChannel channel, final TwitchUser user, final boolean isNowMod, final ModeCommand modeCommand) {
         super(from);
         this.channel = channel;
         this.user = user;
@@ -33,7 +33,7 @@ public class TwitchUserModChangeEvent extends Event {
         this.modeCommand = modeCommand;
     }
 
-    public TwitchUserModChangeEvent(Module from, UUID messageId, long timestamp, TwitchChannel channel, TwitchUser user, boolean isNowMod, ModeCommand modeCommand) {
+    public TwitchUserModChangeEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final TwitchUser user, final boolean isNowMod, final ModeCommand modeCommand) {
         super(from, messageId, timestamp);
         this.channel = channel;
         this.user = user;

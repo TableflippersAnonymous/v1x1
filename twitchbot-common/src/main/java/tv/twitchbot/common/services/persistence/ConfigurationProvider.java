@@ -17,12 +17,12 @@ import java.util.concurrent.TimeUnit;
  * Created by cobi on 10/17/2016.
  */
 public class ConfigurationProvider<T extends GlobalConfiguration> {
-    private LoadingCache<Module, T> cache;
-    private DAOGlobalConfiguration daoGlobalConfiguration;
-    private ObjectMapper mapper;
-    private Module module;
+    private final LoadingCache<Module, T> cache;
+    private final DAOGlobalConfiguration daoGlobalConfiguration;
+    private final ObjectMapper mapper;
+    private final Module module;
 
-    public ConfigurationProvider(Module module, DAOManager daoManager, Class<T> clazz) {
+    public ConfigurationProvider(final Module module, final DAOManager daoManager, final Class<T> clazz) {
         daoGlobalConfiguration = daoManager.getDaoGlobalConfiguration();
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
@@ -30,8 +30,8 @@ public class ConfigurationProvider<T extends GlobalConfiguration> {
                 .expireAfterWrite(10, TimeUnit.SECONDS)
                 .build(new CacheLoader<Module, T>() {
                     @Override
-                    public T load(Module module1) throws Exception {
-                        tv.twitchbot.common.dto.db.GlobalConfiguration globalConfiguration = daoGlobalConfiguration.get(module);
+                    public T load(final Module module1) throws Exception {
+                        final tv.twitchbot.common.dto.db.GlobalConfiguration globalConfiguration = daoGlobalConfiguration.get(module);
                         if(globalConfiguration == null)
                             return mapper.readValue("{}", clazz);
                         return mapper.readValue(globalConfiguration.getJson(), clazz);
@@ -42,16 +42,16 @@ public class ConfigurationProvider<T extends GlobalConfiguration> {
     public T getConfiguration() {
         try {
             return cache.get(module);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void save(T configuration) {
+    public void save(final T configuration) {
         try {
-            tv.twitchbot.common.dto.db.GlobalConfiguration dbConfiguration = new tv.twitchbot.common.dto.db.GlobalConfiguration(module.getName(), mapper.writeValueAsString(configuration));
+            final tv.twitchbot.common.dto.db.GlobalConfiguration dbConfiguration = new tv.twitchbot.common.dto.db.GlobalConfiguration(module.getName(), mapper.writeValueAsString(configuration));
             daoGlobalConfiguration.put(dbConfiguration);
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }

@@ -20,21 +20,21 @@ public class EventRouterModule extends ThreadedModule<EventRouterSettings, Event
             .expireAfterWrite(2, TimeUnit.SECONDS)
             .build(new CacheLoader<String, Set<Module>>() {
                 @Override
-                public Set<Module> load(String s) throws Exception {
+                public Set<Module> load(final String s) throws Exception {
                     return getModuleRegistry().modules();
                 }
             });
 
     @Override
-    protected void processMessage(Message message) {
+    protected void processMessage(final Message message) {
         if(!(message instanceof Event))
             return;
 
         try {
-            Set<Module> modules = moduleCache.get("modules");
-            for(Module module : modules)
+            final Set<Module> modules = moduleCache.get("modules");
+            for(final Module module : modules)
                 send(getMainQueueForModule(module), message);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
@@ -49,7 +49,7 @@ public class EventRouterModule extends ThreadedModule<EventRouterSettings, Event
 
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         new EventRouterModule().entryPoint(args);
     }
 }
