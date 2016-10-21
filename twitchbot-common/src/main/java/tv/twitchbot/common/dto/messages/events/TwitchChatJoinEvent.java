@@ -14,19 +14,19 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchChatJoinEvent extends ChatJoinEvent {
-    public static TwitchChatJoinEvent fromProto(Module module, UUID uuid, long timestamp, User user, Channel channel, EventOuterClass.TwitchChatJoinEvent twitchChatJoinEvent) {
-        JoinCommand joinCommand = (JoinCommand) IrcStanza.fromProto(twitchChatJoinEvent.getJoinCommand());
+    public static TwitchChatJoinEvent fromProto(final Module module, final UUID uuid, final long timestamp, final User user, final Channel channel, final EventOuterClass.TwitchChatJoinEventOrBuilder twitchChatJoinEvent) {
+        final JoinCommand joinCommand = (JoinCommand) IrcStanza.fromProto(twitchChatJoinEvent.getJoinCommand());
         return new TwitchChatJoinEvent(module, uuid, timestamp, user, channel, joinCommand);
     }
 
-    private JoinCommand joinCommand;
+    private final JoinCommand joinCommand;
 
-    public TwitchChatJoinEvent(Module from, User user, Channel channel, JoinCommand joinCommand) {
+    public TwitchChatJoinEvent(final Module from, final User user, final Channel channel, final JoinCommand joinCommand) {
         super(from, user, channel);
         this.joinCommand = joinCommand;
     }
 
-    public TwitchChatJoinEvent(Module from, UUID messageId, long timestamp, User user, Channel channel, JoinCommand joinCommand) {
+    public TwitchChatJoinEvent(final Module from, final UUID messageId, final long timestamp, final User user, final Channel channel, final JoinCommand joinCommand) {
         super(from, messageId, timestamp, user, channel);
         this.joinCommand = joinCommand;
     }

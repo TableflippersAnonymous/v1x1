@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 public abstract class EmoteSetIrcStanza extends TaggedIrcStanza {
     private Set<Integer> emoteSets = new HashSet<>();
 
-    public EmoteSetIrcStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcCommand command, String rawArgs, String[] args) {
+    public EmoteSetIrcStanza(final String rawLine, final Map<String, String> tags, final IrcSource source, final IrcCommand command, final String rawArgs, final String[] args) {
         super(rawLine, tags, source, command, rawArgs, args);
         if(tags.containsKey("emote-sets") && !tags.get("emote-sets").isEmpty())
             emoteSets = Arrays.asList(tags.get("emote-sets").split(",")).stream().map(Integer::valueOf).collect(Collectors.toSet());

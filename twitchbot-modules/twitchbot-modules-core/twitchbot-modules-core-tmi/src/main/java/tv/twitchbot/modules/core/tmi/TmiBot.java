@@ -27,7 +27,6 @@ public class TmiBot implements Runnable {
 
     private volatile boolean running;
     private volatile Socket socket;
-    private volatile InputStream inputStream;
     private volatile BufferedReader reader;
     private volatile BufferedOutputStream outputStream;
     private final String oauthToken;
@@ -43,9 +42,9 @@ public class TmiBot implements Runnable {
     private final String channel;
     private final UUID id = UUID.randomUUID();
 
-    public TmiBot(String username, String oauthToken, MessageQueue queue,
-                  Module module, RateLimiter joinLimiter, RateLimiter messageLimiter,
-                  Deduplicator deduplicator, TmiModule tmiModule, String channel) {
+    public TmiBot(final String username, final String oauthToken, final MessageQueue queue,
+                  final Module module, final RateLimiter joinLimiter, final RateLimiter messageLimiter,
+                  final Deduplicator deduplicator, final TmiModule tmiModule, final String channel) {
         this.oauthToken = oauthToken;
         this.username = username;
         this.module = module;
@@ -74,14 +73,14 @@ public class TmiBot implements Runnable {
                 log("Init: Attempting join");
                 joinChannels();
                 for(;;) {
-                    String line = getLine();
+                    final String line = getLine();
                     if (line == null)
                         break;
                     processLine(line);
                 }
                 log("Init: Attempting disconnect");
                 disconnect();
-            } catch (Exception e) {
+            } catch (final Exception e) {
                 e.printStackTrace();
             } finally {
                 log("Init: Attempting cleanup");
@@ -106,9 +105,9 @@ public class TmiBot implements Runnable {
         sendLine("CAP REQ :twitch.tv/tags");
     }
 
-    private void processLine(String line) throws IOException {
+    private void processLine(final String line) throws IOException {
         log("Read: " + line);
-        IrcStanza stanza = IrcParser.parse(line);
+        final IrcStanza stanza = IrcParser.parse(line);
         if(stanza == null)
             return;
         if(stanza instanceof PingCommand)
@@ -122,10 +121,10 @@ public class TmiBot implements Runnable {
         event(stanza);
     }
 
-    private void handleJoin(JoinCommand stanza) {
+    private void handleJoin(final JoinCommand stanza) {
         if(!(stanza.getSource() instanceof IrcUser))
             return;
-        IrcUser user = (IrcUser) stanza.getSource();
+        final IrcUser user = (IrcUser) stanza.getSource();
         if(!user.getNickname().equals(username))
             return;
         if(!stanza.getChannel().equals(channel))
@@ -133,10 +132,10 @@ public class TmiBot implements Runnable {
         registerService();
     }
 
-    private void handlePart(PartCommand stanza) {
+    private void handlePart(final PartCommand stanza) {
         if(!(stanza.getSource() instanceof IrcUser))
             return;
-        IrcUser user = (IrcUser) stanza.getSource();
+        final IrcUser user = (IrcUser) stanza.getSource();
         if(!user.getNickname().equals(username))
             return;
         if(!stanza.getChannel().equals(channel))
@@ -144,11 +143,11 @@ public class TmiBot implements Runnable {
         unregisterService();
     }
 
-    private void event(Event event) {
+    private void event(final Event event) {
         messageQueue.add(event);
     }
 
-    private void event(IrcStanza stanza) {
+    private void event(final IrcStanza stanza) {
         event(new TwitchRawMessageEvent(module, bot, stanza));
         if(stanza instanceof ClearChatCommand)
             event((ClearChatCommand) stanza);
@@ -184,73 +183,73 @@ public class TmiBot implements Runnable {
             throw new IllegalStateException("Unknown IrcStanza: " + stanza.getClass().getCanonicalName());
     }
 
-    private void event(ClearChatCommand clearChatCommand) {
+    private void event(final ClearChatCommand clearChatCommand) {
         event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand.getChannel()), getUser(clearChatCommand.getNickname()), clearChatCommand));
     }
 
-    private void event(GlobalUserStateCommand globalUserStateCommand) {
+    private void event(final GlobalUserStateCommand globalUserStateCommand) {
         event(new TwitchBotGlobalStateEvent(module, bot, globalUserStateCommand));
     }
 
-    private void event(HostTargetCommand hostTargetCommand) {
+    private void event(final HostTargetCommand hostTargetCommand) {
         event(new TwitchHostEvent(module, getChannel(hostTargetCommand.getChannel()), getChannel(hostTargetCommand.getTargetChannel()), hostTargetCommand));
     }
 
-    private void event(JoinCommand joinCommand) {
+    private void event(final JoinCommand joinCommand) {
         event(new TwitchChatJoinEvent(module, getUser(joinCommand), getChannel(joinCommand.getChannel()), joinCommand));
     }
 
-    private void event(ModeCommand modeCommand) {
-        for(String username : modeCommand.getNicknames())
+    private void event(final ModeCommand modeCommand) {
+        for(final String username : modeCommand.getNicknames())
             event(new TwitchUserModChangeEvent(module, getChannel(modeCommand.getChannel()), getUser(username), modeCommand.getModeString().startsWith("+"), modeCommand));
     }
 
-    private void event(NoticeCommand noticeCommand) {
+    private void event(final NoticeCommand noticeCommand) {
         event(new TwitchChannelEvent(module, getChannel(noticeCommand.getChannel()), noticeCommand.getMessage(), noticeCommand));
     }
 
-    private void event(PartCommand partCommand) {
+    private void event(final PartCommand partCommand) {
         event(new TwitchChatPartEvent(module, getUser(partCommand), getChannel(partCommand.getChannel()), partCommand));
     }
 
-    private void event(PingCommand pingCommand) {
+    private void event(final PingCommand pingCommand) {
         event(new TwitchPingEvent(module, pingCommand.getToken(), pingCommand));
     }
 
-    private void event(PrivmsgCommand privmsgCommand) {
-        TwitchChannel channel = getChannel(privmsgCommand.getChannel());
-        TwitchUser user = getUser(privmsgCommand);
+    private void event(final PrivmsgCommand privmsgCommand) {
+        final TwitchChannel channel = getChannel(privmsgCommand.getChannel());
+        final TwitchUser user = getUser(privmsgCommand);
         if(user.getId().equals(username))
             return;
         event(new TwitchChatMessageEvent(module, new ChatMessage(channel, user, privmsgCommand.getMessage(), tmiModule.getPermissions(channel.getTenant(), user.getGlobalUser())), privmsgCommand));
     }
 
-    private void event(ReconnectCommand reconnectCommand) {
+    private void event(final ReconnectCommand reconnectCommand) {
         event(new TwitchReconnectEvent(module, bot, reconnectCommand));
     }
 
-    private void event(RoomStateCommand roomStateCommand) {
+    private void event(final RoomStateCommand roomStateCommand) {
         event(new TwitchRoomStateEvent(module, getChannel(roomStateCommand.getChannel()), roomStateCommand));
     }
 
-    private void event(RplEndOfMotdCommand rplEndOfMotdCommand) {
+    private void event(final RplEndOfMotdCommand rplEndOfMotdCommand) {
         event(new TwitchBotConnectedEvent(module, bot, rplEndOfMotdCommand));
     }
 
-    private void event(RplNameReplyCommand rplNameReplyCommand) {
+    private void event(final RplNameReplyCommand rplNameReplyCommand) {
         event(new TwitchChannelUsersEvent(module, getChannel(rplNameReplyCommand.getChannel()), rplNameReplyCommand.getMembers().stream().map(member -> getUser(member.getNickname())).collect(Collectors.toList()), rplNameReplyCommand));
     }
 
-    private void event(UserNoticeCommand userNoticeCommand) {
+    private void event(final UserNoticeCommand userNoticeCommand) {
         event(new TwitchUserEvent(module, getChannel(userNoticeCommand.getChannel()), getUser(userNoticeCommand.getLogin()), userNoticeCommand.getMessage(), userNoticeCommand));
     }
 
-    private void event(UserStateCommand userStateCommand) {
+    private void event(final UserStateCommand userStateCommand) {
         event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand.getChannel()), bot, userStateCommand));
     }
 
-    private TwitchUser getUser(IrcStanza stanza) {
-        IrcSource source = stanza.getSource();
+    private TwitchUser getUser(final IrcStanza stanza) {
+        final IrcSource source = stanza.getSource();
         if(source instanceof IrcUser)
             return getUser(((IrcUser) source).getNickname(), stanza.getTags().get("display-name"));
         else if(stanza.getTags().containsKey("login"))
@@ -258,26 +257,26 @@ public class TmiBot implements Runnable {
         throw new IllegalArgumentException("Not able to find a TwitchUser in stanza: " + stanza.getRawLine());
     }
 
-    private TwitchUser getUser(String id) {
+    private TwitchUser getUser(final String id) {
         return getUser(id, null);
     }
 
-    private TwitchUser getUser(String id, String displayName) {
+    private TwitchUser getUser(final String id, final String displayName) {
         return new TwitchUser(id, tmiModule.getGlobalUser(id), displayName == null ? id : displayName);
     }
 
-    private TwitchChannel getChannel(String id) {
+    private TwitchChannel getChannel(final String id) {
         return new TwitchChannel(id, tmiModule.getTenant(id), id);
     }
 
     private void connect() throws IOException {
         socket = new Socket("irc.chat.twitch.tv", 6667);
-        inputStream = socket.getInputStream();
+        final InputStream inputStream = socket.getInputStream();
         reader = new BufferedReader(new InputStreamReader(inputStream));
         outputStream = new BufferedOutputStream(socket.getOutputStream());
     }
 
-    private void sendLine(String line) throws IOException {
+    private void sendLine(final String line) throws IOException {
         log("Write: " + line);
         outputStream.write((line + "\r\n").getBytes());
         outputStream.flush();
@@ -289,7 +288,7 @@ public class TmiBot implements Runnable {
                 sendLine("PASS :" + oauthToken);
                 sendLine("USER " + username + " \"twitchbot.tv\" \"irc.chat.twitch.tv\" :" + username);
                 sendLine("NICK " + username);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -299,17 +298,17 @@ public class TmiBot implements Runnable {
         join(channel);
     }
 
-    private void join(String channel) throws IOException, InterruptedException {
+    private void join(final String channel) throws IOException, InterruptedException {
         joinLimiter.submitAndWait(() -> {
             try {
                 sendLine("JOIN " + channel);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private void part(String channel) throws IOException {
+    private void part(final String channel) throws IOException {
         sendLine("PART " + channel);
     }
 
@@ -326,11 +325,11 @@ public class TmiBot implements Runnable {
         quit();
     }
 
-    public void sendMessage(String channel, String text) throws IOException, InterruptedException {
+    public void sendMessage(final String channel, final String text) throws IOException, InterruptedException {
         messageLimiter.submitAndWait(() -> {
             try {
                 sendLine("PRIVMSG " + channel + " :" + text);
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -346,7 +345,7 @@ public class TmiBot implements Runnable {
             service.shutdown();
     }
 
-    private void log(String m) {
+    private void log(final String m) {
         LOG.info("[{}:{}] [{}] {}", username, id, channel, m);
     }
 }

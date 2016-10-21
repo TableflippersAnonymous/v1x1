@@ -12,18 +12,18 @@ import java.util.stream.Collectors;
  * @author Naomi
  */
 public class GlobalUser {
-    public static GlobalUser fromProto(UserOuterClass.GlobalUser proto) {
-        List<User> list = new ArrayList<>();
-        UUID uuid = UUID.fromProto(proto.getId());
-        GlobalUser globalUser = new GlobalUser(uuid, list);
+    public static GlobalUser fromProto(final UserOuterClass.GlobalUserOrBuilder proto) {
+        final List<User> list = new ArrayList<>();
+        final UUID uuid = UUID.fromProto(proto.getId());
+        final GlobalUser globalUser = new GlobalUser(uuid, list);
         list.addAll(proto.getEntriesList().stream().map(entry -> User.fromProto(globalUser, entry)).collect(Collectors.toList()));
         return globalUser;
     }
 
-    private UUID id;
-    private List<User> entries;
+    private final UUID id;
+    private final List<User> entries;
 
-    public GlobalUser(UUID id, List<User> entries) {
+    public GlobalUser(final UUID id, final List<User> entries) {
         this.id = id;
         this.entries = entries;
     }
@@ -48,11 +48,11 @@ public class GlobalUser {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        GlobalUser that = (GlobalUser) o;
+        final GlobalUser that = (GlobalUser) o;
 
         return id != null ? id.equals(that.id) : that.id == null;
 

@@ -12,26 +12,26 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#notice">Twitch-API Documentation</a>
  */
 public class TwitchChannelEvent extends Event {
-    public static TwitchChannelEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchChannelEvent twitchChannelEvent) {
-        TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelEvent.getChannel());
-        String message = twitchChannelEvent.getMessage();
-        NoticeCommand noticeCommand = (NoticeCommand) IrcStanza.fromProto(twitchChannelEvent.getNoticeCommand());
+    public static TwitchChannelEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchChannelEventOrBuilder twitchChannelEvent) {
+        final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelEvent.getChannel());
+        final String message = twitchChannelEvent.getMessage();
+        final NoticeCommand noticeCommand = (NoticeCommand) IrcStanza.fromProto(twitchChannelEvent.getNoticeCommand());
         return new TwitchChannelEvent(module, uuid, timestamp, channel, message, noticeCommand);
     }
 
-    private TwitchChannel channel;
-    private String message;
+    private final TwitchChannel channel;
+    private final String message;
 
-    private NoticeCommand noticeCommand;
+    private final NoticeCommand noticeCommand;
 
-    public TwitchChannelEvent(Module from, TwitchChannel channel, String message, NoticeCommand noticeCommand) {
+    public TwitchChannelEvent(final Module from, final TwitchChannel channel, final String message, final NoticeCommand noticeCommand) {
         super(from);
         this.channel = channel;
         this.message = message;
         this.noticeCommand = noticeCommand;
     }
 
-    public TwitchChannelEvent(Module from, UUID messageId, long timestamp, TwitchChannel channel, String message, NoticeCommand noticeCommand) {
+    public TwitchChannelEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final String message, final NoticeCommand noticeCommand) {
         super(from, messageId, timestamp);
         this.channel = channel;
         this.message = message;

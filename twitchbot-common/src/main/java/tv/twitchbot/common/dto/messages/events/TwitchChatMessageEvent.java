@@ -13,19 +13,19 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchChatMessageEvent extends ChatMessageEvent {
-    public static TwitchChatMessageEvent fromProto(Module module, UUID uuid, long timestamp, ChatMessage chatMessage, EventOuterClass.TwitchChatMessageEvent twitchChatMessageEvent) {
-        PrivmsgCommand privmsgCommand = (PrivmsgCommand) IrcStanza.fromProto(twitchChatMessageEvent.getPrivmsgCommand());
+    public static TwitchChatMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final ChatMessage chatMessage, final EventOuterClass.TwitchChatMessageEventOrBuilder twitchChatMessageEvent) {
+        final PrivmsgCommand privmsgCommand = (PrivmsgCommand) IrcStanza.fromProto(twitchChatMessageEvent.getPrivmsgCommand());
         return new TwitchChatMessageEvent(module, uuid, timestamp, chatMessage, privmsgCommand);
     }
 
-    private PrivmsgCommand privmsgCommand;
+    private final PrivmsgCommand privmsgCommand;
 
-    public TwitchChatMessageEvent(Module from, ChatMessage chatMessage, PrivmsgCommand privmsgCommand) {
+    public TwitchChatMessageEvent(final Module from, final ChatMessage chatMessage, final PrivmsgCommand privmsgCommand) {
         super(from, chatMessage);
         this.privmsgCommand = privmsgCommand;
     }
 
-    public TwitchChatMessageEvent(Module from, UUID messageId, long timestamp, ChatMessage chatMessage, PrivmsgCommand privmsgCommand) {
+    public TwitchChatMessageEvent(final Module from, final UUID messageId, final long timestamp, final ChatMessage chatMessage, final PrivmsgCommand privmsgCommand) {
         super(from, messageId, timestamp, chatMessage);
         this.privmsgCommand = privmsgCommand;
     }

@@ -9,9 +9,9 @@ import tv.twitchbot.common.dto.messages.Message;
  */
 public class MessageQueueImpl implements MessageQueue {
 
-    private RBlockingQueue<byte[]> blockingQueue;
+    private final RBlockingQueue<byte[]> blockingQueue;
 
-    public MessageQueueImpl(RBlockingQueue<byte[]> blockingQueue) {
+    public MessageQueueImpl(final RBlockingQueue<byte[]> blockingQueue) {
         this.blockingQueue = blockingQueue;
     }
 
@@ -21,7 +21,7 @@ public class MessageQueueImpl implements MessageQueue {
     }
 
     @Override
-    public void add(Message message) {
+    public void add(final Message message) {
         blockingQueue.add(message.toBytes());
     }
 }

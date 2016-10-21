@@ -10,22 +10,22 @@ import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
  * Created by naomi on 10/5/16.
  */
 public class SendMessageRequest extends Request {
-    public static SendMessageRequest fromProto(Module module, UUID uuid, long timestamp, String responseQueueName, RequestOuterClass.SendMessageRequest sendMessageRequest) {
-        Channel destination = Channel.fromProto(sendMessageRequest.getDestination());
-        String text = sendMessageRequest.getText();
+    public static SendMessageRequest fromProto(final Module module, final UUID uuid, final long timestamp, final String responseQueueName, final RequestOuterClass.SendMessageRequestOrBuilder sendMessageRequest) {
+        final Channel destination = Channel.fromProto(sendMessageRequest.getDestination());
+        final String text = sendMessageRequest.getText();
         return new SendMessageRequest(module, uuid, timestamp, responseQueueName, destination, text);
     }
 
-    private Channel destination;
-    private String text;
+    private final Channel destination;
+    private final String text;
 
-    public SendMessageRequest(Module from, String responseQueueName, Channel destination, String text) {
+    public SendMessageRequest(final Module from, final String responseQueueName, final Channel destination, final String text) {
         super(from, responseQueueName);
         this.destination = destination;
         this.text = text;
     }
 
-    public SendMessageRequest(Module from, UUID messageId, long timestamp, String responseQueueName, Channel destination, String text) {
+    public SendMessageRequest(final Module from, final UUID messageId, final long timestamp, final String responseQueueName, final Channel destination, final String text) {
         super(from, messageId, timestamp, responseQueueName);
         this.destination = destination;
         this.text = text;

@@ -1,8 +1,12 @@
 package tv.twitchbot.common.dto.db;
 
-import com.datastax.driver.mapping.annotations.*;
-import tv.twitchbot.common.dto.core.Permission;
+import com.datastax.driver.mapping.annotations.ClusteringColumn;
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
+import com.datastax.driver.mapping.annotations.UDT;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -18,7 +22,7 @@ public class TenantUserPermissions {
         public Permission() {
         }
 
-        public Permission(String node) {
+        public Permission(final String node) {
             this.node = node;
         }
 
@@ -31,11 +35,11 @@ public class TenantUserPermissions {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            Permission that = (Permission) o;
+            final Permission that = (Permission) o;
 
             return node != null ? node.equals(that.node) : that.node == null;
 
@@ -58,7 +62,7 @@ public class TenantUserPermissions {
     public TenantUserPermissions() {
     }
 
-    public TenantUserPermissions(UUID tenantId, UUID userId, List<Permission> permissions) {
+    public TenantUserPermissions(final UUID tenantId, final UUID userId, final List<Permission> permissions) {
         this.tenantId = tenantId;
         this.userId = userId;
         this.permissions = permissions;
@@ -72,7 +76,7 @@ public class TenantUserPermissions {
         return userId;
     }
 
-    public List<Permission> getPermissions() {
+    public Collection<Permission> getPermissions() {
         return permissions;
     }
 }

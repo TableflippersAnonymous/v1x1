@@ -9,17 +9,17 @@ import tv.twitchbot.common.dto.db.GlobalConfiguration;
  * Created by naomi on 10/17/2016.
  */
 public class DAOGlobalConfiguration {
-    private Mapper<GlobalConfiguration> mapper;
+    private final Mapper<GlobalConfiguration> mapper;
 
-    public DAOGlobalConfiguration(MappingManager mappingManager) {
+    public DAOGlobalConfiguration(final MappingManager mappingManager) {
         mapper = mappingManager.mapper(GlobalConfiguration.class);
     }
 
-    public GlobalConfiguration get(Module module) {
+    public GlobalConfiguration get(final Module module) {
         return mapper.get(module.getName());
     }
 
-    public void put(GlobalConfiguration globalConfiguration) {
+    public void put(final GlobalConfiguration globalConfiguration) {
         mapper.save(globalConfiguration);
     }
 }

@@ -11,28 +11,28 @@ import java.util.UUID;
  */
 public class I18n {
     public static final Language DEFAULT_LANGUAGE = new StaticLanguage();
-    public static void registerDefault(Module module, String key, String message) {
+    public static void registerDefault(final Module module, final String key, final String message) {
         DEFAULT_LANGUAGE.set(module, key, message);
     }
-    private DAOManager daoManager;
+    private final DAOManager daoManager;
 
-    public I18n(DAOManager daoManager) {
+    public I18n(final DAOManager daoManager) {
         this.daoManager = daoManager;
     }
 
-    public static String getKey(Module module, String key) {
+    public static String getKey(final Module module, final String key) {
         return module.getName() + "." + key;
     }
 
-    public Language getLanguage(UUID id) {
+    public Language getLanguage(final UUID id) {
         if(id == null)
             return DEFAULT_LANGUAGE;
-        PersistentLanguage language = daoManager.getDaoLanguage().get(id);
+        final PersistentLanguage language = daoManager.getDaoLanguage().get(id);
         return (language != null ? language : DEFAULT_LANGUAGE);
     }
 
-    public Language createLanguage(UUID parentLanguage) {
-        Language language = new PersistentLanguage(parentLanguage);
+    public Language createLanguage(final UUID parentLanguage) {
+        final Language language = new PersistentLanguage(parentLanguage);
         /* Ask DAOLanguage nicely */
         return null;
     }

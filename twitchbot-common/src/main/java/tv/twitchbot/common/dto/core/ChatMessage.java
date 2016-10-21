@@ -10,20 +10,20 @@ import java.util.stream.Collectors;
  * @author Naomi
  */
 public class ChatMessage {
-    public static ChatMessage fromProto(ChatMessageOuterClass.ChatMessage message) {
-        Channel channel = Channel.fromProto(message.getChannel());
-        User sender = User.fromProto(message.getSender());
-        String text = message.getText();
-        List<Permission> permissions = message.getPermissionsList().stream().map(Permission::fromProto).collect(Collectors.toList());
+    public static ChatMessage fromProto(final ChatMessageOuterClass.ChatMessageOrBuilder message) {
+        final Channel channel = Channel.fromProto(message.getChannel());
+        final User sender = User.fromProto(message.getSender());
+        final String text = message.getText();
+        final List<Permission> permissions = message.getPermissionsList().stream().map(Permission::fromProto).collect(Collectors.toList());
         return new ChatMessage(channel, sender, text, permissions);
     }
 
-    private Channel channel;
-    private User sender;
-    private String text;
-    private List<Permission> permissions;
+    private final Channel channel;
+    private final User sender;
+    private final String text;
+    private final List<Permission> permissions;
 
-    public ChatMessage(Channel channel, User sender, String text, List<Permission> permissions) {
+    public ChatMessage(final Channel channel, final User sender, final String text, final List<Permission> permissions) {
         this.channel = channel;
         this.sender = sender;
         this.text = text;

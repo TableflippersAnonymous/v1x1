@@ -10,7 +10,7 @@ import tv.twitchbot.common.dto.proto.messages.MessageOuterClass;
  * Created by naomi on 10/4/16.
  */
 public abstract class Event extends Message {
-    public static Event fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.Event event) {
+    public static Event fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.Event event) {
         switch(event.getType()) {
             case CHAT_JOIN: return ChatJoinEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatJoinEvent.data));
             case CHAT_MESSAGE: return ChatMessageEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatMessageEvent.data));
@@ -32,11 +32,11 @@ public abstract class Event extends Message {
         }
     }
 
-    public Event(Module from) {
+    public Event(final Module from) {
         super(from);
     }
 
-    public Event(Module from, UUID messageId, long timestamp) {
+    public Event(final Module from, final UUID messageId, final long timestamp) {
         super(from, messageId, timestamp);
     }
 

@@ -15,7 +15,7 @@ import tv.twitchbot.common.dto.messages.responses.SendMessageResponse;
 public abstract class EasyThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends ThreadedModule<T, U, V> {
 
     @Override
-    protected void processMessage(Message message) {
+    protected void processMessage(final Message message) {
         if(message instanceof Event)
             processEvent((Event) message);
         else if(message instanceof Request)
@@ -26,7 +26,7 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
             throw new IllegalStateException("Unknown message type " + message.getClass().getCanonicalName());
     }
 
-    protected void processEvent(Event event) {
+    protected void processEvent(final Event event) {
         if(event instanceof ChatMessageEvent) {
             processChatMessageEvent((ChatMessageEvent) event);
             if(event instanceof TwitchChatMessageEvent)
@@ -107,7 +107,7 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
 
     protected abstract void processChatMessageEvent(ChatMessageEvent chatMessageEvent);
 
-    protected void processRequest(Request request) {
+    protected void processRequest(final Request request) {
         if(request instanceof SendMessageRequest) /* ModuleShutdownRequest is handled elsewhere */
             processSendMessageRequest((SendMessageRequest) request);
         else
@@ -116,7 +116,7 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
 
     protected abstract void processSendMessageRequest(SendMessageRequest sendMessageRequest);
 
-    protected void processResponse(Response response) {
+    protected void processResponse(final Response response) {
         if(response instanceof ModuleShutdownResponse)
             processModuleShutdownResponse((ModuleShutdownResponse) response);
         else if(response instanceof SendMessageResponse)

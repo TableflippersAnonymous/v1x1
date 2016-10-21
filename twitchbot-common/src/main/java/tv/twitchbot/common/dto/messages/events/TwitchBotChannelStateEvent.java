@@ -12,26 +12,26 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#userstate-1">Twitch-API documentation</a>
  */
 public class TwitchBotChannelStateEvent extends Event {
-    public static TwitchBotChannelStateEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchBotChannelStateEvent twitchBotChannelStateEvent) {
-        TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchBotChannelStateEvent.getChannel());
-        TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotChannelStateEvent.getBot());
-        UserStateCommand userStateCommand = (UserStateCommand) IrcStanza.fromProto(twitchBotChannelStateEvent.getUserStateCommand());
+    public static TwitchBotChannelStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotChannelStateEventOrBuilder twitchBotChannelStateEvent) {
+        final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchBotChannelStateEvent.getChannel());
+        final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotChannelStateEvent.getBot());
+        final UserStateCommand userStateCommand = (UserStateCommand) IrcStanza.fromProto(twitchBotChannelStateEvent.getUserStateCommand());
         return new TwitchBotChannelStateEvent(module, uuid, timestamp, channel, bot, userStateCommand);
     }
 
-    private TwitchChannel channel;
-    private TwitchBot bot;
+    private final TwitchChannel channel;
+    private final TwitchBot bot;
 
-    private UserStateCommand userStateCommand;
+    private final UserStateCommand userStateCommand;
 
-    public TwitchBotChannelStateEvent(Module from, TwitchChannel channel, TwitchBot bot, UserStateCommand userStateCommand) {
+    public TwitchBotChannelStateEvent(final Module from, final TwitchChannel channel, final TwitchBot bot, final UserStateCommand userStateCommand) {
         super(from);
         this.channel = channel;
         this.bot = bot;
         this.userStateCommand = userStateCommand;
     }
 
-    public TwitchBotChannelStateEvent(Module from, UUID messageId, long timestamp, TwitchChannel channel, TwitchBot bot, UserStateCommand userStateCommand) {
+    public TwitchBotChannelStateEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final TwitchBot bot, final UserStateCommand userStateCommand) {
         super(from, messageId, timestamp);
         this.channel = channel;
         this.bot = bot;

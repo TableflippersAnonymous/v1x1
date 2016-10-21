@@ -18,34 +18,34 @@ import java.util.stream.Collectors;
  * Created by naomi on 10/7/2016.
  */
 public class ModuleRegistry {
-    private ServiceDiscovery<ModuleInstance> serviceDiscovery;
+    private final ServiceDiscovery<ModuleInstance> serviceDiscovery;
 
-    public ModuleRegistry(CuratorFramework framework, final ModuleInstance moduleInstance) {
+    public ModuleRegistry(final CuratorFramework framework, final ModuleInstance moduleInstance) {
         try {
             serviceDiscovery = ServiceDiscoveryBuilder.builder(ModuleInstance.class)
                     .basePath("/twitchbot/module_registry")
                     .client(framework)
                     .serializer(new InstanceSerializer<ModuleInstance>() {
                         @Override
-                        public byte[] serialize(ServiceInstance<ModuleInstance> serviceInstance) throws Exception {
+                        public byte[] serialize(final ServiceInstance<ModuleInstance> serviceInstance) throws Exception {
                             return serviceInstance.getPayload().toProto().toByteArray();
                         }
 
                         @Override
-                        public ServiceInstance<ModuleInstance> deserialize(byte[] bytes) throws Exception {
-                            ModuleInstance instance = ModuleInstance.fromProto(ModuleOuterClass.ModuleInstance.parseFrom(bytes));
+                        public ServiceInstance<ModuleInstance> deserialize(final byte[] bytes) throws Exception {
+                            final ModuleInstance instance = ModuleInstance.fromProto(ModuleOuterClass.ModuleInstance.parseFrom(bytes));
                             return serviceInstanceFromModuleInstance(instance);
                         }
                     })
                     .thisInstance(serviceInstanceFromModuleInstance(moduleInstance))
                     .build();
             serviceDiscovery.start();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private ServiceInstance<ModuleInstance> serviceInstanceFromModuleInstance(ModuleInstance moduleInstance) throws Exception {
+    private ServiceInstance<ModuleInstance> serviceInstanceFromModuleInstance(final ModuleInstance moduleInstance) throws Exception {
         return ServiceInstance.<ModuleInstance>builder()
                 .id(moduleInstance.getId().getValue().toString())
                 .name(moduleInstance.getModule().getName())
@@ -58,15 +58,15 @@ public class ModuleRegistry {
     public Set<Module> modules() {
         try {
             return ImmutableSet.copyOf(serviceDiscovery.queryForNames().stream().map(Module::new).collect(Collectors.toList()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    public Set<ModuleInstance> getInstances(Module module) {
+    public Set<ModuleInstance> getInstances(final Module module) {
         try {
             return ImmutableSet.copyOf(serviceDiscovery.queryForInstances(module.getName()).stream().map(ServiceInstance::getPayload).collect(Collectors.toList()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }

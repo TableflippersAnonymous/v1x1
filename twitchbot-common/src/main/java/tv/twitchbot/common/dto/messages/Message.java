@@ -3,6 +3,7 @@ package tv.twitchbot.common.dto.messages;
 import com.google.protobuf.ExtensionRegistry;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.google.protobuf.MessageLite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.twitchbot.common.dto.core.Module;
@@ -21,7 +22,7 @@ import java.util.Date;
  */
 public abstract class Message {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static ExtensionRegistry extensionRegistry = ExtensionRegistry.newInstance();
+    private static final ExtensionRegistry extensionRegistry = ExtensionRegistry.newInstance();
 
     static {
         /* On Message */
@@ -82,24 +83,24 @@ public abstract class Message {
         Message.register(RequestOuterClass.SendMessageResponse.data);
     }
 
-    public static void register(GeneratedMessage.GeneratedExtension<?, ?> field) {
+    public static void register(final GeneratedMessage.GeneratedExtension<?, ?> field) {
         extensionRegistry.add(field);
     }
 
-    public static Message fromBytes(byte[] bytes) throws InvalidProtocolBufferException {
-        MessageOuterClass.Message message = MessageOuterClass.Message.parseFrom(bytes, extensionRegistry);
+    public static Message fromBytes(final byte[] bytes) throws InvalidProtocolBufferException {
+        final MessageOuterClass.Message message = MessageOuterClass.Message.parseFrom(bytes, extensionRegistry);
         try {
             return fromProto(message);
-        } catch(Exception e) {
+        } catch(final Exception e) {
             LOG.error("Exception converting: {}", message, e);
             throw e;
         }
     }
 
-    public static Message fromProto(MessageOuterClass.Message message) {
-        Module module = Module.fromProto(message.getFrom());
-        UUID uuid = UUID.fromProto(message.getMessageId());
-        long timestamp = message.getTimestamp();
+    public static Message fromProto(final MessageOuterClass.Message message) {
+        final Module module = Module.fromProto(message.getFrom());
+        final UUID uuid = UUID.fromProto(message.getMessageId());
+        final long timestamp = message.getTimestamp();
         switch(message.getType()) {
             case EVENT: return Event.fromProto(module, uuid, timestamp, message.getExtension(EventOuterClass.Event.data));
             case REQUEST: return Request.fromProto(module, uuid, timestamp, message.getExtension(RequestOuterClass.Request.data));
@@ -108,15 +109,15 @@ public abstract class Message {
         }
     }
 
-    private Module from;
-    private UUID messageId;
-    private long timestamp;
+    private final Module from;
+    private final UUID messageId;
+    private final long timestamp;
 
-    public Message(Module from) {
+    public Message(final Module from) {
         this(from, new UUID(java.util.UUID.randomUUID()), new Date().getTime());
     }
 
-    public Message(Module from, UUID messageId, long timestamp) {
+    public Message(final Module from, final UUID messageId, final long timestamp) {
         this.from = from;
         this.messageId = messageId;
         this.timestamp = timestamp;
@@ -142,7 +143,7 @@ public abstract class Message {
         return timestamp;
     }
 
-    public MessageOuterClass.Message toProto() {
+    public MessageLite toProto() {
         return toProtoMessage().build();
     }
 

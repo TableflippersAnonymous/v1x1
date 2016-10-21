@@ -11,39 +11,39 @@ import java.util.concurrent.TimeUnit;
  * Created by naomi on 10/18/2016.
  */
 public class GlobalRateLimiter implements RateLimiter {
-    private ScheduledExecutorService scheduledExecutorService;
-    private int interval;
-    private InterProcessSemaphoreV2 semaphore;
+    private final ScheduledExecutorService scheduledExecutorService;
+    private final int interval;
+    private final InterProcessSemaphoreV2 semaphore;
 
-    public GlobalRateLimiter(CuratorFramework framework, ScheduledExecutorService scheduledExecutorService, String name, int threshold, int interval) {
+    public GlobalRateLimiter(final CuratorFramework framework, final ScheduledExecutorService scheduledExecutorService, final String name, final int threshold, final int interval) {
         this.scheduledExecutorService = scheduledExecutorService;
         this.interval = interval;
         semaphore = new InterProcessSemaphoreV2(framework, "/global_rate_limiter/" + name, threshold);
     }
 
     @Override
-    public void submit(Runnable task) {
+    public void submit(final Runnable task) {
         scheduledExecutorService.submit(() -> {
             try {
                 submitAndWait(task);
-            } catch (InterruptedException e) {
+            } catch (final InterruptedException e) {
                 e.printStackTrace();
             }
         });
     }
 
     @Override
-    public void submitAndWait(Runnable task) throws InterruptedException {
-        Lease lease;
+    public void submitAndWait(final Runnable task) throws InterruptedException {
+        final Lease lease;
         try {
             lease = semaphore.acquire();
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
         run(task, lease);
     }
 
-    private void run(Runnable task, Lease lease) {
+    private void run(final Runnable task, final Lease lease) {
         try {
             task.run();
         } finally {
@@ -51,7 +51,7 @@ public class GlobalRateLimiter implements RateLimiter {
         }
     }
 
-    private void scheduleRelease(Lease lease) {
+    private void scheduleRelease(final Lease lease) {
         scheduledExecutorService.schedule(() -> semaphore.returnLease(lease), interval, TimeUnit.SECONDS);
     }
 }

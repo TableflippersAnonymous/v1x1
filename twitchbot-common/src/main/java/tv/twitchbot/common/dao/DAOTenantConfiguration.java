@@ -10,17 +10,17 @@ import tv.twitchbot.common.dto.db.TenantConfiguration;
  * Created by naomi on 10/17/2016.
  */
 public class DAOTenantConfiguration {
-    private Mapper<TenantConfiguration> mapper;
+    private final Mapper<TenantConfiguration> mapper;
 
-    public DAOTenantConfiguration(MappingManager mappingManager) {
+    public DAOTenantConfiguration(final MappingManager mappingManager) {
         mapper = mappingManager.mapper(TenantConfiguration.class);
     }
 
-    public TenantConfiguration get(Module module, Tenant tenant) {
+    public TenantConfiguration get(final Module module, final Tenant tenant) {
         return mapper.get(module.getName(), tenant.getId().getValue());
     }
 
-    public void put(TenantConfiguration tenantConfiguration) {
+    public void put(final TenantConfiguration tenantConfiguration) {
         mapper.save(tenantConfiguration);
     }
 }

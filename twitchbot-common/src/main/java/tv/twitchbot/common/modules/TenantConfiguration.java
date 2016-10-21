@@ -16,7 +16,7 @@ public class TenantConfiguration {
     }
 
     @JsonProperty
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(final boolean enabled) {
         this.enabled = enabled;
     }
 }

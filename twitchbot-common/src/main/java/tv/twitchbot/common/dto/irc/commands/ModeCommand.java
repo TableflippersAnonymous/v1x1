@@ -11,18 +11,18 @@ import java.util.Map;
  * Created by naomi on 10/8/2016.
  */
 public class ModeCommand extends IrcStanza {
-    public static ModeCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.ModeCommand modeCommand) {
-        String channel = modeCommand.getChannel();
-        String modeString = modeCommand.getModeString();
-        List<String> nicknames = modeCommand.getNicknamesList();
+    public static ModeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.ModeCommandOrBuilder modeCommand) {
+        final String channel = modeCommand.getChannel();
+        final String modeString = modeCommand.getModeString();
+        final List<String> nicknames = modeCommand.getNicknamesList();
         return new ModeCommand(rawLine, tags, source, rawArgs, args, channel, modeString, nicknames);
     }
 
-    private String channel;
-    private String modeString;
-    private List<String> nicknames;
+    private final String channel;
+    private final String modeString;
+    private final List<String> nicknames;
 
-    public ModeCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, String channel, String modeString, List<String> nicknames) {
+    public ModeCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel, final String modeString, final List<String> nicknames) {
         super(rawLine, tags, source, IrcCommand.MODE, rawArgs, args);
         this.channel = channel;
         this.modeString = modeString;
@@ -37,7 +37,7 @@ public class ModeCommand extends IrcStanza {
         return modeString;
     }
 
-    public List<String> getNicknames() {
+    public Iterable<String> getNicknames() {
         return nicknames;
     }
 

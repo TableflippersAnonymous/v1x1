@@ -7,15 +7,15 @@ import tv.twitchbot.common.dao.*;
  * Created by naomi on 10/16/2016.
  */
 public class DAOManager {
-    private DAOTenant daoTenant;
-    private DAOGlobalUser daoGlobalUser;
-    private DAOTenantUserPermissions daoTenantUserPermissions;
-    private DAOKeyValueEntry daoKeyValueEntry;
-    private DAOTenantConfiguration daoTenantConfiguration;
-    private DAOGlobalConfiguration daoGlobalConfiguration;
+    private final DAOTenant daoTenant;
+    private final DAOGlobalUser daoGlobalUser;
+    private final DAOTenantUserPermissions daoTenantUserPermissions;
+    private final DAOKeyValueEntry daoKeyValueEntry;
+    private final DAOTenantConfiguration daoTenantConfiguration;
+    private final DAOGlobalConfiguration daoGlobalConfiguration;
     private DAOLanguage daoLanguage;
 
-    public DAOManager(MappingManager mappingManager) {
+    public DAOManager(final MappingManager mappingManager) {
         daoTenant = new DAOTenant(mappingManager);
         daoGlobalUser = new DAOGlobalUser(mappingManager);
         daoTenantUserPermissions = new DAOTenantUserPermissions(mappingManager);
@@ -53,7 +53,7 @@ public class DAOManager {
         return daoLanguage;
     }
 
-    public void setDaoLanguage(DAOLanguage daoLanguage) {
+    public void setDaoLanguage(final DAOLanguage daoLanguage) {
         this.daoLanguage = daoLanguage;
     }
 }

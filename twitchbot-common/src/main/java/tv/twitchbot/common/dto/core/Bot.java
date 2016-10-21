@@ -7,8 +7,10 @@ import tv.twitchbot.common.dto.proto.core.BotOuterClass;
  * @author Naomi
  */
 public abstract class Bot {
-    public static Bot fromProto(BotOuterClass.Bot bot) {
-        String name = bot.getName();
+    private final String name;
+
+    public static Bot fromProto(final BotOuterClass.Bot bot) {
+        final String name = bot.getName();
         switch(bot.getType()) {
             case TWITCH: return TwitchBot.fromProto(name, bot.getExtension(BotOuterClass.TwitchBot.data));
             case DISCORD: return DiscordBot.fromProto(name, bot.getExtension(BotOuterClass.DiscordBot.data));
@@ -16,9 +18,7 @@ public abstract class Bot {
         }
     }
 
-    private String name;
-
-    public Bot(String name) {
+    public Bot(final String name) {
         this.name = name;
     }
 

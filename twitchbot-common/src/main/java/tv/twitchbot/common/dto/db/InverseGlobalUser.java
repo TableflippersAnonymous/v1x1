@@ -22,7 +22,7 @@ public class InverseGlobalUser {
     public InverseGlobalUser() {
     }
 
-    public InverseGlobalUser(Platform platform, String userId, UUID globalUserId) {
+    public InverseGlobalUser(final Platform platform, final String userId, final UUID globalUserId) {
         this.platform = platform;
         this.userId = userId;
         this.globalUserId = globalUserId;

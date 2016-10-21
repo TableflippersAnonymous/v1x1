@@ -7,13 +7,13 @@ import tv.twitchbot.common.dto.proto.core.ModuleOuterClass;
  * @author Naomi
  */
 public class Module {
-    public static Module fromProto(ModuleOuterClass.Module module) {
+    public static Module fromProto(final ModuleOuterClass.ModuleOrBuilder module) {
         return new Module(module.getName());
     }
 
-    private String name;
+    private final String name;
 
-    public Module(String name) {
+    public Module(final String name) {
         this.name = name;
     }
 
@@ -28,15 +28,14 @@ public class Module {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Module module = (Module) o;
+        final Module module = (Module) o;
 
-        if (name != null ? !name.equals(module.name) : module.name != null) return false;
+        return name != null ? name.equals(module.name) : module.name == null;
 
-        return true;
     }
 
     @Override

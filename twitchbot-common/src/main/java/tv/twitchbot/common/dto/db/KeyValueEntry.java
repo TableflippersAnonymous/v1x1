@@ -17,7 +17,7 @@ public class KeyValueEntry {
     public KeyValueEntry() {
     }
 
-    public KeyValueEntry(String name, byte[] key, byte[] value) {
+    public KeyValueEntry(final String name, final byte[] key, final byte[] value) {
         this.name = name;
         this.key = key;
         this.value = value;
@@ -35,7 +35,7 @@ public class KeyValueEntry {
         return value;
     }
 
-    public void setValue(byte[] value) {
+    public void setValue(final byte[] value) {
         this.value = value;
     }
 }

@@ -20,7 +20,7 @@ public class TmiGlobalConfiguration extends GlobalConfiguration {
     }
 
     @JsonProperty("global_bots")
-    public void setGlobalBots(Map<String, String> globalBots) {
+    public void setGlobalBots(final Map<String, String> globalBots) {
         this.globalBots = globalBots;
     }
 
@@ -30,7 +30,7 @@ public class TmiGlobalConfiguration extends GlobalConfiguration {
     }
 
     @JsonProperty("connections_per_channel")
-    public void setConnectionsPerChannel(int connectionsPerChannel) {
+    public void setConnectionsPerChannel(final int connectionsPerChannel) {
         this.connectionsPerChannel = connectionsPerChannel;
     }
 
@@ -40,7 +40,7 @@ public class TmiGlobalConfiguration extends GlobalConfiguration {
     }
 
     @JsonProperty("default_username")
-    public void setDefaultUsername(String defaultUsername) {
+    public void setDefaultUsername(final String defaultUsername) {
         this.defaultUsername = defaultUsername;
     }
 }

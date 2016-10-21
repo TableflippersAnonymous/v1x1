@@ -20,6 +20,7 @@ import tv.twitchbot.common.util.ratelimiter.RateLimiter;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,11 +47,11 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, Tenant>() {
                     @Override
-                    public Tenant load(String s) throws Exception {
+                    public Tenant load(final String s) throws Exception {
                         try {
                             LOG.debug("Loading tenant for {}", s);
                             return getDaoManager().getDaoTenant().getOrCreate(Platform.TWITCH, s, s).toCore();
-                        } catch(Exception e) {
+                        } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
                         }
@@ -60,11 +61,11 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, GlobalUser>() {
                     @Override
-                    public GlobalUser load(String s) throws Exception {
+                    public GlobalUser load(final String s) throws Exception {
                         try {
                             LOG.debug("Loading global user for {}", s);
                             return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.TWITCH, s, s).toCore();
-                        } catch(Exception e) {
+                        } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
                         }
@@ -74,14 +75,14 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<Pair<Tenant, GlobalUser>, List<Permission>>() {
                     @Override
-                    public List<Permission> load(Pair<Tenant, GlobalUser> tenantGlobalUserPair) throws Exception {
+                    public List<Permission> load(final Pair<Tenant, GlobalUser> tenantGlobalUserPair) throws Exception {
                         try {
                             LOG.debug("Loading tenant permissions for tenant={} globalUser={}", tenantGlobalUserPair.getFirst().getId(), tenantGlobalUserPair.getSecond().getId());
-                            TenantUserPermissions permissions = getDaoManager().getDaoTenantUserPermissions().getByTenantAndUser(tenantGlobalUserPair.getFirst().getId().getValue(), tenantGlobalUserPair.getSecond().getId().getValue());
+                            final TenantUserPermissions permissions = getDaoManager().getDaoTenantUserPermissions().getByTenantAndUser(tenantGlobalUserPair.getFirst().getId().getValue(), tenantGlobalUserPair.getSecond().getId().getValue());
                             if(permissions == null)
                                 return ImmutableList.of();
                             return permissions.getPermissions().stream().map(TenantUserPermissions.Permission::toCore).collect(Collectors.toList());
-                        } catch(Exception e) {
+                        } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
                         }
@@ -92,10 +93,10 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
     @Override
     protected void initialize() {
         super.initialize();
-        String myIp;
+        final String myIp;
         try {
             myIp = IPProvider.getMyIp();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             throw new RuntimeException(e);
         }
         scheduledExecutorService = Executors.newScheduledThreadPool(getSettings().getMaxConnections());
@@ -104,7 +105,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         channelDistributor = getLoadBalancingDistributor("/twitchbot/tmi/channels", getGlobalConfiguration().getConnectionsPerChannel());
         channelDistributor.addListener(new LoadBalancingDistributor.Listener() {
             @Override
-            public void notify(UUID instanceId, Set<String> entries) {
+            public void notify(final UUID instanceId, final Set<String> entries) {
                 if (getInstanceId().equals(instanceId.getValue())) {
                     try {
                         setChannels(entries);
@@ -116,13 +117,13 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
             }
 
             @Override
-            public int compareTo(LoadBalancingDistributor.Listener o) {
+            public int compareTo(final LoadBalancingDistributor.Listener o) {
                 return hashCode() - o.hashCode();
             }
         });
         try {
             channelDistributor.addInstance(new UUID(getInstanceId()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -131,13 +132,13 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
     protected void shutdown() {
         try {
             channelDistributor.removeInstance(new UUID(getInstanceId()));
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
-        for(Map.Entry<String, TmiBot> entry : bots.entrySet())
+        for(final Map.Entry<String, TmiBot> entry : bots.entrySet())
             try {
                 entry.getValue().shutdown();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
         super.shutdown();
@@ -148,46 +149,46 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         return "tmi";
     }
 
-    GlobalUser getGlobalUser(String id) {
+    GlobalUser getGlobalUser(final String id) {
         try {
             return globalUserCache.get(id);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
 
-    Tenant getTenant(String id) {
+    Tenant getTenant(final String id) {
         try {
             return tenantCache.get(id);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
 
-    List<Permission> getPermissions(Tenant tenant, GlobalUser globalUser) {
+    List<Permission> getPermissions(final Tenant tenant, final GlobalUser globalUser) {
         try {
             return permissionCache.get(new Pair<>(tenant, globalUser));
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void setChannels(Set<String> channels) throws IOException, InterruptedException {
+    private void setChannels(final Collection<String> channels) throws IOException, InterruptedException {
         LOG.info("Channels: {}", Joiner.on(", ").join(channels));
         LOG.info("this.channels: {}", Joiner.on(", ").join(bots.keySet()));
         bots.keySet().stream().filter(channel -> !channels.contains(channel)).forEach(this::part);
         channels.stream().filter(channel -> !bots.keySet().contains(channel)).forEach(this::join);
     }
 
-    private void join(String channel) {
+    private void join(final String channel) {
         try {
             LOG.info("Joining {}", channel);
             if (bots.containsKey(channel))
                 return;
-            Tenant tenant = getTenant(channel);
+            final Tenant tenant = getTenant(channel);
             LOG.debug("Getting tenant configuration for {}", channel);
-            TmiTenantConfiguration tenantConfiguration = getTenantConfiguration(tenant);
-            String oauthToken;
+            final TmiTenantConfiguration tenantConfiguration = getTenantConfiguration(tenant);
+            final String oauthToken;
             String username = tenantConfiguration.getBotName();
             if (tenantConfiguration.isCustomBot()) {
                 oauthToken = tenantConfiguration.getOauthToken();
@@ -197,42 +198,42 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 oauthToken = getGlobalConfiguration().getGlobalBots().get(username);
             }
             LOG.debug("Connecting to {} with username={} password={}", channel, username, oauthToken);
-            RateLimiter messageLimiter = new LocalRateLimiter(scheduledExecutorService, 18, 30);
-            TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel);
+            final RateLimiter messageLimiter = new LocalRateLimiter(scheduledExecutorService, 18, 30);
+            final TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel);
             scheduledExecutorService.submit(tmiBot);
-            TmiBot oldTmiBot = bots.put(channel, tmiBot);
+            final TmiBot oldTmiBot = bots.put(channel, tmiBot);
             try {
                 if (oldTmiBot != null)
                     oldTmiBot.shutdown();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    private void part(String channel) {
+    private void part(final String channel) {
         try {
             LOG.info("Leaving {}", channel);
-            TmiBot oldTmiBot = bots.remove(channel);
+            final TmiBot oldTmiBot = bots.remove(channel);
             try {
                 if (oldTmiBot != null)
                     oldTmiBot.shutdown();
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 e.printStackTrace();
             }
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
             throw e;
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(final String[] args) {
         try {
             new TmiModule().entryPoint(args);
-        } catch (Exception e) {
+        } catch (final Exception e) {
             e.printStackTrace();
         }
     }

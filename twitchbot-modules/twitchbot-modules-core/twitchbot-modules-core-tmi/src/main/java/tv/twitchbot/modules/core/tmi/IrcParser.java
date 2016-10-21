@@ -15,20 +15,20 @@ import java.util.stream.Collectors;
  * Created by naomi on 10/8/2016.
  */
 public class IrcParser {
-    public static IrcStanza parse(String line) {
-        String[] tagParts = splitTagFromIrc(line);
-        Map<String, String> tagMap = parseTags(tagParts[0]);
-        String[] parts = splitIrcLine(tagParts[1]);
-        IrcSource source = parseSource(parts[0]);
-        IrcStanza.IrcCommand command = parseCommand(parts[1]);
+    public static IrcStanza parse(final String line) {
+        final String[] tagParts = splitTagFromIrc(line);
+        final Map<String, String> tagMap = parseTags(tagParts[0]);
+        final String[] parts = splitIrcLine(tagParts[1]);
+        final IrcSource source = parseSource(parts[0]);
+        final IrcStanza.IrcCommand command = parseCommand(parts[1]);
         if(command == null)
             return null;
-        String rawArgs = parts[2];
-        List<String> args = parseArgs(rawArgs);
+        final String rawArgs = parts[2];
+        final List<String> args = parseArgs(rawArgs);
         return buildStanza(line, tagMap, source, command, rawArgs, args.toArray(new String[] {}));
     }
 
-    private static IrcStanza buildStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcStanza.IrcCommand command, String rawArgs, String[] args) {
+    private static IrcStanza buildStanza(final String rawLine, final Map<String, String> tags, final IrcSource source, final IrcStanza.IrcCommand command, final String rawArgs, final String[] args) {
         switch(command) {
             case CLEARCHAT: return new ClearChatCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
             case GLOBALUSERSTATE: return new GlobalUserStateCommand(rawLine, tags, source, rawArgs, args);
@@ -49,14 +49,14 @@ public class IrcParser {
         }
     }
 
-    private static IrcStanza.IrcCommand parseCommand(String command) {
+    private static IrcStanza.IrcCommand parseCommand(final String command) {
         if(command.equals("353"))
             return IrcStanza.IrcCommand.RPL_NAMREPLY;
         if(command.equals("376"))
             return IrcStanza.IrcCommand.RPL_ENDOFMOTD;
         try {
             return IrcStanza.IrcCommand.valueOf(command.toUpperCase());
-        } catch(IllegalArgumentException e) {
+        } catch(final IllegalArgumentException e) {
             /* Unsupported IRC command. */
             return null;
         }
@@ -72,21 +72,21 @@ public class IrcParser {
         /* [tags] <source> <command> [args] */
         String tags = null;
         if(line.startsWith("@")) {
-            String[] parts = line.split(" ", 2);
+            final String[] parts = line.split(" ", 2);
             tags = parts[0];
             line = parts[1];
         }
         return new String[] { tags, line };
     }
 
-    private static IrcSource parseSource(String source) {
-        IrcSource ircSource;
+    private static IrcSource parseSource(final String source) {
+        final IrcSource ircSource;
         if(source.contains("!")) {
-            String[] nameParts = source.split("!", 2);
-            String nickname = nameParts[0];
-            String[] userParts = nameParts[1].split("@", 2);
-            String username = userParts[0];
-            String hostname = userParts[1];
+            final String[] nameParts = source.split("!", 2);
+            final String nickname = nameParts[0];
+            final String[] userParts = nameParts[1].split("@", 2);
+            final String username = userParts[0];
+            final String hostname = userParts[1];
             ircSource = new IrcUser(nickname, username, hostname);
         } else {
             ircSource = new IrcServer(source);
@@ -99,19 +99,19 @@ public class IrcParser {
             return ImmutableMap.of();
         if(tags.startsWith("@"))
             tags = tags.substring(1);
-        Map<String, String> tagMap = new HashMap<>();
-        String[] tagArray = tags.split(";");
-        for(String tag : tagArray) {
-            String[] tagParts = tag.split("=", 2);
-            String key = tagParts[0];
-            String value = unescape(tagParts[1]);
+        final Map<String, String> tagMap = new HashMap<>();
+        final String[] tagArray = tags.split(";");
+        for(final String tag : tagArray) {
+            final String[] tagParts = tag.split("=", 2);
+            final String key = tagParts[0];
+            final String value = unescape(tagParts[1]);
             tagMap.put(key, value);
         }
         return tagMap;
     }
 
-    private static String unescape(String escaped) {
-        StringBuilder sb = new StringBuilder();
+    private static String unescape(final CharSequence escaped) {
+        final StringBuilder sb = new StringBuilder();
         int i = 0;
         for(; i < escaped.length() - 1; i++) {
             if(escaped.charAt(i) == '\\') {
@@ -135,16 +135,16 @@ public class IrcParser {
         return sb.toString();
     }
 
-    private static List<String> parseArgs(String args) {
+    private static List<String> parseArgs(final String args) {
         if(args == null || args.isEmpty())
             return ImmutableList.of();
-        List<String> argList = new ArrayList<>();
-        String[] splitArgs = args.split(" ");
+        final List<String> argList = new ArrayList<>();
+        final String[] splitArgs = args.split(" ");
         for(int i = 0; i < splitArgs.length; i++) {
             if(splitArgs[i].isEmpty())
                 throw new RuntimeException("Error parsing args: <middle> is not allowed to be empty.  args = " + args);
             if(splitArgs[i].charAt(0) == ':') {
-                String rest = args.split(" ", i + 1)[i];
+                final String rest = args.split(" ", i + 1)[i];
                 argList.add(rest.substring(1));
                 break;
             } else {

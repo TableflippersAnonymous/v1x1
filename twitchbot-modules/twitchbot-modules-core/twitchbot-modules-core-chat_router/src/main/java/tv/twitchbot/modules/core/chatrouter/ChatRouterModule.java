@@ -17,7 +17,7 @@ public class ChatRouterModule extends ServiceModule<ChatRouterSettings, ChatRout
         registerService(new ChatRouterService(this));
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main(final String[] args) throws Exception {
         new ChatRouterModule().entryPoint(args);
     }
 }

@@ -13,13 +13,13 @@ public class EchoListener implements EventListener {
 
     Echo echo;
 
-    EchoListener(Echo echo) {
+    EchoListener(final Echo echo) {
         this.echo = echo;
     }
 
     @EventHandler
-    public void onChatJoin(ChatJoinEvent ev) {
-        StringBuilder sb = new StringBuilder();
+    public void onChatJoin(final ChatJoinEvent ev) {
+        final StringBuilder sb = new StringBuilder();
         sb.append("Echo: ");
         sb.append(ev.getUser().getDisplayName());
         sb.append(" joined the channel");
@@ -27,8 +27,8 @@ public class EchoListener implements EventListener {
     }
 
     @EventHandler
-    public void onChatPart(ChatPartEvent ev) {
-        StringBuilder sb = new StringBuilder();
+    public void onChatPart(final ChatPartEvent ev) {
+        final StringBuilder sb = new StringBuilder();
         sb.append("Echo: ");
         sb.append(ev.getUser().getDisplayName());
         sb.append(" left the channel");
@@ -36,9 +36,9 @@ public class EchoListener implements EventListener {
     }
 
     @EventHandler
-    public void onChatMessage(ChatMessageEvent ev) {
+    public void onChatMessage(final ChatMessageEvent ev) {
         System.out.println("Got chat message event");
-        StringBuilder sb = new StringBuilder();
+        final StringBuilder sb = new StringBuilder();
         sb.append("Echo: ");
         sb.append(ev.getChatMessage().getText());
         echo.crsc.sendMessage(ev.getChatMessage().getChannel(), sb.toString());

@@ -9,20 +9,20 @@ import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
  * @author Naomi
  */
 public class DiscordChannel extends Channel {
-    public static DiscordChannel fromProto(ChannelOuterClass.Channel channel) {
-        String id = channel.getId();
-        Tenant tenant = Tenant.fromProto(channel.getTenant());
-        String displayName = channel.getDisplayName();
+    public static DiscordChannel fromProto(final ChannelOuterClass.ChannelOrBuilder channel) {
+        final String id = channel.getId();
+        final Tenant tenant = Tenant.fromProto(channel.getTenant());
+        final String displayName = channel.getDisplayName();
         return new DiscordChannel(id, tenant, displayName);
     }
 
-    public static DiscordChannel fromProto(Tenant tenant, ChannelOuterClass.TenantEntry tenantEntry) {
-        String id = tenantEntry.getId();
-        String displayName = tenantEntry.getDisplayName();
+    public static DiscordChannel fromProto(final Tenant tenant, final ChannelOuterClass.TenantEntryOrBuilder tenantEntry) {
+        final String id = tenantEntry.getId();
+        final String displayName = tenantEntry.getDisplayName();
         return new DiscordChannel(id, tenant, displayName);
     }
 
-    public DiscordChannel(String id, Tenant tenant, String displayName) {
+    public DiscordChannel(final String id, final Tenant tenant, final String displayName) {
         super(id, tenant, displayName);
     }
 

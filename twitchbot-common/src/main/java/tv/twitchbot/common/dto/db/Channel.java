@@ -20,7 +20,7 @@ public abstract class Channel {
     public Channel() {
     }
 
-    public Channel(String id, String displayName, UUID tenantId) {
+    public Channel(final String id, final String displayName, final UUID tenantId) {
         this.id = id;
         this.displayName = displayName;
         this.tenantId = tenantId;

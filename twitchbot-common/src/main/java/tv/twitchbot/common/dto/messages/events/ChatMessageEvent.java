@@ -11,22 +11,22 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public abstract class ChatMessageEvent extends Event {
-    public static ChatMessageEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.ChatMessageEvent chatMessageEvent) {
-        ChatMessage chatMessage = ChatMessage.fromProto(chatMessageEvent.getChatMessage());
+    public static ChatMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.ChatMessageEvent chatMessageEvent) {
+        final ChatMessage chatMessage = ChatMessage.fromProto(chatMessageEvent.getChatMessage());
         switch(chatMessageEvent.getType()) {
             case TWITCH: return TwitchChatMessageEvent.fromProto(module, uuid, timestamp, chatMessage, chatMessageEvent.getExtension(EventOuterClass.TwitchChatMessageEvent.data));
             default: throw new IllegalStateException("Unknown ChatMessageEvent type: " + chatMessageEvent.getType());
         }
     }
 
-    private ChatMessage chatMessage;
+    private final ChatMessage chatMessage;
 
-    public ChatMessageEvent(Module from, ChatMessage chatMessage) {
+    public ChatMessageEvent(final Module from, final ChatMessage chatMessage) {
         super(from);
         this.chatMessage = chatMessage;
     }
 
-    public ChatMessageEvent(Module from, UUID messageId, long timestamp, ChatMessage chatMessage) {
+    public ChatMessageEvent(final Module from, final UUID messageId, final long timestamp, final ChatMessage chatMessage) {
         super(from, messageId, timestamp);
         this.chatMessage = chatMessage;
     }

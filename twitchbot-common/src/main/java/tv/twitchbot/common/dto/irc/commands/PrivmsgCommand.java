@@ -4,26 +4,26 @@ import tv.twitchbot.common.dto.irc.IrcSource;
 import tv.twitchbot.common.dto.irc.MessageTaggedIrcStanza;
 import tv.twitchbot.common.dto.proto.core.IRC;
 
-import java.util.*;
+import java.util.Map;
 import java.util.UUID;
 
 /**
  * Created by naomi on 10/8/2016.
  */
 public class PrivmsgCommand extends MessageTaggedIrcStanza {
-    public static PrivmsgCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.PrivmsgCommand privmsgCommand) {
-        String channel = privmsgCommand.getChannel();
-        String message = privmsgCommand.getMessage();
+    public static PrivmsgCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.PrivmsgCommandOrBuilder privmsgCommand) {
+        final String channel = privmsgCommand.getChannel();
+        final String message = privmsgCommand.getMessage();
         return new PrivmsgCommand(rawLine, tags, source, rawArgs, args, channel, message);
     }
 
-    private String channel;
-    private String message;
+    private final String channel;
+    private final String message;
 
     private UUID id;
     private int bits;
 
-    public PrivmsgCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, String channel, String message) {
+    public PrivmsgCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel, final String message) {
         super(rawLine, tags, source, IrcCommand.PRIVMSG, rawArgs, args);
         this.channel = channel;
         this.message = message;
@@ -58,7 +58,7 @@ public class PrivmsgCommand extends MessageTaggedIrcStanza {
     }
 
     private IRC.PrivmsgCommand toProtoCommand() {
-        IRC.PrivmsgCommand.Builder builder = IRC.PrivmsgCommand.newBuilder()
+        final IRC.PrivmsgCommand.Builder builder = IRC.PrivmsgCommand.newBuilder()
                 .setChannel(channel)
                 .setMessage(message);
         if(id != null)

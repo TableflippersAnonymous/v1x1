@@ -11,24 +11,24 @@ import java.util.concurrent.TimeUnit;
  * Created by naomi on 10/5/16.
  */
 public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends Module<T, U, V> {
-    private ExecutorService executorService;
+    private final ExecutorService executorService;
 
     protected ThreadedModule() {
         executorService = new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
     }
 
-    protected ThreadedModule(int count) {
+    protected ThreadedModule(final int count) {
         executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
     }
 
-    protected ThreadedModule(int count, int queueDepth) {
+    protected ThreadedModule(final int count, final int queueDepth) {
         executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth));
     }
 
-    private void processMessageWrapper(Message message) {
+    private void processMessageWrapper(final Message message) {
         try {
             processMessage(message);
-        } catch(Exception e) {
+        } catch(final Exception e) {
             e.printStackTrace();
             throw e;
         }

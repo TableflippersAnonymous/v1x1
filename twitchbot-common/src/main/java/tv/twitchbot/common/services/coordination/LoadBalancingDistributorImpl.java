@@ -30,9 +30,9 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     public static final String INSTANCE_NAME = "INSTANCE";
 
     public static class InstanceId {
-        private UUID instanceId;
+        private final UUID instanceId;
 
-        public InstanceId(UUID instanceId) {
+        public InstanceId(final UUID instanceId) {
             this.instanceId = instanceId;
         }
 
@@ -41,11 +41,11 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         }
 
         @Override
-        public boolean equals(Object o) {
+        public boolean equals(final Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
 
-            InstanceId that = (InstanceId) o;
+            final InstanceId that = (InstanceId) o;
 
             return instanceId != null ? instanceId.equals(that.instanceId) : that.instanceId == null;
 
@@ -67,23 +67,23 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
      *           `- 2
      */
 
-    private PathChildrenCache entryCache;
-    private ServiceDiscovery<InstanceId> instanceDiscovery;
-    private CuratorFramework framework;
-    private String path;
-    private int redundancy;
-    private Set<Listener> listeners = new ConcurrentSkipListSet<>();
-    private ServiceCache<InstanceId> serviceCache;
+    private final PathChildrenCache entryCache;
+    private final ServiceDiscovery<InstanceId> instanceDiscovery;
+    private final CuratorFramework framework;
+    private final String path;
+    private final int redundancy;
+    private final Collection<Listener> listeners = new ConcurrentSkipListSet<>();
+    private final ServiceCache<InstanceId> serviceCache;
 
-    private Map<InstanceId, Set<String>> entriesByInstance = Collections.synchronizedMap(new HashMap<>());
-    private Map<String, Set<InstanceId>> instancesByEntry = Collections.synchronizedMap(new HashMap<>());
-    private ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final Map<InstanceId, Set<String>> entriesByInstance = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, Set<InstanceId>> instancesByEntry = Collections.synchronizedMap(new HashMap<>());
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
-    public LoadBalancingDistributorImpl(CuratorFramework framework, String path, int redundancy) {
+    public LoadBalancingDistributorImpl(final CuratorFramework framework, final String path, final int redundancy) {
         this(framework, path, redundancy, null);
     }
 
-    public LoadBalancingDistributorImpl(CuratorFramework framework, String path, int redundancy, Listener listener) {
+    public LoadBalancingDistributorImpl(final CuratorFramework framework, final String path, final int redundancy, final Listener listener) {
         this.framework = framework;
         this.path = path;
         this.redundancy = redundancy;
@@ -106,16 +106,16 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
             public void cacheChanged() {
                 try {
                     recalculateEntries();
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     throw new RuntimeException(e);
                 }
             }
 
             @Override
-            public void stateChanged(CuratorFramework curatorFramework, ConnectionState connectionState) {
+            public void stateChanged(final CuratorFramework curatorFramework, final ConnectionState connectionState) {
                 try {
                     recalculateEntries();
-                } catch (Exception e) {
+                } catch (final Exception e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -123,31 +123,31 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     }
 
     @Override
-    public void addEntry(String entry) throws Exception {
+    public void addEntry(final String entry) throws Exception {
         framework.create().withMode(CreateMode.PERSISTENT).forPath(path + "/entries/" + entry, entry.getBytes());
     }
 
     @Override
-    public void addInstance(UUID instanceId) throws Exception {
+    public void addInstance(final UUID instanceId) throws Exception {
         instanceDiscovery.registerService(serviceInstanceFor(new InstanceId(instanceId)));
     }
 
     @Override
-    public Set<String> getEntriesForInstance(UUID instanceId) throws Exception {
+    public Set<String> getEntriesForInstance(final UUID instanceId) throws Exception {
         recalculateEntries();
         return entriesByInstance.get(new InstanceId(instanceId));
     }
 
     private void recalculateEntries() throws Exception {
         LOG.info("Recalculating entries.");
-        List<InstanceId> instances = instanceDiscovery.queryForInstances(INSTANCE_NAME).stream().map(this::instanceIdFor).collect(Collectors.toList());
+        final List<InstanceId> instances = instanceDiscovery.queryForInstances(INSTANCE_NAME).stream().map(this::instanceIdFor).collect(Collectors.toList());
         if(instances.size() == 0)
             return;
-        int realisticRedundancy = Math.min(redundancy, instances.size());
-        List<String> entries = entryCache.getCurrentData().stream().map(ChildData::getData).map(String::new).collect(Collectors.toList());
-        TreeMap<java.util.UUID, InstanceId> instanceLookupTable = new TreeMap<>();
-        Map<InstanceId, Set<String>> newEntriesByInstance = new HashMap<>();
-        for(InstanceId instanceId : instances) {
+        final int realisticRedundancy = Math.min(redundancy, instances.size());
+        final List<String> entries = entryCache.getCurrentData().stream().map(ChildData::getData).map(String::new).collect(Collectors.toList());
+        final TreeMap<java.util.UUID, InstanceId> instanceLookupTable = new TreeMap<>();
+        final Map<InstanceId, Set<String>> newEntriesByInstance = new HashMap<>();
+        for(final InstanceId instanceId : instances) {
             newEntriesByInstance.put(instanceId, new HashSet<>());
             java.util.UUID uuid = instanceId.getInstanceId().getValue();
             instanceLookupTable.put(uuid, instanceId);
@@ -156,8 +156,8 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
                 instanceLookupTable.put(uuid, instanceId);
             }
         }
-        Map<String, Set<InstanceId>> newInstancesByEntry = new HashMap<>();
-        for(String entry : entries) {
+        final Map<String, Set<InstanceId>> newInstancesByEntry = new HashMap<>();
+        for(final String entry : entries) {
             java.util.UUID key = java.util.UUID.nameUUIDFromBytes(entry.getBytes());
             for(int i = 0; i < realisticRedundancy; i++) {
                 InstanceId instanceId;
@@ -170,7 +170,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
                 newInstancesByEntry.get(entry).add(instanceId);
             }
         }
-        Map<InstanceId, Set<String>> diff = generateDiff(entriesByInstance, newEntriesByInstance);
+        final Map<InstanceId, Set<String>> diff = generateDiff(entriesByInstance, newEntriesByInstance);
         synchronized(entriesByInstance) {
             synchronized(instancesByEntry) {
                 entriesByInstance.clear();
@@ -182,14 +182,14 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         notifyListeners(diff);
     }
 
-    private void notifyListeners(Map<InstanceId, Set<String>> diff) {
-        for(Map.Entry<InstanceId, Set<String>> entry : diff.entrySet())
-            for(Listener listener : listeners)
+    private void notifyListeners(final Map<InstanceId, Set<String>> diff) {
+        for(final Map.Entry<InstanceId, Set<String>> entry : diff.entrySet())
+            for(final Listener listener : listeners)
                 listener.notify(entry.getKey().getInstanceId(), ImmutableSet.copyOf(entry.getValue()));
     }
 
-    private Map<InstanceId, Set<String>> generateDiff(Map<InstanceId, Set<String>> entriesByInstance, Map<InstanceId, Set<String>> newEntriesByInstance) {
-        Map<InstanceId, Set<String>> diffMap = new HashMap<>();
+    private Map<InstanceId, Set<String>> generateDiff(final Map<InstanceId, Set<String>> entriesByInstance, final Map<InstanceId, Set<String>> newEntriesByInstance) {
+        final Map<InstanceId, Set<String>> diffMap = new HashMap<>();
         entriesByInstance.entrySet().stream()
                 .filter(entry -> !newEntriesByInstance.containsKey(entry.getKey()))
                 .forEach(entry -> diffMap.put(entry.getKey(), ImmutableSet.of()));
@@ -199,8 +199,8 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         return diffMap;
     }
 
-    private <K, V> K getNext(NavigableMap<K, V> map, K key) {
-        K newKey = map.higherKey(key);
+    private <K, V> K getNext(final NavigableMap<K, V> map, final K key) {
+        final K newKey = map.higherKey(key);
         if(newKey == null)
             return map.firstKey();
         else
@@ -208,17 +208,17 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     }
 
     @Override
-    public void addListener(Listener listener) {
+    public void addListener(final Listener listener) {
         listeners.add(listener);
     }
 
     @Override
-    public void removeListener(Listener listener) {
+    public void removeListener(final Listener listener) {
         listeners.remove(listener);
     }
 
     @Override
-    public void removeInstance(UUID instanceId) throws Exception {
+    public void removeInstance(final UUID instanceId) throws Exception {
         instanceDiscovery.unregisterService(serviceInstanceFor(new InstanceId(instanceId)));
     }
 
@@ -238,7 +238,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         executorService.shutdown();
     }
 
-    private ServiceInstance<InstanceId> serviceInstanceFor(InstanceId instanceId) throws Exception {
+    private ServiceInstance<InstanceId> serviceInstanceFor(final InstanceId instanceId) throws Exception {
         return ServiceInstance.<InstanceId>builder()
                 .name(INSTANCE_NAME)
                 .id(instanceId.getInstanceId().getValue().toString())
@@ -249,20 +249,20 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
                 .build();
     }
 
-    private InstanceId instanceIdFor(ServiceInstance<InstanceId> serviceInstance) {
+    private InstanceId instanceIdFor(final ServiceInstance<InstanceId> serviceInstance) {
         return serviceInstance.getPayload();
     }
 
     private class InstanceIdInstanceSerializer implements InstanceSerializer<InstanceId> {
         @Override
-        public byte[] serialize(ServiceInstance<InstanceId> serviceInstance) throws Exception {
+        public byte[] serialize(final ServiceInstance<InstanceId> serviceInstance) throws Exception {
             return serviceInstance.getPayload().getInstanceId().toProto().toByteArray();
         }
 
         @Override
-        public ServiceInstance<InstanceId> deserialize(byte[] bytes) throws Exception {
-            UUID id = UUID.fromProto(UUIDOuterClass.UUID.parseFrom(bytes));
-            InstanceId instanceId = new InstanceId(id);
+        public ServiceInstance<InstanceId> deserialize(final byte[] bytes) throws Exception {
+            final UUID id = UUID.fromProto(UUIDOuterClass.UUID.parseFrom(bytes));
+            final InstanceId instanceId = new InstanceId(id);
             return serviceInstanceFor(instanceId);
         }
     }

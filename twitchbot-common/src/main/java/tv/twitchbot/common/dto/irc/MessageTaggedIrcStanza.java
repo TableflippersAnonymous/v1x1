@@ -2,9 +2,12 @@ package tv.twitchbot.common.dto.irc;
 
 import tv.twitchbot.common.dto.proto.core.IRC;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -13,16 +16,16 @@ import java.util.stream.Collectors;
 public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
     public static class Emote {
         public static class Range{
-            private int beginIndex;
-            private int endIndex;
+            private final int beginIndex;
+            private final int endIndex;
 
-            public Range(String encoded) {
-                String[] parts = encoded.split("-", 2);
+            public Range(final String encoded) {
+                final String[] parts = encoded.split("-", 2);
                 beginIndex = Integer.valueOf(parts[0]);
                 endIndex = Integer.valueOf(parts[1]);
             }
 
-            public Range(int beginIndex, int endIndex) {
+            public Range(final int beginIndex, final int endIndex) {
                 this.beginIndex = beginIndex;
                 this.endIndex = endIndex;
             }
@@ -43,17 +46,17 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
             }
         }
 
-        private String id;
-        private Range[] ranges;
+        private final String id;
+        private final Range[] ranges;
 
-        public Emote(String encoded) {
-            String[] parts = encoded.split(":");
+        public Emote(final String encoded) {
+            final String[] parts = encoded.split(":");
             id = parts[0];
-            String encodedRanges = parts[1];
+            final String encodedRanges = parts[1];
             ranges = Arrays.asList(encodedRanges.split(",")).stream().map(Range::new).collect(Collectors.toList()).toArray(new Range[] {});
         }
 
-        public Emote(String id, Range[] ranges) {
+        public Emote(final String id, final Range[] ranges) {
             this.id = id;
             this.ranges = ranges;
         }
@@ -91,7 +94,7 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
     private List<Emote> emotes = new ArrayList<>();
     private int roomId, userId;
 
-    public MessageTaggedIrcStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcCommand command, String rawArgs, String[] args) {
+    public MessageTaggedIrcStanza(final String rawLine, final Map<String, String> tags, final IrcSource source, final IrcCommand command, final String rawArgs, final String[] args) {
         super(rawLine, tags, source, command, rawArgs, args);
         if(tags.containsKey("badges") && !tags.get("badges").isEmpty())
             badges = Arrays.asList(tags.get("badges").split(",")).stream().map(String::toUpperCase).map(s -> s.split("/")[0]).map(s -> {

@@ -8,25 +8,25 @@ import java.util.concurrent.TimeUnit;
  * Created by naomi on 10/12/2016.
  */
 public class LocalRateLimiter implements RateLimiter {
-    private ScheduledExecutorService scheduledExecutorService;
-    private int interval;
-    private Semaphore semaphore;
+    private final ScheduledExecutorService scheduledExecutorService;
+    private final int interval;
+    private final Semaphore semaphore;
 
-    public LocalRateLimiter(ScheduledExecutorService scheduledExecutorService, int threshold, int interval) {
+    public LocalRateLimiter(final ScheduledExecutorService scheduledExecutorService, final int threshold, final int interval) {
         this.scheduledExecutorService = scheduledExecutorService;
         this.interval = interval;
         semaphore = new Semaphore(threshold, true);
     }
 
     @Override
-    public void submit(Runnable task) {
+    public void submit(final Runnable task) {
         if(semaphore.tryAcquire()) {
             run(task);
         } else {
             scheduledExecutorService.submit(() -> {
                 try {
                     submitAndWait(task);
-                } catch (InterruptedException e) {
+                } catch (final InterruptedException e) {
                     e.printStackTrace();
                 }
             });
@@ -34,12 +34,12 @@ public class LocalRateLimiter implements RateLimiter {
     }
 
     @Override
-    public void submitAndWait(Runnable task) throws InterruptedException {
+    public void submitAndWait(final Runnable task) throws InterruptedException {
         semaphore.acquire();
         run(task);
     }
 
-    private void run(Runnable task) {
+    private void run(final Runnable task) {
         try {
             task.run();
         } finally {

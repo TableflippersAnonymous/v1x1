@@ -17,9 +17,9 @@ import java.util.List;
  */
 public class HelloWorldCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private HelloWorld module;
+    private final HelloWorld module;
 
-    public HelloWorldCommand(HelloWorld module) {
+    public HelloWorldCommand(final HelloWorld module) {
         this.module = module;
     }
 
@@ -34,8 +34,8 @@ public class HelloWorldCommand extends Command {
     }
 
     @Override
-    public void run(ChatMessage chatMessage, String command, List<String> args) {
-        String resp = module.language.message(module.toDto(), "hello", ImmutableMap.of("user", chatMessage.getSender().getDisplayName()));
+    public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
+        final String resp = module.language.message(module.toDto(), "hello", ImmutableMap.of("user", chatMessage.getSender().getDisplayName()));
         module.crsc.sendMessage(chatMessage.getChannel(), resp);
     }
 }

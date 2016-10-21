@@ -21,35 +21,35 @@ import java.util.concurrent.TimeoutException;
  */
 public class ChatRouterService extends ThreadedService<SendMessageRequest, SendMessageResponse> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private LoadingCache<String, TmiServiceClient> tmiCache;
+    private final LoadingCache<String, TmiServiceClient> tmiCache;
 
-    public ChatRouterService(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
+    public ChatRouterService(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
         super(module, "ChatRouter", SendMessageRequest.class);
         tmiCache = CacheBuilder.newBuilder()
                 .expireAfterAccess(1, TimeUnit.MINUTES)
                 .removalListener(new RemovalListener<String, TmiServiceClient>() {
                     @Override
-                    public void onRemoval(RemovalNotification<String, TmiServiceClient> removalNotification) {
+                    public void onRemoval(final RemovalNotification<String, TmiServiceClient> removalNotification) {
                         removalNotification.getValue().shutdown();
                     }
                 })
                 .build(new CacheLoader<String, TmiServiceClient>() {
                     @Override
-                    public TmiServiceClient load(String s) throws Exception {
+                    public TmiServiceClient load(final String s) throws Exception {
                         return new TmiServiceClient(module, s);
                     }
                 });
     }
 
     @Override
-    protected SendMessageResponse call(SendMessageRequest request) {
+    protected SendMessageResponse call(final SendMessageRequest request) {
         try {
             LOG.info("Forwarding message={} to {}", request.getText(), request.getDestination().getDisplayName());
-            SendMessageResponse response = tmiCache.get(request.getDestination().getId()).sendMessage(request.getDestination(), request.getText()).get(10, TimeUnit.SECONDS);
+            final SendMessageResponse response = tmiCache.get(request.getDestination().getId()).sendMessage(request.getDestination(), request.getText()).get(10, TimeUnit.SECONDS);
             return new SendMessageResponse(getModule().toDto(), request.getMessageId());
         } catch (InterruptedException | TimeoutException e) {
             throw new RuntimeException(e);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
     }

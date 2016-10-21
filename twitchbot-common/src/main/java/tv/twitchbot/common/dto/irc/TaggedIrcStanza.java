@@ -27,7 +27,7 @@ public abstract class TaggedIrcStanza extends IrcStanza {
     private boolean mod, subscriber, turbo;
     private UserType userType;
 
-    public TaggedIrcStanza(String rawLine, Map<String, String> tags, IrcSource source, IrcCommand command, String rawArgs, String[] args) {
+    public TaggedIrcStanza(final String rawLine, final Map<String, String> tags, final IrcSource source, final IrcCommand command, final String rawArgs, final String[] args) {
         super(rawLine, tags, source, command, rawArgs, args);
         if(tags.containsKey("color") && !tags.get("color").isEmpty())
             color = tags.get("color");
@@ -68,7 +68,7 @@ public abstract class TaggedIrcStanza extends IrcStanza {
     }
 
     protected IRC.TaggedIrcStanza toProtoTagged() {
-        IRC.TaggedIrcStanza.Builder builder = IRC.TaggedIrcStanza.newBuilder();
+        final IRC.TaggedIrcStanza.Builder builder = IRC.TaggedIrcStanza.newBuilder();
         if(color != null)
             builder.setColor(color);
         if(displayName != null)

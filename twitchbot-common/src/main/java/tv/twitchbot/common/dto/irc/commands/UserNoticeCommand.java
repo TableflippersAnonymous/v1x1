@@ -10,9 +10,9 @@ import java.util.Map;
  * Created by naomi on 10/8/2016.
  */
 public class UserNoticeCommand extends MessageTaggedIrcStanza {
-    public static UserNoticeCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.UserNoticeCommand userNoticeCommand) {
-        String channel = userNoticeCommand.getChannel();
-        String message = userNoticeCommand.getMessage();
+    public static UserNoticeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.UserNoticeCommandOrBuilder userNoticeCommand) {
+        final String channel = userNoticeCommand.getChannel();
+        final String message = userNoticeCommand.getMessage();
         return new UserNoticeCommand(rawLine, tags, source, rawArgs, args, channel, message);
     }
 
@@ -27,15 +27,15 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
         }
     }
 
-    private String channel;
-    private String message;
+    private final String channel;
+    private final String message;
 
     private MessageId messageId;
     private int months;
     private String systemMessage;
     private String login;
 
-    public UserNoticeCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, String channel, String message) {
+    public UserNoticeCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel, final String message) {
         super(rawLine, tags, source, IrcCommand.USERNOTICE, rawArgs, args);
         this.channel = channel;
         this.message = message;
@@ -81,7 +81,7 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
     }
 
     private IRC.UserNoticeCommand toProtoCommand() {
-        IRC.UserNoticeCommand.Builder builder = IRC.UserNoticeCommand.newBuilder()
+        final IRC.UserNoticeCommand.Builder builder = IRC.UserNoticeCommand.newBuilder()
                 .setChannel(channel)
                 .setMessage(message);
         if(messageId != null)

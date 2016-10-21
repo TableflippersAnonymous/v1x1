@@ -8,11 +8,11 @@ import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
  * @author Naomi
  */
 public class DiscordBot extends Bot {
-    public static DiscordBot fromProto(String name, BotOuterClass.DiscordBot discordBot) {
+    public static DiscordBot fromProto(final String name, final BotOuterClass.DiscordBot discordBot) {
         return new DiscordBot(name);
     }
 
-    public DiscordBot(String name) {
+    public DiscordBot(final String name) {
         super(name);
     }
 

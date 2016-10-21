@@ -12,23 +12,23 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchPingEvent extends Event {
-    public static TwitchPingEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchPingEvent twitchPingEvent) {
-        String token = twitchPingEvent.getToken();
-        PingCommand pingCommand = (PingCommand) IrcStanza.fromProto(twitchPingEvent.getPingCommand());
+    public static TwitchPingEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchPingEventOrBuilder twitchPingEvent) {
+        final String token = twitchPingEvent.getToken();
+        final PingCommand pingCommand = (PingCommand) IrcStanza.fromProto(twitchPingEvent.getPingCommand());
         return new TwitchPingEvent(module, uuid, timestamp, token, pingCommand);
     }
 
-    private String token;
+    private final String token;
 
-    private PingCommand pingCommand;
+    private final PingCommand pingCommand;
 
-    public TwitchPingEvent(Module from, String token, PingCommand pingCommand) {
+    public TwitchPingEvent(final Module from, final String token, final PingCommand pingCommand) {
         super(from);
         this.token = token;
         this.pingCommand = pingCommand;
     }
 
-    public TwitchPingEvent(Module from, UUID messageId, long timestamp, String token, PingCommand pingCommand) {
+    public TwitchPingEvent(final Module from, final UUID messageId, final long timestamp, final String token, final PingCommand pingCommand) {
         super(from, messageId, timestamp);
         this.token = token;
         this.pingCommand = pingCommand;

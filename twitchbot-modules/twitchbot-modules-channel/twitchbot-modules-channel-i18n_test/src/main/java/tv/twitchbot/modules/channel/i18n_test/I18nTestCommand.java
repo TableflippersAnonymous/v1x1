@@ -19,7 +19,7 @@ public class I18nTestCommand extends Command {
     I18nTest module;
     Map<String, Object> testData;
 
-    I18nTestCommand(I18nTest module) {
+    I18nTestCommand(final I18nTest module) {
         this.module = module;
         testData = new HashMap<>();
         testData.put("name", "SnoFox");
@@ -40,7 +40,7 @@ public class I18nTestCommand extends Command {
     }
 
     @Override
-    public void run(ChatMessage chatMessage, String command, List<String> args) {
+    public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         module.language.set(module.toDto(), "userdefined", Joiner.on(' ').join(args));
         module.crsc.sendMessage(chatMessage.getChannel(), module.language.message(module.toDto(), "userdefined", testData));
     }

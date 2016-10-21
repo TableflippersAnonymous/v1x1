@@ -7,7 +7,7 @@ import tv.twitchbot.common.dto.proto.core.UserOuterClass;
  * @author Naomi
  */
 public abstract class User {
-    public static User fromProto(UserOuterClass.User user) {
+    public static User fromProto(final UserOuterClass.User user) {
         switch(user.getPlatform()) {
             case TWITCH: return TwitchUser.fromProto(user);
             case DISCORD: return DiscordUser.fromProto(user);
@@ -15,7 +15,7 @@ public abstract class User {
         }
     }
 
-    public static User fromProto(GlobalUser globalUser, UserOuterClass.GlobalUserEntry globalUserEntry) {
+    public static User fromProto(final GlobalUser globalUser, final UserOuterClass.GlobalUserEntry globalUserEntry) {
         switch(globalUserEntry.getPlatform()) {
             case TWITCH: return TwitchUser.fromProto(globalUser, globalUserEntry);
             case DISCORD: return DiscordUser.fromProto(globalUser, globalUserEntry);
@@ -24,11 +24,11 @@ public abstract class User {
     }
 
 
-    private String id;
-    private GlobalUser globalUser;
-    private String displayName;
+    private final String id;
+    private final GlobalUser globalUser;
+    private final String displayName;
 
-    public User(String id, GlobalUser globalUser, String displayName) {
+    public User(final String id, final GlobalUser globalUser, final String displayName) {
         this.id = id;
         this.globalUser = globalUser;
         this.displayName = displayName;
@@ -47,11 +47,11 @@ public abstract class User {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        User user = (User) o;
+        final User user = (User) o;
 
         return id != null ? id.equals(user.id) : user.id == null;
 

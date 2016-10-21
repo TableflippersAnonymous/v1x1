@@ -11,14 +11,14 @@ import java.util.Map;
  * Created by naomi on 10/8/2016.
  */
 public class JoinCommand extends IrcStanza {
-    public static JoinCommand fromProto(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, IRC.JoinCommand joinCommand) {
-        String channel = joinCommand.getChannel();
+    public static JoinCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.JoinCommandOrBuilder joinCommand) {
+        final String channel = joinCommand.getChannel();
         return new JoinCommand(rawLine, tags, source, rawArgs, args, channel);
     }
 
-    private String channel;
+    private final String channel;
 
-    public JoinCommand(String rawLine, Map<String, String> tags, IrcSource source, String rawArgs, String[] args, String channel) {
+    public JoinCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel) {
         super(rawLine, tags, source, IrcCommand.JOIN, rawArgs, args);
         this.channel = channel;
     }

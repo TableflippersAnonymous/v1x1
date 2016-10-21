@@ -16,11 +16,11 @@ import java.util.concurrent.Future;
  */
 public class ChatRouterServiceClient extends ServiceClient<SendMessageRequest, SendMessageResponse> {
 
-    public ChatRouterServiceClient(Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
+    public ChatRouterServiceClient(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
         super(module, SendMessageResponse.class);
     }
 
-    public Future<SendMessageResponse> sendMessage(Channel channel, String text) {
+    public Future<SendMessageResponse> sendMessage(final Channel channel, final String text) {
         return send(new SendMessageRequest(getModule(), getQueueName(), channel, text));
     }
 

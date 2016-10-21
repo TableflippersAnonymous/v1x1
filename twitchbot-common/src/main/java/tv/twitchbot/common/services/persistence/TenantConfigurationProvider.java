@@ -18,12 +18,12 @@ import java.util.concurrent.TimeUnit;
  * Created by naomi on 10/17/2016.
  */
 public class TenantConfigurationProvider<T extends TenantConfiguration> {
-    private LoadingCache<Tenant, T> cache;
-    private DAOTenantConfiguration daoTenantConfiguration;
-    private ObjectMapper mapper;
-    private Module module;
+    private final LoadingCache<Tenant, T> cache;
+    private final DAOTenantConfiguration daoTenantConfiguration;
+    private final ObjectMapper mapper;
+    private final Module module;
 
-    public TenantConfigurationProvider(Module module, DAOManager daoManager, Class<T> clazz) {
+    public TenantConfigurationProvider(final Module module, final DAOManager daoManager, final Class<T> clazz) {
         daoTenantConfiguration = daoManager.getDaoTenantConfiguration();
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
@@ -31,13 +31,13 @@ public class TenantConfigurationProvider<T extends TenantConfiguration> {
                 .expireAfterWrite(10, TimeUnit.SECONDS)
                 .build(new CacheLoader<Tenant, T>() {
                     @Override
-                    public T load(Tenant tenant) throws Exception {
+                    public T load(final Tenant tenant) throws Exception {
                         try {
-                            tv.twitchbot.common.dto.db.TenantConfiguration tenantConfiguration = daoTenantConfiguration.get(module, tenant);
+                            final tv.twitchbot.common.dto.db.TenantConfiguration tenantConfiguration = daoTenantConfiguration.get(module, tenant);
                             if (tenantConfiguration == null)
                                 return mapper.readValue("{}", clazz);
                             return mapper.readValue(tenantConfiguration.getJson(), clazz);
-                        } catch(Exception e) {
+                        } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
                         }
@@ -45,19 +45,19 @@ public class TenantConfigurationProvider<T extends TenantConfiguration> {
                 });
     }
 
-    public T getTenantConfiguration(Tenant tenant) {
+    public T getTenantConfiguration(final Tenant tenant) {
         try {
             return cache.get(tenant);
-        } catch (ExecutionException e) {
+        } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void save(Tenant tenant, T configuration) {
+    public void save(final Tenant tenant, final T configuration) {
         try {
-            tv.twitchbot.common.dto.db.TenantConfiguration dbConfiguration = new tv.twitchbot.common.dto.db.TenantConfiguration(module.getName(), tenant.getId().getValue(), mapper.writeValueAsString(configuration));
+            final tv.twitchbot.common.dto.db.TenantConfiguration dbConfiguration = new tv.twitchbot.common.dto.db.TenantConfiguration(module.getName(), tenant.getId().getValue(), mapper.writeValueAsString(configuration));
             daoTenantConfiguration.put(dbConfiguration);
-        } catch (JsonProcessingException e) {
+        } catch (final JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }

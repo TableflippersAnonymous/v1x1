@@ -12,23 +12,23 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchRoomStateEvent extends Event {
-    public static TwitchRoomStateEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchRoomStateEvent twitchRoomStateEvent) {
-        TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchRoomStateEvent.getChannel());
-        RoomStateCommand roomStateCommand = (RoomStateCommand) IrcStanza.fromProto(twitchRoomStateEvent.getRoomStateCommand());
+    public static TwitchRoomStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchRoomStateEventOrBuilder twitchRoomStateEvent) {
+        final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchRoomStateEvent.getChannel());
+        final RoomStateCommand roomStateCommand = (RoomStateCommand) IrcStanza.fromProto(twitchRoomStateEvent.getRoomStateCommand());
         return new TwitchRoomStateEvent(module, uuid, timestamp, channel, roomStateCommand);
     }
 
-    private TwitchChannel channel;
+    private final TwitchChannel channel;
 
-    private RoomStateCommand roomStateCommand;
+    private final RoomStateCommand roomStateCommand;
 
-    public TwitchRoomStateEvent(Module from, TwitchChannel channel, RoomStateCommand roomStateCommand) {
+    public TwitchRoomStateEvent(final Module from, final TwitchChannel channel, final RoomStateCommand roomStateCommand) {
         super(from);
         this.channel = channel;
         this.roomStateCommand = roomStateCommand;
     }
 
-    public TwitchRoomStateEvent(Module from, UUID messageId, long timestamp, TwitchChannel channel, RoomStateCommand roomStateCommand) {
+    public TwitchRoomStateEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final RoomStateCommand roomStateCommand) {
         super(from, messageId, timestamp);
         this.channel = channel;
         this.roomStateCommand = roomStateCommand;

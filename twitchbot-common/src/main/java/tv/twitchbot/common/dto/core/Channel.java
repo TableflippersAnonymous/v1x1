@@ -7,7 +7,7 @@ import tv.twitchbot.common.dto.proto.core.ChannelOuterClass;
  * @author Naomi
  */
 public abstract class Channel {
-    public static Channel fromProto(ChannelOuterClass.Channel channel) {
+    public static Channel fromProto(final ChannelOuterClass.Channel channel) {
         switch(channel.getPlatform()) {
             case TWITCH: return TwitchChannel.fromProto(channel);
             case DISCORD: return DiscordChannel.fromProto(channel);
@@ -15,7 +15,7 @@ public abstract class Channel {
         }
     }
 
-    public static Channel fromProto(Tenant tenant, ChannelOuterClass.TenantEntry tenantEntry) {
+    public static Channel fromProto(final Tenant tenant, final ChannelOuterClass.TenantEntry tenantEntry) {
         switch(tenantEntry.getPlatform()) {
             case TWITCH: return TwitchChannel.fromProto(tenant, tenantEntry);
             case DISCORD: return DiscordChannel.fromProto(tenant, tenantEntry);
@@ -27,7 +27,7 @@ public abstract class Channel {
     protected Tenant tenant;
     protected String displayName;
 
-    public Channel(String id, Tenant tenant, String displayName) {
+    public Channel(final String id, final Tenant tenant, final String displayName) {
         this.id = id;
         this.tenant = tenant;
         this.displayName = displayName;

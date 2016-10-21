@@ -11,8 +11,8 @@ import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
  * Created by naomi on 10/4/16.
  */
 public abstract class Response<T extends Request> extends Message {
-    public static Response<? extends Request> fromProto(Module module, UUID uuid, long timestamp, RequestOuterClass.Response response) {
-        UUID requestMessageId = UUID.fromProto(response.getRequestMessageId());
+    public static Response<? extends Request> fromProto(final Module module, final UUID uuid, final long timestamp, final RequestOuterClass.Response response) {
+        final UUID requestMessageId = UUID.fromProto(response.getRequestMessageId());
         switch(response.getType()) {
             case MODULE_SHUTDOWN: return ModuleShutdownResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ModuleShutdownResponse.data));
             case SEND_MESSAGE: return SendMessageResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.SendMessageResponse.data));
@@ -20,14 +20,14 @@ public abstract class Response<T extends Request> extends Message {
         }
     }
 
-    private UUID requestMessageId;
+    private final UUID requestMessageId;
 
-    public Response(Module from, UUID requestMessageId) {
+    public Response(final Module from, final UUID requestMessageId) {
         super(from);
         this.requestMessageId = requestMessageId;
     }
 
-    public Response(Module from, UUID messageId, long timestamp, UUID requestMessageId) {
+    public Response(final Module from, final UUID messageId, final long timestamp, final UUID requestMessageId) {
         super(from, messageId, timestamp);
         this.requestMessageId = requestMessageId;
     }

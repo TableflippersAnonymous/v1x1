@@ -14,23 +14,23 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchReconnectEvent extends Event {
-    public static TwitchReconnectEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchReconnectEvent twitchReconnectEvent) {
-        TwitchBot bot = (TwitchBot) Bot.fromProto(twitchReconnectEvent.getBot());
-        ReconnectCommand reconnectCommand = (ReconnectCommand) IrcStanza.fromProto(twitchReconnectEvent.getReconnectCommand());
+    public static TwitchReconnectEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchReconnectEventOrBuilder twitchReconnectEvent) {
+        final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchReconnectEvent.getBot());
+        final ReconnectCommand reconnectCommand = (ReconnectCommand) IrcStanza.fromProto(twitchReconnectEvent.getReconnectCommand());
         return new TwitchReconnectEvent(module, uuid, timestamp, bot, reconnectCommand);
     }
 
-    private TwitchBot bot;
+    private final TwitchBot bot;
 
-    private ReconnectCommand reconnectCommand;
+    private final ReconnectCommand reconnectCommand;
 
-    public TwitchReconnectEvent(Module from, TwitchBot bot, ReconnectCommand reconnectCommand) {
+    public TwitchReconnectEvent(final Module from, final TwitchBot bot, final ReconnectCommand reconnectCommand) {
         super(from);
         this.bot = bot;
         this.reconnectCommand = reconnectCommand;
     }
 
-    public TwitchReconnectEvent(Module from, UUID messageId, long timestamp, TwitchBot bot, ReconnectCommand reconnectCommand) {
+    public TwitchReconnectEvent(final Module from, final UUID messageId, final long timestamp, final TwitchBot bot, final ReconnectCommand reconnectCommand) {
         super(from, messageId, timestamp);
         this.bot = bot;
         this.reconnectCommand = reconnectCommand;

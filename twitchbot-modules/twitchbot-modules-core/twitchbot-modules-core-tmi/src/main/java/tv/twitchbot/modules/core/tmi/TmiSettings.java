@@ -15,7 +15,7 @@ public class TmiSettings extends ModuleSettings {
     }
 
     @JsonProperty("max_connections")
-    public void setMaxConnections(int maxConnections) {
+    public void setMaxConnections(final int maxConnections) {
         this.maxConnections = maxConnections;
     }
 }

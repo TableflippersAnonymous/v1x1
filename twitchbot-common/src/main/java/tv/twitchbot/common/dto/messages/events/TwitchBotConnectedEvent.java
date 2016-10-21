@@ -11,23 +11,23 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchBotConnectedEvent extends Event {
-    public static TwitchBotConnectedEvent fromProto(Module module, UUID uuid, long timestamp, EventOuterClass.TwitchBotConnectedEvent twitchBotConnectedEvent) {
-        TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotConnectedEvent.getBot());
-        RplEndOfMotdCommand rplEndOfMotdCommand = (RplEndOfMotdCommand) IrcStanza.fromProto(twitchBotConnectedEvent.getRplEndOfMotdCommand());
+    public static TwitchBotConnectedEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotConnectedEventOrBuilder twitchBotConnectedEvent) {
+        final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotConnectedEvent.getBot());
+        final RplEndOfMotdCommand rplEndOfMotdCommand = (RplEndOfMotdCommand) IrcStanza.fromProto(twitchBotConnectedEvent.getRplEndOfMotdCommand());
         return new TwitchBotConnectedEvent(module, uuid, timestamp, bot, rplEndOfMotdCommand);
     }
 
-    private TwitchBot bot;
+    private final TwitchBot bot;
 
-    private RplEndOfMotdCommand rplEndOfMotdCommand;
+    private final RplEndOfMotdCommand rplEndOfMotdCommand;
 
-    public TwitchBotConnectedEvent(Module from, TwitchBot bot, RplEndOfMotdCommand rplEndOfMotdCommand) {
+    public TwitchBotConnectedEvent(final Module from, final TwitchBot bot, final RplEndOfMotdCommand rplEndOfMotdCommand) {
         super(from);
         this.bot = bot;
         this.rplEndOfMotdCommand = rplEndOfMotdCommand;
     }
 
-    public TwitchBotConnectedEvent(Module from, UUID messageId, long timestamp, TwitchBot bot, RplEndOfMotdCommand rplEndOfMotdCommand) {
+    public TwitchBotConnectedEvent(final Module from, final UUID messageId, final long timestamp, final TwitchBot bot, final RplEndOfMotdCommand rplEndOfMotdCommand) {
         super(from, messageId, timestamp);
         this.bot = bot;
         this.rplEndOfMotdCommand = rplEndOfMotdCommand;

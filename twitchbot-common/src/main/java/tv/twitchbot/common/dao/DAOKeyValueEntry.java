@@ -8,21 +8,21 @@ import tv.twitchbot.common.dto.db.KeyValueEntry;
  * Created by naomi on 10/17/2016.
  */
 public class DAOKeyValueEntry {
-    private Mapper<KeyValueEntry> mapper;
+    private final Mapper<KeyValueEntry> mapper;
 
-    public DAOKeyValueEntry(MappingManager mappingManager) {
+    public DAOKeyValueEntry(final MappingManager mappingManager) {
         mapper = mappingManager.mapper(KeyValueEntry.class);
     }
 
-    public void put(KeyValueEntry keyValueEntry) {
+    public void put(final KeyValueEntry keyValueEntry) {
         mapper.save(keyValueEntry);
     }
 
-    public KeyValueEntry get(String name, byte[] key) {
+    public KeyValueEntry get(final String name, final byte[] key) {
         return mapper.get(name, key);
     }
 
-    public void delete(KeyValueEntry keyValueEntry) {
+    public void delete(final KeyValueEntry keyValueEntry) {
         mapper.delete(keyValueEntry);
     }
 }

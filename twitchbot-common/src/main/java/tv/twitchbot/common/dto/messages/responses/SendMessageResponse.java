@@ -10,15 +10,15 @@ import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
  * Created by naomi on 10/5/16.
  */
 public class SendMessageResponse extends Response<SendMessageRequest> {
-    public static SendMessageResponse fromProto(Module module, UUID uuid, long timestamp, UUID requestMessageId, RequestOuterClass.SendMessageResponse extension) {
+    public static SendMessageResponse fromProto(final Module module, final UUID uuid, final long timestamp, final UUID requestMessageId, final RequestOuterClass.SendMessageResponse extension) {
         return new SendMessageResponse(module, uuid, timestamp, requestMessageId);
     }
 
-    public SendMessageResponse(Module from, UUID requestMessageId) {
+    public SendMessageResponse(final Module from, final UUID requestMessageId) {
         super(from, requestMessageId);
     }
 
-    public SendMessageResponse(Module from, UUID messageId, long timestamp, UUID requestMessageId) {
+    public SendMessageResponse(final Module from, final UUID messageId, final long timestamp, final UUID requestMessageId) {
         super(from, messageId, timestamp, requestMessageId);
     }
 
