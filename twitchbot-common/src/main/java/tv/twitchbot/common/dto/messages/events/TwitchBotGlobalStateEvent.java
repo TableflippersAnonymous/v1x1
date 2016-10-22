@@ -15,7 +15,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#globaluserstate">Twitch-API documentation</a>
  */
 public class TwitchBotGlobalStateEvent extends Event {
-    public static TwitchBotGlobalStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotGlobalStateEventOrBuilder twitchBotGlobalStateEvent) {
+    public static TwitchBotGlobalStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotGlobalStateEvent twitchBotGlobalStateEvent) {
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotGlobalStateEvent.getBot());
         final GlobalUserStateCommand globalUserStateCommand = (GlobalUserStateCommand) IrcStanza.fromProto(twitchBotGlobalStateEvent.getGlobalUserStateCommand());
         return new TwitchBotGlobalStateEvent(module, uuid, timestamp, bot, globalUserStateCommand);

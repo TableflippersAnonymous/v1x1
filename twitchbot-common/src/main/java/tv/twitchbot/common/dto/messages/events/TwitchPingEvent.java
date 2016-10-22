@@ -12,7 +12,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchPingEvent extends Event {
-    public static TwitchPingEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchPingEventOrBuilder twitchPingEvent) {
+    public static TwitchPingEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchPingEvent twitchPingEvent) {
         final String token = twitchPingEvent.getToken();
         final PingCommand pingCommand = (PingCommand) IrcStanza.fromProto(twitchPingEvent.getPingCommand());
         return new TwitchPingEvent(module, uuid, timestamp, token, pingCommand);

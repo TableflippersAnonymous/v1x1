@@ -12,7 +12,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#clearchat-1">Twitch-API Documentation</a>
  */
 public class TwitchTimeoutEvent extends Event {
-    public static TwitchTimeoutEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchTimeoutEventOrBuilder twitchTimeoutEvent) {
+    public static TwitchTimeoutEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchTimeoutEvent twitchTimeoutEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchTimeoutEvent.getChannel());
         final TwitchUser user = (TwitchUser) User.fromProto(twitchTimeoutEvent.getUser());
         final ClearChatCommand clearChatCommand = (ClearChatCommand) IrcStanza.fromProto(twitchTimeoutEvent.getClearChatCommand());

@@ -6,7 +6,7 @@ import tv.twitchbot.common.dto.proto.core.IRC;
  * Created by naomi on 10/8/2016.
  */
 public class IrcServer extends IrcSource {
-    public static IrcServer fromProto(final IRC.IrcServerOrBuilder server) {
+    public static IrcServer fromProto(final IRC.IrcServer server) {
         final String name = server.getName();
         return new IrcServer(name);
     }

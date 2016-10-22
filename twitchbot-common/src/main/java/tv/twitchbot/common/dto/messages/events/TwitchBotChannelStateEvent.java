@@ -12,7 +12,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#userstate-1">Twitch-API documentation</a>
  */
 public class TwitchBotChannelStateEvent extends Event {
-    public static TwitchBotChannelStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotChannelStateEventOrBuilder twitchBotChannelStateEvent) {
+    public static TwitchBotChannelStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotChannelStateEvent twitchBotChannelStateEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchBotChannelStateEvent.getChannel());
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotChannelStateEvent.getBot());
         final UserStateCommand userStateCommand = (UserStateCommand) IrcStanza.fromProto(twitchBotChannelStateEvent.getUserStateCommand());

@@ -8,7 +8,7 @@ import tv.twitchbot.common.dto.proto.core.UUIDOuterClass;
  * @author Naomi
  */
 public class UUID {
-    public static UUID fromProto(final UUIDOuterClass.UUIDOrBuilder uuid) {
+    public static UUID fromProto(final UUIDOuterClass.UUID uuid) {
         final java.util.UUID realUuid = new java.util.UUID(uuid.getMostSignificantBits(), uuid.getLeastSignificantBits());
         return new UUID(realUuid);
     }

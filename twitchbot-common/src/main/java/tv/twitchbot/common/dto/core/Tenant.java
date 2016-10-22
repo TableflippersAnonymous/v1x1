@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
  * @author Naomi
  */
 public class Tenant {
-    public static Tenant fromProto(final ChannelOuterClass.TenantOrBuilder proto) {
+    public static Tenant fromProto(final ChannelOuterClass.Tenant proto) {
         final UUID uuid = UUID.fromProto(proto.getId());
         final List<Channel> channels = new ArrayList<>();
         final Tenant tenant = new Tenant(uuid, channels);

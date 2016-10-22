@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
  * @author Naomi
  */
 public class ChatMessage {
-    public static ChatMessage fromProto(final ChatMessageOuterClass.ChatMessageOrBuilder message) {
+    public static ChatMessage fromProto(final ChatMessageOuterClass.ChatMessage message) {
         final Channel channel = Channel.fromProto(message.getChannel());
         final User sender = User.fromProto(message.getSender());
         final String text = message.getText();

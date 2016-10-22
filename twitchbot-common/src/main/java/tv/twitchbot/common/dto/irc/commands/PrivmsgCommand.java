@@ -11,7 +11,7 @@ import java.util.UUID;
  * Created by naomi on 10/8/2016.
  */
 public class PrivmsgCommand extends MessageTaggedIrcStanza {
-    public static PrivmsgCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.PrivmsgCommandOrBuilder privmsgCommand) {
+    public static PrivmsgCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.PrivmsgCommand privmsgCommand) {
         final String channel = privmsgCommand.getChannel();
         final String message = privmsgCommand.getMessage();
         return new PrivmsgCommand(rawLine, tags, source, rawArgs, args, channel, message);

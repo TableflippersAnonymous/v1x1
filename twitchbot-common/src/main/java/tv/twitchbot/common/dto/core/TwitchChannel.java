@@ -9,14 +9,14 @@ import tv.twitchbot.common.dto.proto.core.PlatformOuterClass;
  * @author Naomi
  */
 public class TwitchChannel extends Channel {
-    public static TwitchChannel fromProto(final ChannelOuterClass.ChannelOrBuilder channel) {
+    public static TwitchChannel fromProto(final ChannelOuterClass.Channel channel) {
         final String id = channel.getId();
         final Tenant tenant = Tenant.fromProto(channel.getTenant());
         final String displayName = channel.getDisplayName();
         return new TwitchChannel(id, tenant, displayName);
     }
 
-    public static TwitchChannel fromProto(final Tenant tenant, final ChannelOuterClass.TenantEntryOrBuilder tenantEntry) {
+    public static TwitchChannel fromProto(final Tenant tenant, final ChannelOuterClass.TenantEntry tenantEntry) {
         final String id = tenantEntry.getId();
         final String displayName = tenantEntry.getDisplayName();
         return new TwitchChannel(id, tenant, displayName);

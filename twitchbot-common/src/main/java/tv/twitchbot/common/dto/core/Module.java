@@ -7,7 +7,7 @@ import tv.twitchbot.common.dto.proto.core.ModuleOuterClass;
  * @author Naomi
  */
 public class Module {
-    public static Module fromProto(final ModuleOuterClass.ModuleOrBuilder module) {
+    public static Module fromProto(final ModuleOuterClass.Module module) {
         return new Module(module.getName());
     }
 

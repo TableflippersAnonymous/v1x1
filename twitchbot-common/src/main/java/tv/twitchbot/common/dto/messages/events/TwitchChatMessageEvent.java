@@ -13,7 +13,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchChatMessageEvent extends ChatMessageEvent {
-    public static TwitchChatMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final ChatMessage chatMessage, final EventOuterClass.TwitchChatMessageEventOrBuilder twitchChatMessageEvent) {
+    public static TwitchChatMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final ChatMessage chatMessage, final EventOuterClass.TwitchChatMessageEvent twitchChatMessageEvent) {
         final PrivmsgCommand privmsgCommand = (PrivmsgCommand) IrcStanza.fromProto(twitchChatMessageEvent.getPrivmsgCommand());
         return new TwitchChatMessageEvent(module, uuid, timestamp, chatMessage, privmsgCommand);
     }

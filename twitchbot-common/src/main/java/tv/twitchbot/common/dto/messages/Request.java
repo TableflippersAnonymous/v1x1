@@ -3,6 +3,7 @@ package tv.twitchbot.common.dto.messages;
 import tv.twitchbot.common.dto.core.Module;
 import tv.twitchbot.common.dto.core.UUID;
 import tv.twitchbot.common.dto.messages.requests.ModuleShutdownRequest;
+import tv.twitchbot.common.dto.messages.requests.ScheduleRequest;
 import tv.twitchbot.common.dto.messages.requests.SendMessageRequest;
 import tv.twitchbot.common.dto.proto.messages.MessageOuterClass;
 import tv.twitchbot.common.dto.proto.messages.RequestOuterClass;
@@ -16,6 +17,7 @@ public abstract class Request extends Message {
         switch(request.getType()) {
             case MODULE_SHUTDOWN: return ModuleShutdownRequest.fromProto(module, uuid, timestamp, responseQueueName, request.getExtension(RequestOuterClass.ModuleShutdownRequest.data));
             case SEND_MESSAGE: return SendMessageRequest.fromProto(module, uuid, timestamp, responseQueueName, request.getExtension(RequestOuterClass.SendMessageRequest.data));
+            case SCHEDULE: return ScheduleRequest.fromProto(module, uuid, timestamp, responseQueueName, request.getExtension(RequestOuterClass.ScheduleRequest.data));
             default: throw new IllegalStateException("Unknown request type " + request.getType().name());
         }
     }

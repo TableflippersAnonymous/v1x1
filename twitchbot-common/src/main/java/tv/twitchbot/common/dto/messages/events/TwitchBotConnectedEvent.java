@@ -11,7 +11,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchBotConnectedEvent extends Event {
-    public static TwitchBotConnectedEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotConnectedEventOrBuilder twitchBotConnectedEvent) {
+    public static TwitchBotConnectedEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotConnectedEvent twitchBotConnectedEvent) {
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotConnectedEvent.getBot());
         final RplEndOfMotdCommand rplEndOfMotdCommand = (RplEndOfMotdCommand) IrcStanza.fromProto(twitchBotConnectedEvent.getRplEndOfMotdCommand());
         return new TwitchBotConnectedEvent(module, uuid, timestamp, bot, rplEndOfMotdCommand);

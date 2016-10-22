@@ -12,7 +12,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#usernotice-1">Twitch-API Documentation</a>
  */
 public class TwitchUserEvent extends Event {
-    public static TwitchUserEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchUserEventOrBuilder twitchUserEvent) {
+    public static TwitchUserEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchUserEvent twitchUserEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchUserEvent.getChannel());
         final TwitchUser user = (TwitchUser) User.fromProto(twitchUserEvent.getUser());
         final String message = twitchUserEvent.getMessage();

@@ -8,7 +8,7 @@ import tv.twitchbot.common.dto.proto.core.ModuleOuterClass;
  * @author Naomi
  */
 public class ModuleInstance {
-    public static ModuleInstance fromProto(final ModuleOuterClass.ModuleInstanceOrBuilder moduleInstance) {
+    public static ModuleInstance fromProto(final ModuleOuterClass.ModuleInstance moduleInstance) {
         final Module module = Module.fromProto(moduleInstance.getModule());
         final UUID uuid = UUID.fromProto(moduleInstance.getId());
         return new ModuleInstance(uuid, module);

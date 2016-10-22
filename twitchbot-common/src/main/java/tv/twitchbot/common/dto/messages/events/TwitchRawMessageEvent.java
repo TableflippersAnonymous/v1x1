@@ -13,7 +13,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchRawMessageEvent extends Event {
-    public static TwitchRawMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchRawMessageEventOrBuilder twitchRawMessageEvent) {
+    public static TwitchRawMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchRawMessageEvent twitchRawMessageEvent) {
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchRawMessageEvent.getBot());
         final IrcStanza ircStanza = IrcStanza.fromProto(twitchRawMessageEvent.getIrcStanza());
         return new TwitchRawMessageEvent(module, uuid, timestamp, bot, ircStanza);

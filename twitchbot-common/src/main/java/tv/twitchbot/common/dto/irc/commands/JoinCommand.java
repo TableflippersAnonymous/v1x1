@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by naomi on 10/8/2016.
  */
 public class JoinCommand extends IrcStanza {
-    public static JoinCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.JoinCommandOrBuilder joinCommand) {
+    public static JoinCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.JoinCommand joinCommand) {
         final String channel = joinCommand.getChannel();
         return new JoinCommand(rawLine, tags, source, rawArgs, args, channel);
     }

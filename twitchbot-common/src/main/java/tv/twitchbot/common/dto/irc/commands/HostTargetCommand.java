@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by naomi on 10/8/2016.
  */
 public class HostTargetCommand extends IrcStanza {
-    public static HostTargetCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.HostTargetCommandOrBuilder hostTargetCommand) {
+    public static HostTargetCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.HostTargetCommand hostTargetCommand) {
         final String channel = hostTargetCommand.getChannel();
         final String targetChannel = hostTargetCommand.getTargetChannel();
         return new HostTargetCommand(rawLine, tags, source, rawArgs, args, channel, targetChannel);
