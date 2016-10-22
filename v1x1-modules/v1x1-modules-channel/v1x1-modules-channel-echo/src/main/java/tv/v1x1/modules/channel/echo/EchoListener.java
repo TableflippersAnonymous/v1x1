@@ -19,6 +19,8 @@ public class EchoListener implements EventListener {
 
     @EventHandler
     public void onChatJoin(final ChatJoinEvent ev) {
+        if(!echo.getTenantConfiguration(ev.getChannel().getTenant()).isEnabled())
+            return;
         final StringBuilder sb = new StringBuilder();
         sb.append("Echo: ");
         sb.append(ev.getUser().getDisplayName());
@@ -28,6 +30,8 @@ public class EchoListener implements EventListener {
 
     @EventHandler
     public void onChatPart(final ChatPartEvent ev) {
+        if(!echo.getTenantConfiguration(ev.getChannel().getTenant()).isEnabled())
+            return;
         final StringBuilder sb = new StringBuilder();
         sb.append("Echo: ");
         sb.append(ev.getUser().getDisplayName());
@@ -37,6 +41,8 @@ public class EchoListener implements EventListener {
 
     @EventHandler
     public void onChatMessage(final ChatMessageEvent ev) {
+        if(!echo.getTenantConfiguration(ev.getChatMessage().getChannel().getTenant()).isEnabled())
+            return;
         System.out.println("Got chat message event");
         final StringBuilder sb = new StringBuilder();
         sb.append("Echo: ");
