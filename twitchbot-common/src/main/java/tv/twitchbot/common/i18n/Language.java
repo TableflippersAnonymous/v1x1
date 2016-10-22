@@ -1,6 +1,7 @@
 package tv.twitchbot.common.i18n;
 
 import tv.twitchbot.common.dto.core.Module;
+import tv.twitchbot.common.util.data.Pair;
 
 import java.text.MessageFormat;
 import java.util.Date;
@@ -10,15 +11,6 @@ import java.util.Map;
  * @author Josh
  */
 public abstract class Language {
-    private static class Pair<T, U> {
-        T left;
-        U right;
-        Pair(final T left, final U right) {
-            this.left = left;
-            this.right = right;
-        }
-    }
-
     public abstract String message(Module module, String key, Map<String, Object> parameters);
     public abstract void set(Module module, String key, String message);
 
@@ -37,13 +29,13 @@ public abstract class Language {
             }
             if(i == '%') {
                 final Pair<String, Integer> tokenAndPos = scanForChar(inputArray, position, '%');
-                if(tokenAndPos.left == null) {
-                    blind = tokenAndPos.right - position;
+                if(tokenAndPos.getFirst() == null) {
+                    blind = tokenAndPos.getSecond() - position;
                     output.append(i);
                     continue;
                 }
-                output.append(getToken(tokenAndPos.left, parameters));
-                position = tokenAndPos.right;
+                output.append(getToken(tokenAndPos.getFirst(), parameters));
+                position = tokenAndPos.getSecond();
                 continue;
             }
             output.append(i);
