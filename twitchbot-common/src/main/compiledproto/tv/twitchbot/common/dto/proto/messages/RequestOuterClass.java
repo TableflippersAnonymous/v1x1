@@ -13,6 +13,8 @@ public final class RequestOuterClass {
     registry.add(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ModuleShutdownResponse.data);
     registry.add(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.SendMessageRequest.data);
     registry.add(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.SendMessageResponse.data);
+    registry.add(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.data);
+    registry.add(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.data);
   }
 
   public static void registerAllExtensions(
@@ -37,6 +39,10 @@ public final class RequestOuterClass {
      * <code>SEND_MESSAGE = 2;</code>
      */
     SEND_MESSAGE(2),
+    /**
+     * <code>SCHEDULE = 3;</code>
+     */
+    SCHEDULE(3),
     ;
 
     /**
@@ -51,6 +57,10 @@ public final class RequestOuterClass {
      * <code>SEND_MESSAGE = 2;</code>
      */
     public static final int SEND_MESSAGE_VALUE = 2;
+    /**
+     * <code>SCHEDULE = 3;</code>
+     */
+    public static final int SCHEDULE_VALUE = 3;
 
 
     public final int getNumber() {
@@ -70,6 +80,7 @@ public final class RequestOuterClass {
         case 0: return UNKNOWN;
         case 1: return MODULE_SHUTDOWN;
         case 2: return SEND_MESSAGE;
+        case 3: return SCHEDULE;
         default: return null;
       }
     }
@@ -3515,6 +3526,2774 @@ public final class RequestOuterClass {
           tv.twitchbot.common.dto.proto.messages.RequestOuterClass.SendMessageResponse.getDefaultInstance());
   }
 
+  public interface ScheduleRequestOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.twitchbot.common.dto.proto.messages.ScheduleRequest)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder();
+
+    /**
+     * <code>required bytes payload = 2;</code>
+     */
+    boolean hasPayload();
+    /**
+     * <code>required bytes payload = 2;</code>
+     */
+    com.google.protobuf.ByteString getPayload();
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type type = 3;</code>
+     */
+    boolean hasType();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type type = 3;</code>
+     */
+    tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type getType();
+
+    /**
+     * <code>optional sfixed64 delay = 4;</code>
+     */
+    boolean hasDelay();
+    /**
+     * <code>optional sfixed64 delay = 4;</code>
+     */
+    long getDelay();
+
+    /**
+     * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+     */
+    boolean hasCron();
+    /**
+     * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+     */
+    tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron getCron();
+    /**
+     * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+     */
+    tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.CronOrBuilder getCronOrBuilder();
+  }
+  /**
+   * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ScheduleRequest}
+   */
+  public  static final class ScheduleRequest extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.twitchbot.common.dto.proto.messages.ScheduleRequest)
+      ScheduleRequestOrBuilder {
+    // Use ScheduleRequest.newBuilder() to construct.
+    private ScheduleRequest(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ScheduleRequest() {
+      payload_ = com.google.protobuf.ByteString.EMPTY;
+      type_ = 0;
+      delay_ = 0L;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ScheduleRequest(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = id_.toBuilder();
+              }
+              id_ = input.readMessage(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(id_);
+                id_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              payload_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              int rawValue = input.readEnum();
+              tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type value = tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(3, rawValue);
+              } else {
+                bitField0_ |= 0x00000004;
+                type_ = rawValue;
+              }
+              break;
+            }
+            case 33: {
+              bitField0_ |= 0x00000008;
+              delay_ = input.readSFixed64();
+              break;
+            }
+            case 42: {
+              tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                subBuilder = cron_.toBuilder();
+              }
+              cron_ = input.readMessage(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(cron_);
+                cron_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000010;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.class, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Builder.class);
+    }
+
+    /**
+     * Protobuf enum {@code tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type}
+     */
+    public enum Type
+        implements com.google.protobuf.ProtocolMessageEnum {
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      UNKNOWN(0),
+      /**
+       * <code>DELAY = 1;</code>
+       */
+      DELAY(1),
+      /**
+       * <code>INTERVAL = 2;</code>
+       */
+      INTERVAL(2),
+      /**
+       * <code>CRON = 3;</code>
+       */
+      CRON(3),
+      ;
+
+      /**
+       * <code>UNKNOWN = 0;</code>
+       */
+      public static final int UNKNOWN_VALUE = 0;
+      /**
+       * <code>DELAY = 1;</code>
+       */
+      public static final int DELAY_VALUE = 1;
+      /**
+       * <code>INTERVAL = 2;</code>
+       */
+      public static final int INTERVAL_VALUE = 2;
+      /**
+       * <code>CRON = 3;</code>
+       */
+      public static final int CRON_VALUE = 3;
+
+
+      public final int getNumber() {
+        return value;
+      }
+
+      /**
+       * @deprecated Use {@link #forNumber(int)} instead.
+       */
+      @java.lang.Deprecated
+      public static Type valueOf(int value) {
+        return forNumber(value);
+      }
+
+      public static Type forNumber(int value) {
+        switch (value) {
+          case 0: return UNKNOWN;
+          case 1: return DELAY;
+          case 2: return INTERVAL;
+          case 3: return CRON;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<Type>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static final com.google.protobuf.Internal.EnumLiteMap<
+          Type> internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<Type>() {
+              public Type findValueByNumber(int number) {
+                return Type.forNumber(number);
+              }
+            };
+
+      public final com.google.protobuf.Descriptors.EnumValueDescriptor
+          getValueDescriptor() {
+        return getDescriptor().getValues().get(ordinal());
+      }
+      public final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptorForType() {
+        return getDescriptor();
+      }
+      public static final com.google.protobuf.Descriptors.EnumDescriptor
+          getDescriptor() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.getDescriptor().getEnumTypes().get(0);
+      }
+
+      private static final Type[] VALUES = values();
+
+      public static Type valueOf(
+          com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+        if (desc.getType() != getDescriptor()) {
+          throw new java.lang.IllegalArgumentException(
+            "EnumValueDescriptor is not for this type.");
+        }
+        return VALUES[desc.getIndex()];
+      }
+
+      private final int value;
+
+      private Type(int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type)
+    }
+
+    public interface CronOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>repeated int32 minute = 1;</code>
+       */
+      java.util.List<java.lang.Integer> getMinuteList();
+      /**
+       * <code>repeated int32 minute = 1;</code>
+       */
+      int getMinuteCount();
+      /**
+       * <code>repeated int32 minute = 1;</code>
+       */
+      int getMinute(int index);
+
+      /**
+       * <code>repeated int32 hour = 2;</code>
+       */
+      java.util.List<java.lang.Integer> getHourList();
+      /**
+       * <code>repeated int32 hour = 2;</code>
+       */
+      int getHourCount();
+      /**
+       * <code>repeated int32 hour = 2;</code>
+       */
+      int getHour(int index);
+
+      /**
+       * <code>repeated int32 day_of_month = 3;</code>
+       */
+      java.util.List<java.lang.Integer> getDayOfMonthList();
+      /**
+       * <code>repeated int32 day_of_month = 3;</code>
+       */
+      int getDayOfMonthCount();
+      /**
+       * <code>repeated int32 day_of_month = 3;</code>
+       */
+      int getDayOfMonth(int index);
+
+      /**
+       * <code>repeated int32 month = 4;</code>
+       */
+      java.util.List<java.lang.Integer> getMonthList();
+      /**
+       * <code>repeated int32 month = 4;</code>
+       */
+      int getMonthCount();
+      /**
+       * <code>repeated int32 month = 4;</code>
+       */
+      int getMonth(int index);
+
+      /**
+       * <code>repeated int32 day_of_week = 5;</code>
+       */
+      java.util.List<java.lang.Integer> getDayOfWeekList();
+      /**
+       * <code>repeated int32 day_of_week = 5;</code>
+       */
+      int getDayOfWeekCount();
+      /**
+       * <code>repeated int32 day_of_week = 5;</code>
+       */
+      int getDayOfWeek(int index);
+    }
+    /**
+     * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron}
+     */
+    public  static final class Cron extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron)
+        CronOrBuilder {
+      // Use Cron.newBuilder() to construct.
+      private Cron(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private Cron() {
+        minute_ = java.util.Collections.emptyList();
+        hour_ = java.util.Collections.emptyList();
+        dayOfMonth_ = java.util.Collections.emptyList();
+        month_ = java.util.Collections.emptyList();
+        dayOfWeek_ = java.util.Collections.emptyList();
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private Cron(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 8: {
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+                  minute_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000001;
+                }
+                minute_.add(input.readInt32());
+                break;
+              }
+              case 10: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000001) == 0x00000001) && input.getBytesUntilLimit() > 0) {
+                  minute_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000001;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  minute_.add(input.readInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 16: {
+                if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                  hour_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                hour_.add(input.readInt32());
+                break;
+              }
+              case 18: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000002) == 0x00000002) && input.getBytesUntilLimit() > 0) {
+                  hour_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000002;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  hour_.add(input.readInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 24: {
+                if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                  dayOfMonth_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                dayOfMonth_.add(input.readInt32());
+                break;
+              }
+              case 26: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000004) == 0x00000004) && input.getBytesUntilLimit() > 0) {
+                  dayOfMonth_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000004;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  dayOfMonth_.add(input.readInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 32: {
+                if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                  month_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000008;
+                }
+                month_.add(input.readInt32());
+                break;
+              }
+              case 34: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000008) == 0x00000008) && input.getBytesUntilLimit() > 0) {
+                  month_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000008;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  month_.add(input.readInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+              case 40: {
+                if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                  dayOfWeek_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000010;
+                }
+                dayOfWeek_.add(input.readInt32());
+                break;
+              }
+              case 42: {
+                int length = input.readRawVarint32();
+                int limit = input.pushLimit(length);
+                if (!((mutable_bitField0_ & 0x00000010) == 0x00000010) && input.getBytesUntilLimit() > 0) {
+                  dayOfWeek_ = new java.util.ArrayList<java.lang.Integer>();
+                  mutable_bitField0_ |= 0x00000010;
+                }
+                while (input.getBytesUntilLimit() > 0) {
+                  dayOfWeek_.add(input.readInt32());
+                }
+                input.popLimit(limit);
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
+            minute_ = java.util.Collections.unmodifiableList(minute_);
+          }
+          if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+            hour_ = java.util.Collections.unmodifiableList(hour_);
+          }
+          if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+            dayOfMonth_ = java.util.Collections.unmodifiableList(dayOfMonth_);
+          }
+          if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+            month_ = java.util.Collections.unmodifiableList(month_);
+          }
+          if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+            dayOfWeek_ = java.util.Collections.unmodifiableList(dayOfWeek_);
+          }
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.class, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.Builder.class);
+      }
+
+      public static final int MINUTE_FIELD_NUMBER = 1;
+      private java.util.List<java.lang.Integer> minute_;
+      /**
+       * <code>repeated int32 minute = 1;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getMinuteList() {
+        return minute_;
+      }
+      /**
+       * <code>repeated int32 minute = 1;</code>
+       */
+      public int getMinuteCount() {
+        return minute_.size();
+      }
+      /**
+       * <code>repeated int32 minute = 1;</code>
+       */
+      public int getMinute(int index) {
+        return minute_.get(index);
+      }
+
+      public static final int HOUR_FIELD_NUMBER = 2;
+      private java.util.List<java.lang.Integer> hour_;
+      /**
+       * <code>repeated int32 hour = 2;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getHourList() {
+        return hour_;
+      }
+      /**
+       * <code>repeated int32 hour = 2;</code>
+       */
+      public int getHourCount() {
+        return hour_.size();
+      }
+      /**
+       * <code>repeated int32 hour = 2;</code>
+       */
+      public int getHour(int index) {
+        return hour_.get(index);
+      }
+
+      public static final int DAY_OF_MONTH_FIELD_NUMBER = 3;
+      private java.util.List<java.lang.Integer> dayOfMonth_;
+      /**
+       * <code>repeated int32 day_of_month = 3;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getDayOfMonthList() {
+        return dayOfMonth_;
+      }
+      /**
+       * <code>repeated int32 day_of_month = 3;</code>
+       */
+      public int getDayOfMonthCount() {
+        return dayOfMonth_.size();
+      }
+      /**
+       * <code>repeated int32 day_of_month = 3;</code>
+       */
+      public int getDayOfMonth(int index) {
+        return dayOfMonth_.get(index);
+      }
+
+      public static final int MONTH_FIELD_NUMBER = 4;
+      private java.util.List<java.lang.Integer> month_;
+      /**
+       * <code>repeated int32 month = 4;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getMonthList() {
+        return month_;
+      }
+      /**
+       * <code>repeated int32 month = 4;</code>
+       */
+      public int getMonthCount() {
+        return month_.size();
+      }
+      /**
+       * <code>repeated int32 month = 4;</code>
+       */
+      public int getMonth(int index) {
+        return month_.get(index);
+      }
+
+      public static final int DAY_OF_WEEK_FIELD_NUMBER = 5;
+      private java.util.List<java.lang.Integer> dayOfWeek_;
+      /**
+       * <code>repeated int32 day_of_week = 5;</code>
+       */
+      public java.util.List<java.lang.Integer>
+          getDayOfWeekList() {
+        return dayOfWeek_;
+      }
+      /**
+       * <code>repeated int32 day_of_week = 5;</code>
+       */
+      public int getDayOfWeekCount() {
+        return dayOfWeek_.size();
+      }
+      /**
+       * <code>repeated int32 day_of_week = 5;</code>
+       */
+      public int getDayOfWeek(int index) {
+        return dayOfWeek_.get(index);
+      }
+
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        for (int i = 0; i < minute_.size(); i++) {
+          output.writeInt32(1, minute_.get(i));
+        }
+        for (int i = 0; i < hour_.size(); i++) {
+          output.writeInt32(2, hour_.get(i));
+        }
+        for (int i = 0; i < dayOfMonth_.size(); i++) {
+          output.writeInt32(3, dayOfMonth_.get(i));
+        }
+        for (int i = 0; i < month_.size(); i++) {
+          output.writeInt32(4, month_.get(i));
+        }
+        for (int i = 0; i < dayOfWeek_.size(); i++) {
+          output.writeInt32(5, dayOfWeek_.get(i));
+        }
+        unknownFields.writeTo(output);
+      }
+
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        {
+          int dataSize = 0;
+          for (int i = 0; i < minute_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(minute_.get(i));
+          }
+          size += dataSize;
+          size += 1 * getMinuteList().size();
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < hour_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(hour_.get(i));
+          }
+          size += dataSize;
+          size += 1 * getHourList().size();
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < dayOfMonth_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dayOfMonth_.get(i));
+          }
+          size += dataSize;
+          size += 1 * getDayOfMonthList().size();
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < month_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(month_.get(i));
+          }
+          size += dataSize;
+          size += 1 * getMonthList().size();
+        }
+        {
+          int dataSize = 0;
+          for (int i = 0; i < dayOfWeek_.size(); i++) {
+            dataSize += com.google.protobuf.CodedOutputStream
+              .computeInt32SizeNoTag(dayOfWeek_.get(i));
+          }
+          size += dataSize;
+          size += 1 * getDayOfWeekList().size();
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron)) {
+          return super.equals(obj);
+        }
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron other = (tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron) obj;
+
+        boolean result = true;
+        result = result && getMinuteList()
+            .equals(other.getMinuteList());
+        result = result && getHourList()
+            .equals(other.getHourList());
+        result = result && getDayOfMonthList()
+            .equals(other.getDayOfMonthList());
+        result = result && getMonthList()
+            .equals(other.getMonthList());
+        result = result && getDayOfWeekList()
+            .equals(other.getDayOfWeekList());
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptorForType().hashCode();
+        if (getMinuteCount() > 0) {
+          hash = (37 * hash) + MINUTE_FIELD_NUMBER;
+          hash = (53 * hash) + getMinuteList().hashCode();
+        }
+        if (getHourCount() > 0) {
+          hash = (37 * hash) + HOUR_FIELD_NUMBER;
+          hash = (53 * hash) + getHourList().hashCode();
+        }
+        if (getDayOfMonthCount() > 0) {
+          hash = (37 * hash) + DAY_OF_MONTH_FIELD_NUMBER;
+          hash = (53 * hash) + getDayOfMonthList().hashCode();
+        }
+        if (getMonthCount() > 0) {
+          hash = (37 * hash) + MONTH_FIELD_NUMBER;
+          hash = (53 * hash) + getMonthList().hashCode();
+        }
+        if (getDayOfWeekCount() > 0) {
+          hash = (37 * hash) + DAY_OF_WEEK_FIELD_NUMBER;
+          hash = (53 * hash) + getDayOfWeekList().hashCode();
+        }
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron)
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.CronOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.class, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.Builder.class);
+        }
+
+        // Construct using tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        public Builder clear() {
+          super.clear();
+          minute_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          hour_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          dayOfMonth_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          month_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          dayOfWeek_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_descriptor;
+        }
+
+        public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron getDefaultInstanceForType() {
+          return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.getDefaultInstance();
+        }
+
+        public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron build() {
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron buildPartial() {
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron result = new tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron(this);
+          int from_bitField0_ = bitField0_;
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            minute_ = java.util.Collections.unmodifiableList(minute_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.minute_ = minute_;
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            hour_ = java.util.Collections.unmodifiableList(hour_);
+            bitField0_ = (bitField0_ & ~0x00000002);
+          }
+          result.hour_ = hour_;
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            dayOfMonth_ = java.util.Collections.unmodifiableList(dayOfMonth_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.dayOfMonth_ = dayOfMonth_;
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            month_ = java.util.Collections.unmodifiableList(month_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.month_ = month_;
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            dayOfWeek_ = java.util.Collections.unmodifiableList(dayOfWeek_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.dayOfWeek_ = dayOfWeek_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron) {
+            return mergeFrom((tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron other) {
+          if (other == tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.getDefaultInstance()) return this;
+          if (!other.minute_.isEmpty()) {
+            if (minute_.isEmpty()) {
+              minute_ = other.minute_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureMinuteIsMutable();
+              minute_.addAll(other.minute_);
+            }
+            onChanged();
+          }
+          if (!other.hour_.isEmpty()) {
+            if (hour_.isEmpty()) {
+              hour_ = other.hour_;
+              bitField0_ = (bitField0_ & ~0x00000002);
+            } else {
+              ensureHourIsMutable();
+              hour_.addAll(other.hour_);
+            }
+            onChanged();
+          }
+          if (!other.dayOfMonth_.isEmpty()) {
+            if (dayOfMonth_.isEmpty()) {
+              dayOfMonth_ = other.dayOfMonth_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensureDayOfMonthIsMutable();
+              dayOfMonth_.addAll(other.dayOfMonth_);
+            }
+            onChanged();
+          }
+          if (!other.month_.isEmpty()) {
+            if (month_.isEmpty()) {
+              month_ = other.month_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureMonthIsMutable();
+              month_.addAll(other.month_);
+            }
+            onChanged();
+          }
+          if (!other.dayOfWeek_.isEmpty()) {
+            if (dayOfWeek_.isEmpty()) {
+              dayOfWeek_ = other.dayOfWeek_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureDayOfWeekIsMutable();
+              dayOfWeek_.addAll(other.dayOfWeek_);
+            }
+            onChanged();
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private java.util.List<java.lang.Integer> minute_ = java.util.Collections.emptyList();
+        private void ensureMinuteIsMutable() {
+          if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+            minute_ = new java.util.ArrayList<java.lang.Integer>(minute_);
+            bitField0_ |= 0x00000001;
+           }
+        }
+        /**
+         * <code>repeated int32 minute = 1;</code>
+         */
+        public java.util.List<java.lang.Integer>
+            getMinuteList() {
+          return java.util.Collections.unmodifiableList(minute_);
+        }
+        /**
+         * <code>repeated int32 minute = 1;</code>
+         */
+        public int getMinuteCount() {
+          return minute_.size();
+        }
+        /**
+         * <code>repeated int32 minute = 1;</code>
+         */
+        public int getMinute(int index) {
+          return minute_.get(index);
+        }
+        /**
+         * <code>repeated int32 minute = 1;</code>
+         */
+        public Builder setMinute(
+            int index, int value) {
+          ensureMinuteIsMutable();
+          minute_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 minute = 1;</code>
+         */
+        public Builder addMinute(int value) {
+          ensureMinuteIsMutable();
+          minute_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 minute = 1;</code>
+         */
+        public Builder addAllMinute(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+          ensureMinuteIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, minute_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 minute = 1;</code>
+         */
+        public Builder clearMinute() {
+          minute_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+          return this;
+        }
+
+        private java.util.List<java.lang.Integer> hour_ = java.util.Collections.emptyList();
+        private void ensureHourIsMutable() {
+          if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+            hour_ = new java.util.ArrayList<java.lang.Integer>(hour_);
+            bitField0_ |= 0x00000002;
+           }
+        }
+        /**
+         * <code>repeated int32 hour = 2;</code>
+         */
+        public java.util.List<java.lang.Integer>
+            getHourList() {
+          return java.util.Collections.unmodifiableList(hour_);
+        }
+        /**
+         * <code>repeated int32 hour = 2;</code>
+         */
+        public int getHourCount() {
+          return hour_.size();
+        }
+        /**
+         * <code>repeated int32 hour = 2;</code>
+         */
+        public int getHour(int index) {
+          return hour_.get(index);
+        }
+        /**
+         * <code>repeated int32 hour = 2;</code>
+         */
+        public Builder setHour(
+            int index, int value) {
+          ensureHourIsMutable();
+          hour_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 hour = 2;</code>
+         */
+        public Builder addHour(int value) {
+          ensureHourIsMutable();
+          hour_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 hour = 2;</code>
+         */
+        public Builder addAllHour(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+          ensureHourIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, hour_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 hour = 2;</code>
+         */
+        public Builder clearHour() {
+          hour_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000002);
+          onChanged();
+          return this;
+        }
+
+        private java.util.List<java.lang.Integer> dayOfMonth_ = java.util.Collections.emptyList();
+        private void ensureDayOfMonthIsMutable() {
+          if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+            dayOfMonth_ = new java.util.ArrayList<java.lang.Integer>(dayOfMonth_);
+            bitField0_ |= 0x00000004;
+           }
+        }
+        /**
+         * <code>repeated int32 day_of_month = 3;</code>
+         */
+        public java.util.List<java.lang.Integer>
+            getDayOfMonthList() {
+          return java.util.Collections.unmodifiableList(dayOfMonth_);
+        }
+        /**
+         * <code>repeated int32 day_of_month = 3;</code>
+         */
+        public int getDayOfMonthCount() {
+          return dayOfMonth_.size();
+        }
+        /**
+         * <code>repeated int32 day_of_month = 3;</code>
+         */
+        public int getDayOfMonth(int index) {
+          return dayOfMonth_.get(index);
+        }
+        /**
+         * <code>repeated int32 day_of_month = 3;</code>
+         */
+        public Builder setDayOfMonth(
+            int index, int value) {
+          ensureDayOfMonthIsMutable();
+          dayOfMonth_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 day_of_month = 3;</code>
+         */
+        public Builder addDayOfMonth(int value) {
+          ensureDayOfMonthIsMutable();
+          dayOfMonth_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 day_of_month = 3;</code>
+         */
+        public Builder addAllDayOfMonth(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+          ensureDayOfMonthIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, dayOfMonth_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 day_of_month = 3;</code>
+         */
+        public Builder clearDayOfMonth() {
+          dayOfMonth_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+          return this;
+        }
+
+        private java.util.List<java.lang.Integer> month_ = java.util.Collections.emptyList();
+        private void ensureMonthIsMutable() {
+          if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+            month_ = new java.util.ArrayList<java.lang.Integer>(month_);
+            bitField0_ |= 0x00000008;
+           }
+        }
+        /**
+         * <code>repeated int32 month = 4;</code>
+         */
+        public java.util.List<java.lang.Integer>
+            getMonthList() {
+          return java.util.Collections.unmodifiableList(month_);
+        }
+        /**
+         * <code>repeated int32 month = 4;</code>
+         */
+        public int getMonthCount() {
+          return month_.size();
+        }
+        /**
+         * <code>repeated int32 month = 4;</code>
+         */
+        public int getMonth(int index) {
+          return month_.get(index);
+        }
+        /**
+         * <code>repeated int32 month = 4;</code>
+         */
+        public Builder setMonth(
+            int index, int value) {
+          ensureMonthIsMutable();
+          month_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 month = 4;</code>
+         */
+        public Builder addMonth(int value) {
+          ensureMonthIsMutable();
+          month_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 month = 4;</code>
+         */
+        public Builder addAllMonth(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+          ensureMonthIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, month_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 month = 4;</code>
+         */
+        public Builder clearMonth() {
+          month_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+          return this;
+        }
+
+        private java.util.List<java.lang.Integer> dayOfWeek_ = java.util.Collections.emptyList();
+        private void ensureDayOfWeekIsMutable() {
+          if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+            dayOfWeek_ = new java.util.ArrayList<java.lang.Integer>(dayOfWeek_);
+            bitField0_ |= 0x00000010;
+           }
+        }
+        /**
+         * <code>repeated int32 day_of_week = 5;</code>
+         */
+        public java.util.List<java.lang.Integer>
+            getDayOfWeekList() {
+          return java.util.Collections.unmodifiableList(dayOfWeek_);
+        }
+        /**
+         * <code>repeated int32 day_of_week = 5;</code>
+         */
+        public int getDayOfWeekCount() {
+          return dayOfWeek_.size();
+        }
+        /**
+         * <code>repeated int32 day_of_week = 5;</code>
+         */
+        public int getDayOfWeek(int index) {
+          return dayOfWeek_.get(index);
+        }
+        /**
+         * <code>repeated int32 day_of_week = 5;</code>
+         */
+        public Builder setDayOfWeek(
+            int index, int value) {
+          ensureDayOfWeekIsMutable();
+          dayOfWeek_.set(index, value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 day_of_week = 5;</code>
+         */
+        public Builder addDayOfWeek(int value) {
+          ensureDayOfWeekIsMutable();
+          dayOfWeek_.add(value);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 day_of_week = 5;</code>
+         */
+        public Builder addAllDayOfWeek(
+            java.lang.Iterable<? extends java.lang.Integer> values) {
+          ensureDayOfWeekIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, dayOfWeek_);
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>repeated int32 day_of_week = 5;</code>
+         */
+        public Builder clearDayOfWeek() {
+          dayOfWeek_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+          return this;
+        }
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron)
+      }
+
+      // @@protoc_insertion_point(class_scope:tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron)
+      private static final tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron();
+      }
+
+      public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      @java.lang.Deprecated public static final com.google.protobuf.Parser<Cron>
+          PARSER = new com.google.protobuf.AbstractParser<Cron>() {
+        public Cron parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+            return new Cron(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<Cron> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Cron> getParserForType() {
+        return PARSER;
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    private int bitField0_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID id_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId() {
+      return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder() {
+      return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+    }
+
+    public static final int PAYLOAD_FIELD_NUMBER = 2;
+    private com.google.protobuf.ByteString payload_;
+    /**
+     * <code>required bytes payload = 2;</code>
+     */
+    public boolean hasPayload() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required bytes payload = 2;</code>
+     */
+    public com.google.protobuf.ByteString getPayload() {
+      return payload_;
+    }
+
+    public static final int TYPE_FIELD_NUMBER = 3;
+    private int type_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type type = 3;</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type type = 3;</code>
+     */
+    public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type getType() {
+      tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type result = tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type.valueOf(type_);
+      return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type.UNKNOWN : result;
+    }
+
+    public static final int DELAY_FIELD_NUMBER = 4;
+    private long delay_;
+    /**
+     * <code>optional sfixed64 delay = 4;</code>
+     */
+    public boolean hasDelay() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional sfixed64 delay = 4;</code>
+     */
+    public long getDelay() {
+      return delay_;
+    }
+
+    public static final int CRON_FIELD_NUMBER = 5;
+    private tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron cron_;
+    /**
+     * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+     */
+    public boolean hasCron() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+     */
+    public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron getCron() {
+      return cron_ == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.getDefaultInstance() : cron_;
+    }
+    /**
+     * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+     */
+    public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.CronOrBuilder getCronOrBuilder() {
+      return cron_ == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.getDefaultInstance() : cron_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasPayload()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getId().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, getId());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, payload_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeEnum(3, type_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeSFixed64(4, delay_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeMessage(5, getCron());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getId());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, payload_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(3, type_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeSFixed64Size(4, delay_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getCron());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest)) {
+        return super.equals(obj);
+      }
+      tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest other = (tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest) obj;
+
+      boolean result = true;
+      result = result && (hasId() == other.hasId());
+      if (hasId()) {
+        result = result && getId()
+            .equals(other.getId());
+      }
+      result = result && (hasPayload() == other.hasPayload());
+      if (hasPayload()) {
+        result = result && getPayload()
+            .equals(other.getPayload());
+      }
+      result = result && (hasType() == other.hasType());
+      if (hasType()) {
+        result = result && type_ == other.type_;
+      }
+      result = result && (hasDelay() == other.hasDelay());
+      if (hasDelay()) {
+        result = result && (getDelay()
+            == other.getDelay());
+      }
+      result = result && (hasCron() == other.hasCron());
+      if (hasCron()) {
+        result = result && getCron()
+            .equals(other.getCron());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+      }
+      if (hasPayload()) {
+        hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
+        hash = (53 * hash) + getPayload().hashCode();
+      }
+      if (hasType()) {
+        hash = (37 * hash) + TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + type_;
+      }
+      if (hasDelay()) {
+        hash = (37 * hash) + DELAY_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getDelay());
+      }
+      if (hasCron()) {
+        hash = (37 * hash) + CRON_FIELD_NUMBER;
+        hash = (53 * hash) + getCron().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ScheduleRequest}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.twitchbot.common.dto.proto.messages.ScheduleRequest)
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequestOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.class, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Builder.class);
+      }
+
+      // Construct using tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getIdFieldBuilder();
+          getCronFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (idBuilder_ == null) {
+          id_ = null;
+        } else {
+          idBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        payload_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        type_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        delay_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        if (cronBuilder_ == null) {
+          cron_ = null;
+        } else {
+          cronBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_descriptor;
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest getDefaultInstanceForType() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.getDefaultInstance();
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest build() {
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest buildPartial() {
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest result = new tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (idBuilder_ == null) {
+          result.id_ = id_;
+        } else {
+          result.id_ = idBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.payload_ = payload_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.type_ = type_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.delay_ = delay_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        if (cronBuilder_ == null) {
+          result.cron_ = cron_;
+        } else {
+          result.cron_ = cronBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest) {
+          return mergeFrom((tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest other) {
+        if (other == tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          mergeId(other.getId());
+        }
+        if (other.hasPayload()) {
+          setPayload(other.getPayload());
+        }
+        if (other.hasType()) {
+          setType(other.getType());
+        }
+        if (other.hasDelay()) {
+          setDelay(other.getDelay());
+        }
+        if (other.hasCron()) {
+          mergeCron(other.getCron());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        if (!hasPayload()) {
+          return false;
+        }
+        if (!hasType()) {
+          return false;
+        }
+        if (!getId().isInitialized()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID id_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> idBuilder_;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId() {
+        if (idBuilder_ == null) {
+          return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+        } else {
+          return idBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public Builder setId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (idBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          id_ = value;
+          onChanged();
+        } else {
+          idBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public Builder setId(
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder builderForValue) {
+        if (idBuilder_ == null) {
+          id_ = builderForValue.build();
+          onChanged();
+        } else {
+          idBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public Builder mergeId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (idBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              id_ != null &&
+              id_ != tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance()) {
+            id_ =
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.newBuilder(id_).mergeFrom(value).buildPartial();
+          } else {
+            id_ = value;
+          }
+          onChanged();
+        } else {
+          idBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public Builder clearId() {
+        if (idBuilder_ == null) {
+          id_ = null;
+          onChanged();
+        } else {
+          idBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder getIdBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder() {
+        if (idBuilder_ != null) {
+          return idBuilder_.getMessageOrBuilder();
+        } else {
+          return id_ == null ?
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> 
+          getIdFieldBuilder() {
+        if (idBuilder_ == null) {
+          idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder>(
+                  getId(),
+                  getParentForChildren(),
+                  isClean());
+          id_ = null;
+        }
+        return idBuilder_;
+      }
+
+      private com.google.protobuf.ByteString payload_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes payload = 2;</code>
+       */
+      public boolean hasPayload() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required bytes payload = 2;</code>
+       */
+      public com.google.protobuf.ByteString getPayload() {
+        return payload_;
+      }
+      /**
+       * <code>required bytes payload = 2;</code>
+       */
+      public Builder setPayload(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        payload_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes payload = 2;</code>
+       */
+      public Builder clearPayload() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        payload_ = getDefaultInstance().getPayload();
+        onChanged();
+        return this;
+      }
+
+      private int type_ = 0;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type type = 3;</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type type = 3;</code>
+       */
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type getType() {
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type result = tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type.valueOf(type_);
+        return result == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type.UNKNOWN : result;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type type = 3;</code>
+       */
+      public Builder setType(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Type value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000004;
+        type_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Type type = 3;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        type_ = 0;
+        onChanged();
+        return this;
+      }
+
+      private long delay_ ;
+      /**
+       * <code>optional sfixed64 delay = 4;</code>
+       */
+      public boolean hasDelay() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional sfixed64 delay = 4;</code>
+       */
+      public long getDelay() {
+        return delay_;
+      }
+      /**
+       * <code>optional sfixed64 delay = 4;</code>
+       */
+      public Builder setDelay(long value) {
+        bitField0_ |= 0x00000008;
+        delay_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional sfixed64 delay = 4;</code>
+       */
+      public Builder clearDelay() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        delay_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron cron_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.Builder, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.CronOrBuilder> cronBuilder_;
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      public boolean hasCron() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron getCron() {
+        if (cronBuilder_ == null) {
+          return cron_ == null ? tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.getDefaultInstance() : cron_;
+        } else {
+          return cronBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      public Builder setCron(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron value) {
+        if (cronBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          cron_ = value;
+          onChanged();
+        } else {
+          cronBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      public Builder setCron(
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.Builder builderForValue) {
+        if (cronBuilder_ == null) {
+          cron_ = builderForValue.build();
+          onChanged();
+        } else {
+          cronBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      public Builder mergeCron(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron value) {
+        if (cronBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              cron_ != null &&
+              cron_ != tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.getDefaultInstance()) {
+            cron_ =
+              tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.newBuilder(cron_).mergeFrom(value).buildPartial();
+          } else {
+            cron_ = value;
+          }
+          onChanged();
+        } else {
+          cronBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      public Builder clearCron() {
+        if (cronBuilder_ == null) {
+          cron_ = null;
+          onChanged();
+        } else {
+          cronBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.Builder getCronBuilder() {
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return getCronFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.CronOrBuilder getCronOrBuilder() {
+        if (cronBuilder_ != null) {
+          return cronBuilder_.getMessageOrBuilder();
+        } else {
+          return cron_ == null ?
+              tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.getDefaultInstance() : cron_;
+        }
+      }
+      /**
+       * <code>optional .tv.twitchbot.common.dto.proto.messages.ScheduleRequest.Cron cron = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.Builder, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.CronOrBuilder> 
+          getCronFieldBuilder() {
+        if (cronBuilder_ == null) {
+          cronBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.Cron.Builder, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.CronOrBuilder>(
+                  getCron(),
+                  getParentForChildren(),
+                  isClean());
+          cron_ = null;
+        }
+        return cronBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.twitchbot.common.dto.proto.messages.ScheduleRequest)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.twitchbot.common.dto.proto.messages.ScheduleRequest)
+    private static final tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest();
+    }
+
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ScheduleRequest>
+        PARSER = new com.google.protobuf.AbstractParser<ScheduleRequest>() {
+      public ScheduleRequest parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ScheduleRequest(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ScheduleRequest> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ScheduleRequest> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 103;
+    /**
+     * <code>extend .tv.twitchbot.common.dto.proto.messages.Request { ... }</code>
+     */
+    public static final
+      com.google.protobuf.GeneratedMessage.GeneratedExtension<
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.Request,
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest> data = com.google.protobuf.GeneratedMessage
+            .newMessageScopedGeneratedExtension(
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.getDefaultInstance(),
+          0,
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.class,
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.getDefaultInstance());
+  }
+
+  public interface ScheduleResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.twitchbot.common.dto.proto.messages.ScheduleResponse)
+      com.google.protobuf.MessageOrBuilder {
+  }
+  /**
+   * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ScheduleResponse}
+   */
+  public  static final class ScheduleResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.twitchbot.common.dto.proto.messages.ScheduleResponse)
+      ScheduleResponseOrBuilder {
+    // Use ScheduleResponse.newBuilder() to construct.
+    private ScheduleResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ScheduleResponse() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ScheduleResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.class, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.Builder.class);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse)) {
+        return super.equals(obj);
+      }
+      tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse other = (tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse) obj;
+
+      boolean result = true;
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.ScheduleResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.twitchbot.common.dto.proto.messages.ScheduleResponse)
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.class, tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.Builder.class);
+      }
+
+      // Construct using tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_descriptor;
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse getDefaultInstanceForType() {
+        return tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.getDefaultInstance();
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse build() {
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse buildPartial() {
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse result = new tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse(this);
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse) {
+          return mergeFrom((tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse other) {
+        if (other == tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.twitchbot.common.dto.proto.messages.ScheduleResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.twitchbot.common.dto.proto.messages.ScheduleResponse)
+    private static final tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse();
+    }
+
+    public static tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ScheduleResponse>
+        PARSER = new com.google.protobuf.AbstractParser<ScheduleResponse>() {
+      public ScheduleResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ScheduleResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ScheduleResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ScheduleResponse> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 103;
+    /**
+     * <code>extend .tv.twitchbot.common.dto.proto.messages.Response { ... }</code>
+     */
+    public static final
+      com.google.protobuf.GeneratedMessage.GeneratedExtension<
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.Response,
+        tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse> data = com.google.protobuf.GeneratedMessage
+            .newMessageScopedGeneratedExtension(
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.getDefaultInstance(),
+          0,
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.class,
+          tv.twitchbot.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.getDefaultInstance());
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_twitchbot_common_dto_proto_messages_Request_descriptor;
   private static final 
@@ -3545,6 +6324,21 @@ public final class RequestOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_twitchbot_common_dto_proto_messages_SendMessageResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -3556,38 +6350,56 @@ public final class RequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n\rRequest.proto\022&tv.twitchbot.common.dto" +
       ".proto.messages\032\rMessage.proto\032\rChannel." +
-      "proto\032\nUUID.proto\"\343\001\n\007Request\022A\n\004type\030\001 " +
-      "\002(\01623.tv.twitchbot.common.dto.proto.mess" +
-      "ages.RequestType\022\033\n\023response_queue_name\030" +
-      "\002 \002(\t*\010\010d\020\200\200\200\200\0022n\n\004data\022/.tv.twitchbot.c" +
-      "ommon.dto.proto.messages.Message\030f \001(\0132/" +
-      ".tv.twitchbot.common.dto.proto.messages." +
-      "Request\"\216\002\n\010Response\022A\n\004type\030\001 \002(\01623.tv." +
-      "twitchbot.common.dto.proto.messages.Requ",
-      "estType\022D\n\022request_message_id\030\002 \002(\0132(.tv" +
-      ".twitchbot.common.dto.proto.core.UUID*\010\010" +
-      "d\020\200\200\200\200\0022o\n\004data\022/.tv.twitchbot.common.dt" +
-      "o.proto.messages.Message\030g \001(\01320.tv.twit" +
-      "chbot.common.dto.proto.messages.Response" +
-      "\"\225\001\n\025ModuleShutdownRequest2|\n\004data\022/.tv." +
+      "proto\032\nUUID.proto\032\014Module.proto\"\343\001\n\007Requ" +
+      "est\022A\n\004type\030\001 \002(\01623.tv.twitchbot.common." +
+      "dto.proto.messages.RequestType\022\033\n\023respon" +
+      "se_queue_name\030\002 \002(\t*\010\010d\020\200\200\200\200\0022n\n\004data\022/." +
+      "tv.twitchbot.common.dto.proto.messages.M" +
+      "essage\030f \001(\0132/.tv.twitchbot.common.dto.p" +
+      "roto.messages.Request\"\216\002\n\010Response\022A\n\004ty" +
+      "pe\030\001 \002(\01623.tv.twitchbot.common.dto.proto",
+      ".messages.RequestType\022D\n\022request_message" +
+      "_id\030\002 \002(\0132(.tv.twitchbot.common.dto.prot" +
+      "o.core.UUID*\010\010d\020\200\200\200\200\0022o\n\004data\022/.tv.twitc" +
+      "hbot.common.dto.proto.messages.Message\030g" +
+      " \001(\01320.tv.twitchbot.common.dto.proto.mes" +
+      "sages.Response\"\225\001\n\025ModuleShutdownRequest" +
+      "2|\n\004data\022/.tv.twitchbot.common.dto.proto" +
+      ".messages.Request\030e \001(\0132=.tv.twitchbot.c" +
+      "ommon.dto.proto.messages.ModuleShutdownR" +
+      "equest\"\230\001\n\026ModuleShutdownResponse2~\n\004dat",
+      "a\0220.tv.twitchbot.common.dto.proto.messag" +
+      "es.Response\030e \001(\0132>.tv.twitchbot.common." +
+      "dto.proto.messages.ModuleShutdownRespons" +
+      "e\"\337\001\n\022SendMessageRequest\022@\n\013destination\030" +
+      "\001 \002(\0132+.tv.twitchbot.common.dto.proto.co" +
+      "re.Channel\022\014\n\004text\030\002 \002(\t2y\n\004data\022/.tv.tw" +
+      "itchbot.common.dto.proto.messages.Reques" +
+      "t\030f \001(\0132:.tv.twitchbot.common.dto.proto." +
+      "messages.SendMessageRequest\"\222\001\n\023SendMess" +
+      "ageResponse2{\n\004data\0220.tv.twitchbot.commo",
+      "n.dto.proto.messages.Response\030f \001(\0132;.tv" +
+      ".twitchbot.common.dto.proto.messages.Sen" +
+      "dMessageResponse\"\217\004\n\017ScheduleRequest\0224\n\002" +
+      "id\030\001 \002(\0132(.tv.twitchbot.common.dto.proto" +
+      ".core.UUID\022\017\n\007payload\030\002 \002(\014\022J\n\004type\030\003 \002(" +
+      "\0162<.tv.twitchbot.common.dto.proto.messag" +
+      "es.ScheduleRequest.Type\022\r\n\005delay\030\004 \001(\020\022J" +
+      "\n\004cron\030\005 \001(\0132<.tv.twitchbot.common.dto.p" +
+      "roto.messages.ScheduleRequest.Cron\032^\n\004Cr" +
+      "on\022\016\n\006minute\030\001 \003(\005\022\014\n\004hour\030\002 \003(\005\022\024\n\014day_",
+      "of_month\030\003 \003(\005\022\r\n\005month\030\004 \003(\005\022\023\n\013day_of_" +
+      "week\030\005 \003(\005\"6\n\004Type\022\013\n\007UNKNOWN\020\000\022\t\n\005DELAY" +
+      "\020\001\022\014\n\010INTERVAL\020\002\022\010\n\004CRON\020\0032v\n\004data\022/.tv." +
       "twitchbot.common.dto.proto.messages.Requ" +
-      "est\030e \001(\0132=.tv.twitchbot.common.dto.prot" +
-      "o.messages.ModuleShutdownRequest\"\230\001\n\026Mod" +
-      "uleShutdownResponse2~\n\004data\0220.tv.twitchb",
-      "ot.common.dto.proto.messages.Response\030e " +
-      "\001(\0132>.tv.twitchbot.common.dto.proto.mess" +
-      "ages.ModuleShutdownResponse\"\337\001\n\022SendMess" +
-      "ageRequest\022@\n\013destination\030\001 \002(\0132+.tv.twi" +
-      "tchbot.common.dto.proto.core.Channel\022\014\n\004" +
-      "text\030\002 \002(\t2y\n\004data\022/.tv.twitchbot.common" +
-      ".dto.proto.messages.Request\030f \001(\0132:.tv.t" +
-      "witchbot.common.dto.proto.messages.SendM" +
-      "essageRequest\"\222\001\n\023SendMessageResponse2{\n" +
-      "\004data\0220.tv.twitchbot.common.dto.proto.me",
-      "ssages.Response\030f \001(\0132;.tv.twitchbot.com" +
-      "mon.dto.proto.messages.SendMessageRespon" +
-      "se*A\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\023\n\017MODULE" +
-      "_SHUTDOWN\020\001\022\020\n\014SEND_MESSAGE\020\002"
+      "est\030g \001(\01327.tv.twitchbot.common.dto.prot" +
+      "o.messages.ScheduleRequest\"\214\001\n\020ScheduleR" +
+      "esponse2x\n\004data\0220.tv.twitchbot.common.dt" +
+      "o.proto.messages.Response\030g \001(\01328.tv.twi" +
+      "tchbot.common.dto.proto.messages.Schedul" +
+      "eResponse*O\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\023\n",
+      "\017MODULE_SHUTDOWN\020\001\022\020\n\014SEND_MESSAGE\020\002\022\014\n\010" +
+      "SCHEDULE\020\003"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -3603,6 +6415,7 @@ public final class RequestOuterClass {
           tv.twitchbot.common.dto.proto.messages.MessageOuterClass.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor(),
+          tv.twitchbot.common.dto.proto.core.ModuleOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_messages_Request_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -3640,9 +6453,28 @@ public final class RequestOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_twitchbot_common_dto_proto_messages_SendMessageResponse_descriptor,
         new java.lang.String[] { });
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_descriptor =
+      getDescriptor().getMessageTypes().get(6);
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_descriptor,
+        new java.lang.String[] { "Id", "Payload", "Type", "Delay", "Cron", });
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_descriptor =
+      internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_descriptor.getNestedTypes().get(0);
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleRequest_Cron_descriptor,
+        new java.lang.String[] { "Minute", "Hour", "DayOfMonth", "Month", "DayOfWeek", });
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_descriptor =
+      getDescriptor().getMessageTypes().get(7);
+    internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_twitchbot_common_dto_proto_messages_ScheduleResponse_descriptor,
+        new java.lang.String[] { });
     tv.twitchbot.common.dto.proto.messages.MessageOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor();
+    tv.twitchbot.common.dto.proto.core.ModuleOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

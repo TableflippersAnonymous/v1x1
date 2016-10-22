@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class PartCommand extends IrcStanza {
-    public static PartCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.PartCommandOrBuilder partCommand) {
+    public static PartCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.PartCommand partCommand) {
         final String channel = partCommand.getChannel();
         return new PartCommand(rawLine, tags, source, rawArgs, args, channel);
     }

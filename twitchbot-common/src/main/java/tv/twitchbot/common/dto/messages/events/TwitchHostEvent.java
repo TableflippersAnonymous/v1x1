@@ -14,7 +14,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchHostEvent extends Event {
-    public static TwitchHostEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchHostEventOrBuilder twitchHostEvent) {
+    public static TwitchHostEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchHostEvent twitchHostEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchHostEvent.getChannel());
         final TwitchChannel targetChannel = (TwitchChannel) Channel.fromProto(twitchHostEvent.getTargetChannel());
         final HostTargetCommand hostTargetCommand = (HostTargetCommand) IrcStanza.fromProto(twitchHostEvent.getHostTargetCommand());

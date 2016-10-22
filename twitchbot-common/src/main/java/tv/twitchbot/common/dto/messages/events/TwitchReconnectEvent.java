@@ -14,7 +14,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchReconnectEvent extends Event {
-    public static TwitchReconnectEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchReconnectEventOrBuilder twitchReconnectEvent) {
+    public static TwitchReconnectEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchReconnectEvent twitchReconnectEvent) {
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchReconnectEvent.getBot());
         final ReconnectCommand reconnectCommand = (ReconnectCommand) IrcStanza.fromProto(twitchReconnectEvent.getReconnectCommand());
         return new TwitchReconnectEvent(module, uuid, timestamp, bot, reconnectCommand);

@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by cobi on 10/9/2016.
  */
 public class PingCommand extends IrcStanza {
-    public static PingCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.PingCommandOrBuilder pingCommand) {
+    public static PingCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.PingCommand pingCommand) {
         final String token = pingCommand.getToken();
         return new PingCommand(rawLine, tags, source, rawArgs, args, token);
     }

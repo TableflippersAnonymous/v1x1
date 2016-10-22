@@ -18,6 +18,7 @@
     <module>twitchbot-modules-core-tmi</module>
     <module>twitchbot-modules-core-chat_router</module>
     <module>twitchbot-modules-core-event_router</module>
+    <module>twitchbot-modules-core-scheduler</module>
   </modules>
 
   <dependencies>

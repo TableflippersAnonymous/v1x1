@@ -47,6 +47,7 @@ public abstract class Message {
         Message.register(EventOuterClass.TwitchTimeoutEvent.data);
         Message.register(EventOuterClass.TwitchUserEvent.data);
         Message.register(EventOuterClass.TwitchUserModChangeEvent.data);
+        Message.register(EventOuterClass.SchedulerNotifyEvent.data);
 
         /* On independent events */
         Message.register(EventOuterClass.TwitchChatJoinEvent.data);
@@ -81,6 +82,8 @@ public abstract class Message {
         Message.register(RequestOuterClass.ModuleShutdownResponse.data);
         Message.register(RequestOuterClass.SendMessageRequest.data);
         Message.register(RequestOuterClass.SendMessageResponse.data);
+        Message.register(RequestOuterClass.ScheduleRequest.data);
+        Message.register(RequestOuterClass.ScheduleResponse.data);
     }
 
     public static void register(final GeneratedMessage.GeneratedExtension<?, ?> field) {

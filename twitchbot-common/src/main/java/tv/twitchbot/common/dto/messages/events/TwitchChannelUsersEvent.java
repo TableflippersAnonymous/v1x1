@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
  */
 public class TwitchChannelUsersEvent extends Event {
     @SuppressWarnings("unchecked")
-    public static TwitchChannelUsersEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchChannelUsersEventOrBuilder twitchChannelUsersEvent) {
+    public static TwitchChannelUsersEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchChannelUsersEvent twitchChannelUsersEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelUsersEvent.getChannel());
         final List<TwitchUser> users = (List<TwitchUser>) (List) twitchChannelUsersEvent.getUsersList().stream().map(User::fromProto).collect(Collectors.toList());
         final RplNameReplyCommand rplNameReplyCommand = (RplNameReplyCommand) IrcStanza.fromProto(twitchChannelUsersEvent.getRplNameReplyCommand());

@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class ClearChatCommand extends IrcStanza {
-    public static ClearChatCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.ClearChatCommandOrBuilder clearChatCommand) {
+    public static ClearChatCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.ClearChatCommand clearChatCommand) {
         final String channel = clearChatCommand.getChannel();
         final String nickname = clearChatCommand.getNickname();
         return new ClearChatCommand(rawLine, tags, source, rawArgs, args, channel, nickname);

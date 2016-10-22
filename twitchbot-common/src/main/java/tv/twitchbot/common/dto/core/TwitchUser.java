@@ -9,14 +9,14 @@ import tv.twitchbot.common.dto.proto.core.UserOuterClass;
  * @author Cobi
  */
 public class TwitchUser extends User {
-    public static TwitchUser fromProto(final UserOuterClass.UserOrBuilder user) {
+    public static TwitchUser fromProto(final UserOuterClass.User user) {
         final String id = user.getId();
         final GlobalUser globalUser = GlobalUser.fromProto(user.getGlobalUser());
         final String displayName = user.getDisplayName();
         return new TwitchUser(id, globalUser, displayName);
     }
 
-    public static TwitchUser fromProto(final GlobalUser globalUser, final UserOuterClass.GlobalUserEntryOrBuilder globalUserEntry) {
+    public static TwitchUser fromProto(final GlobalUser globalUser, final UserOuterClass.GlobalUserEntry globalUserEntry) {
         final String id = globalUserEntry.getId();
         final String displayName = globalUserEntry.getDisplayName();
         return new TwitchUser(id, globalUser, displayName);

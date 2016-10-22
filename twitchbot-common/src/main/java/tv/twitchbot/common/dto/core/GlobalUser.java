@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * @author Cobi
  */
 public class GlobalUser {
-    public static GlobalUser fromProto(final UserOuterClass.GlobalUserOrBuilder proto) {
+    public static GlobalUser fromProto(final UserOuterClass.GlobalUser proto) {
         final List<User> list = new ArrayList<>();
         final UUID uuid = UUID.fromProto(proto.getId());
         final GlobalUser globalUser = new GlobalUser(uuid, list);

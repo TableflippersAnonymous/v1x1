@@ -27,6 +27,7 @@ public final class EventOuterClass {
     registry.add(tv.twitchbot.common.dto.proto.messages.EventOuterClass.TwitchTimeoutEvent.data);
     registry.add(tv.twitchbot.common.dto.proto.messages.EventOuterClass.TwitchUserEvent.data);
     registry.add(tv.twitchbot.common.dto.proto.messages.EventOuterClass.TwitchUserModChangeEvent.data);
+    registry.add(tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.data);
   }
 
   public static void registerAllExtensions(
@@ -200,6 +201,10 @@ public final class EventOuterClass {
        * <code>TWITCH_USER_MOD_CHANGE = 16;</code>
        */
       TWITCH_USER_MOD_CHANGE(16),
+      /**
+       * <code>SCHEDULER_NOTIFY = 17;</code>
+       */
+      SCHEDULER_NOTIFY(17),
       ;
 
       /**
@@ -270,6 +275,10 @@ public final class EventOuterClass {
        * <code>TWITCH_USER_MOD_CHANGE = 16;</code>
        */
       public static final int TWITCH_USER_MOD_CHANGE_VALUE = 16;
+      /**
+       * <code>SCHEDULER_NOTIFY = 17;</code>
+       */
+      public static final int SCHEDULER_NOTIFY_VALUE = 17;
 
 
       public final int getNumber() {
@@ -303,6 +312,7 @@ public final class EventOuterClass {
           case 14: return TWITCH_TIMEOUT;
           case 15: return TWITCH_USER;
           case 16: return TWITCH_USER_MOD_CHANGE;
+          case 17: return SCHEDULER_NOTIFY;
           default: return null;
         }
       }
@@ -17763,6 +17773,921 @@ public final class EventOuterClass {
           tv.twitchbot.common.dto.proto.messages.EventOuterClass.TwitchUserModChangeEvent.getDefaultInstance());
   }
 
+  public interface SchedulerNotifyEventOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.twitchbot.common.dto.proto.messages.SchedulerNotifyEvent)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+     */
+    boolean hasModule();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module getModule();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.ModuleOuterClass.ModuleOrBuilder getModuleOrBuilder();
+
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId();
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+     */
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder();
+
+    /**
+     * <code>required bytes payload = 3;</code>
+     */
+    boolean hasPayload();
+    /**
+     * <code>required bytes payload = 3;</code>
+     */
+    com.google.protobuf.ByteString getPayload();
+  }
+  /**
+   * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.SchedulerNotifyEvent}
+   */
+  public  static final class SchedulerNotifyEvent extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.twitchbot.common.dto.proto.messages.SchedulerNotifyEvent)
+      SchedulerNotifyEventOrBuilder {
+    // Use SchedulerNotifyEvent.newBuilder() to construct.
+    private SchedulerNotifyEvent(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private SchedulerNotifyEvent() {
+      payload_ = com.google.protobuf.ByteString.EMPTY;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private SchedulerNotifyEvent(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = module_.toBuilder();
+              }
+              module_ = input.readMessage(tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(module_);
+                module_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 18: {
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = id_.toBuilder();
+              }
+              id_ = input.readMessage(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(id_);
+                id_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              payload_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.twitchbot.common.dto.proto.messages.EventOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.twitchbot.common.dto.proto.messages.EventOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.class, tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int MODULE_FIELD_NUMBER = 1;
+    private tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module module_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+     */
+    public boolean hasModule() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module getModule() {
+      return module_ == null ? tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.getDefaultInstance() : module_;
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.ModuleOuterClass.ModuleOrBuilder getModuleOrBuilder() {
+      return module_ == null ? tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.getDefaultInstance() : module_;
+    }
+
+    public static final int ID_FIELD_NUMBER = 2;
+    private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID id_;
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId() {
+      return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+    }
+    /**
+     * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+     */
+    public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder() {
+      return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+    }
+
+    public static final int PAYLOAD_FIELD_NUMBER = 3;
+    private com.google.protobuf.ByteString payload_;
+    /**
+     * <code>required bytes payload = 3;</code>
+     */
+    public boolean hasPayload() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required bytes payload = 3;</code>
+     */
+    public com.google.protobuf.ByteString getPayload() {
+      return payload_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasModule()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasPayload()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getModule().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getId().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, getModule());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, getId());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, payload_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getModule());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getId());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, payload_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent)) {
+        return super.equals(obj);
+      }
+      tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent other = (tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent) obj;
+
+      boolean result = true;
+      result = result && (hasModule() == other.hasModule());
+      if (hasModule()) {
+        result = result && getModule()
+            .equals(other.getModule());
+      }
+      result = result && (hasId() == other.hasId());
+      if (hasId()) {
+        result = result && getId()
+            .equals(other.getId());
+      }
+      result = result && (hasPayload() == other.hasPayload());
+      if (hasPayload()) {
+        result = result && getPayload()
+            .equals(other.getPayload());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasModule()) {
+        hash = (37 * hash) + MODULE_FIELD_NUMBER;
+        hash = (53 * hash) + getModule().hashCode();
+      }
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+      }
+      if (hasPayload()) {
+        hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
+        hash = (53 * hash) + getPayload().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.twitchbot.common.dto.proto.messages.SchedulerNotifyEvent}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.twitchbot.common.dto.proto.messages.SchedulerNotifyEvent)
+        tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEventOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.twitchbot.common.dto.proto.messages.EventOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.twitchbot.common.dto.proto.messages.EventOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.class, tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.Builder.class);
+      }
+
+      // Construct using tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getModuleFieldBuilder();
+          getIdFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (moduleBuilder_ == null) {
+          module_ = null;
+        } else {
+          moduleBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (idBuilder_ == null) {
+          id_ = null;
+        } else {
+          idBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        payload_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.twitchbot.common.dto.proto.messages.EventOuterClass.internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_descriptor;
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent getDefaultInstanceForType() {
+        return tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.getDefaultInstance();
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent build() {
+        tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent buildPartial() {
+        tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent result = new tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (moduleBuilder_ == null) {
+          result.module_ = module_;
+        } else {
+          result.module_ = moduleBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (idBuilder_ == null) {
+          result.id_ = id_;
+        } else {
+          result.id_ = idBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.payload_ = payload_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent) {
+          return mergeFrom((tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent other) {
+        if (other == tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.getDefaultInstance()) return this;
+        if (other.hasModule()) {
+          mergeModule(other.getModule());
+        }
+        if (other.hasId()) {
+          mergeId(other.getId());
+        }
+        if (other.hasPayload()) {
+          setPayload(other.getPayload());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasModule()) {
+          return false;
+        }
+        if (!hasId()) {
+          return false;
+        }
+        if (!hasPayload()) {
+          return false;
+        }
+        if (!getModule().isInitialized()) {
+          return false;
+        }
+        if (!getId().isInitialized()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module module_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module, tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.Builder, tv.twitchbot.common.dto.proto.core.ModuleOuterClass.ModuleOrBuilder> moduleBuilder_;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      public boolean hasModule() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module getModule() {
+        if (moduleBuilder_ == null) {
+          return module_ == null ? tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.getDefaultInstance() : module_;
+        } else {
+          return moduleBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      public Builder setModule(tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module value) {
+        if (moduleBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          module_ = value;
+          onChanged();
+        } else {
+          moduleBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      public Builder setModule(
+          tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.Builder builderForValue) {
+        if (moduleBuilder_ == null) {
+          module_ = builderForValue.build();
+          onChanged();
+        } else {
+          moduleBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      public Builder mergeModule(tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module value) {
+        if (moduleBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              module_ != null &&
+              module_ != tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.getDefaultInstance()) {
+            module_ =
+              tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.newBuilder(module_).mergeFrom(value).buildPartial();
+          } else {
+            module_ = value;
+          }
+          onChanged();
+        } else {
+          moduleBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      public Builder clearModule() {
+        if (moduleBuilder_ == null) {
+          module_ = null;
+          onChanged();
+        } else {
+          moduleBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.Builder getModuleBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getModuleFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.ModuleOuterClass.ModuleOrBuilder getModuleOrBuilder() {
+        if (moduleBuilder_ != null) {
+          return moduleBuilder_.getMessageOrBuilder();
+        } else {
+          return module_ == null ?
+              tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.getDefaultInstance() : module_;
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.Module module = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module, tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.Builder, tv.twitchbot.common.dto.proto.core.ModuleOuterClass.ModuleOrBuilder> 
+          getModuleFieldBuilder() {
+        if (moduleBuilder_ == null) {
+          moduleBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module, tv.twitchbot.common.dto.proto.core.ModuleOuterClass.Module.Builder, tv.twitchbot.common.dto.proto.core.ModuleOuterClass.ModuleOrBuilder>(
+                  getModule(),
+                  getParentForChildren(),
+                  isClean());
+          module_ = null;
+        }
+        return moduleBuilder_;
+      }
+
+      private tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID id_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> idBuilder_;
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID getId() {
+        if (idBuilder_ == null) {
+          return id_ == null ? tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+        } else {
+          return idBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      public Builder setId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (idBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          id_ = value;
+          onChanged();
+        } else {
+          idBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      public Builder setId(
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder builderForValue) {
+        if (idBuilder_ == null) {
+          id_ = builderForValue.build();
+          onChanged();
+        } else {
+          idBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      public Builder mergeId(tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID value) {
+        if (idBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              id_ != null &&
+              id_ != tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance()) {
+            id_ =
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.newBuilder(id_).mergeFrom(value).buildPartial();
+          } else {
+            id_ = value;
+          }
+          onChanged();
+        } else {
+          idBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      public Builder clearId() {
+        if (idBuilder_ == null) {
+          id_ = null;
+          onChanged();
+        } else {
+          idBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder getIdBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getIdFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      public tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getIdOrBuilder() {
+        if (idBuilder_ != null) {
+          return idBuilder_.getMessageOrBuilder();
+        } else {
+          return id_ == null ?
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : id_;
+        }
+      }
+      /**
+       * <code>required .tv.twitchbot.common.dto.proto.core.UUID id = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> 
+          getIdFieldBuilder() {
+        if (idBuilder_ == null) {
+          idBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.twitchbot.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder>(
+                  getId(),
+                  getParentForChildren(),
+                  isClean());
+          id_ = null;
+        }
+        return idBuilder_;
+      }
+
+      private com.google.protobuf.ByteString payload_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>required bytes payload = 3;</code>
+       */
+      public boolean hasPayload() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required bytes payload = 3;</code>
+       */
+      public com.google.protobuf.ByteString getPayload() {
+        return payload_;
+      }
+      /**
+       * <code>required bytes payload = 3;</code>
+       */
+      public Builder setPayload(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        payload_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required bytes payload = 3;</code>
+       */
+      public Builder clearPayload() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        payload_ = getDefaultInstance().getPayload();
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.twitchbot.common.dto.proto.messages.SchedulerNotifyEvent)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.twitchbot.common.dto.proto.messages.SchedulerNotifyEvent)
+    private static final tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent();
+    }
+
+    public static tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<SchedulerNotifyEvent>
+        PARSER = new com.google.protobuf.AbstractParser<SchedulerNotifyEvent>() {
+      public SchedulerNotifyEvent parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new SchedulerNotifyEvent(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<SchedulerNotifyEvent> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<SchedulerNotifyEvent> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 117;
+    /**
+     * <code>extend .tv.twitchbot.common.dto.proto.messages.Event { ... }</code>
+     */
+    public static final
+      com.google.protobuf.GeneratedMessage.GeneratedExtension<
+        tv.twitchbot.common.dto.proto.messages.EventOuterClass.Event,
+        tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent> data = com.google.protobuf.GeneratedMessage
+            .newMessageScopedGeneratedExtension(
+          tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.getDefaultInstance(),
+          0,
+          tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.class,
+          tv.twitchbot.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.getDefaultInstance());
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_twitchbot_common_dto_proto_messages_Event_descriptor;
   private static final 
@@ -17863,6 +18788,11 @@ public final class EventOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_twitchbot_common_dto_proto_messages_TwitchUserModChangeEvent_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -17875,163 +18805,171 @@ public final class EventOuterClass {
       "\n\013Event.proto\022&tv.twitchbot.common.dto.p" +
       "roto.messages\032\rMessage.proto\032\021ChatMessag" +
       "e.proto\032\rChannel.proto\032\nUser.proto\032\tIRC." +
-      "proto\032\tBot.proto\032\016Platform.proto\"\302\004\n\005Eve" +
-      "nt\022E\n\004type\030\001 \002(\01627.tv.twitchbot.common.d" +
-      "to.proto.messages.Event.EventType\"\371\002\n\tEv" +
-      "entType\022\013\n\007UNKNOWN\020\000\022\020\n\014CHAT_MESSAGE\020\001\022\r" +
-      "\n\tCHAT_JOIN\020\002\022\r\n\tCHAT_PART\020\003\022\034\n\030TWITCH_B" +
-      "OT_CHANNEL_STATE\020\004\022\030\n\024TWITCH_BOT_CONNECT" +
-      "ED\020\005\022\033\n\027TWITCH_BOT_GLOBAL_STATE\020\006\022\030\n\024TWI",
-      "TCH_CHANNEL_EVENT\020\007\022\030\n\024TWITCH_CHANNEL_US" +
-      "ERS\020\010\022\017\n\013TWITCH_HOST\020\t\022\017\n\013TWITCH_PING\020\n\022" +
-      "\026\n\022TWITCH_RAW_MESSAGE\020\013\022\024\n\020TWITCH_RECONN" +
-      "ECT\020\014\022\025\n\021TWITCH_ROOM_STATE\020\r\022\022\n\016TWITCH_T" +
-      "IMEOUT\020\016\022\017\n\013TWITCH_USER\020\017\022\032\n\026TWITCH_USER" +
-      "_MOD_CHANGE\020\020*\010\010d\020\200\200\200\200\0022l\n\004data\022/.tv.twi" +
-      "tchbot.common.dto.proto.messages.Message" +
-      "\030e \001(\0132-.tv.twitchbot.common.dto.proto.m" +
-      "essages.Event\"\226\002\n\020ChatMessageEvent\022E\n\014ch" +
-      "at_message\030\001 \002(\0132/.tv.twitchbot.common.d",
-      "to.proto.core.ChatMessage\022:\n\004type\030\002 \002(\0162" +
-      ",.tv.twitchbot.common.dto.proto.core.Pla" +
-      "tform*\010\010d\020\200\200\200\200\0022u\n\004data\022-.tv.twitchbot.c" +
-      "ommon.dto.proto.messages.Event\030e \001(\01328.t" +
-      "v.twitchbot.common.dto.proto.messages.Ch" +
-      "atMessageEvent\"\277\002\n\rChatJoinEvent\0226\n\004user" +
-      "\030\001 \002(\0132(.tv.twitchbot.common.dto.proto.c" +
-      "ore.User\022<\n\007channel\030\002 \002(\0132+.tv.twitchbot" +
-      ".common.dto.proto.core.Channel\022:\n\004type\030\003" +
-      " \002(\0162,.tv.twitchbot.common.dto.proto.cor",
-      "e.Platform*\010\010d\020\200\200\200\200\0022r\n\004data\022-.tv.twitch" +
-      "bot.common.dto.proto.messages.Event\030f \001(" +
-      "\01325.tv.twitchbot.common.dto.proto.messag" +
-      "es.ChatJoinEvent\"\277\002\n\rChatPartEvent\0226\n\004us" +
-      "er\030\001 \002(\0132(.tv.twitchbot.common.dto.proto" +
-      ".core.User\022<\n\007channel\030\002 \002(\0132+.tv.twitchb" +
-      "ot.common.dto.proto.core.Channel\022:\n\004type" +
-      "\030\003 \002(\0162,.tv.twitchbot.common.dto.proto.c" +
-      "ore.Platform*\010\010d\020\200\200\200\200\0022r\n\004data\022-.tv.twit" +
-      "chbot.common.dto.proto.messages.Event\030g ",
-      "\001(\01325.tv.twitchbot.common.dto.proto.mess" +
-      "ages.ChatPartEvent\"\334\002\n\032TwitchBotChannelS" +
-      "tateEvent\022<\n\007channel\030\001 \002(\0132+.tv.twitchbo" +
-      "t.common.dto.proto.core.Channel\0224\n\003bot\030\002" +
-      " \002(\0132\'.tv.twitchbot.common.dto.proto.cor" +
-      "e.Bot\022I\n\022user_state_command\030\003 \002(\0132-.tv.t" +
-      "witchbot.common.dto.proto.core.IrcStanza" +
-      "2\177\n\004data\022-.tv.twitchbot.common.dto.proto" +
-      ".messages.Event\030h \001(\0132B.tv.twitchbot.com" +
-      "mon.dto.proto.messages.TwitchBotChannelS",
-      "tateEvent\"\235\002\n\027TwitchBotConnectedEvent\0224\n" +
-      "\003bot\030\001 \002(\0132\'.tv.twitchbot.common.dto.pro" +
-      "to.core.Bot\022N\n\027rpl_end_of_motd_command\030\002" +
-      " \002(\0132-.tv.twitchbot.common.dto.proto.cor" +
-      "e.IrcStanza2|\n\004data\022-.tv.twitchbot.commo" +
-      "n.dto.proto.messages.Event\030i \001(\0132?.tv.tw" +
-      "itchbot.common.dto.proto.messages.Twitch" +
-      "BotConnectedEvent\"\243\002\n\031TwitchBotGlobalSta" +
-      "teEvent\0224\n\003bot\030\001 \002(\0132\'.tv.twitchbot.comm" +
-      "on.dto.proto.core.Bot\022P\n\031global_user_sta",
-      "te_command\030\002 \002(\0132-.tv.twitchbot.common.d" +
-      "to.proto.core.IrcStanza2~\n\004data\022-.tv.twi" +
-      "tchbot.common.dto.proto.messages.Event\030j" +
-      " \001(\0132A.tv.twitchbot.common.dto.proto.mes" +
-      "sages.TwitchBotGlobalStateEvent\"\243\002\n\022Twit" +
-      "chChannelEvent\022<\n\007channel\030\001 \002(\0132+.tv.twi" +
-      "tchbot.common.dto.proto.core.Channel\022\017\n\007" +
-      "message\030\002 \002(\t\022E\n\016notice_command\030\003 \002(\0132-." +
-      "tv.twitchbot.common.dto.proto.core.IrcSt" +
-      "anza2w\n\004data\022-.tv.twitchbot.common.dto.p",
-      "roto.messages.Event\030k \001(\0132:.tv.twitchbot" +
-      ".common.dto.proto.messages.TwitchChannel" +
-      "Event\"\335\002\n\027TwitchChannelUsersEvent\022<\n\007cha" +
-      "nnel\030\001 \002(\0132+.tv.twitchbot.common.dto.pro" +
-      "to.core.Channel\0227\n\005users\030\002 \003(\0132(.tv.twit" +
-      "chbot.common.dto.proto.core.User\022M\n\026rpl_" +
-      "name_reply_command\030\003 \002(\0132-.tv.twitchbot." +
-      "common.dto.proto.core.IrcStanza2|\n\004data\022" +
-      "-.tv.twitchbot.common.dto.proto.messages" +
-      ".Event\030l \001(\0132?.tv.twitchbot.common.dto.p",
-      "roto.messages.TwitchChannelUsersEvent\"\335\001" +
-      "\n\023TwitchChatJoinEvent\022C\n\014join_command\030\001 " +
-      "\002(\0132-.tv.twitchbot.common.dto.proto.core" +
-      ".IrcStanza2\200\001\n\004data\0225.tv.twitchbot.commo" +
-      "n.dto.proto.messages.ChatJoinEvent\030e \001(\013" +
-      "2;.tv.twitchbot.common.dto.proto.message" +
-      "s.TwitchChatJoinEvent\"\351\001\n\026TwitchChatMess" +
-      "ageEvent\022F\n\017privmsg_command\030\001 \002(\0132-.tv.t" +
-      "witchbot.common.dto.proto.core.IrcStanza" +
-      "2\206\001\n\004data\0228.tv.twitchbot.common.dto.prot",
-      "o.messages.ChatMessageEvent\030e \001(\0132>.tv.t" +
-      "witchbot.common.dto.proto.messages.Twitc" +
-      "hChatMessageEvent\"\335\001\n\023TwitchChatPartEven" +
-      "t\022C\n\014part_command\030\001 \002(\0132-.tv.twitchbot.c" +
-      "ommon.dto.proto.core.IrcStanza2\200\001\n\004data\022" +
-      "5.tv.twitchbot.common.dto.proto.messages" +
-      ".ChatPartEvent\030e \001(\0132;.tv.twitchbot.comm" +
-      "on.dto.proto.messages.TwitchChatPartEven" +
-      "t\"\326\002\n\017TwitchHostEvent\022<\n\007channel\030\001 \002(\0132+" +
-      ".tv.twitchbot.common.dto.proto.core.Chan",
-      "nel\022C\n\016target_channel\030\002 \001(\0132+.tv.twitchb" +
-      "ot.common.dto.proto.core.Channel\022J\n\023host" +
-      "_target_command\030\003 \002(\0132-.tv.twitchbot.com" +
-      "mon.dto.proto.core.IrcStanza2t\n\004data\022-.t" +
+      "proto\032\tBot.proto\032\016Platform.proto\032\014Module" +
+      ".proto\032\nUUID.proto\"\330\004\n\005Event\022E\n\004type\030\001 \002" +
+      "(\01627.tv.twitchbot.common.dto.proto.messa" +
+      "ges.Event.EventType\"\217\003\n\tEventType\022\013\n\007UNK" +
+      "NOWN\020\000\022\020\n\014CHAT_MESSAGE\020\001\022\r\n\tCHAT_JOIN\020\002\022" +
+      "\r\n\tCHAT_PART\020\003\022\034\n\030TWITCH_BOT_CHANNEL_STA" +
+      "TE\020\004\022\030\n\024TWITCH_BOT_CONNECTED\020\005\022\033\n\027TWITCH",
+      "_BOT_GLOBAL_STATE\020\006\022\030\n\024TWITCH_CHANNEL_EV" +
+      "ENT\020\007\022\030\n\024TWITCH_CHANNEL_USERS\020\010\022\017\n\013TWITC" +
+      "H_HOST\020\t\022\017\n\013TWITCH_PING\020\n\022\026\n\022TWITCH_RAW_" +
+      "MESSAGE\020\013\022\024\n\020TWITCH_RECONNECT\020\014\022\025\n\021TWITC" +
+      "H_ROOM_STATE\020\r\022\022\n\016TWITCH_TIMEOUT\020\016\022\017\n\013TW" +
+      "ITCH_USER\020\017\022\032\n\026TWITCH_USER_MOD_CHANGE\020\020\022" +
+      "\024\n\020SCHEDULER_NOTIFY\020\021*\010\010d\020\200\200\200\200\0022l\n\004data\022" +
+      "/.tv.twitchbot.common.dto.proto.messages" +
+      ".Message\030e \001(\0132-.tv.twitchbot.common.dto" +
+      ".proto.messages.Event\"\226\002\n\020ChatMessageEve",
+      "nt\022E\n\014chat_message\030\001 \002(\0132/.tv.twitchbot." +
+      "common.dto.proto.core.ChatMessage\022:\n\004typ" +
+      "e\030\002 \002(\0162,.tv.twitchbot.common.dto.proto." +
+      "core.Platform*\010\010d\020\200\200\200\200\0022u\n\004data\022-.tv.twi" +
+      "tchbot.common.dto.proto.messages.Event\030e" +
+      " \001(\01328.tv.twitchbot.common.dto.proto.mes" +
+      "sages.ChatMessageEvent\"\277\002\n\rChatJoinEvent" +
+      "\0226\n\004user\030\001 \002(\0132(.tv.twitchbot.common.dto" +
+      ".proto.core.User\022<\n\007channel\030\002 \002(\0132+.tv.t" +
+      "witchbot.common.dto.proto.core.Channel\022:",
+      "\n\004type\030\003 \002(\0162,.tv.twitchbot.common.dto.p" +
+      "roto.core.Platform*\010\010d\020\200\200\200\200\0022r\n\004data\022-.t" +
       "v.twitchbot.common.dto.proto.messages.Ev" +
-      "ent\030m \001(\01327.tv.twitchbot.common.dto.prot" +
-      "o.messages.TwitchHostEvent\"\333\001\n\017TwitchPin" +
-      "gEvent\022\r\n\005token\030\001 \002(\t\022C\n\014ping_command\030\002 " +
-      "\002(\0132-.tv.twitchbot.common.dto.proto.core" +
-      ".IrcStanza2t\n\004data\022-.tv.twitchbot.common",
-      ".dto.proto.messages.Event\030n \001(\01327.tv.twi" +
-      "tchbot.common.dto.proto.messages.TwitchP" +
-      "ingEvent\"\214\002\n\025TwitchRawMessageEvent\0224\n\003bo" +
-      "t\030\001 \002(\0132\'.tv.twitchbot.common.dto.proto." +
-      "core.Bot\022A\n\nirc_stanza\030\002 \002(\0132-.tv.twitch" +
-      "bot.common.dto.proto.core.IrcStanza2z\n\004d" +
-      "ata\022-.tv.twitchbot.common.dto.proto.mess" +
-      "ages.Event\030o \001(\0132=.tv.twitchbot.common.d" +
-      "to.proto.messages.TwitchRawMessageEvent\"" +
-      "\221\002\n\024TwitchReconnectEvent\0224\n\003bot\030\001 \002(\0132\'.",
-      "tv.twitchbot.common.dto.proto.core.Bot\022H" +
-      "\n\021reconnect_command\030\002 \002(\0132-.tv.twitchbot" +
-      ".common.dto.proto.core.IrcStanza2y\n\004data" +
-      "\022-.tv.twitchbot.common.dto.proto.message" +
-      "s.Event\030p \001(\0132<.tv.twitchbot.common.dto." +
-      "proto.messages.TwitchReconnectEvent\"\232\002\n\024" +
-      "TwitchRoomStateEvent\022<\n\007channel\030\001 \002(\0132+." +
-      "tv.twitchbot.common.dto.proto.core.Chann" +
-      "el\022I\n\022room_state_command\030\002 \002(\0132-.tv.twit" +
-      "chbot.common.dto.proto.core.IrcStanza2y\n",
-      "\004data\022-.tv.twitchbot.common.dto.proto.me" +
-      "ssages.Event\030q \001(\0132<.tv.twitchbot.common" +
-      ".dto.proto.messages.TwitchRoomStateEvent" +
-      "\"\316\002\n\022TwitchTimeoutEvent\022<\n\007channel\030\001 \002(\013" +
-      "2+.tv.twitchbot.common.dto.proto.core.Ch" +
-      "annel\0226\n\004user\030\002 \002(\0132(.tv.twitchbot.commo" +
-      "n.dto.proto.core.User\022I\n\022clear_chat_comm" +
-      "and\030\003 \002(\0132-.tv.twitchbot.common.dto.prot" +
-      "o.core.IrcStanza2w\n\004data\022-.tv.twitchbot." +
-      "common.dto.proto.messages.Event\030r \001(\0132:.",
-      "tv.twitchbot.common.dto.proto.messages.T" +
-      "witchTimeoutEvent\"\332\002\n\017TwitchUserEvent\022<\n" +
-      "\007channel\030\001 \002(\0132+.tv.twitchbot.common.dto" +
-      ".proto.core.Channel\0226\n\004user\030\002 \002(\0132(.tv.t" +
-      "witchbot.common.dto.proto.core.User\022\017\n\007m" +
-      "essage\030\003 \002(\t\022J\n\023user_notice_command\030\004 \002(" +
+      "ent\030f \001(\01325.tv.twitchbot.common.dto.prot" +
+      "o.messages.ChatJoinEvent\"\277\002\n\rChatPartEve" +
+      "nt\0226\n\004user\030\001 \002(\0132(.tv.twitchbot.common.d" +
+      "to.proto.core.User\022<\n\007channel\030\002 \002(\0132+.tv" +
+      ".twitchbot.common.dto.proto.core.Channel" +
+      "\022:\n\004type\030\003 \002(\0162,.tv.twitchbot.common.dto" +
+      ".proto.core.Platform*\010\010d\020\200\200\200\200\0022r\n\004data\022-",
+      ".tv.twitchbot.common.dto.proto.messages." +
+      "Event\030g \001(\01325.tv.twitchbot.common.dto.pr" +
+      "oto.messages.ChatPartEvent\"\334\002\n\032TwitchBot" +
+      "ChannelStateEvent\022<\n\007channel\030\001 \002(\0132+.tv." +
+      "twitchbot.common.dto.proto.core.Channel\022" +
+      "4\n\003bot\030\002 \002(\0132\'.tv.twitchbot.common.dto.p" +
+      "roto.core.Bot\022I\n\022user_state_command\030\003 \002(" +
       "\0132-.tv.twitchbot.common.dto.proto.core.I" +
-      "rcStanza2t\n\004data\022-.tv.twitchbot.common.d" +
-      "to.proto.messages.Event\030s \001(\01327.tv.twitc" +
-      "hbot.common.dto.proto.messages.TwitchUse",
-      "rEvent\"\350\002\n\030TwitchUserModChangeEvent\022<\n\007c" +
-      "hannel\030\001 \002(\0132+.tv.twitchbot.common.dto.p" +
-      "roto.core.Channel\0226\n\004user\030\002 \002(\0132(.tv.twi" +
-      "tchbot.common.dto.proto.core.User\022\022\n\nis_" +
-      "now_mod\030\003 \002(\010\022C\n\014mode_command\030\004 \002(\0132-.tv" +
-      ".twitchbot.common.dto.proto.core.IrcStan" +
-      "za2}\n\004data\022-.tv.twitchbot.common.dto.pro" +
-      "to.messages.Event\030t \001(\0132@.tv.twitchbot.c" +
-      "ommon.dto.proto.messages.TwitchUserModCh" +
-      "angeEvent"
+      "rcStanza2\177\n\004data\022-.tv.twitchbot.common.d" +
+      "to.proto.messages.Event\030h \001(\0132B.tv.twitc",
+      "hbot.common.dto.proto.messages.TwitchBot" +
+      "ChannelStateEvent\"\235\002\n\027TwitchBotConnected" +
+      "Event\0224\n\003bot\030\001 \002(\0132\'.tv.twitchbot.common" +
+      ".dto.proto.core.Bot\022N\n\027rpl_end_of_motd_c" +
+      "ommand\030\002 \002(\0132-.tv.twitchbot.common.dto.p" +
+      "roto.core.IrcStanza2|\n\004data\022-.tv.twitchb" +
+      "ot.common.dto.proto.messages.Event\030i \001(\013" +
+      "2?.tv.twitchbot.common.dto.proto.message" +
+      "s.TwitchBotConnectedEvent\"\243\002\n\031TwitchBotG" +
+      "lobalStateEvent\0224\n\003bot\030\001 \002(\0132\'.tv.twitch",
+      "bot.common.dto.proto.core.Bot\022P\n\031global_" +
+      "user_state_command\030\002 \002(\0132-.tv.twitchbot." +
+      "common.dto.proto.core.IrcStanza2~\n\004data\022" +
+      "-.tv.twitchbot.common.dto.proto.messages" +
+      ".Event\030j \001(\0132A.tv.twitchbot.common.dto.p" +
+      "roto.messages.TwitchBotGlobalStateEvent\"" +
+      "\243\002\n\022TwitchChannelEvent\022<\n\007channel\030\001 \002(\0132" +
+      "+.tv.twitchbot.common.dto.proto.core.Cha" +
+      "nnel\022\017\n\007message\030\002 \002(\t\022E\n\016notice_command\030" +
+      "\003 \002(\0132-.tv.twitchbot.common.dto.proto.co",
+      "re.IrcStanza2w\n\004data\022-.tv.twitchbot.comm" +
+      "on.dto.proto.messages.Event\030k \001(\0132:.tv.t" +
+      "witchbot.common.dto.proto.messages.Twitc" +
+      "hChannelEvent\"\335\002\n\027TwitchChannelUsersEven" +
+      "t\022<\n\007channel\030\001 \002(\0132+.tv.twitchbot.common" +
+      ".dto.proto.core.Channel\0227\n\005users\030\002 \003(\0132(" +
+      ".tv.twitchbot.common.dto.proto.core.User" +
+      "\022M\n\026rpl_name_reply_command\030\003 \002(\0132-.tv.tw" +
+      "itchbot.common.dto.proto.core.IrcStanza2" +
+      "|\n\004data\022-.tv.twitchbot.common.dto.proto.",
+      "messages.Event\030l \001(\0132?.tv.twitchbot.comm" +
+      "on.dto.proto.messages.TwitchChannelUsers" +
+      "Event\"\335\001\n\023TwitchChatJoinEvent\022C\n\014join_co" +
+      "mmand\030\001 \002(\0132-.tv.twitchbot.common.dto.pr" +
+      "oto.core.IrcStanza2\200\001\n\004data\0225.tv.twitchb" +
+      "ot.common.dto.proto.messages.ChatJoinEve" +
+      "nt\030e \001(\0132;.tv.twitchbot.common.dto.proto" +
+      ".messages.TwitchChatJoinEvent\"\351\001\n\026Twitch" +
+      "ChatMessageEvent\022F\n\017privmsg_command\030\001 \002(" +
+      "\0132-.tv.twitchbot.common.dto.proto.core.I",
+      "rcStanza2\206\001\n\004data\0228.tv.twitchbot.common." +
+      "dto.proto.messages.ChatMessageEvent\030e \001(" +
+      "\0132>.tv.twitchbot.common.dto.proto.messag" +
+      "es.TwitchChatMessageEvent\"\335\001\n\023TwitchChat" +
+      "PartEvent\022C\n\014part_command\030\001 \002(\0132-.tv.twi" +
+      "tchbot.common.dto.proto.core.IrcStanza2\200" +
+      "\001\n\004data\0225.tv.twitchbot.common.dto.proto." +
+      "messages.ChatPartEvent\030e \001(\0132;.tv.twitch" +
+      "bot.common.dto.proto.messages.TwitchChat" +
+      "PartEvent\"\326\002\n\017TwitchHostEvent\022<\n\007channel",
+      "\030\001 \002(\0132+.tv.twitchbot.common.dto.proto.c" +
+      "ore.Channel\022C\n\016target_channel\030\002 \001(\0132+.tv" +
+      ".twitchbot.common.dto.proto.core.Channel" +
+      "\022J\n\023host_target_command\030\003 \002(\0132-.tv.twitc" +
+      "hbot.common.dto.proto.core.IrcStanza2t\n\004" +
+      "data\022-.tv.twitchbot.common.dto.proto.mes" +
+      "sages.Event\030m \001(\01327.tv.twitchbot.common." +
+      "dto.proto.messages.TwitchHostEvent\"\333\001\n\017T" +
+      "witchPingEvent\022\r\n\005token\030\001 \002(\t\022C\n\014ping_co" +
+      "mmand\030\002 \002(\0132-.tv.twitchbot.common.dto.pr",
+      "oto.core.IrcStanza2t\n\004data\022-.tv.twitchbo" +
+      "t.common.dto.proto.messages.Event\030n \001(\0132" +
+      "7.tv.twitchbot.common.dto.proto.messages" +
+      ".TwitchPingEvent\"\214\002\n\025TwitchRawMessageEve" +
+      "nt\0224\n\003bot\030\001 \002(\0132\'.tv.twitchbot.common.dt" +
+      "o.proto.core.Bot\022A\n\nirc_stanza\030\002 \002(\0132-.t" +
+      "v.twitchbot.common.dto.proto.core.IrcSta" +
+      "nza2z\n\004data\022-.tv.twitchbot.common.dto.pr" +
+      "oto.messages.Event\030o \001(\0132=.tv.twitchbot." +
+      "common.dto.proto.messages.TwitchRawMessa",
+      "geEvent\"\221\002\n\024TwitchReconnectEvent\0224\n\003bot\030" +
+      "\001 \002(\0132\'.tv.twitchbot.common.dto.proto.co" +
+      "re.Bot\022H\n\021reconnect_command\030\002 \002(\0132-.tv.t" +
+      "witchbot.common.dto.proto.core.IrcStanza" +
+      "2y\n\004data\022-.tv.twitchbot.common.dto.proto" +
+      ".messages.Event\030p \001(\0132<.tv.twitchbot.com" +
+      "mon.dto.proto.messages.TwitchReconnectEv" +
+      "ent\"\232\002\n\024TwitchRoomStateEvent\022<\n\007channel\030" +
+      "\001 \002(\0132+.tv.twitchbot.common.dto.proto.co" +
+      "re.Channel\022I\n\022room_state_command\030\002 \002(\0132-",
+      ".tv.twitchbot.common.dto.proto.core.IrcS" +
+      "tanza2y\n\004data\022-.tv.twitchbot.common.dto." +
+      "proto.messages.Event\030q \001(\0132<.tv.twitchbo" +
+      "t.common.dto.proto.messages.TwitchRoomSt" +
+      "ateEvent\"\316\002\n\022TwitchTimeoutEvent\022<\n\007chann" +
+      "el\030\001 \002(\0132+.tv.twitchbot.common.dto.proto" +
+      ".core.Channel\0226\n\004user\030\002 \002(\0132(.tv.twitchb" +
+      "ot.common.dto.proto.core.User\022I\n\022clear_c" +
+      "hat_command\030\003 \002(\0132-.tv.twitchbot.common." +
+      "dto.proto.core.IrcStanza2w\n\004data\022-.tv.tw",
+      "itchbot.common.dto.proto.messages.Event\030" +
+      "r \001(\0132:.tv.twitchbot.common.dto.proto.me" +
+      "ssages.TwitchTimeoutEvent\"\332\002\n\017TwitchUser" +
+      "Event\022<\n\007channel\030\001 \002(\0132+.tv.twitchbot.co" +
+      "mmon.dto.proto.core.Channel\0226\n\004user\030\002 \002(" +
+      "\0132(.tv.twitchbot.common.dto.proto.core.U" +
+      "ser\022\017\n\007message\030\003 \002(\t\022J\n\023user_notice_comm" +
+      "and\030\004 \002(\0132-.tv.twitchbot.common.dto.prot" +
+      "o.core.IrcStanza2t\n\004data\022-.tv.twitchbot." +
+      "common.dto.proto.messages.Event\030s \001(\01327.",
+      "tv.twitchbot.common.dto.proto.messages.T" +
+      "witchUserEvent\"\350\002\n\030TwitchUserModChangeEv" +
+      "ent\022<\n\007channel\030\001 \002(\0132+.tv.twitchbot.comm" +
+      "on.dto.proto.core.Channel\0226\n\004user\030\002 \002(\0132" +
+      "(.tv.twitchbot.common.dto.proto.core.Use" +
+      "r\022\022\n\nis_now_mod\030\003 \002(\010\022C\n\014mode_command\030\004 " +
+      "\002(\0132-.tv.twitchbot.common.dto.proto.core" +
+      ".IrcStanza2}\n\004data\022-.tv.twitchbot.common" +
+      ".dto.proto.messages.Event\030t \001(\0132@.tv.twi" +
+      "tchbot.common.dto.proto.messages.TwitchU",
+      "serModChangeEvent\"\224\002\n\024SchedulerNotifyEve" +
+      "nt\022:\n\006module\030\001 \002(\0132*.tv.twitchbot.common" +
+      ".dto.proto.core.Module\0224\n\002id\030\002 \002(\0132(.tv." +
+      "twitchbot.common.dto.proto.core.UUID\022\017\n\007" +
+      "payload\030\003 \002(\0142y\n\004data\022-.tv.twitchbot.com" +
+      "mon.dto.proto.messages.Event\030u \001(\0132<.tv." +
+      "twitchbot.common.dto.proto.messages.Sche" +
+      "dulerNotifyEvent"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -18051,6 +18989,8 @@ public final class EventOuterClass {
           tv.twitchbot.common.dto.proto.core.IRC.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.BotOuterClass.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.PlatformOuterClass.getDescriptor(),
+          tv.twitchbot.common.dto.proto.core.ModuleOuterClass.getDescriptor(),
+          tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_messages_Event_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -18172,6 +19112,12 @@ public final class EventOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_twitchbot_common_dto_proto_messages_TwitchUserModChangeEvent_descriptor,
         new java.lang.String[] { "Channel", "User", "IsNowMod", "ModeCommand", });
+    internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_descriptor =
+      getDescriptor().getMessageTypes().get(20);
+    internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_twitchbot_common_dto_proto_messages_SchedulerNotifyEvent_descriptor,
+        new java.lang.String[] { "Module", "Id", "Payload", });
     tv.twitchbot.common.dto.proto.messages.MessageOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.ChatMessageOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor();
@@ -18179,6 +19125,8 @@ public final class EventOuterClass {
     tv.twitchbot.common.dto.proto.core.IRC.getDescriptor();
     tv.twitchbot.common.dto.proto.core.BotOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.PlatformOuterClass.getDescriptor();
+    tv.twitchbot.common.dto.proto.core.ModuleOuterClass.getDescriptor();
+    tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

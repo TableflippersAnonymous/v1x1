@@ -15,7 +15,7 @@ import java.util.Map;
 public class NoticeCommand extends IrcStanza {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static NoticeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.NoticeCommandOrBuilder noticeCommand) {
+    public static NoticeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.NoticeCommand noticeCommand) {
         final String channel = noticeCommand.getChannel();
         final String message = noticeCommand.getMessage();
         return new NoticeCommand(rawLine, tags, source, rawArgs, args, channel, message);

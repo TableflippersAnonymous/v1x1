@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class UserNoticeCommand extends MessageTaggedIrcStanza {
-    public static UserNoticeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.UserNoticeCommandOrBuilder userNoticeCommand) {
+    public static UserNoticeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.UserNoticeCommand userNoticeCommand) {
         final String channel = userNoticeCommand.getChannel();
         final String message = userNoticeCommand.getMessage();
         return new UserNoticeCommand(rawLine, tags, source, rawArgs, args, channel, message);
