@@ -20,7 +20,7 @@ cd $(dirname $0)
 echo "Finding modules..."
 while read module; do
   MODULES="$MODULES v1x1-$module"
-done < <(find twitchbot-modules -mindepth 2 -iname "twitchbot-modules-*" -type d -printf '%f\n'|cut -f4- -d- --)
+done < <(find v1x1-modules -mindepth 2 -iname "v1x1-modules-*" -type d -printf '%f\n'|cut -f4- -d- --)
 echo "Clearing out old Docker containers..."
 docker-compose down
 echo "Clearing out old Docker images..."
