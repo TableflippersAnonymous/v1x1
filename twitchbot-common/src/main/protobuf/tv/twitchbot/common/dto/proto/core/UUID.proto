@@ -1,8 +1,0 @@
-syntax = "proto2";
-
-package tv.twitchbot.common.dto.proto.core;
-
-message UUID {
-    required sfixed64 mostSignificantBits = 1;
-    required sfixed64 leastSignificantBits = 2;
-}

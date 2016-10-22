@@ -1,7 +1,0 @@
-syntax = "proto2";
-
-package tv.twitchbot.common.dto.proto.core;
-
-message Permission {
-    required string node = 1;
-}
