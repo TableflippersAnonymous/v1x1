@@ -2,6 +2,7 @@ package tv.twitchbot.common.dao;
 
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
 import tv.twitchbot.common.dto.db.TenantUserPermissions;
@@ -22,7 +23,7 @@ public class DAOTenantUserPermissions {
         TenantUserPermissions getByTenantAndUser(UUID tenantId, UUID userId);
 
         @Query("SELECT * FROM tenant_user_permissions WHERE tenant_id = ?")
-        Iterable<TenantUserPermissions> getByTenant(UUID tenantId);
+        Result<TenantUserPermissions> getByTenant(UUID tenantId);
     }
 
     public DAOTenantUserPermissions(final MappingManager mappingManager) {

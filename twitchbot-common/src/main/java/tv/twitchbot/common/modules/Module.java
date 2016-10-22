@@ -330,7 +330,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     @SuppressWarnings("unchecked")
-    protected <W extends ServiceClient<? extends Request, ? extends Response<? extends Request>>> W getServiceClient(final Class<W> serviceClass) {
+    public <W extends ServiceClient<? extends Request, ? extends Response<? extends Request>>> W getServiceClient(final Class<W> serviceClass) {
         if(!serviceClientMap.containsKey(serviceClass)) {
             try {
                 serviceClientMap.put(serviceClass, serviceClass.getConstructor(Module.class).newInstance(this));

@@ -45,3 +45,9 @@ services:
       - redis
       - zoo1
       - chat_router
+  link_purger:
+    image: v1x1-link_purger:latest
+    depends_on:
+      - redis
+      - zoo1
+      - chat_router
