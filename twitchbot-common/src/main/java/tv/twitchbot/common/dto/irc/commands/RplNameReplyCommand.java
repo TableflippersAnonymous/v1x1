@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
  * Created by cobi on 10/8/2016.
  */
 public class RplNameReplyCommand extends IrcStanza {
-    public static RplNameReplyCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.RplNameReplyCommandOrBuilder rplNameReplyCommand) {
+    public static RplNameReplyCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.RplNameReplyCommand rplNameReplyCommand) {
         final String channel = rplNameReplyCommand.getChannel();
         final List<Member> members = rplNameReplyCommand.getMembersList().stream().map(Member::fromProto).collect(Collectors.toList());
         return new RplNameReplyCommand(rawLine, tags, source, rawArgs, args, channel, members);
     }
 
     public static class Member {
-        public static Member fromProto(final IRC.RplNameReplyCommand.MemberOrBuilder member) {
+        public static Member fromProto(final IRC.RplNameReplyCommand.Member member) {
             final String nickname = member.getNickname();
             final boolean isOp = member.getIsOp();
             return new Member(nickname, isOp);

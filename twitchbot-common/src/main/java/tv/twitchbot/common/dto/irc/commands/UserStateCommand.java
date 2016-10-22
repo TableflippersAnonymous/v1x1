@@ -10,7 +10,7 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class UserStateCommand extends EmoteSetIrcStanza {
-    public static UserStateCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.UserStateCommandOrBuilder userStateCommand) {
+    public static UserStateCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.UserStateCommand userStateCommand) {
         final String channel = userStateCommand.getChannel();
         return new UserStateCommand(rawLine, tags, source, rawArgs, args, channel);
     }

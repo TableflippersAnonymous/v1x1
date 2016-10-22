@@ -8,7 +8,7 @@ import tv.twitchbot.common.dto.proto.core.PermissionOuterClass;
  * @author Cobi
  */
 public class Permission {
-    public static Permission fromProto(final PermissionOuterClass.PermissionOrBuilder proto) {
+    public static Permission fromProto(final PermissionOuterClass.Permission proto) {
         final String node = proto.getNode();
         return new Permission(node);
     }

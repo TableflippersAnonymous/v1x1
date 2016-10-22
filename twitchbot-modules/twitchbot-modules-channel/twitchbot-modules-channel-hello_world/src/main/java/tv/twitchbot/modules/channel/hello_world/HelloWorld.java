@@ -48,6 +48,8 @@ public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlob
     protected void processChatMessageEvent(final ChatMessageEvent chatMessageEvent) {
         super.processChatMessageEvent(chatMessageEvent);
         LOG.debug("Got chat message: {}", chatMessageEvent.getChatMessage().getText());
+        if(!getTenantConfiguration(chatMessageEvent.getChatMessage().getChannel().getTenant()).isEnabled())
+            return;
         delegator.handleChatMessage(chatMessageEvent);
     }
 }

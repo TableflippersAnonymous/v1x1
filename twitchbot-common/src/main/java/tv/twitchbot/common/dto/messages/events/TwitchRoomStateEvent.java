@@ -12,7 +12,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchRoomStateEvent extends Event {
-    public static TwitchRoomStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchRoomStateEventOrBuilder twitchRoomStateEvent) {
+    public static TwitchRoomStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchRoomStateEvent twitchRoomStateEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchRoomStateEvent.getChannel());
         final RoomStateCommand roomStateCommand = (RoomStateCommand) IrcStanza.fromProto(twitchRoomStateEvent.getRoomStateCommand());
         return new TwitchRoomStateEvent(module, uuid, timestamp, channel, roomStateCommand);

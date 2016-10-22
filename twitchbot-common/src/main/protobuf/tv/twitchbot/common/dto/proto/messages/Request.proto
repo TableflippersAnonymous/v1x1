@@ -5,11 +5,13 @@ package tv.twitchbot.common.dto.proto.messages;
 import "Message.proto";
 import "Channel.proto";
 import "UUID.proto";
+import "Module.proto";
 
 enum RequestType {
     UNKNOWN = 0;
     MODULE_SHUTDOWN = 1;
     SEND_MESSAGE = 2;
+    SCHEDULE = 3;
 };
 
 message Request {
@@ -58,5 +60,38 @@ message SendMessageRequest {
 message SendMessageResponse {
     extend Response {
         optional SendMessageResponse data = 102;
+    }
+}
+
+message ScheduleRequest {
+    extend Request {
+        optional ScheduleRequest data = 103;
+    }
+
+    enum Type {
+        UNKNOWN = 0;
+        DELAY = 1;
+        INTERVAL = 2;
+        CRON = 3;
+    }
+
+    message Cron {
+        repeated int32 minute = 1;
+        repeated int32 hour = 2;
+        repeated int32 day_of_month = 3;
+        repeated int32 month = 4;
+        repeated int32 day_of_week = 5;
+    }
+
+    required core.UUID id = 1;
+    required bytes payload = 2;
+    required Type type = 3;
+    optional sfixed64 delay = 4;
+    optional Cron cron = 5;
+}
+
+message ScheduleResponse {
+    extend Response {
+        optional ScheduleResponse data = 103;
     }
 }

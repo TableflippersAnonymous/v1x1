@@ -9,6 +9,8 @@ import "User.proto";
 import "IRC.proto";
 import "Bot.proto";
 import "Platform.proto";
+import "Module.proto";
+import "UUID.proto";
 
 message Event {
     enum EventType {
@@ -29,6 +31,7 @@ message Event {
         TWITCH_TIMEOUT = 14;
         TWITCH_USER = 15;
         TWITCH_USER_MOD_CHANGE = 16;
+        SCHEDULER_NOTIFY = 17;
     };
 
     extensions 100 to max; /* Convention is to use the same 100 + your EventType ID */
@@ -223,4 +226,14 @@ message TwitchUserModChangeEvent {
     required core.User user = 2;
     required bool is_now_mod = 3;
     required core.IrcStanza mode_command = 4;
+}
+
+message SchedulerNotifyEvent {
+    extend Event {
+        optional SchedulerNotifyEvent data = 117;
+    }
+
+    required core.Module module = 1;
+    required core.UUID id = 2;
+    required bytes payload = 3;
 }

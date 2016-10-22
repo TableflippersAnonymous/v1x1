@@ -11,7 +11,7 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public class ModeCommand extends IrcStanza {
-    public static ModeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.ModeCommandOrBuilder modeCommand) {
+    public static ModeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.ModeCommand modeCommand) {
         final String channel = modeCommand.getChannel();
         final String modeString = modeCommand.getModeString();
         final List<String> nicknames = modeCommand.getNicknamesList();

@@ -11,7 +11,7 @@ import tv.twitchbot.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchUserModChangeEvent extends Event {
-    public static TwitchUserModChangeEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchUserModChangeEventOrBuilder twitchUserModChangeEvent) {
+    public static TwitchUserModChangeEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchUserModChangeEvent twitchUserModChangeEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchUserModChangeEvent.getChannel());
         final TwitchUser user = (TwitchUser) User.fromProto(twitchUserModChangeEvent.getUser());
         final boolean isNowMod = twitchUserModChangeEvent.getIsNowMod();
