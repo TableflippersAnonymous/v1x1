@@ -71,7 +71,7 @@ public class Tenant {
         return id;
     }
 
-    public Collection<Entry> getEntries() {
+    public List<Entry> getEntries() {
         return entries;
     }
 

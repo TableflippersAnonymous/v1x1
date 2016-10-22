@@ -13,6 +13,7 @@ import tv.twitchbot.common.dto.db.TenantUserPermissions;
 import tv.twitchbot.common.modules.ServiceModule;
 import tv.twitchbot.common.services.coordination.LoadBalancingDistributor;
 import tv.twitchbot.common.services.queue.MessageQueue;
+import tv.twitchbot.common.util.data.Pair;
 import tv.twitchbot.common.util.network.IPProvider;
 import tv.twitchbot.common.util.ratelimiter.GlobalRateLimiter;
 import tv.twitchbot.common.util.ratelimiter.LocalRateLimiter;
