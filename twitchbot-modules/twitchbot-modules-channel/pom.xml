@@ -18,6 +18,7 @@
     <module>twitchbot-modules-channel-hello_world</module>
     <module>twitchbot-modules-channel-echo</module>
     <module>twitchbot-modules-channel-i18n_test</module>
+      <module>twitchbot-modules-channel-link_purger</module>
   </modules>
 
   <dependencies>
