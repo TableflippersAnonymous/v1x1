@@ -354,11 +354,11 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return loadBalancingDistributorMap.get(path);
     }
 
-    protected U getGlobalConfiguration() {
+    public U getGlobalConfiguration() {
         return getGlobalConfigProvider().getConfiguration();
     }
 
-    protected V getTenantConfiguration(final Tenant tenant) {
+    public V getTenantConfiguration(final Tenant tenant) {
         return getTenantConfigProvider().getTenantConfiguration(tenant);
     }
 
