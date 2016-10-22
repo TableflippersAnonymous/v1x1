@@ -1,0 +1,24 @@
+syntax = "proto2";
+
+package tv.v1x1.common.dto.proto.core;
+
+import "UUID.proto";
+import "Platform.proto";
+
+message User {
+    required string id = 1;
+    required Platform platform = 2;
+    required GlobalUser global_user = 3;
+    required string display_name = 4;
+}
+
+message GlobalUser {
+    required UUID id = 1;
+    repeated GlobalUserEntry entries = 2;
+}
+
+message GlobalUserEntry {
+    required string id = 1;
+    required Platform platform = 2;
+    required string display_name = 3;
+}

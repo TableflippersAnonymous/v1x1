@@ -1,0 +1,7 @@
+syntax = "proto2";
+
+package tv.v1x1.common.dto.proto.core;
+
+message Permission {
+    required string node = 1;
+}

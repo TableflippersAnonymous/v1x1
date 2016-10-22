@@ -1,0 +1,24 @@
+syntax = "proto2";
+
+package tv.v1x1.common.dto.proto.core;
+
+import "Platform.proto";
+
+message Bot {
+    extensions 100 to max;
+
+    required string name = 1;
+    required Platform type = 2;
+}
+
+message TwitchBot {
+    extend Bot {
+        optional TwitchBot data = 101;
+    }
+}
+
+message DiscordBot {
+    extend Bot {
+        optional DiscordBot data = 102;
+    }
+}
