@@ -28,7 +28,7 @@
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
-      <scheduleId>central</scheduleId>
+      <id>central</id>
       <name>Maven Repository Switchboard</name>
       <url>http://repo1.maven.org/maven2</url>
     </repository>

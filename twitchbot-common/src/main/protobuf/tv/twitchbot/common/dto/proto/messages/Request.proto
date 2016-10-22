@@ -5,7 +5,6 @@ package tv.twitchbot.common.dto.proto.messages;
 import "Message.proto";
 import "Channel.proto";
 import "UUID.proto";
-import "Module.proto";
 
 enum RequestType {
     UNKNOWN = 0;
