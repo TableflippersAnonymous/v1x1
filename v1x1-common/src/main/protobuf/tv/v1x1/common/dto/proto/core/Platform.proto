@@ -1,0 +1,9 @@
+syntax = "proto2";
+
+package tv.v1x1.common.dto.proto.core;
+
+enum Platform {
+    UNKNOWN = 0;
+    TWITCH = 1;
+    DISCORD = 2;
+};
