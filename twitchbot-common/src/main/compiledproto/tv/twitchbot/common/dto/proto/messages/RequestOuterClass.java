@@ -6350,56 +6350,55 @@ public final class RequestOuterClass {
     java.lang.String[] descriptorData = {
       "\n\rRequest.proto\022&tv.twitchbot.common.dto" +
       ".proto.messages\032\rMessage.proto\032\rChannel." +
-      "proto\032\nUUID.proto\032\014Module.proto\"\343\001\n\007Requ" +
-      "est\022A\n\004type\030\001 \002(\01623.tv.twitchbot.common." +
-      "dto.proto.messages.RequestType\022\033\n\023respon" +
-      "se_queue_name\030\002 \002(\t*\010\010d\020\200\200\200\200\0022n\n\004data\022/." +
-      "tv.twitchbot.common.dto.proto.messages.M" +
-      "essage\030f \001(\0132/.tv.twitchbot.common.dto.p" +
-      "roto.messages.Request\"\216\002\n\010Response\022A\n\004ty" +
-      "pe\030\001 \002(\01623.tv.twitchbot.common.dto.proto",
-      ".messages.RequestType\022D\n\022request_message" +
-      "_id\030\002 \002(\0132(.tv.twitchbot.common.dto.prot" +
-      "o.core.UUID*\010\010d\020\200\200\200\200\0022o\n\004data\022/.tv.twitc" +
-      "hbot.common.dto.proto.messages.Message\030g" +
-      " \001(\01320.tv.twitchbot.common.dto.proto.mes" +
-      "sages.Response\"\225\001\n\025ModuleShutdownRequest" +
-      "2|\n\004data\022/.tv.twitchbot.common.dto.proto" +
-      ".messages.Request\030e \001(\0132=.tv.twitchbot.c" +
-      "ommon.dto.proto.messages.ModuleShutdownR" +
-      "equest\"\230\001\n\026ModuleShutdownResponse2~\n\004dat",
-      "a\0220.tv.twitchbot.common.dto.proto.messag" +
-      "es.Response\030e \001(\0132>.tv.twitchbot.common." +
-      "dto.proto.messages.ModuleShutdownRespons" +
-      "e\"\337\001\n\022SendMessageRequest\022@\n\013destination\030" +
-      "\001 \002(\0132+.tv.twitchbot.common.dto.proto.co" +
-      "re.Channel\022\014\n\004text\030\002 \002(\t2y\n\004data\022/.tv.tw" +
-      "itchbot.common.dto.proto.messages.Reques" +
-      "t\030f \001(\0132:.tv.twitchbot.common.dto.proto." +
-      "messages.SendMessageRequest\"\222\001\n\023SendMess" +
-      "ageResponse2{\n\004data\0220.tv.twitchbot.commo",
-      "n.dto.proto.messages.Response\030f \001(\0132;.tv" +
-      ".twitchbot.common.dto.proto.messages.Sen" +
-      "dMessageResponse\"\217\004\n\017ScheduleRequest\0224\n\002" +
-      "id\030\001 \002(\0132(.tv.twitchbot.common.dto.proto" +
-      ".core.UUID\022\017\n\007payload\030\002 \002(\014\022J\n\004type\030\003 \002(" +
-      "\0162<.tv.twitchbot.common.dto.proto.messag" +
-      "es.ScheduleRequest.Type\022\r\n\005delay\030\004 \001(\020\022J" +
-      "\n\004cron\030\005 \001(\0132<.tv.twitchbot.common.dto.p" +
-      "roto.messages.ScheduleRequest.Cron\032^\n\004Cr" +
-      "on\022\016\n\006minute\030\001 \003(\005\022\014\n\004hour\030\002 \003(\005\022\024\n\014day_",
-      "of_month\030\003 \003(\005\022\r\n\005month\030\004 \003(\005\022\023\n\013day_of_" +
-      "week\030\005 \003(\005\"6\n\004Type\022\013\n\007UNKNOWN\020\000\022\t\n\005DELAY" +
-      "\020\001\022\014\n\010INTERVAL\020\002\022\010\n\004CRON\020\0032v\n\004data\022/.tv." +
+      "proto\032\nUUID.proto\"\343\001\n\007Request\022A\n\004type\030\001 " +
+      "\002(\01623.tv.twitchbot.common.dto.proto.mess" +
+      "ages.RequestType\022\033\n\023response_queue_name\030" +
+      "\002 \002(\t*\010\010d\020\200\200\200\200\0022n\n\004data\022/.tv.twitchbot.c" +
+      "ommon.dto.proto.messages.Message\030f \001(\0132/" +
+      ".tv.twitchbot.common.dto.proto.messages." +
+      "Request\"\216\002\n\010Response\022A\n\004type\030\001 \002(\01623.tv." +
+      "twitchbot.common.dto.proto.messages.Requ",
+      "estType\022D\n\022request_message_id\030\002 \002(\0132(.tv" +
+      ".twitchbot.common.dto.proto.core.UUID*\010\010" +
+      "d\020\200\200\200\200\0022o\n\004data\022/.tv.twitchbot.common.dt" +
+      "o.proto.messages.Message\030g \001(\01320.tv.twit" +
+      "chbot.common.dto.proto.messages.Response" +
+      "\"\225\001\n\025ModuleShutdownRequest2|\n\004data\022/.tv." +
       "twitchbot.common.dto.proto.messages.Requ" +
-      "est\030g \001(\01327.tv.twitchbot.common.dto.prot" +
-      "o.messages.ScheduleRequest\"\214\001\n\020ScheduleR" +
-      "esponse2x\n\004data\0220.tv.twitchbot.common.dt" +
-      "o.proto.messages.Response\030g \001(\01328.tv.twi" +
-      "tchbot.common.dto.proto.messages.Schedul" +
-      "eResponse*O\n\013RequestType\022\013\n\007UNKNOWN\020\000\022\023\n",
-      "\017MODULE_SHUTDOWN\020\001\022\020\n\014SEND_MESSAGE\020\002\022\014\n\010" +
-      "SCHEDULE\020\003"
+      "est\030e \001(\0132=.tv.twitchbot.common.dto.prot" +
+      "o.messages.ModuleShutdownRequest\"\230\001\n\026Mod" +
+      "uleShutdownResponse2~\n\004data\0220.tv.twitchb",
+      "ot.common.dto.proto.messages.Response\030e " +
+      "\001(\0132>.tv.twitchbot.common.dto.proto.mess" +
+      "ages.ModuleShutdownResponse\"\337\001\n\022SendMess" +
+      "ageRequest\022@\n\013destination\030\001 \002(\0132+.tv.twi" +
+      "tchbot.common.dto.proto.core.Channel\022\014\n\004" +
+      "text\030\002 \002(\t2y\n\004data\022/.tv.twitchbot.common" +
+      ".dto.proto.messages.Request\030f \001(\0132:.tv.t" +
+      "witchbot.common.dto.proto.messages.SendM" +
+      "essageRequest\"\222\001\n\023SendMessageResponse2{\n" +
+      "\004data\0220.tv.twitchbot.common.dto.proto.me",
+      "ssages.Response\030f \001(\0132;.tv.twitchbot.com" +
+      "mon.dto.proto.messages.SendMessageRespon" +
+      "se\"\217\004\n\017ScheduleRequest\0224\n\002id\030\001 \002(\0132(.tv." +
+      "twitchbot.common.dto.proto.core.UUID\022\017\n\007" +
+      "payload\030\002 \002(\014\022J\n\004type\030\003 \002(\0162<.tv.twitchb" +
+      "ot.common.dto.proto.messages.ScheduleReq" +
+      "uest.Type\022\r\n\005delay\030\004 \001(\020\022J\n\004cron\030\005 \001(\0132<" +
+      ".tv.twitchbot.common.dto.proto.messages." +
+      "ScheduleRequest.Cron\032^\n\004Cron\022\016\n\006minute\030\001" +
+      " \003(\005\022\014\n\004hour\030\002 \003(\005\022\024\n\014day_of_month\030\003 \003(\005",
+      "\022\r\n\005month\030\004 \003(\005\022\023\n\013day_of_week\030\005 \003(\005\"6\n\004" +
+      "Type\022\013\n\007UNKNOWN\020\000\022\t\n\005DELAY\020\001\022\014\n\010INTERVAL" +
+      "\020\002\022\010\n\004CRON\020\0032v\n\004data\022/.tv.twitchbot.comm" +
+      "on.dto.proto.messages.Request\030g \001(\01327.tv" +
+      ".twitchbot.common.dto.proto.messages.Sch" +
+      "eduleRequest\"\214\001\n\020ScheduleResponse2x\n\004dat" +
+      "a\0220.tv.twitchbot.common.dto.proto.messag" +
+      "es.Response\030g \001(\01328.tv.twitchbot.common." +
+      "dto.proto.messages.ScheduleResponse*O\n\013R" +
+      "equestType\022\013\n\007UNKNOWN\020\000\022\023\n\017MODULE_SHUTDO",
+      "WN\020\001\022\020\n\014SEND_MESSAGE\020\002\022\014\n\010SCHEDULE\020\003"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -6415,7 +6414,6 @@ public final class RequestOuterClass {
           tv.twitchbot.common.dto.proto.messages.MessageOuterClass.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor(),
           tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor(),
-          tv.twitchbot.common.dto.proto.core.ModuleOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_twitchbot_common_dto_proto_messages_Request_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -6474,7 +6472,6 @@ public final class RequestOuterClass {
     tv.twitchbot.common.dto.proto.messages.MessageOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.ChannelOuterClass.getDescriptor();
     tv.twitchbot.common.dto.proto.core.UUIDOuterClass.getDescriptor();
-    tv.twitchbot.common.dto.proto.core.ModuleOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

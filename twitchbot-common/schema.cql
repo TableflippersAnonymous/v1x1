@@ -6,17 +6,17 @@ CREATE KEYSPACE v1x1 WITH REPLICATION = {
 USE v1x1;
 
 CREATE TABLE discord_channel (
-    scheduleId text,
+    id text,
     display_name text,
     tenant_id uuid,
-    PRIMARY KEY (scheduleId)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE twitch_channel (
-    scheduleId text,
+    id text,
     display_name text,
     tenant_id uuid,
-    PRIMARY KEY (scheduleId)
+    PRIMARY KEY (id)
 );
 
 CREATE TYPE global_user_entry (
@@ -26,9 +26,9 @@ CREATE TYPE global_user_entry (
 );
 
 CREATE TABLE global_user (
-    scheduleId uuid,
+    id uuid,
     "entries" list<frozen<global_user_entry>>,
-    PRIMARY KEY (scheduleId)
+    PRIMARY KEY (id)
 );
 
 CREATE TABLE inverse_global_user (
@@ -45,9 +45,9 @@ CREATE TYPE tenant_entry (
 );
 
 CREATE TABLE tenant (
-    scheduleId uuid,
+    id uuid,
     "entries" list<frozen<tenant_entry>>,
-    PRIMARY KEY (scheduleId)
+    PRIMARY KEY (id)
 );
 
 CREATE TYPE permission (
@@ -82,9 +82,9 @@ CREATE TABLE tenant_configuration (
 );
 
 CREATE TABLE persistent_language (
-    scheduleId uuid,
+    id uuid,
     parent_id uuid,
     name text,
     strings map<text, text>,
-    PRIMARY KEY (scheduleId)
+    PRIMARY KEY (id)
 );
