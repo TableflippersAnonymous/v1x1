@@ -1,9 +1,9 @@
-package tv.twitchbot.modules.core.tmi;
+package tv.twitchbot.common.util.data;
 
 /**
- * Created by naomi on 10/19/2016.
+ * @author Naomi
  */
-class Pair<A, B> {
+public class Pair<A, B> {
     private final A first;
     private final B second;
 
