@@ -1,0 +1,14 @@
+syntax = "proto2";
+
+package tv.v1x1.common.dto.proto.core;
+
+import "UUID.proto";
+
+message Module {
+    required string name = 1;
+}
+
+message ModuleInstance {
+    required UUID id = 1;
+    required Module module = 2;
+}

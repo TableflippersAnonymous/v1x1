@@ -1,0 +1,8 @@
+syntax = "proto2";
+
+package tv.v1x1.common.dto.proto.core;
+
+message UUID {
+    required sfixed64 mostSignificantBits = 1;
+    required sfixed64 leastSignificantBits = 2;
+}

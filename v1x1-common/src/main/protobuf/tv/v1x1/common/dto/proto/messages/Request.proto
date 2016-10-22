@@ -1,0 +1,96 @@
+syntax = "proto2";
+
+package tv.v1x1.common.dto.proto.messages;
+
+import "Message.proto";
+import "Channel.proto";
+import "UUID.proto";
+
+enum RequestType {
+    UNKNOWN = 0;
+    MODULE_SHUTDOWN = 1;
+    SEND_MESSAGE = 2;
+    SCHEDULE = 3;
+};
+
+message Request {
+    extensions 100 to max; /* Convention is to use the same 100 + your RequestType ID */
+
+    extend Message {
+        optional Request data = 102;
+    }
+
+    required RequestType type = 1;
+    required string response_queue_name = 2;
+}
+
+message Response {
+    extensions 100 to max; /* Convention is to use the same 100 + your RequestType ID */
+
+    extend Message {
+        optional Response data = 103;
+    }
+
+    required RequestType type = 1;
+    required core.UUID request_message_id = 2;
+}
+
+message ModuleShutdownRequest {
+    extend Request {
+        optional ModuleShutdownRequest data = 101;
+    }
+}
+
+message ModuleShutdownResponse {
+    extend Response {
+        optional ModuleShutdownResponse data = 101;
+    }
+}
+
+message SendMessageRequest {
+    extend Request {
+        optional SendMessageRequest data = 102;
+    }
+
+    required core.Channel destination = 1;
+    required string text = 2;
+}
+
+message SendMessageResponse {
+    extend Response {
+        optional SendMessageResponse data = 102;
+    }
+}
+
+message ScheduleRequest {
+    extend Request {
+        optional ScheduleRequest data = 103;
+    }
+
+    enum Type {
+        UNKNOWN = 0;
+        DELAY = 1;
+        INTERVAL = 2;
+        CRON = 3;
+    }
+
+    message Cron {
+        repeated int32 minute = 1;
+        repeated int32 hour = 2;
+        repeated int32 day_of_month = 3;
+        repeated int32 month = 4;
+        repeated int32 day_of_week = 5;
+    }
+
+    required core.UUID id = 1;
+    required bytes payload = 2;
+    required Type type = 3;
+    optional sfixed64 delay = 4;
+    optional Cron cron = 5;
+}
+
+message ScheduleResponse {
+    extend Response {
+        optional ScheduleResponse data = 103;
+    }
+}
