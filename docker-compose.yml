@@ -7,6 +7,9 @@ services:
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zoo1:2888:3888
+    volumes:
+      - ./docker-data/zoo1/data:/data
+      - ./docker-data/zoo1/datalog:/datalog
   cass1:
     image: cassandra:3
     environment:
