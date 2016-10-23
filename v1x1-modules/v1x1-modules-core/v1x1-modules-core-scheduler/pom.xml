@@ -32,7 +32,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>tv.v1x1.modules.core.tmi.TmiModule</mainClass>
+                                    <mainClass>tv.v1x1.modules.core.scheduler.SchedulerModule</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

@@ -88,3 +88,23 @@ CREATE TABLE persistent_language (
     strings map<text, text>,
     PRIMARY KEY (id)
 );
+
+CREATE TABLE interval_schedule (
+    id uuid,
+    module blob,
+    payload blob,
+    interval bigint,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE cron_schedule (
+    id uuid,
+    module blob,
+    payload blob,
+    minute set<int>,
+    hour set<int>,
+    day_of_month set<int>,
+    month set<int>,
+    day_of_week set<int>,
+    PRIMARY KEY (id)
+);

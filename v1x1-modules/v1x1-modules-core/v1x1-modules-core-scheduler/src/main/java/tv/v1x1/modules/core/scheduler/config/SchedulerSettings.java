@@ -1,4 +1,4 @@
-package tv.v1x1.modules.core.scheduler;
+package tv.v1x1.modules.core.scheduler.config;
 
 import tv.v1x1.common.modules.ModuleSettings;
 
