@@ -1,3 +1,11 @@
+Notes for further framework:
+- User service, to find and get users (display name, ID)
+    - Service like Chat that simply reads state from Redis?
+    - How does it get state to write? A dedicated microservice to update?
+- Channel service, to find and get channel info (ID, display name, mod list, user list)
+- Remediation service, to handle punishments on different platforms
+    - Count strikes for different labels, provided by modules
+    - Backed by Redis, probably
 Notes for technology to use:
 - Netflix Hystrix for things that could be slow
 - Netflix Atlas for real-time stats
