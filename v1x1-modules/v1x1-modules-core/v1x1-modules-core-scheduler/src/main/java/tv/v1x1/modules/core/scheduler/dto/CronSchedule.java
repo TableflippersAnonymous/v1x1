@@ -25,6 +25,9 @@ public class CronSchedule {
     @Column(name = "day_of_week")
     private Set<Integer> dayOfWeek;
 
+    public CronSchedule() {
+    }
+
     public CronSchedule(final UUID id, final byte[] module, final byte[] payload, final Set<Integer> minute, final Set<Integer> hour,
                         final Set<Integer> dayOfMonth, final Set<Integer> month, final Set<Integer> dayOfWeek) {
         this.id = id;
@@ -42,7 +45,7 @@ public class CronSchedule {
     }
 
     public byte[] getModule() {
-        byte[] bytes = new byte[module.remaining()];
+        final byte[] bytes = new byte[module.remaining()];
         module.mark();
         module.get(bytes);
         module.reset();

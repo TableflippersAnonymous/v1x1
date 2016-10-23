@@ -17,6 +17,9 @@ public class IntervalSchedule {
     private ByteBuffer payload;
     private long interval;
 
+    public IntervalSchedule() {
+    }
+
     public IntervalSchedule(final UUID id, final byte[] module, final byte[] payload, final long interval) {
         this.id = id;
         this.module = ByteBuffer.wrap(module);
@@ -29,7 +32,7 @@ public class IntervalSchedule {
     }
 
     public byte[] getModule() {
-        byte[] bytes = new byte[module.remaining()];
+        final byte[] bytes = new byte[module.remaining()];
         module.mark();
         module.get(bytes);
         module.reset();
@@ -37,7 +40,7 @@ public class IntervalSchedule {
     }
 
     public byte[] getPayload() {
-        byte[] bytes = new byte[payload.remaining()];
+        final byte[] bytes = new byte[payload.remaining()];
         payload.mark();
         payload.get(bytes);
         payload.reset();
