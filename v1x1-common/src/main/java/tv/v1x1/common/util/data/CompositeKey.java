@@ -1,8 +1,11 @@
 package tv.v1x1.common.util.data;
 
+import org.codehaus.jackson.util.ByteArrayBuilder;
+
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * @author Josh
@@ -28,5 +31,13 @@ public class CompositeKey {
             throw new RuntimeException(ex);
         }
         return bos.toByteArray();
+    }
+
+    public static byte[] makeKey(String... keys) {
+        byte[][] byteKeys = new byte[keys.length][];
+        for(int i = 0; i < byteKeys.length; ++i) {
+            byteKeys[i] = keys[i].getBytes();
+        }
+        return makeKey(byteKeys);
     }
 }
