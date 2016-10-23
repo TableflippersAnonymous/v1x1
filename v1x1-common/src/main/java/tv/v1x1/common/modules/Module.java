@@ -68,6 +68,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private MessageQueueManager messageQueueManager;
 
     /* Persistence */
+    private RedissonClient redisson;
     private KeyValueStore temporaryKeyValueStore;
     private KeyValueStore temporaryGlobalKeyValueStore;
     private KeyValueStore persistentKeyValueStore;
@@ -121,12 +122,12 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     private void initializeInternal() {
         final Config redissonConfig = settings.getRedissonConfig();
-        final RedissonClient client = Redisson.create(redissonConfig);
-        messageQueueManager = new MessageQueueManagerImpl(client);
+        redisson = Redisson.create(redissonConfig);
+        messageQueueManager = new MessageQueueManagerImpl(redisson);
 
-        temporaryKeyValueStore = new TemporaryKeyValueStoreImpl(client, toDto());
-        temporaryGlobalKeyValueStore = new TemporaryKeyValueStoreImpl(client);
-        deduplicator = new Deduplicator(client, toDto());
+        temporaryKeyValueStore = new TemporaryKeyValueStoreImpl(redisson, toDto());
+        temporaryGlobalKeyValueStore = new TemporaryKeyValueStoreImpl(redisson);
+        deduplicator = new Deduplicator(redisson, toDto());
 
         curatorFramework = CuratorFrameworkFactory.newClient(settings.getZookeeperConnectionString(), new BoundedExponentialBackoffRetry(50, 1000, 50));
         curatorFramework.start();
@@ -292,7 +293,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return cassandraSession;
     }
 
-    protected MappingManager getMappingManager() {
+    public MappingManager getMappingManager() {
         return mappingManager;
     }
 
@@ -310,6 +311,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     protected I18n getI18n() {
         return i18n;
+    }
+
+    public RedissonClient getRedisson() {
+        return redisson;
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */
@@ -383,7 +388,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return getMainQueueForModule(toDto());
     }
 
-    protected String getMainQueueForModule(final tv.v1x1.common.dto.core.Module module) {
+    public static String getMainQueueForModule(final tv.v1x1.common.dto.core.Module module) {
         return "Module|" + module.getName();
     }
 
