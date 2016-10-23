@@ -31,6 +31,11 @@ services:
     depends_on:
       - redis
       - zoo1
+  scheduler:
+    image: v1x1-scheduler:latest
+    depends_on:
+      - redis
+      - zoo1
   hello:
     image: v1x1-hello_world:latest
     depends_on:
