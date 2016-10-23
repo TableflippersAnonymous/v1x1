@@ -65,9 +65,13 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
             processTwitchUserEvent((TwitchUserEvent) event);
         else if(event instanceof TwitchUserModChangeEvent)
             processTwitchUserModChangeEvent((TwitchUserModChangeEvent) event);
+        else if(event instanceof SchedulerNotifyEvent)
+            processSchedulerNotifyEvent((SchedulerNotifyEvent) event);
         else
             throw new IllegalStateException("Unknown event type " + event.getClass().getCanonicalName());
     }
+
+    protected abstract void processSchedulerNotifyEvent(SchedulerNotifyEvent event);
 
     protected abstract void processTwitchChatPartEvent(TwitchChatPartEvent event);
 
