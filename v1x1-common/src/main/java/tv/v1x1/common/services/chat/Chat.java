@@ -11,6 +11,13 @@ import tv.v1x1.common.rpc.client.ChatRouterServiceClient;
  * @author Josh
  */
 public class Chat {
+    /**
+     * Convenience method to hide the semantics behind sending messages to channels
+     * @author Josh
+     * @param module DTO module sending the message
+     * @param channel channel to send a message to
+     * @param text the message to send
+     */
     public static void message(final Module<?, ?, ?> module, final Channel channel, final String text) {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, text);
@@ -20,7 +27,16 @@ public class Chat {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
     }
 
-    public static void purge(final Module<?, ?, ?> module, final Channel channel, final User user, final String reason) {
+    /**
+     * Clear a users messages from the channel
+     * @author Josh
+     * @param module
+     * @param channel
+     * @param user
+     * @param amount if a platform supports it, the number of messages to purge
+     * @param reason reason for punishment, if supported
+     */
+    public static void purge(final Module<?, ?, ?> module, final Channel channel, final User user, final int amount, final String reason) {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s 1 %s", user.getId(), reason));
         else if(channel instanceof DiscordChannel)
@@ -29,6 +45,16 @@ public class Chat {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
     }
 
+    /**
+     * Quiet a user on a channel
+     * @author Josh
+     * @param module
+     * @param channel
+     * @param user
+     * @param length duration (in seconds) to quiet a user for, if supported
+     * @param reason reason for punishment, if supported
+     * @throws ChatException
+     */
     public static void timeout(final Module<?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) throws ChatException {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s %d %s", user.getId(), length, reason));
@@ -38,6 +64,14 @@ public class Chat {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
     }
 
+    /**
+     * Undo the action from {@link Chat#timeout(Module, Channel, User, Integer, String)}
+     * @author Josh
+     * @param module
+     * @param channel
+     * @param user
+     * @throws ChatException
+     */
     public static void untimeout(final Module<?, ?, ?> module, final Channel channel, final User user) throws ChatException {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/untimeout %s", user.getId()));
@@ -47,6 +81,15 @@ public class Chat {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
     }
 
+    /**
+     * Temporarily remove a user from a channel
+     * @author Josh
+     * @param module
+     * @param channel
+     * @param user
+     * @param reason reason for punishment, if supported
+     * @throws ChatException
+     */
     public static void kick(final Module<?, ?, ?> module, final Channel channel, final User user, final String reason) throws ChatException {
         if(channel instanceof TwitchChannel)
             throw new ChatException("TwitchChannel doesn't support kick()");
@@ -56,6 +99,15 @@ public class Chat {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
     }
 
+    /**
+     * Indefinitely remove a user from a channel
+     * @author
+     * @param module
+     * @param channel
+     * @param user
+     * @param length time (in seconds) to ban for; 0 for indefinite (if supported)
+     * @param reason reason for punishment, if supported
+     */
     public static void ban(final Module<?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/ban %s %s", user.getId(), reason));
@@ -63,5 +115,23 @@ public class Chat {
             throw new IllegalArgumentException("DiscordChannel bans not supported yet");
         else
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
+    }
+
+    /**
+     * Convenience method to take the minimal punishment on a user supported by a platform
+     * @param module DTO module
+     * @param channel channel to punish on
+     * @param user user to punish
+     * @param length length of time to punish for, in seconds, if applicable
+     * @param reason reason for punishment, if supported
+     */
+    public static void punish(final Module<?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) {
+        try {
+            if(channel instanceof TwitchChannel) Chat.timeout(module, channel, user, length, reason);
+            if(channel instanceof DiscordChannel) Chat.timeout(module, channel, user, length, reason);
+            //if(channel instanceof IrcChannel) Chat.kick()...; // Example, but we don't have IRC channels yet
+        } catch(ChatException e) {
+            // We've done the impossible
+        }
     }
 }
