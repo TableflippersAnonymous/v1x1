@@ -124,4 +124,9 @@ public abstract class DefaultModule<T extends ModuleSettings, U extends GlobalCo
     protected void initialize() {
         /* No action */
     }
+
+    @Override
+    protected void processSchedulerNotifyEvent(final SchedulerNotifyEvent event) {
+        /* No action */
+    }
 }
