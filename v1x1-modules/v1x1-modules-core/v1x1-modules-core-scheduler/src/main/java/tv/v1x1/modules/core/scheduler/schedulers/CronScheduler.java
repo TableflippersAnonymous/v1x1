@@ -94,7 +94,7 @@ public class CronScheduler implements Runnable {
             updateLastRun(cronSchedule.getId(), nextRunTime);
             scheduleTask(cronSchedule, nextRunTime);
             lastRunTime = getLastRun(cronSchedule.getId());
-            nextRunTime = getNextRunTime(cronSchedule, lastRunTime, now + 600000);
+            nextRunTime = getNextRunTime(cronSchedule, lastRunTime + 60000, now + 600000);
         }
     }
 
