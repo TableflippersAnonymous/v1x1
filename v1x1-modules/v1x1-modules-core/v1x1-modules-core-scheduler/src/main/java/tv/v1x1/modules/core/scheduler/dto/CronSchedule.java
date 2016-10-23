@@ -4,6 +4,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
+import java.nio.ByteBuffer;
 import java.util.Set;
 import java.util.UUID;
 
@@ -14,8 +15,8 @@ import java.util.UUID;
 public class CronSchedule {
     @PartitionKey
     private UUID id;
-    private byte[] module;
-    private byte[] payload;
+    private ByteBuffer module;
+    private ByteBuffer payload;
     private Set<Integer> minute;
     private Set<Integer> hour;
     @Column(name = "day_of_month")
@@ -27,8 +28,8 @@ public class CronSchedule {
     public CronSchedule(final UUID id, final byte[] module, final byte[] payload, final Set<Integer> minute, final Set<Integer> hour,
                         final Set<Integer> dayOfMonth, final Set<Integer> month, final Set<Integer> dayOfWeek) {
         this.id = id;
-        this.module = module;
-        this.payload = payload;
+        this.module = ByteBuffer.wrap(module);
+        this.payload = ByteBuffer.wrap(payload);
         this.minute = minute;
         this.hour = hour;
         this.dayOfMonth = dayOfMonth;
@@ -41,11 +42,19 @@ public class CronSchedule {
     }
 
     public byte[] getModule() {
-        return module;
+        byte[] bytes = new byte[module.remaining()];
+        module.mark();
+        module.get(bytes);
+        module.reset();
+        return bytes;
     }
 
     public byte[] getPayload() {
-        return payload;
+        byte[] bytes = new byte[payload.remaining()];
+        payload.mark();
+        payload.get(bytes);
+        payload.reset();
+        return bytes;
     }
 
     public Set<Integer> getMinute() {
