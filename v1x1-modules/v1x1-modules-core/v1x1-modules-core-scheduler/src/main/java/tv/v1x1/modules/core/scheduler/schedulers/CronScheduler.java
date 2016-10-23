@@ -125,8 +125,8 @@ public class CronScheduler implements Runnable {
     }
 
     private void scheduleTask(final CronSchedule cronSchedule, final long timestamp) throws InvalidProtocolBufferException {
-        delayScheduler.schedule(timestamp, Module.fromProto(ModuleOuterClass.Module.parseFrom(cronSchedule.getModuleBytes())),
-                new UUID(cronSchedule.getId()), cronSchedule.getPayloadBytes());
+        delayScheduler.schedule(timestamp, Module.fromProto(ModuleOuterClass.Module.parseFrom(cronSchedule.moduleBytes())),
+                new UUID(cronSchedule.getId()), cronSchedule.payloadBytes());
     }
 
     private long getLastRun(final java.util.UUID id) {

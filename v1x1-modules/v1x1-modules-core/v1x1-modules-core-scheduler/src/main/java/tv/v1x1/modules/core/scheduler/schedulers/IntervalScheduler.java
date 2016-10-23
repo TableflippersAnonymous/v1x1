@@ -96,8 +96,8 @@ public class IntervalScheduler implements Runnable {
     }
 
     private void scheduleTask(final IntervalSchedule intervalSchedule, final long timestamp) throws InvalidProtocolBufferException {
-        delayScheduler.schedule(timestamp, Module.fromProto(ModuleOuterClass.Module.parseFrom(intervalSchedule.getModuleBytes())),
-                new UUID(intervalSchedule.getId()), intervalSchedule.getPayloadBytes());
+        delayScheduler.schedule(timestamp, Module.fromProto(ModuleOuterClass.Module.parseFrom(intervalSchedule.moduleBytes())),
+                new UUID(intervalSchedule.getId()), intervalSchedule.payloadBytes());
     }
 
     private long getLastRun(final java.util.UUID id) {
