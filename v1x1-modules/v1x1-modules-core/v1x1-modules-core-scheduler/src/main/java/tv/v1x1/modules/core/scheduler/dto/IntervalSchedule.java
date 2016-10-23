@@ -31,7 +31,7 @@ public class IntervalSchedule {
         return id;
     }
 
-    public byte[] getModuleBytes() {
+    public byte[] moduleBytes() {
         final byte[] bytes = new byte[module.remaining()];
         module.mark();
         module.get(bytes);
@@ -39,7 +39,7 @@ public class IntervalSchedule {
         return bytes;
     }
 
-    public byte[] getPayloadBytes() {
+    public byte[] payloadBytes() {
         final byte[] bytes = new byte[payload.remaining()];
         payload.mark();
         payload.get(bytes);
