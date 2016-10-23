@@ -5,6 +5,7 @@ import org.redisson.api.RMapCache;
 import org.redisson.api.RSetCache;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.ByteArrayCodec;
+import org.redisson.client.codec.IntegerCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
@@ -46,7 +47,7 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
     protected void initialize() {
         super.initialize();
         redissonClient = Redisson.create(getSettings().getRedissonConfig());
-        offenses = redissonClient.getMapCache("link_purger|offenses", ByteArrayCodec.INSTANCE);
+        offenses = redissonClient.getMapCache("link_purger|offenses");
         permits = redissonClient.getSetCache("link_purger|permits", ByteArrayCodec.INSTANCE);
         delegator = new CommandDelegator("!");
         delegator.registerCommand(new PermitCommand(this));
