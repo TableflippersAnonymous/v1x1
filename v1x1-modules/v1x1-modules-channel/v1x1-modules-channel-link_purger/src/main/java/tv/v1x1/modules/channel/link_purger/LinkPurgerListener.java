@@ -1,41 +1,76 @@
 package tv.v1x1.modules.channel.link_purger;
 
+import com.google.common.collect.ImmutableMap;
+import tv.v1x1.common.dto.core.Channel;
+import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
 import tv.v1x1.common.services.chat.Chat;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.UnknownHostException;
 
 /**
  * @author Josh
  */
 public class LinkPurgerListener implements EventListener {
     private final LinkPurger module;
-    private final Pattern urlRegex = Pattern.compile("(?:https?:\\/\\/)?(?:[-a-zA-Z0-9@:%_\\+~#=]+\\.)+[a-z]{2,6}\\b(?:[-a-zA-Z0-9@:%_\\+.~#?&\\/\\/=]*)", Pattern.CASE_INSENSITIVE);
 
     public LinkPurgerListener(LinkPurger linkPurger) {
         module = linkPurger;
     }
 
     @EventHandler
-    public void onChatMessage(ChatMessageEvent ev) {
-        List<String> links = findLinks(ev.getChatMessage().getText());
-        Chat.message(module, ev.getChatMessage().getChannel(), "Link Purger: Detected " + links.size() + " links");
-        if(links.size() > 0) {
-            Chat.purge(module, ev.getChatMessage().getChannel(), ev.getChatMessage().getSender(), "Unpermitted link");
+    public void onChatMessage(final ChatMessageEvent ev) {
+        final Channel channel = ev.getChatMessage().getChannel();
+        final User sender = ev.getChatMessage().getSender();
+        if(!shouldMonitorUser(channel, sender)) return;
+        final String[] words = ev.getChatMessage().getText().split(" ");
+        for(final String word : words) {
+            final URL url;
+            if(!word.contains(".")) continue;
+            try {
+                if(!word.matches("^.+://.+")) url = new URL("http://" + word);
+                else url = new URL(word);
+            } catch (MalformedURLException e) {
+                continue;
+            }
+            String host = url.getHost();
+            if(!canResolve(host)) continue;
+            punish(channel, sender, module.addOffense(channel, sender));
+            break;
         }
     }
 
-    private List<String> findLinks(String line) {
-        final ArrayList<String> links = new ArrayList<>();
-        Matcher m = urlRegex.matcher(line);
-        while(m.find()) {
-            links.add(m.group());
+    private void punish(final Channel channel, final User sender, final int offenseNumber) {
+        if(offenseNumber < 2) {
+            Chat.purge(module, channel, sender, 1, "Unpermitted link");
+            Chat.message(module, channel, module.language.message(module.toDto(), "purged", ImmutableMap.of("user", sender.getDisplayName())));
+        } else {
+            Chat.punish(module, channel, sender, 600, "Unpermitted link");
+            Chat.message(module, channel, module.language.message(module.toDto(), "timeout", ImmutableMap.of("user", sender.getDisplayName())));
         }
-        return links;
+    }
+
+    private boolean shouldMonitorUser(final Channel channel, final User sender) {
+        return true;
+    }
+
+    private boolean canResolve(final String host) {
+        try {
+            return !reservedAddress(InetAddress.getByName(host));
+        } catch (UnknownHostException e) {
+            return false;
+        }
+    }
+
+    private boolean reservedAddress(final InetAddress ip) {
+        return ip.isLinkLocalAddress() ||
+                ip.isLoopbackAddress() ||
+                ip.isMulticastAddress() ||
+                ip.isSiteLocalAddress();
     }
 }
