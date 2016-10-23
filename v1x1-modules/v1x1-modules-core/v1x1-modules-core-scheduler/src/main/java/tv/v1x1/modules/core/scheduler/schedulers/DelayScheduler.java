@@ -63,7 +63,7 @@ public class DelayScheduler implements Runnable {
     @Override
     public void run() {
         try {
-            for (;;) {
+            while (!set.isEmpty()) {
                 final byte[] key = set.first();
                 if (key == null)
                     break;
