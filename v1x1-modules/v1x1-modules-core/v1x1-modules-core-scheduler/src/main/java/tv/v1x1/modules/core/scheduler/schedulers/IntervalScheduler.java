@@ -60,19 +60,24 @@ public class IntervalScheduler implements Runnable {
 
     @Override
     public void run() {
-        final Iterable<IntervalSchedule> intervalSchedules = daoIntervalSchedule.all();
-        for(final IntervalSchedule schedule : intervalSchedules)
-            try {
-                lock.lock(5, TimeUnit.SECONDS);
-                processTask(schedule);
-            } catch(final Exception e) {
-                LOG.warn("Exception caught while processing schedule {}", schedule.getId(), e);
-            } finally {
-                lock.unlock();
-            }
+        try {
+            final Iterable<IntervalSchedule> intervalSchedules = daoIntervalSchedule.all();
+            for (final IntervalSchedule schedule : intervalSchedules)
+                try {
+                    lock.lock(5, TimeUnit.SECONDS);
+                    processTask(schedule);
+                } catch (final Exception e) {
+                    LOG.warn("Exception caught while processing schedule {}", schedule.getId(), e);
+                } finally {
+                    lock.unlock();
+                }
+        } catch(Exception e) {
+            LOG.warn("Exception caught while processing schedules", e);
+        }
     }
 
     private void processTask(final IntervalSchedule intervalSchedule) throws InvalidProtocolBufferException {
+        LOG.debug("Processing IntervalSchedule: {}", intervalSchedule.getId());
         final long now = new Date().getTime();
         final long originalLastRunTime = getLastRun(intervalSchedule.getId());
         if(originalLastRunTime == -1) {

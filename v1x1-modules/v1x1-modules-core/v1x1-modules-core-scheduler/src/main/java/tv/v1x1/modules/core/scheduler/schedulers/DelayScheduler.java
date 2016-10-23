@@ -62,22 +62,29 @@ public class DelayScheduler implements Runnable {
 
     @Override
     public void run() {
-        for(;;) {
-            final byte[] key = set.first();
-            try {
-                final byte[][] keyParts = CompositeKey.getKeys(key);
-                final Module module = Module.fromProto(ModuleOuterClass.Module.parseFrom(keyParts[0]));
-                final UUID id = UUID.fromProto(UUIDOuterClass.UUID.parseFrom(keyParts[1]));
-                final byte[] payload = keyParts[2];
-                final long timestamp = Longs.fromByteArray(keyParts[3]);
-                if(new Date().getTime() < timestamp)
+        try {
+            for (;;) {
+                final byte[] key = set.first();
+                if (key == null)
                     break;
-                if(set.remove(key))
-                    messageQueue.add(new SchedulerNotifyEvent(source, module, id, payload));
-            } catch (final Exception e) {
-                LOG.warn("Exception caught while attempting to decode delay scheduler entry: {}", key, e);
-                break;
+                try {
+                    final byte[][] keyParts = CompositeKey.getKeys(key);
+                    final Module module = Module.fromProto(ModuleOuterClass.Module.parseFrom(keyParts[0]));
+                    final UUID id = UUID.fromProto(UUIDOuterClass.UUID.parseFrom(keyParts[1]));
+                    final byte[] payload = keyParts[2];
+                    final long timestamp = Longs.fromByteArray(keyParts[3]);
+                    if (new Date().getTime() < timestamp)
+                        break;
+                    LOG.debug("Processing {}", id.getValue());
+                    if (set.remove(key))
+                        messageQueue.add(new SchedulerNotifyEvent(source, module, id, payload));
+                } catch (final Exception e) {
+                    LOG.warn("Exception caught while attempting to decode delay scheduler entry: {}", key, e);
+                    break;
+                }
             }
+        } catch (final Exception e) {
+            LOG.warn("Exception caught while attempting to process entries.", e);
         }
     }
 

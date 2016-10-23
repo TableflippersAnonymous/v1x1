@@ -64,19 +64,24 @@ public class CronScheduler implements Runnable {
 
     @Override
     public void run() {
-        final Iterable<CronSchedule> cronSchedules = daoCronSchedule.all();
-        for(final CronSchedule schedule : cronSchedules)
-            try {
-                lock.lock(5, TimeUnit.SECONDS);
-                processTask(schedule);
-            } catch(final Exception e) {
-                LOG.warn("Exception caught while processing schedule {}", schedule.getId(), e);
-            } finally {
-                lock.unlock();
-            }
+        try {
+            final Iterable<CronSchedule> cronSchedules = daoCronSchedule.all();
+            for (final CronSchedule schedule : cronSchedules)
+                try {
+                    lock.lock(5, TimeUnit.SECONDS);
+                    processTask(schedule);
+                } catch (final Exception e) {
+                    LOG.warn("Exception caught while processing schedule {}", schedule.getId(), e);
+                } finally {
+                    lock.unlock();
+                }
+        } catch(Exception e) {
+            LOG.warn("Exception caught while processing schedules", e);
+        }
     }
 
     private void processTask(final CronSchedule cronSchedule) throws InvalidProtocolBufferException {
+        LOG.debug("Processing CronSchedule: {}", cronSchedule.getId());
         final long now = new Date().getTime();
         final long originalLastRunTime = getLastRun(cronSchedule.getId());
         if(originalLastRunTime == -1) {
