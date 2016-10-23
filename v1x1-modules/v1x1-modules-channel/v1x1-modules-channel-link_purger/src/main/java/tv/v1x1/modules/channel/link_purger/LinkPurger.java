@@ -1,11 +1,9 @@
 package tv.v1x1.modules.channel.link_purger;
 
-import org.redisson.Redisson;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RSetCache;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.ByteArrayCodec;
-import org.redisson.client.codec.IntegerCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
@@ -32,8 +30,6 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
         I18n.registerDefault(module, "permit", "Hey %viewer%, you can post one link now!");
     }
 
-    private CommandDelegator delegator;
-    private RedissonClient redissonClient;
     private RMapCache<byte[], Integer> offenses;
     private RSetCache<byte[]> permits;
 
@@ -46,10 +42,10 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
     @Override
     protected void initialize() {
         super.initialize();
-        redissonClient = Redisson.create(getSettings().getRedissonConfig());
+        final RedissonClient redissonClient = getRedisson();
         offenses = redissonClient.getMapCache("link_purger|offenses");
         permits = redissonClient.getSetCache("link_purger|permits", ByteArrayCodec.INSTANCE);
-        delegator = new CommandDelegator("!");
+        final CommandDelegator delegator = new CommandDelegator("!");
         delegator.registerCommand(new PermitCommand(this));
         registerListener(new LinkPurgerListener(this));
         language = getI18n().getLanguage(null);
