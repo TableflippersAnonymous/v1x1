@@ -108,3 +108,33 @@ CREATE TABLE cron_schedule (
     day_of_week set<int>,
     PRIMARY KEY (id)
 );
+
+CREATE TYPE configuration_definition_field (
+    display_name text,
+    description text,
+    default_value text,
+    config_type int,
+    requires list<text>,
+    tenant_permission int,
+    json_field text
+);
+
+CREATE TABLE global_configuration_definition (
+    name text,
+    display_name text,
+    description text,
+    version int,
+    tenant_permission int,
+    fields list<frozen<configuration_definition_field>>
+    PRIMARY KEY (name)
+);
+
+CREATE TABLE tenant_configuration_definition (
+    name text,
+    display_name text,
+    description text,
+    version int,
+    tenant_permission int,
+    fields list<frozen<configuration_definition_field>>
+    PRIMARY KEY (name)
+);
