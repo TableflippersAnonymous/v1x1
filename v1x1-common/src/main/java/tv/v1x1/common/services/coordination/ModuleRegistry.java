@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -23,7 +24,6 @@ import java.util.stream.Collectors;
  */
 public class ModuleRegistry {
     private final ServiceDiscovery<ModuleInstance> serviceDiscovery;
-    private final ServiceCache<ModuleInstance> serviceCache;
 
     public ModuleRegistry(final CuratorFramework framework, final ModuleInstance moduleInstance) {
         try {
@@ -45,7 +45,6 @@ public class ModuleRegistry {
                     .thisInstance(serviceInstanceFromModuleInstance(moduleInstance))
                     .build();
             serviceDiscovery.start();
-            serviceCache = serviceDiscovery.serviceCacheBuilder().build();
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -79,14 +78,13 @@ public class ModuleRegistry {
 
     public Set<Module> liveModules() {
         try {
-            return ImmutableSet.copyOf(serviceCache.getInstances().stream().map(moduleInstanceServiceInstance -> moduleInstanceServiceInstance.getPayload().getModule()).collect(Collectors.toSet()));
+            return modules().stream().filter(module -> !getInstances(module).isEmpty()).collect(Collectors.toSet());
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
 
     public void shutdown() throws IOException {
-        serviceCache.close();
         serviceDiscovery.close();
     }
 }
