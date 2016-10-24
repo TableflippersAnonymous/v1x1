@@ -75,7 +75,7 @@ public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlob
             final Channel channel = Channel.fromProto(ChannelOuterClass.Channel.parseFrom(bytes[0]));
             final String text = new String(bytes[1]);
             crsc.sendMessage(channel, text);
-        } catch (InvalidProtocolBufferException e) {
+        } catch (final InvalidProtocolBufferException e) {
             e.printStackTrace();
         }
     }
