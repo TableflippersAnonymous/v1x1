@@ -3,7 +3,10 @@ package tv.v1x1.modules.channel.link_purger;
 import com.google.common.collect.ImmutableMap;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.User;
+import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
+import tv.v1x1.common.dto.irc.commands.PrivmsgCommand;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatMessageEvent;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
 import tv.v1x1.common.services.chat.Chat;
@@ -25,9 +28,9 @@ public class LinkPurgerListener implements EventListener {
 
     @EventHandler
     public void onChatMessage(final ChatMessageEvent ev) {
+        if(!shouldMonitorUser(ev)) return;
         final Channel channel = ev.getChatMessage().getChannel();
         final User sender = ev.getChatMessage().getSender();
-        if(!shouldMonitorUser(channel, sender)) return;
         final String[] words = ev.getChatMessage().getText().split(" ");
         for(final String word : words) {
             final URL url;
@@ -55,8 +58,12 @@ public class LinkPurgerListener implements EventListener {
         }
     }
 
-    private boolean shouldMonitorUser(final Channel channel, final User sender) {
-        return true;
+    private boolean shouldMonitorUser(ChatMessageEvent ev) {
+        // TODO: Support other platforms
+        if(!(ev instanceof TwitchChatMessageEvent)) return false;
+        PrivmsgCommand msg = ((TwitchChatMessageEvent) ev).getPrivmsgCommand();
+        return !(msg.isMod() || msg.getBadges().contains(PrivmsgCommand.Badge.BROADCASTER) || msg.getUserType() != null);
+
     }
 
     private boolean canResolve(final String host) {

@@ -16,6 +16,7 @@ public abstract class Language {
 
     protected String format(final String string, final Map<String, Object> parameters) {
         if(string.isEmpty()) return "<empty message>";
+        if(string == null) return "<invalid message key>";
         final StringBuilder output = new StringBuilder(string.length());
         final char[] inputArray = string.toCharArray();
         int position = 0;
