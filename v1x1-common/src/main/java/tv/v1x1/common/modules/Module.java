@@ -23,8 +23,12 @@ import org.redisson.connection.balancer.LoadBalancer;
 import org.redisson.liveobject.provider.ResolverProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tv.v1x1.common.config.ConfigScanner;
+import tv.v1x1.common.dao.DAOConfigurationDefinition;
+import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.core.ModuleInstance;
 import tv.v1x1.common.dto.core.Tenant;
+import tv.v1x1.common.dto.core.TenantConfigurationDefinition;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.messages.Message;
 import tv.v1x1.common.dto.messages.Request;
@@ -185,6 +189,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         globalConfigProvider = new ConfigurationProvider<U>(toDto(), daoManager, getGlobalConfigurationClass());
         tenantConfigProvider = new TenantConfigurationProvider<V>(toDto(), daoManager, getTenantConfigurationClass());
         i18n = new I18n(daoManager);
+
+        updateConfigurationDefinitions();
     }
 
     /* ******************************* CALL THIS FROM main() ******************************* */
@@ -409,5 +415,15 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     private Class<V> getTenantConfigurationClass() {
         return Generics.getTypeParameter(getClass(), TenantConfiguration.class);
+    }
+
+    private void updateConfigurationDefinitions() {
+        final DAOConfigurationDefinition daoConfigurationDefinition = daoManager.getDaoConfigurationDefinition();
+        final GlobalConfigurationDefinition globalConfigurationDefinition = ConfigScanner.scanGlobal(getGlobalConfigurationClass());
+        if(globalConfigurationDefinition != null)
+            daoConfigurationDefinition.put(globalConfigurationDefinition.toDB());
+        final TenantConfigurationDefinition tenantConfigurationDefinition = ConfigScanner.scanTenant(getTenantConfigurationClass());
+        if(tenantConfigurationDefinition != null)
+            daoConfigurationDefinition.put(tenantConfigurationDefinition.toDB());
     }
 }
