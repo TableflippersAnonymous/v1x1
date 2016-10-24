@@ -21,7 +21,7 @@ public class EventRouterModule extends ThreadedModule<EventRouterSettings, Event
             .build(new CacheLoader<String, Set<Module>>() {
                 @Override
                 public Set<Module> load(final String s) throws Exception {
-                    return getModuleRegistry().modules();
+                    return getModuleRegistry().liveModules();
                 }
             });
 

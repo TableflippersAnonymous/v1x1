@@ -2,6 +2,7 @@ package tv.v1x1.common.services.coordination;
 
 import com.google.common.collect.ImmutableSet;
 import org.apache.curator.framework.CuratorFramework;
+import org.apache.curator.x.discovery.ServiceCache;
 import org.apache.curator.x.discovery.ServiceDiscovery;
 import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
 import org.apache.curator.x.discovery.ServiceInstance;
@@ -12,6 +13,9 @@ import tv.v1x1.common.dto.proto.core.ModuleOuterClass;
 
 import java.io.IOException;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -19,6 +23,7 @@ import java.util.stream.Collectors;
  */
 public class ModuleRegistry {
     private final ServiceDiscovery<ModuleInstance> serviceDiscovery;
+    private final ServiceCache<ModuleInstance> serviceCache;
 
     public ModuleRegistry(final CuratorFramework framework, final ModuleInstance moduleInstance) {
         try {
@@ -40,6 +45,7 @@ public class ModuleRegistry {
                     .thisInstance(serviceInstanceFromModuleInstance(moduleInstance))
                     .build();
             serviceDiscovery.start();
+            serviceCache = serviceDiscovery.serviceCacheBuilder().build();
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -71,7 +77,16 @@ public class ModuleRegistry {
         }
     }
 
+    public Set<Module> liveModules() {
+        try {
+            return ImmutableSet.copyOf(serviceCache.getInstances().stream().map(moduleInstanceServiceInstance -> moduleInstanceServiceInstance.getPayload().getModule()).collect(Collectors.toSet()));
+        } catch (final Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void shutdown() throws IOException {
+        serviceCache.close();
         serviceDiscovery.close();
     }
 }
