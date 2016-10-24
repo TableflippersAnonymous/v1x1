@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
  * Created by naomi on 10/16/2016.
  */
 public class EventRouterModule extends ThreadedModule<EventRouterSettings, EventRouterGlobalConfiguration, EventRouterTenantConfiguration> {
-    LoadingCache<String, Set<Module>> moduleCache = CacheBuilder.newBuilder()
+    private final LoadingCache<String, Set<Module>> moduleCache = CacheBuilder.newBuilder()
             .expireAfterWrite(2, TimeUnit.SECONDS)
             .build(new CacheLoader<String, Set<Module>>() {
                 @Override
