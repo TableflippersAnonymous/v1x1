@@ -40,6 +40,7 @@ import tv.v1x1.common.services.persistence.*;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.queue.MessageQueueManagerImpl;
+import tv.v1x1.common.services.state.StateManager;
 import tv.v1x1.common.services.stats.NoopStatsCollector;
 import tv.v1x1.common.services.stats.StatsCollector;
 
@@ -85,6 +86,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private final Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
     private StatsCollector statsCollector;
     private I18n i18n;
+    private StateManager stateManager;
 
     /* Third-Party Clients */
     private CuratorFramework curatorFramework;
@@ -315,6 +317,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public RedissonClient getRedisson() {
         return redisson;
+    }
+
+    public StateManager getStateManager() {
+        return stateManager;
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */

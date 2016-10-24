@@ -1,5 +1,6 @@
 package tv.v1x1.modules.channel.link_purger;
 
+import com.google.common.primitives.Ints;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RSetCache;
 import org.redisson.api.RedissonClient;
@@ -27,10 +28,12 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
         final Module module = new Module("link_purger");
         I18n.registerDefault(module, "purged", "Hey %user%, please ask before posting a link! I've purged your messages; feel free to keep chatting!");
         I18n.registerDefault(module, "timeout", "Hey %user%, I said ask before posting a link! I've timed you out for now; see you soon.");
-        I18n.registerDefault(module, "permit", "Hey %viewer%, you can post one link now!");
+        I18n.registerDefault(module, "permit", "Hey %target%, you can post one link now!");
+        I18n.registerDefault(module, "permitfailed", "%commander%, %target% is already allowed to post a link.");
+        I18n.registerDefault(module, "notarget", "%commander%, I don't see %target% in the channel. I can't add the permit.");
     }
 
-    private RMapCache<byte[], Integer> offenses;
+    private RMapCache<byte[], byte[]> offenses;
     private RSetCache<byte[]> permits;
 
     /* pkg-private */ Language language;
@@ -43,8 +46,8 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
     protected void initialize() {
         super.initialize();
         final RedissonClient redissonClient = getRedisson();
-        offenses = redissonClient.getMapCache("link_purger|offenses");
-        permits = redissonClient.getSetCache("link_purger|permits", ByteArrayCodec.INSTANCE);
+        offenses = redissonClient.getMapCache("Modules|Channel|LinkPurger|offenses", ByteArrayCodec.INSTANCE);
+        permits = redissonClient.getSetCache("Modules|Channel|LinkPurger|permits", ByteArrayCodec.INSTANCE);
         final CommandDelegator delegator = new CommandDelegator("!");
         delegator.registerCommand(new PermitCommand(this));
         registerListener(new LinkPurgerListener(this));
@@ -62,17 +65,18 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
 
     public int addOffense(final Channel channel, final User user) {
         byte[] key = CompositeKey.makeKey(channel.getId(), user.getId());
-        Integer offenseNumber = 1;
-        offenseNumber += offenses.getOrDefault(key, 0);
-        offenses.putAsync(key, offenseNumber, 1, TimeUnit.HOURS);
+        int offenseNumber = 1;
+        offenseNumber += Ints.fromByteArray(offenses.getOrDefault(key, Ints.toByteArray(0)));
+        offenses.putAsync(key, Ints.toByteArray(offenseNumber), 1, TimeUnit.HOURS);
         return offenseNumber;
     }
 
-    public void removeOffenses(final Channel channel, final User user) {
-        offenses.removeAsync(CompositeKey.makeKey(channel.getId(), user.getId()));
+    public void removeOffenses(final Channel channel, final String userId) {
+        offenses.removeAsync(CompositeKey.makeKey(channel.getId(), userId));
     }
 
-    public boolean permitUser(final Channel channel, final User user) {
-        return permits.add(CompositeKey.makeKey(channel.getId(), user.getId()), 5, TimeUnit.MINUTES);
+    public boolean permitUser(final Channel channel, final String userId) {
+        removeOffenses(channel, userId);
+        return permits.add(CompositeKey.makeKey(channel.getId(), userId), 5, TimeUnit.MINUTES);
     }
 }
