@@ -24,6 +24,8 @@ import org.redisson.liveobject.provider.ResolverProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.config.ConfigScanner;
+import tv.v1x1.common.config.ConfigType;
+import tv.v1x1.common.config.Permission;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
 import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.core.ModuleInstance;
@@ -176,6 +178,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
                 ))
                 .withCodecRegistry(new CodecRegistry()
                         .register(new EnumOrdinalCodec<>(Platform.class))
+                        .register(new EnumOrdinalCodec<>(Permission.class))
+                        .register(new EnumOrdinalCodec<>(ConfigType.class))
                 )
                 .build();
         cassandraSession = cassandraCluster.connect();
