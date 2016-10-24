@@ -125,7 +125,7 @@ CREATE TABLE global_configuration_definition (
     description text,
     version int,
     tenant_permission int,
-    fields list<frozen<configuration_definition_field>>
+    fields list<frozen<configuration_definition_field>>,
     PRIMARY KEY (name)
 );
 
@@ -135,6 +135,6 @@ CREATE TABLE tenant_configuration_definition (
     description text,
     version int,
     tenant_permission int,
-    fields list<frozen<configuration_definition_field>>
+    fields list<frozen<configuration_definition_field>>,
     PRIMARY KEY (name)
 );
