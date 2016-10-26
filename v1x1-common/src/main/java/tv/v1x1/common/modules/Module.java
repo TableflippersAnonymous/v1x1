@@ -70,6 +70,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private ConfigurationProvider<U> globalConfigProvider;
     private TenantConfigurationProvider<V> tenantConfigProvider;
     private final UUID instanceId = UUID.randomUUID();
+    private String configFile;
 
     /* Queues */
     private MessageQueueManager messageQueueManager;
@@ -125,6 +126,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         mapper.addMixIn(RedissonNodeInitializer.class, ConfigSupport.ClassMixIn.class);
         mapper.addMixIn(LoadBalancer.class, ConfigSupport.ClassMixIn.class);
 
+        configFile = filename;
         settings = mapper.readValue(new File(filename), getSettingsClass());
     }
 
@@ -309,7 +311,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return mappingManager;
     }
 
-    protected DAOManager getDaoManager() {
+    public DAOManager getDaoManager() {
         return daoManager;
     }
 
@@ -331,6 +333,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public StateManager getStateManager() {
         return stateManager;
+    }
+
+    protected String getConfigFile() {
+        return configFile;
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */
