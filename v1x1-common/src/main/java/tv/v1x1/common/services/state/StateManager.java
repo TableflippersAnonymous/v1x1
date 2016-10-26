@@ -8,7 +8,8 @@ public class StateManager {
     private MembershipService membershipService;
 
     public StateManager() {
-
+        displayNameService = new DisplayNameService();
+        membershipService = new MembershipService();
     }
 
     public DisplayNameService getDisplayNameService() {
