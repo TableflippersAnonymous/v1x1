@@ -1,0 +1,47 @@
+/api/v1 - GET: list of endpoints
+  /tenants - GET: list of tenants you are allowed to control.
+    /{platform}
+      /{channel} - GET: tenant-id
+    /{tenant} - GET: list of endpoints
+      /channels - GET: list of platforms
+        /{platform} - GET: list of channels with that platform
+          /{channel} - GET: channel object; PUT: link a channel; DELETE: unlink a channel
+            /state - GET: whether bot is in channel or not; PUT: change whether bot should be in channel or not
+            /message - POST: send message as bot to channel
+      /config
+        /{module} - GET: TenantConfiguration for module; PUT: Update TenantConfiguration for module.
+      /permissions
+        /{user} - GET: List permissions; POST: Add permission
+          /{permission} - DELETE: Remove permission
+      /history - GET: search based on query string
+        /{date} - GET: list of messages sent on date
+  /global-users
+    /{platform}
+      /{username} - GET: global user id
+    /{userid} - GET: list of endpoints
+      /users - GET: list of platforms
+        /{platform} - GET: list of users on platform
+          /{user} - GET: user object; PUT: link a user; DELETE: unlink a user
+  /platform
+    /config-definitions
+      /global - GET: list of modules with GlobalConfigurationDefinitions.
+        /{module} - GET: GlobalConfigurationDefinition for module.
+      /tenant - GET: list of modules with TenantConfigurationDefinitions.
+        /{module} - GET: TenantConfigurationDefinition for module.
+    /bots
+      /{platform} - GET: list of bots that v1x1 is using on platform.
+        /{botname} - GET: list of channels bot is in
+  /meta
+    /self - GET: redirect to /global-users/{userid} for currently logged in user
+  /management
+    /modules - GET: list running modules
+      /{module}
+        /instances - GET: list running instance of module
+          /{instanceid}
+            /state - GET: show state of module instance; PUT: change state of module instance
+        /config - GET: GlobalConfiguration for module; PUT: Update GlobalConfiguration
+        /state - GET: show state of module; PUT: change state of module
+    /permissions - GET: List all global permissions
+      /{user} - GET: list permissions for user; POST: grant permission to user
+        /{permission} - DELETE: revoke permission from user
+/ws - Websockets
