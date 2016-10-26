@@ -195,6 +195,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         globalConfigProvider = new ConfigurationProvider<U>(toDto(), daoManager, getGlobalConfigurationClass());
         tenantConfigProvider = new TenantConfigurationProvider<V>(toDto(), daoManager, getTenantConfigurationClass());
         i18n = new I18n(daoManager);
+        stateManager = new StateManager();
 
         updateConfigurationDefinitions();
     }

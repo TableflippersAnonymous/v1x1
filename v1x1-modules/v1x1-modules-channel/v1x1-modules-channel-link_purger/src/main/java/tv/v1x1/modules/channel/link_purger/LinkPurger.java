@@ -37,6 +37,7 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
     private RSetCache<byte[]> permits;
 
     /* pkg-private */ Language language;
+    /* pkg-private */ CommandDelegator delegator;
 
     public static void main(String[] args) throws Exception {
         new LinkPurger().entryPoint(args);
@@ -48,7 +49,7 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
         final RedissonClient redissonClient = getRedisson();
         offenses = redissonClient.getMapCache("Modules|Channel|LinkPurger|offenses", ByteArrayCodec.INSTANCE);
         permits = redissonClient.getSetCache("Modules|Channel|LinkPurger|permits", ByteArrayCodec.INSTANCE);
-        final CommandDelegator delegator = new CommandDelegator("!");
+        delegator = new CommandDelegator("!");
         delegator.registerCommand(new PermitCommand(this));
         registerListener(new LinkPurgerListener(this));
         language = getI18n().getLanguage(null);
@@ -72,11 +73,15 @@ public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, Lin
     }
 
     public void removeOffenses(final Channel channel, final String userId) {
-        offenses.removeAsync(CompositeKey.makeKey(channel.getId(), userId));
+        offenses.putAsync(CompositeKey.makeKey(channel.getId(), userId), Ints.toByteArray(0), 1, TimeUnit.MINUTES);
     }
 
     public boolean permitUser(final Channel channel, final String userId) {
         removeOffenses(channel, userId);
         return permits.add(CompositeKey.makeKey(channel.getId(), userId), 5, TimeUnit.MINUTES);
+    }
+
+    public boolean usePermit(final Channel channel, final User user) {
+        return permits.remove(CompositeKey.makeKey(channel.getId(), user.getId()));
     }
 }
