@@ -3,7 +3,6 @@ package tv.v1x1.modules.channel.link_purger;
 import com.google.common.collect.ImmutableMap;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.User;
-import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
 import tv.v1x1.common.dto.irc.commands.PrivmsgCommand;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.TwitchChatMessageEvent;
@@ -28,9 +27,11 @@ public class LinkPurgerListener implements EventListener {
 
     @EventHandler
     public void onChatMessage(final ChatMessageEvent ev) {
+        module.delegator.handleChatMessage(ev);
         if(!shouldMonitorUser(ev)) return;
         final Channel channel = ev.getChatMessage().getChannel();
         final User sender = ev.getChatMessage().getSender();
+        if(module.usePermit(channel, sender)) return;
         final String[] words = ev.getChatMessage().getText().split(" ");
         for(final String word : words) {
             final URL url;
