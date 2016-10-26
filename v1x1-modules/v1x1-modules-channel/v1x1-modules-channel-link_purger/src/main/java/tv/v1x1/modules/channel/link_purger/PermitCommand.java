@@ -53,7 +53,9 @@ public class PermitCommand extends Command {
     public void run(ChatMessage chatMessage, String command, List<String> args) {
         final Channel channel = chatMessage.getChannel();
         final String commanderName = chatMessage.getSender().getDisplayName();
-        final String targetId = module.getStateManager().getDisplayNameService().getIdFromDisplayName(channel, args.get(0));
+        final String targetId = module.getStateManager()
+                .getDisplayNameService()
+                .getIdFromDisplayName(channel, args.get(0));
         if(targetId == null) {
             Chat.message(module, channel, module.language.message(module.toDto(), "notarget",
                     ImmutableMap.of("commander", commanderName, "target", args.get(0))));
