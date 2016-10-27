@@ -31,7 +31,6 @@ public class LinkPurgerListener implements EventListener {
         if(!shouldMonitorUser(ev)) return;
         final Channel channel = ev.getChatMessage().getChannel();
         final User sender = ev.getChatMessage().getSender();
-        if(module.usePermit(channel, sender)) return;
         final String[] words = ev.getChatMessage().getText().split(" ");
         for(final String word : words) {
             final URL url;
@@ -44,6 +43,7 @@ public class LinkPurgerListener implements EventListener {
             }
             String host = url.getHost();
             if(!canResolve(host)) continue;
+            if(module.usePermit(channel, sender)) return;
             punish(channel, sender, module.addOffense(channel, sender));
             break;
         }

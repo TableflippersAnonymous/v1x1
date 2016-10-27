@@ -50,7 +50,8 @@ public class PermitCommand extends Command {
     }
 
     @Override
-    public void run(ChatMessage chatMessage, String command, List<String> args) {
+    public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
+        chatMessage.getPermissions().contains(getAllowedPermissions().get(0));
         final Channel channel = chatMessage.getChannel();
         final String commanderName = chatMessage.getSender().getDisplayName();
         final String targetId = module.getStateManager()
