@@ -27,6 +27,8 @@ public class LinkPurgerListener implements EventListener {
 
     @EventHandler
     public void onChatMessage(final ChatMessageEvent ev) {
+        if(!module.getTenantConfiguration(ev.getChatMessage().getChannel().getTenant()).isEnabled())
+            return;
         module.delegator.handleChatMessage(ev);
         if(!shouldMonitorUser(ev)) return;
         final Channel channel = ev.getChatMessage().getChannel();
