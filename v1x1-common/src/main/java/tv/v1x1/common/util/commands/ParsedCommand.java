@@ -9,7 +9,7 @@ public class ParsedCommand {
     private final String command;
     private final List<String> args;
 
-    ParsedCommand(final String command, final List<String> args) {
+    public ParsedCommand(final String command, final List<String> args) {
         this.command = command;
         this.args = args;
     }

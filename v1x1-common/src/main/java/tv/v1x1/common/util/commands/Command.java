@@ -53,4 +53,20 @@ public abstract class Command {
      * @return
      */
     public int getMaxArgs() { return -1; }
+
+    /**
+     * Do something when called with incorrect argument counts
+     * @param chatMessage
+     */
+    public void handleArgMismatch(ChatMessage chatMessage) {
+        // Deliberately do nothing unless overridden
+    }
+
+    /**
+     * Do something when called with lack of permissions
+     * @param chatMessage
+     */
+    public void handleNoPermissions(ChatMessage chatMessage) {
+        // Deliberately do nothing unless overridden
+    }
 }
