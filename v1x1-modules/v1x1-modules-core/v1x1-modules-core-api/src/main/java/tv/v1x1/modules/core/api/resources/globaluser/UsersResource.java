@@ -1,17 +1,26 @@
 package tv.v1x1.modules.core.api.resources.globaluser;
 
+import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
+import tv.v1x1.common.dao.DAOGlobalUser;
+import tv.v1x1.common.dto.db.GlobalUser;
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.modules.core.api.api.User;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Created by naomi on 10/26/2016.
@@ -27,9 +36,19 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsersResource {
+    private final DAOGlobalUser daoGlobalUser;
+
+    @Inject
+    public UsersResource(final DAOGlobalUser daoGlobalUser) {
+        this.daoGlobalUser = daoGlobalUser;
+    }
+
     @GET
     public List<String> listPlatforms(@PathParam("global_user_id") final String globalUserId) {
-        return null; //TODO
+        final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
+        if(globalUser == null)
+            throw new NotFoundException();
+        return Arrays.asList(Platform.values()).stream().map(Platform::name).map(String::toLowerCase).collect(Collectors.toList());
     }
 
     @Path("/{platform}")
