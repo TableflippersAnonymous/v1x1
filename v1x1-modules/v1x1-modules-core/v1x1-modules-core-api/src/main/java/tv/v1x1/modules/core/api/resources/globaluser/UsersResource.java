@@ -48,13 +48,17 @@ public class UsersResource {
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
-        return Arrays.asList(Platform.values()).stream().map(Platform::name).map(String::toLowerCase).collect(Collectors.toList());
+        return ImmutableList.copyOf(globalUser.getEntries().stream().map(GlobalUser.Entry::getPlatform).map(Platform::name).map(String::toLowerCase).collect(Collectors.toSet()));
     }
 
     @Path("/{platform}")
     @GET
-    public List<String> listUsers(@PathParam("global_user_id") final String globalUserId, @PathParam("platform") final String platform) {
-        return null; //TODO
+    public List<String> listUsers(@PathParam("global_user_id") final String globalUserId, @PathParam("platform") final String platformString) {
+        final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
+        if(globalUser == null)
+            throw new NotFoundException();
+        final Platform platform = Platform.valueOf(platformString.toUpperCase());
+        return globalUser.getEntries().stream().filter(e -> e.getPlatform().equals(platform)).map(GlobalUser.Entry::getUserId).collect(Collectors.toList());
     }
 
     @Path("/{platform}/{user_id}")
