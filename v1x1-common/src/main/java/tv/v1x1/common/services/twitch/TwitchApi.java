@@ -45,21 +45,21 @@ public class TwitchApi {
         final TwitchApiRequestFilter twitchApiRequestFilter = new TwitchApiRequestFilter(clientId, oauthToken);
         final Client client = ClientBuilder.newClient();
         client.register(twitchApiRequestFilter);
-        final WebTarget rootTarget = client.target(BASE_URL);
-        blocks = new BlocksResource(rootTarget.path("users"));
-        channelFeed = new ChannelFeedResource(rootTarget.path("feed"));
-        channels = new ChannelsResource(rootTarget.path("channels"));
-        chat = new ChatResource(rootTarget.path("chat"));
-        follows = new FollowsResource(rootTarget.path("channels"), rootTarget.path("users"));
-        games = new GamesResource(rootTarget.path("games"));
-        ingests = new IngestsResource(rootTarget.path("ingests"));
-        root = new RootResource(rootTarget);
-        search = new SearchResource(rootTarget.path("search"));
-        streams = new StreamsResource(rootTarget.path("streams"));
-        subscriptions = new SubscriptionsResource(rootTarget.path("channels"), rootTarget.path("users"));
-        teams = new TeamsResource(rootTarget.path("teams"));
-        users = new UsersResource(rootTarget.path("users"), rootTarget.path("user"), rootTarget.path("streams"), rootTarget.path("videos"));
-        videos = new VideosResource(rootTarget.path("videos"), rootTarget.path("channels"));
+        final WebTarget api = client.target(BASE_URL);
+        blocks = new BlocksResource(api.path("users"));
+        channelFeed = new ChannelFeedResource(api.path("feed"));
+        channels = new ChannelsResource(api.path("channels"));
+        chat = new ChatResource(api.path("chat"));
+        follows = new FollowsResource(api.path("channels"), api.path("users"));
+        games = new GamesResource(api.path("games"));
+        ingests = new IngestsResource(api.path("ingests"));
+        root = new RootResource(api);
+        search = new SearchResource(api.path("search"));
+        streams = new StreamsResource(api.path("streams"));
+        subscriptions = new SubscriptionsResource(api.path("channels"), api.path("users"));
+        teams = new TeamsResource(api.path("teams"));
+        users = new UsersResource(api.path("users"), api.path("user"), api.path("streams"), api.path("videos"));
+        videos = new VideosResource(api.path("videos"), api.path("channels"));
     }
 
     public BlocksResource getBlocks() {
