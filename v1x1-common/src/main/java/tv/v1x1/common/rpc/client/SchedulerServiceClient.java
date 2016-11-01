@@ -44,6 +44,13 @@ public class SchedulerServiceClient extends ServiceClient<ScheduleRequest, Sched
         return send(delayScheduleRequest);
     }
 
+    /**
+     * Schedule a task to be run and repeated in the future
+     * @param interval time in milliseconds; or -1 to cancel an existing one
+     * @param id the ID of the task
+     * @param payload
+     * @return
+     */
     public Future<ScheduleResponse> scheduleRepeating(final long interval, final UUID id, final byte[] payload) {
         final IntervalScheduleRequest intervalScheduleRequest = new IntervalScheduleRequest(getModule(), getQueueName(), id, payload, interval);
         return send(intervalScheduleRequest);
