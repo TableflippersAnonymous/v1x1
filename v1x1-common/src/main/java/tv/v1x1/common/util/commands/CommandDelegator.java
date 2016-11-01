@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Josh on 2016-10-06.
+ * @author Josh
  */
 public class CommandDelegator {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -28,7 +28,7 @@ public class CommandDelegator {
     }
     /**
      * CommandDelegator tracks {@link Command Commands} to be run
-     * @param prefix
+     * @param prefix The prefix this CommandDelegator looks for
      */
     public CommandDelegator(final String prefix) {
         this.prefix = prefix;
@@ -72,10 +72,11 @@ public class CommandDelegator {
                     isFound = true;
             if(!isFound)
                 continue;
-            if(parsedCmd.getArgs().size() < command.getMinArgs())
+            if((parsedCmd.getArgs().size() < command.getMinArgs()) ||
+                    (command.getMaxArgs() != -1 && parsedCmd.getArgs().size() > command.getMaxArgs())) {
+                command.handleArgMismatch(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
                 continue;
-            if(command.getMaxArgs() != -1 && parsedCmd.getArgs().size() > command.getMaxArgs())
-                continue;
+            }
             final List<Permission> allowedPermissions = command.getAllowedPermissions();
             if(allowedPermissions == null) {
                 hasPerm = true;
@@ -87,8 +88,10 @@ public class CommandDelegator {
                     }
                 }
             }
-            if(!hasPerm)
+            if(!hasPerm) {
+                command.handleNoPermissions(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
                 continue;
+            }
             command.run(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
             return true;
         }

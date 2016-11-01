@@ -57,16 +57,20 @@ public abstract class Command {
     /**
      * Do something when called with incorrect argument counts
      * @param chatMessage
+     * @param command
+     * @param args
      */
-    public void handleArgMismatch(ChatMessage chatMessage) {
+    public void handleArgMismatch(ChatMessage chatMessage, final String command, final List<String> args) {
         // Deliberately do nothing unless overridden
     }
 
     /**
      * Do something when called with lack of permissions
      * @param chatMessage
+     * @param command
+     * @param args
      */
-    public void handleNoPermissions(ChatMessage chatMessage) {
+    public void handleNoPermissions(ChatMessage chatMessage, final String command, final List<String> args) {
         // Deliberately do nothing unless overridden
     }
 }
