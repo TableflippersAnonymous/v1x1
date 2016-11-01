@@ -7,7 +7,6 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
-import tv.v1x1.common.dto.messages.requests.SendMessageRequest;
 import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.i18n.Language;

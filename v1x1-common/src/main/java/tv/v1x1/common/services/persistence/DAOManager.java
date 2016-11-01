@@ -4,7 +4,8 @@ import com.datastax.driver.mapping.MappingManager;
 import tv.v1x1.common.dao.*;
 
 /**
- * Created by naomi on 10/16/2016.
+ *
+ * @author Naomi
  */
 public class DAOManager {
     private final DAOTenant daoTenant;

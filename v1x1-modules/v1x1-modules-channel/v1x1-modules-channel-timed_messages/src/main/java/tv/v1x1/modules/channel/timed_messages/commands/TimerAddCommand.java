@@ -1,6 +1,7 @@
 package tv.v1x1.modules.channel.timed_messages.commands;
 
 import com.google.common.collect.ImmutableList;
+import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
@@ -30,8 +31,8 @@ public class TimerAddCommand extends Command {
     }
 
     @Override
-    public void handleArgMismatch(final ChatMessage chatMessage) {
-        Chat.i18nMessage(module, chatMessage.getChannel(), null, "invalid.add.notarget",
+    public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
+        Chat.i18nMessage(module, chatMessage.getChannel(), null, "entry.add.notarget",
                 "commander", chatMessage.getSender().getDisplayName(),
                 "usage", getUsage()
                 );
@@ -39,7 +40,22 @@ public class TimerAddCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-
+        final Channel channel = chatMessage.getChannel();
+        final String senderName = chatMessage.getSender().getDisplayName();
+        final String timerName = args.remove(0);
+        final StringBuilder message = new StringBuilder();
+        for(String arg : args)
+            message.append(arg);
+        if(module.addTimerEntry(channel.getTenant(), timerName, message.toString()))
+            Chat.i18nMessage(module, channel, null, "entry.add.success",
+                    "commander", senderName,
+                    "id", timerName
+            );
+        else
+            Chat.i18nMessage(module, channel, null, "entry.add.badtarget",
+                    "commander", senderName,
+                    "id", timerName
+            );
     }
 
     @Override

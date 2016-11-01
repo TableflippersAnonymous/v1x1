@@ -58,7 +58,7 @@ public class TimerCommand extends Command {
     }
 
     @Override
-    public void handleArgMismatch(final ChatMessage chatMessage) {
+    public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         Chat.i18nMessage(module, chatMessage.getChannel(), null, "timer.invalid.subcommand",
                 "commander", chatMessage.getSender().getDisplayName(),
                 "usage", getUsage()
@@ -67,8 +67,9 @@ public class TimerCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
+        // TODO: Don't respond if globally disabled
         String subCmd = args.remove(0).toLowerCase();
         if(!delegator.handleParsedCommand(chatMessage, new ParsedCommand(subCmd, args)))
-            handleArgMismatch(chatMessage);
+            handleArgMismatch(chatMessage, command, args);
     }
 }
