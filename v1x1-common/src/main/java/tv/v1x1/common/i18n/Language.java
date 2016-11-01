@@ -14,11 +14,11 @@ public abstract class Language {
     public abstract String message(Module module, String key, Map<String, Object> parameters);
     public abstract void set(Module module, String key, String message);
 
-    protected String format(final String string, final Map<String, Object> parameters) {
-        if(string.isEmpty()) return "<empty message>";
-        if(string == null) return "<invalid message key>";
-        final StringBuilder output = new StringBuilder(string.length());
-        final char[] inputArray = string.toCharArray();
+    protected String format(final String template, final Map<String, Object> parameters) {
+        if(template == null) return "<invalid message key>";
+        if(template.isEmpty()) return "<empty message>";
+        final StringBuilder output = new StringBuilder(template.length());
+        final char[] inputArray = template.toCharArray();
         int position = 0;
         int blind = 0;
         for(; position < inputArray.length; ++position) {

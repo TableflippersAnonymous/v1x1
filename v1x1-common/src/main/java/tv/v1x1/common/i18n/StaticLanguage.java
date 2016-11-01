@@ -17,7 +17,8 @@ public class StaticLanguage extends Language {
 
     @Override
     public String message(final Module module, final String key, final Map<String, Object> parameters) {
-        return format(strings.get(getKey(module, key)), parameters);
+        final String template = strings.get(getKey(module, key));
+        return format((template == null ? key : template), parameters);
     }
 
     @Override
