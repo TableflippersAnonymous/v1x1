@@ -41,18 +41,6 @@ services:
     depends_on:
       - redis
       - zoo1
-  echo:
-    image: v1x1-echo:latest
-    depends_on:
-      - redis
-      - zoo1
-      - chat_router
-  i18n_test:
-    image: v1x1-i18n_test:latest
-    depends_on:
-      - redis
-      - zoo1
-      - chat_router
   link_purger:
     image: v1x1-link_purger:latest
     depends_on:
