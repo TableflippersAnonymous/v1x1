@@ -32,7 +32,7 @@ public class TimerAddCommand extends Command {
 
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
-        Chat.i18nMessage(module, chatMessage.getChannel(), null, "entry.add.notarget",
+        Chat.i18nMessage(module, chatMessage.getChannel(), "entry.add.notarget",
                 "commander", chatMessage.getSender().getDisplayName(),
                 "usage", getUsage()
                 );
@@ -47,12 +47,12 @@ public class TimerAddCommand extends Command {
         for(String arg : args)
             message.append(arg);
         if(module.addTimerEntry(channel.getTenant(), timerName, message.toString()))
-            Chat.i18nMessage(module, channel, null, "entry.add.success",
+            Chat.i18nMessage(module, channel, "entry.add.success",
                     "commander", senderName,
                     "id", timerName
             );
         else
-            Chat.i18nMessage(module, channel, null, "entry.add.badtarget",
+            Chat.i18nMessage(module, channel, "entry.add.badtarget",
                     "commander", senderName,
                     "id", timerName
             );

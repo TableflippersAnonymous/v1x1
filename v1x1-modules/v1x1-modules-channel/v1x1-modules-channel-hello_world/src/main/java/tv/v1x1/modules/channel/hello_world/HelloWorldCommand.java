@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.google.common.collect.ImmutableMap;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
-import tv.v1x1.common.i18n.I18n;
+import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 
 import java.lang.invoke.MethodHandles;
@@ -31,6 +31,20 @@ public class HelloWorldCommand extends Command {
     @Override
     public List<Permission> getAllowedPermissions() {
         return ImmutableList.of(new Permission("hello.use"));
+    }
+
+    @Override
+    public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
+        Chat.i18nMessage(module, chatMessage.getChannel(), "hello.badargs",
+                "commander", chatMessage.getSender().getDisplayName(),
+                "usage", getUsage());
+    }
+
+    @Override
+    public void handleNoPermissions(final ChatMessage chatMessage, final String command, final List<String> args) {
+        Chat.i18nMessage(module, chatMessage.getChannel(), "hello.noperms",
+                "commander", chatMessage.getSender().getDisplayName(),
+                "perm", "hello.use");
     }
 
     @Override

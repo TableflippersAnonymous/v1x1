@@ -41,12 +41,12 @@ public class TimerDeleteCommand extends Command {
             message.append(arg);
         TimerEntry entry = module.deleteTimerEntry(channel.getTenant(), timerName, message.toString());
         if(entry == null) {
-            Chat.i18nMessage(module, channel, null, "entry.delete.nomatch",
+            Chat.i18nMessage(module, channel, "entry.delete.nomatch",
                     "commander", senderName,
                     "id", timerName
             );
         } else {
-            Chat.i18nMessage(module, channel, null, "entry.delete.success",
+            Chat.i18nMessage(module, channel, "entry.delete.success",
                     "commander", senderName,
                     "id", timerName,
                     "preview", "<preview here>"
@@ -71,7 +71,7 @@ public class TimerDeleteCommand extends Command {
 
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
-        Chat.i18nMessage(module, chatMessage.getChannel(), null, "entry.delete.notarget",
+        Chat.i18nMessage(module, chatMessage.getChannel(), "entry.delete.notarget",
                 "commander", chatMessage.getSender().getDisplayName(),
                 "usage", getUsage());
     }

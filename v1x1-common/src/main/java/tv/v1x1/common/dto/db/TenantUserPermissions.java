@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Created by cobi on 10/15/2016.
+ * @author Cobi
  */
 @Table(name = "tenant_user_permissions")
 public class TenantUserPermissions {
@@ -76,7 +76,7 @@ public class TenantUserPermissions {
         return userId;
     }
 
-    public Collection<Permission> getPermissions() {
+    public List<Permission> getPermissions() {
         return permissions;
     }
 }
