@@ -26,24 +26,38 @@ services:
     depends_on:
       - redis
       - zoo1
+      - cass1
   tmi:
     image: v1x1-tmi:latest
     depends_on:
       - redis
       - zoo1
+      - cass1
   scheduler:
     image: v1x1-scheduler:latest
     depends_on:
       - redis
       - zoo1
-  hello:
+      - cass1
+  hello_world:
     image: v1x1-hello_world:latest
     depends_on:
       - redis
       - zoo1
+      - cass1
   link_purger:
     image: v1x1-link_purger:latest
     depends_on:
       - redis
       - zoo1
+      - cass1
       - chat_router
+  timed_messages:
+    image: v1x1-timed_messages:latest
+    depends_on:
+      - redis
+      - zoo1
+      - cass1
+      - chat_router
+      - event_router
+      - scheduler
