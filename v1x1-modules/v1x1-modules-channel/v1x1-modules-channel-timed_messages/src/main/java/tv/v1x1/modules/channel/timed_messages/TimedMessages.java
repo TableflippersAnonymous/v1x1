@@ -57,7 +57,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         I18n.registerDefault(module, "timer.alreadytoggled", "%commander%, the \"%id%\" timer is already %state%");
     }
 
-    private CommandDelegator delegator;
+    CommandDelegator delegator;
     private SchedulerServiceClient ssc;
     private RMapCache<byte[], byte[]> cursors; // uuid -> int
 
@@ -75,6 +75,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         cursors = getRedisson().getMapCache("Modules|Channel|TimedMessages|Cursors", ByteArrayCodec.INSTANCE);
         delegator = new CommandDelegator("!");
         delegator.registerCommand(new TimerCommand(this));
+        registerListener(new TimedMessagesListener(this));
         ssc = getServiceClient(SchedulerServiceClient.class);
     }
 
