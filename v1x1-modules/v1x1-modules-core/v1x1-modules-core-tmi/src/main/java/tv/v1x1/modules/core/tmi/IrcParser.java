@@ -32,7 +32,7 @@ public class IrcParser {
         switch(command) {
             case CLEARCHAT: return new ClearChatCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
             case GLOBALUSERSTATE: return new GlobalUserStateCommand(rawLine, tags, source, rawArgs, args);
-            case HOSTTARGET: return new HostTargetCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
+            case HOSTTARGET: return new HostTargetCommand(rawLine, tags, source, rawArgs, args, args[0], args[1].split(" ")[0]);
             case JOIN: return new JoinCommand(rawLine, tags, source, rawArgs, args, args[0]);
             case MODE: return new ModeCommand(rawLine, tags, source, rawArgs, args, args[0], args[1], Arrays.asList(Arrays.copyOfRange(args, 2, args.length)));
             case NOTICE: return new NoticeCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
@@ -43,7 +43,7 @@ public class IrcParser {
             case ROOMSTATE: return new RoomStateCommand(rawLine, tags, source, rawArgs, args, args[0]);
             case RPL_ENDOFMOTD: return new RplEndOfMotdCommand(rawLine, tags, source, rawArgs, args);
             case RPL_NAMREPLY: return new RplNameReplyCommand(rawLine, tags, source, rawArgs, args, args[2], Arrays.asList(args[3].split(" ")).stream().map(RplNameReplyCommand.Member::new).collect(Collectors.toList()));
-            case USERNOTICE: return new UserNoticeCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
+            case USERNOTICE: return new UserNoticeCommand(rawLine, tags, source, rawArgs, args, args[0], args.length < 2 ? tags.get("system-msg") : args[1]);
             case USERSTATE: return new UserStateCommand(rawLine, tags, source, rawArgs, args, args[0]);
             default: throw new IllegalStateException("Unknown command: " + command);
         }
