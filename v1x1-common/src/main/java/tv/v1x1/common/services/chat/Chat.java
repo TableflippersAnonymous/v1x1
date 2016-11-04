@@ -3,8 +3,8 @@ package tv.v1x1.common.services.chat;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.DiscordChannel;
 import tv.v1x1.common.dto.core.TwitchChannel;
-import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.core.User;
+import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.i18n.Language;
 import tv.v1x1.common.modules.Module;
 import tv.v1x1.common.rpc.client.ChatRouterServiceClient;
@@ -39,13 +39,14 @@ public class Chat {
      * @param key
      * @param parameters
      */
-    public static void i18nMessage(final Module<?, ?, ?> module, final Channel channel, final Language language, final String key, final Object... parameters) {
+    public static void i18nMessage(final Module<?, ?, ?> module, final Channel channel, final String key, final Object... parameters) {
         if(parameters.length % 2 != 0) throw new IllegalArgumentException("Passed a non-even amount of arguments for i18n params");
         final Map<String, Object> castParams = new HashMap<String, Object>();
         for(int i = 0; i < parameters.length; ++i) {
             if(!(parameters[i] instanceof String)) throw new IllegalArgumentException("Passed a non-String key for i18n params");
             castParams.put((String)parameters[i], parameters[++i]);
         }
+        final Language language = I18n.DEFAULT_LANGUAGE; // TODO: Detect the language automatically
         Chat.message(module, channel, language.message(module.toDto(), key, castParams));
     }
 

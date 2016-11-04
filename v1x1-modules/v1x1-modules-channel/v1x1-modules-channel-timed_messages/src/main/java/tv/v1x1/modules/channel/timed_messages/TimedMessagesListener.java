@@ -1,9 +1,12 @@
 package tv.v1x1.modules.channel.timed_messages;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
@@ -11,10 +14,13 @@ import tv.v1x1.common.modules.eventhandler.EventListener;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.data.CompositeKey;
 
+import java.lang.invoke.MethodHandles;
+
 /**
  * @author Josh
  */
 public class TimedMessagesListener implements EventListener {
+    public static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private TimedMessages module;
 
     TimedMessagesListener(TimedMessages module) {
@@ -35,7 +41,7 @@ public class TimedMessagesListener implements EventListener {
             try {
                 tenant = Tenant.fromProto(ChannelOuterClass.Tenant.parseFrom(keys[1]));
             } catch(InvalidProtocolBufferException e) {
-                TimedMessages.LOG.warn("Failed to deserialize tenant from scheduler payload");
+                LOG.warn("Failed to deserialize tenant from scheduler payload");
                 e.printStackTrace();
                 return;
             }
@@ -43,7 +49,7 @@ public class TimedMessagesListener implements EventListener {
             Timer t = module.getTenantConfiguration(tenant).getTimer(timerName);
             int cursor = module.getCursor(uuid);
             if(cursor == -1) {
-                TimedMessages.LOG.warn("Got a timer with no cursor; deleting it...");
+                LOG.warn("Got a timer with no cursor; deleting it...");
                 module.disableTimer(tenant, ev.getId());
                 return;
             }
@@ -54,7 +60,12 @@ public class TimedMessagesListener implements EventListener {
                 Chat.message(module, channel, message);
             }
         } else {
-            TimedMessages.LOG.warn("Got unknown timer type {}", type);
+            LOG.warn("Got unknown timer type {}", type);
         }
+    }
+
+    @EventHandler
+    public void onChatMessage(ChatMessageEvent ev) {
+        module.delegator.handleChatMessage(ev);
     }
 }

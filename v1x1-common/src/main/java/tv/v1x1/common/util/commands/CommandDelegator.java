@@ -49,6 +49,7 @@ public class CommandDelegator {
      * @param chatMessageEvent
      */
     public void handleChatMessage(final ChatMessageEvent chatMessageEvent) {
+        LOG.trace("Asked to handle chat message: {}", chatMessageEvent.getChatMessage().getText());
         final ParsedCommand parsedCmd = CommandParser.parse(chatMessageEvent, prefix);
         if(parsedCmd == null)
             return;
@@ -72,26 +73,35 @@ public class CommandDelegator {
                     isFound = true;
             if(!isFound)
                 continue;
+            LOG.debug("Found valid command: {}", parsedCmd.getCommand());
             if((parsedCmd.getArgs().size() < command.getMinArgs()) ||
                     (command.getMaxArgs() != -1 && parsedCmd.getArgs().size() > command.getMaxArgs())) {
                 command.handleArgMismatch(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
+                LOG.trace("Command had invalid args");
                 continue;
             }
             final List<Permission> allowedPermissions = command.getAllowedPermissions();
             if(allowedPermissions == null) {
                 hasPerm = true;
             } else {
+                LOG.trace("User has these perms: ");
+                for(Permission p : chatMessage.getPermissions())
+                    LOG.trace(p.getNode());
                 for(Permission p : allowedPermissions) {
+                    LOG.trace("Command has " + p.getNode());
                     if(chatMessage.getPermissions().contains(p)) {
+                        LOG.trace("Found permission");
                         hasPerm = true;
                         break;
                     }
                 }
             }
             if(!hasPerm) {
+                LOG.trace("No permissions");
                 command.handleNoPermissions(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
                 continue;
             }
+            LOG.debug("Command is allowed and valid enough; executing...");
             command.run(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
             return true;
         }

@@ -35,12 +35,12 @@ public class TimerDestroyCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String senderName = chatMessage.getSender().getDisplayName();
         if(module.destroyTimer(channel.getTenant(), args.get(0))) {
-            Chat.i18nMessage(module, channel, null, "timer.destroy.success",
+            Chat.i18nMessage(module, channel, "timer.destroy.success",
                     "commander", senderName,
                     "id", args.get(0)
                     );
         } else {
-            Chat.i18nMessage(module, channel, null, "timer.destroy.notarget",
+            Chat.i18nMessage(module, channel, "timer.destroy.notarget",
                     "commander", senderName,
                     "id", args.get(0)
             );
@@ -64,7 +64,7 @@ public class TimerDestroyCommand extends Command {
 
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
-        Chat.i18nMessage(module, chatMessage.getChannel(), null, "timer.destroy.notarget",
+        Chat.i18nMessage(module, chatMessage.getChannel(), "timer.destroy.notarget",
                 "commander", chatMessage.getSender().getDisplayName(),
                 "usage", getUsage()
         );

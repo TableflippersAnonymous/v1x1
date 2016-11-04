@@ -28,4 +28,20 @@ public class Permission {
                 .setNode(node)
                 .build();
     }
+
+    @Override
+    public boolean equals(final Object o) {
+        if(this == o) return true;
+        if(o == null || getClass() != o.getClass()) return false;
+
+        final Permission that = (Permission)o;
+
+        return node != null ? node.equals(that.node) : that.node == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        return node != null ? node.hashCode() : 0;
+    }
 }

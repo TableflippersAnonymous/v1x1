@@ -11,7 +11,6 @@ import tv.v1x1.modules.channel.timed_messages.TimedMessages;
 import tv.v1x1.modules.channel.timed_messages.Timer;
 
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author Josh
@@ -41,7 +40,7 @@ public class TimerCreateCommand extends Command {
         try {
             interval = Long.getLong(args.get(0)) * 1000;
         } catch (NumberFormatException e) {
-            Chat.i18nMessage(module, channel, null, "timer.create.badinterval");
+            Chat.i18nMessage(module, channel, "timer.create.badinterval");
             return;
         }
         Timer timer = new Timer(interval);
@@ -70,18 +69,18 @@ public class TimerCreateCommand extends Command {
         final String displayName = chatMessage.getSender().getDisplayName();
         switch (args.size()) {
             case 1:
-                Chat.i18nMessage(module, channel, null, "timer.create.notarget",
+                Chat.i18nMessage(module, channel, "timer.create.notarget",
                         "commander", displayName,
                         "usage", getUsage()
                 );
                 break;
             case 2:
-                Chat.i18nMessage(module, channel, null, "timer.create.badinterval",
+                Chat.i18nMessage(module, channel, "timer.create.badinterval",
                         "commander", displayName
                 );
                 break;
             default:
-                Chat.i18nMessage(module, channel, null, "timer.create.toomanyargs",
+                Chat.i18nMessage(module, channel, "timer.create.toomanyargs",
                         "commander", displayName
                 );
                 break;
