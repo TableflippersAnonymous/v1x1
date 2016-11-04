@@ -29,7 +29,7 @@ public abstract class RegisteredThreadedModule<T extends ModuleSettings, U exten
             if(m.isAnnotationPresent(EventHandler.class)) {
                 if(m.getParameterCount() == 1 && Event.class.isAssignableFrom(m.getParameters()[0].getType())) {
                     handlers.add(m);
-                    //System.out.println("Added event handler: " + listener.getClass().getCanonicalName() + "; " + m.getName());
+                    LOG.debug("Added event handler: {} in {}" + listener.getClass().getCanonicalName(), m.getName());
                 }
             }
         }
