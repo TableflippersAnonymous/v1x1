@@ -3,6 +3,7 @@ package tv.v1x1.modules.channel.link_purger;
 import com.google.common.collect.ImmutableMap;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.User;
+import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
 import tv.v1x1.common.dto.irc.commands.PrivmsgCommand;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.TwitchChatMessageEvent;
@@ -65,7 +66,7 @@ public class LinkPurgerListener implements EventListener {
         // TODO: Support other platforms
         if(!(ev instanceof TwitchChatMessageEvent)) return false;
         PrivmsgCommand msg = ((TwitchChatMessageEvent) ev).getPrivmsgCommand();
-        return !(msg.isMod() || msg.getBadges().contains(PrivmsgCommand.Badge.BROADCASTER) || msg.getUserType() != null);
+        return !(msg.isMod() || msg.getBadges().contains(PrivmsgCommand.Badge.BROADCASTER) || msg.getUserType() != null || msg.getBadges().contains(PrivmsgCommand.Badge.SUBSCRIBER));
 
     }
 
