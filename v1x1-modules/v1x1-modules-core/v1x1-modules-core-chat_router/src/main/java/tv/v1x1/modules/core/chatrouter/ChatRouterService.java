@@ -23,7 +23,7 @@ public class ChatRouterService extends ThreadedService<SendMessageRequest, SendM
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final LoadingCache<String, TmiServiceClient> tmiCache;
 
-    public ChatRouterService(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
+    public ChatRouterService(final Module<?, ?, ?, ?> module) {
         super(module, "ChatRouter", SendMessageRequest.class);
         tmiCache = CacheBuilder.newBuilder()
                 .expireAfterAccess(1, TimeUnit.MINUTES)

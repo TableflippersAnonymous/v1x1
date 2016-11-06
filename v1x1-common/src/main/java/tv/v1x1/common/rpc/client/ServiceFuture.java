@@ -12,4 +12,9 @@ public class ServiceFuture<U> extends AbstractFuture<U> {
     public boolean set(@Nullable final U value) {
         return super.set(value);
     }
+
+    @Override
+    public boolean setException(final Throwable throwable) {
+        return super.setException(throwable);
+    }
 }

@@ -19,7 +19,7 @@ import java.util.concurrent.Future;
  * Created by naomi on 10/23/2016.
  */
 public class SchedulerServiceClient extends ServiceClient<ScheduleRequest, ScheduleResponse> {
-    public SchedulerServiceClient(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
+    public SchedulerServiceClient(final Module<?, ?, ?, ?> module) {
         super(module, ScheduleResponse.class);
     }
 

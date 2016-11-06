@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.messages.Message;
 import tv.v1x1.common.dto.messages.Request;
 import tv.v1x1.common.dto.messages.Response;
+import tv.v1x1.common.dto.messages.responses.ExceptionResponse;
 import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.Module;
 import tv.v1x1.common.modules.ModuleSettings;
@@ -24,12 +25,12 @@ import java.util.concurrent.Future;
  */
 public abstract class ServiceClient<T extends Request, U extends Response<T>> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module;
+    private final Module<?, ?, ?, ?> module;
     private final String queueName;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final Map<tv.v1x1.common.dto.core.UUID, ServiceFuture<U>> futureMap = new ConcurrentHashMap<>();
 
-    public ServiceClient(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, final Class<U> responseClass) {
+    public ServiceClient(final Module<?, ?, ?, ?> module, final Class<U> responseClass) {
         this.module = module;
         this.queueName = "ServiceResponse|" + module.getName() + "|" + getClass().getCanonicalName() + "|" + UUID.randomUUID().toString();
         final MessageQueue messageQueue = module.getMessageQueueManager().forName(queueName);
@@ -37,15 +38,23 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
             while(!Thread.interrupted()) {
                 try {
                     final Message m = messageQueue.get();
-                    if (!responseClass.isInstance(m)) {
+                    if (!responseClass.isInstance(m) && !(m instanceof ExceptionResponse)) {
                         LOG.warn("Invalid class seen on response queue: {} expected: {}", m.getClass().getCanonicalName(), responseClass.getCanonicalName());
                         continue;
                     }
-                    @SuppressWarnings("unchecked") final U response = (U) m;
-                    final ServiceFuture<U> future = futureMap.remove(response.getRequestMessageId());
-                    if (future == null)
-                        continue;
-                    future.set(response);
+                    if(m instanceof ExceptionResponse) {
+                        final ExceptionResponse exceptionResponse = (ExceptionResponse) m;
+                        final ServiceFuture<U> future = futureMap.remove(exceptionResponse.getRequestMessageId());
+                        if (future == null)
+                            continue;
+                        future.setException(new RpcException(exceptionResponse.getExceptionClass(), exceptionResponse.getMessage(), exceptionResponse.getStackTrace()));
+                    } else {
+                        @SuppressWarnings("unchecked") final U response = (U) m;
+                        final ServiceFuture<U> future = futureMap.remove(response.getRequestMessageId());
+                        if (future == null)
+                            continue;
+                        future.set(response);
+                    }
                 } catch (final InterruptedException e) {
                     break;
                 } catch (final Exception e) {
