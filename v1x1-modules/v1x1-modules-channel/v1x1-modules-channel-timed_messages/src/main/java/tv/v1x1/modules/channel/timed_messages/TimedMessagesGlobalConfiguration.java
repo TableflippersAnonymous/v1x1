@@ -5,5 +5,5 @@ import tv.v1x1.common.modules.GlobalConfiguration;
 /**
  * @author Josh
  */
-public class TimedMessagesGlobalConfiguration extends GlobalConfiguration {
+public class TimedMessagesGlobalConfiguration implements GlobalConfiguration {
 }

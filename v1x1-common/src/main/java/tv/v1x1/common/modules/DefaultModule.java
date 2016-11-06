@@ -8,7 +8,7 @@ import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
 /**
  * Created by naomi on 10/6/16.
  */
-public abstract class DefaultModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends EasyThreadedModule<T, U, V> {
+public abstract class DefaultModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> extends EasyThreadedModule<T, U, V, W> {
     @Override
     protected void processChatMessageEvent(final ChatMessageEvent chatMessageEvent) {
         /* No action */
@@ -117,6 +117,16 @@ public abstract class DefaultModule<T extends ModuleSettings, U extends GlobalCo
 
     @Override
     protected void processSendMessageResponse(final SendMessageResponse sendMessageResponse) {
+        /* No action */
+    }
+
+    @Override
+    protected void processTwitchPrivateMessageEvent(final TwitchPrivateMessageEvent event) {
+        /* No action */
+    }
+
+    @Override
+    protected void processPrivateMessageEvent(final PrivateMessageEvent event) {
         /* No action */
     }
 

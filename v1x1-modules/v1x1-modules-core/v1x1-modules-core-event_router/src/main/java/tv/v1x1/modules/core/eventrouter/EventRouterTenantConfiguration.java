@@ -5,5 +5,5 @@ import tv.v1x1.common.modules.TenantConfiguration;
 /**
  * Created by naomi on 10/16/2016.
  */
-public class EventRouterTenantConfiguration extends TenantConfiguration {
+public class EventRouterTenantConfiguration implements TenantConfiguration {
 }

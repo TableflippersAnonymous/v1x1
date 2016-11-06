@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * @author Josh
  */ // TODO: Handle (hard) disabled but saved timers
     // TODO: Handle (soft) enable/disable of timers for offline strimmers
-public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSettings, TimedMessagesGlobalConfiguration, TimedMessagesTenantConfiguration> {
+public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSettings, TimedMessagesGlobalConfiguration, TimedMessagesTenantConfiguration, TimedMessagesChannelConfiguration> {
     public static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     static {
         Module module = new Module("timed_messages");

@@ -24,6 +24,7 @@ public final class IRC {
     registry.add(tv.v1x1.common.dto.proto.core.IRC.RplNameReplyCommand.data);
     registry.add(tv.v1x1.common.dto.proto.core.IRC.UserNoticeCommand.data);
     registry.add(tv.v1x1.common.dto.proto.core.IRC.UserStateCommand.data);
+    registry.add(tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.data);
   }
 
   public static void registerAllExtensions(
@@ -350,6 +351,10 @@ public final class IRC {
        * <code>USERSTATE = 15;</code>
        */
       USERSTATE(15),
+      /**
+       * <code>WHISPER = 16;</code>
+       */
+      WHISPER(16),
       ;
 
       /**
@@ -416,6 +421,10 @@ public final class IRC {
        * <code>USERSTATE = 15;</code>
        */
       public static final int USERSTATE_VALUE = 15;
+      /**
+       * <code>WHISPER = 16;</code>
+       */
+      public static final int WHISPER_VALUE = 16;
 
 
       public final int getNumber() {
@@ -448,6 +457,7 @@ public final class IRC {
           case 13: return RPL_NAMREPLY;
           case 14: return USERNOTICE;
           case 15: return USERSTATE;
+          case 16: return WHISPER;
           default: return null;
         }
       }
@@ -21923,6 +21933,1208 @@ public final class IRC {
           tv.v1x1.common.dto.proto.core.IRC.UserStateCommand.getDefaultInstance());
   }
 
+  public interface WhisperCommandOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.core.WhisperCommand)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required string target = 1;</code>
+     */
+    boolean hasTarget();
+    /**
+     * <code>required string target = 1;</code>
+     */
+    java.lang.String getTarget();
+    /**
+     * <code>required string target = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTargetBytes();
+
+    /**
+     * <code>required string message = 2;</code>
+     */
+    boolean hasMessage();
+    /**
+     * <code>required string message = 2;</code>
+     */
+    java.lang.String getMessage();
+    /**
+     * <code>required string message = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getMessageBytes();
+
+    /**
+     * <code>optional string thread_id = 3;</code>
+     */
+    boolean hasThreadId();
+    /**
+     * <code>optional string thread_id = 3;</code>
+     */
+    java.lang.String getThreadId();
+    /**
+     * <code>optional string thread_id = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getThreadIdBytes();
+
+    /**
+     * <code>optional uint64 message_id = 4;</code>
+     */
+    boolean hasMessageId();
+    /**
+     * <code>optional uint64 message_id = 4;</code>
+     */
+    long getMessageId();
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+     */
+    boolean hasMessageTaggedStanza();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+     */
+    tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza getMessageTaggedStanza();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+     */
+    tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanzaOrBuilder getMessageTaggedStanzaOrBuilder();
+  }
+  /**
+   * Protobuf type {@code tv.v1x1.common.dto.proto.core.WhisperCommand}
+   */
+  public  static final class WhisperCommand extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.core.WhisperCommand)
+      WhisperCommandOrBuilder {
+    // Use WhisperCommand.newBuilder() to construct.
+    private WhisperCommand(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private WhisperCommand() {
+      target_ = "";
+      message_ = "";
+      threadId_ = "";
+      messageId_ = 0L;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private WhisperCommand(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              target_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              message_ = bs;
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              threadId_ = bs;
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              messageId_ = input.readUInt64();
+              break;
+            }
+            case 42: {
+              tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                subBuilder = messageTaggedStanza_.toBuilder();
+              }
+              messageTaggedStanza_ = input.readMessage(tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(messageTaggedStanza_);
+                messageTaggedStanza_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000010;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.v1x1.common.dto.proto.core.IRC.internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.v1x1.common.dto.proto.core.IRC.internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.class, tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int TARGET_FIELD_NUMBER = 1;
+    private volatile java.lang.Object target_;
+    /**
+     * <code>required string target = 1;</code>
+     */
+    public boolean hasTarget() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string target = 1;</code>
+     */
+    public java.lang.String getTarget() {
+      java.lang.Object ref = target_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          target_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string target = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTargetBytes() {
+      java.lang.Object ref = target_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        target_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MESSAGE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object message_;
+    /**
+     * <code>required string message = 2;</code>
+     */
+    public boolean hasMessage() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string message = 2;</code>
+     */
+    public java.lang.String getMessage() {
+      java.lang.Object ref = message_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          message_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string message = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getMessageBytes() {
+      java.lang.Object ref = message_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        message_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int THREAD_ID_FIELD_NUMBER = 3;
+    private volatile java.lang.Object threadId_;
+    /**
+     * <code>optional string thread_id = 3;</code>
+     */
+    public boolean hasThreadId() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional string thread_id = 3;</code>
+     */
+    public java.lang.String getThreadId() {
+      java.lang.Object ref = threadId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          threadId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string thread_id = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getThreadIdBytes() {
+      java.lang.Object ref = threadId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        threadId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int MESSAGE_ID_FIELD_NUMBER = 4;
+    private long messageId_;
+    /**
+     * <code>optional uint64 message_id = 4;</code>
+     */
+    public boolean hasMessageId() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional uint64 message_id = 4;</code>
+     */
+    public long getMessageId() {
+      return messageId_;
+    }
+
+    public static final int MESSAGE_TAGGED_STANZA_FIELD_NUMBER = 5;
+    private tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza messageTaggedStanza_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+     */
+    public boolean hasMessageTaggedStanza() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza getMessageTaggedStanza() {
+      return messageTaggedStanza_ == null ? tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.getDefaultInstance() : messageTaggedStanza_;
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanzaOrBuilder getMessageTaggedStanzaOrBuilder() {
+      return messageTaggedStanza_ == null ? tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.getDefaultInstance() : messageTaggedStanza_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasTarget()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasMessage()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasMessageTaggedStanza()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getMessageTaggedStanza().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, target_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, message_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, threadId_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeUInt64(4, messageId_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeMessage(5, getMessageTaggedStanza());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, target_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, message_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, threadId_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt64Size(4, messageId_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getMessageTaggedStanza());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.v1x1.common.dto.proto.core.IRC.WhisperCommand)) {
+        return super.equals(obj);
+      }
+      tv.v1x1.common.dto.proto.core.IRC.WhisperCommand other = (tv.v1x1.common.dto.proto.core.IRC.WhisperCommand) obj;
+
+      boolean result = true;
+      result = result && (hasTarget() == other.hasTarget());
+      if (hasTarget()) {
+        result = result && getTarget()
+            .equals(other.getTarget());
+      }
+      result = result && (hasMessage() == other.hasMessage());
+      if (hasMessage()) {
+        result = result && getMessage()
+            .equals(other.getMessage());
+      }
+      result = result && (hasThreadId() == other.hasThreadId());
+      if (hasThreadId()) {
+        result = result && getThreadId()
+            .equals(other.getThreadId());
+      }
+      result = result && (hasMessageId() == other.hasMessageId());
+      if (hasMessageId()) {
+        result = result && (getMessageId()
+            == other.getMessageId());
+      }
+      result = result && (hasMessageTaggedStanza() == other.hasMessageTaggedStanza());
+      if (hasMessageTaggedStanza()) {
+        result = result && getMessageTaggedStanza()
+            .equals(other.getMessageTaggedStanza());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasTarget()) {
+        hash = (37 * hash) + TARGET_FIELD_NUMBER;
+        hash = (53 * hash) + getTarget().hashCode();
+      }
+      if (hasMessage()) {
+        hash = (37 * hash) + MESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getMessage().hashCode();
+      }
+      if (hasThreadId()) {
+        hash = (37 * hash) + THREAD_ID_FIELD_NUMBER;
+        hash = (53 * hash) + getThreadId().hashCode();
+      }
+      if (hasMessageId()) {
+        hash = (37 * hash) + MESSAGE_ID_FIELD_NUMBER;
+        hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+            getMessageId());
+      }
+      if (hasMessageTaggedStanza()) {
+        hash = (37 * hash) + MESSAGE_TAGGED_STANZA_FIELD_NUMBER;
+        hash = (53 * hash) + getMessageTaggedStanza().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.v1x1.common.dto.proto.core.IRC.WhisperCommand prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.core.WhisperCommand}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.core.WhisperCommand)
+        tv.v1x1.common.dto.proto.core.IRC.WhisperCommandOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.core.IRC.internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.core.IRC.internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.class, tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.Builder.class);
+      }
+
+      // Construct using tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getMessageTaggedStanzaFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        target_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        message_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        threadId_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        messageId_ = 0L;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        if (messageTaggedStanzaBuilder_ == null) {
+          messageTaggedStanza_ = null;
+        } else {
+          messageTaggedStanzaBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.v1x1.common.dto.proto.core.IRC.internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_descriptor;
+      }
+
+      public tv.v1x1.common.dto.proto.core.IRC.WhisperCommand getDefaultInstanceForType() {
+        return tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.getDefaultInstance();
+      }
+
+      public tv.v1x1.common.dto.proto.core.IRC.WhisperCommand build() {
+        tv.v1x1.common.dto.proto.core.IRC.WhisperCommand result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.v1x1.common.dto.proto.core.IRC.WhisperCommand buildPartial() {
+        tv.v1x1.common.dto.proto.core.IRC.WhisperCommand result = new tv.v1x1.common.dto.proto.core.IRC.WhisperCommand(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.target_ = target_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.message_ = message_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.threadId_ = threadId_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.messageId_ = messageId_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        if (messageTaggedStanzaBuilder_ == null) {
+          result.messageTaggedStanza_ = messageTaggedStanza_;
+        } else {
+          result.messageTaggedStanza_ = messageTaggedStanzaBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.v1x1.common.dto.proto.core.IRC.WhisperCommand) {
+          return mergeFrom((tv.v1x1.common.dto.proto.core.IRC.WhisperCommand)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.v1x1.common.dto.proto.core.IRC.WhisperCommand other) {
+        if (other == tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.getDefaultInstance()) return this;
+        if (other.hasTarget()) {
+          bitField0_ |= 0x00000001;
+          target_ = other.target_;
+          onChanged();
+        }
+        if (other.hasMessage()) {
+          bitField0_ |= 0x00000002;
+          message_ = other.message_;
+          onChanged();
+        }
+        if (other.hasThreadId()) {
+          bitField0_ |= 0x00000004;
+          threadId_ = other.threadId_;
+          onChanged();
+        }
+        if (other.hasMessageId()) {
+          setMessageId(other.getMessageId());
+        }
+        if (other.hasMessageTaggedStanza()) {
+          mergeMessageTaggedStanza(other.getMessageTaggedStanza());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasTarget()) {
+          return false;
+        }
+        if (!hasMessage()) {
+          return false;
+        }
+        if (!hasMessageTaggedStanza()) {
+          return false;
+        }
+        if (!getMessageTaggedStanza().isInitialized()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.v1x1.common.dto.proto.core.IRC.WhisperCommand parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.v1x1.common.dto.proto.core.IRC.WhisperCommand) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object target_ = "";
+      /**
+       * <code>required string target = 1;</code>
+       */
+      public boolean hasTarget() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string target = 1;</code>
+       */
+      public java.lang.String getTarget() {
+        java.lang.Object ref = target_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            target_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string target = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTargetBytes() {
+        java.lang.Object ref = target_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          target_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string target = 1;</code>
+       */
+      public Builder setTarget(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        target_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string target = 1;</code>
+       */
+      public Builder clearTarget() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        target_ = getDefaultInstance().getTarget();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string target = 1;</code>
+       */
+      public Builder setTargetBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        target_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object message_ = "";
+      /**
+       * <code>required string message = 2;</code>
+       */
+      public boolean hasMessage() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string message = 2;</code>
+       */
+      public java.lang.String getMessage() {
+        java.lang.Object ref = message_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            message_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string message = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getMessageBytes() {
+        java.lang.Object ref = message_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          message_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string message = 2;</code>
+       */
+      public Builder setMessage(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        message_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string message = 2;</code>
+       */
+      public Builder clearMessage() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        message_ = getDefaultInstance().getMessage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string message = 2;</code>
+       */
+      public Builder setMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        message_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object threadId_ = "";
+      /**
+       * <code>optional string thread_id = 3;</code>
+       */
+      public boolean hasThreadId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional string thread_id = 3;</code>
+       */
+      public java.lang.String getThreadId() {
+        java.lang.Object ref = threadId_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            threadId_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string thread_id = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getThreadIdBytes() {
+        java.lang.Object ref = threadId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          threadId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string thread_id = 3;</code>
+       */
+      public Builder setThreadId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        threadId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string thread_id = 3;</code>
+       */
+      public Builder clearThreadId() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        threadId_ = getDefaultInstance().getThreadId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string thread_id = 3;</code>
+       */
+      public Builder setThreadIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        threadId_ = value;
+        onChanged();
+        return this;
+      }
+
+      private long messageId_ ;
+      /**
+       * <code>optional uint64 message_id = 4;</code>
+       */
+      public boolean hasMessageId() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional uint64 message_id = 4;</code>
+       */
+      public long getMessageId() {
+        return messageId_;
+      }
+      /**
+       * <code>optional uint64 message_id = 4;</code>
+       */
+      public Builder setMessageId(long value) {
+        bitField0_ |= 0x00000008;
+        messageId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint64 message_id = 4;</code>
+       */
+      public Builder clearMessageId() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        messageId_ = 0L;
+        onChanged();
+        return this;
+      }
+
+      private tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza messageTaggedStanza_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza, tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Builder, tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanzaOrBuilder> messageTaggedStanzaBuilder_;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      public boolean hasMessageTaggedStanza() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza getMessageTaggedStanza() {
+        if (messageTaggedStanzaBuilder_ == null) {
+          return messageTaggedStanza_ == null ? tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.getDefaultInstance() : messageTaggedStanza_;
+        } else {
+          return messageTaggedStanzaBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      public Builder setMessageTaggedStanza(tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza value) {
+        if (messageTaggedStanzaBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          messageTaggedStanza_ = value;
+          onChanged();
+        } else {
+          messageTaggedStanzaBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      public Builder setMessageTaggedStanza(
+          tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Builder builderForValue) {
+        if (messageTaggedStanzaBuilder_ == null) {
+          messageTaggedStanza_ = builderForValue.build();
+          onChanged();
+        } else {
+          messageTaggedStanzaBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      public Builder mergeMessageTaggedStanza(tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza value) {
+        if (messageTaggedStanzaBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              messageTaggedStanza_ != null &&
+              messageTaggedStanza_ != tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.getDefaultInstance()) {
+            messageTaggedStanza_ =
+              tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.newBuilder(messageTaggedStanza_).mergeFrom(value).buildPartial();
+          } else {
+            messageTaggedStanza_ = value;
+          }
+          onChanged();
+        } else {
+          messageTaggedStanzaBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      public Builder clearMessageTaggedStanza() {
+        if (messageTaggedStanzaBuilder_ == null) {
+          messageTaggedStanza_ = null;
+          onChanged();
+        } else {
+          messageTaggedStanzaBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Builder getMessageTaggedStanzaBuilder() {
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return getMessageTaggedStanzaFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanzaOrBuilder getMessageTaggedStanzaOrBuilder() {
+        if (messageTaggedStanzaBuilder_ != null) {
+          return messageTaggedStanzaBuilder_.getMessageOrBuilder();
+        } else {
+          return messageTaggedStanza_ == null ?
+              tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.getDefaultInstance() : messageTaggedStanza_;
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza, tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Builder, tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanzaOrBuilder> 
+          getMessageTaggedStanzaFieldBuilder() {
+        if (messageTaggedStanzaBuilder_ == null) {
+          messageTaggedStanzaBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza, tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.Builder, tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanzaOrBuilder>(
+                  getMessageTaggedStanza(),
+                  getParentForChildren(),
+                  isClean());
+          messageTaggedStanza_ = null;
+        }
+        return messageTaggedStanzaBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.core.WhisperCommand)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.core.WhisperCommand)
+    private static final tv.v1x1.common.dto.proto.core.IRC.WhisperCommand DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.core.IRC.WhisperCommand();
+    }
+
+    public static tv.v1x1.common.dto.proto.core.IRC.WhisperCommand getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<WhisperCommand>
+        PARSER = new com.google.protobuf.AbstractParser<WhisperCommand>() {
+      public WhisperCommand parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new WhisperCommand(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<WhisperCommand> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<WhisperCommand> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.v1x1.common.dto.proto.core.IRC.WhisperCommand getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 116;
+    /**
+     * <code>extend .tv.v1x1.common.dto.proto.core.IrcStanza { ... }</code>
+     */
+    public static final
+      com.google.protobuf.GeneratedMessage.GeneratedExtension<
+        tv.v1x1.common.dto.proto.core.IRC.IrcStanza,
+        tv.v1x1.common.dto.proto.core.IRC.WhisperCommand> data = com.google.protobuf.GeneratedMessage
+            .newMessageScopedGeneratedExtension(
+          tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.getDefaultInstance(),
+          0,
+          tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.class,
+          tv.v1x1.common.dto.proto.core.IRC.WhisperCommand.getDefaultInstance());
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_v1x1_common_dto_proto_core_IrcStanza_descriptor;
   private static final 
@@ -22053,6 +23265,11 @@ public final class IRC {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_v1x1_common_dto_proto_core_UserStateCommand_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -22063,146 +23280,153 @@ public final class IRC {
   static {
     java.lang.String[] descriptorData = {
       "\n\tIRC.proto\022\035tv.v1x1.common.dto.proto.co" +
-      "re\032\nUUID.proto\"\251\004\n\tIrcStanza\022\020\n\010raw_line" +
+      "re\032\nUUID.proto\"\266\004\n\tIrcStanza\022\020\n\010raw_line" +
       "\030\001 \002(\t\022@\n\004tags\030\002 \003(\01322.tv.v1x1.common.dt" +
       "o.proto.core.IrcStanza.TagsEntry\0228\n\006sour" +
       "ce\030\003 \002(\0132(.tv.v1x1.common.dto.proto.core" +
       ".IrcSource\022D\n\007command\030\004 \002(\01623.tv.v1x1.co" +
       "mmon.dto.proto.core.IrcStanza.IrcCommand" +
       "\022\020\n\010raw_args\030\005 \001(\t\022\014\n\004args\030\006 \003(\t\032+\n\tTags" +
-      "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\360\001" +
+      "Entry\022\013\n\003key\030\001 \001(\t\022\r\n\005value\030\002 \001(\t:\0028\001\"\375\001" +
       "\n\nIrcCommand\022\013\n\007UNKNOWN\020\000\022\r\n\tCLEARCHAT\020\001",
       "\022\023\n\017GLOBALUSERSTATE\020\002\022\016\n\nHOSTTARGET\020\003\022\010\n" +
       "\004JOIN\020\004\022\010\n\004MODE\020\005\022\n\n\006NOTICE\020\006\022\010\n\004PART\020\007\022" +
       "\010\n\004PING\020\010\022\013\n\007PRIVMSG\020\t\022\r\n\tRECONNECT\020\n\022\r\n" +
       "\tROOMSTATE\020\013\022\021\n\rRPL_ENDOFMOTD\020\014\022\020\n\014RPL_N" +
       "AMREPLY\020\r\022\016\n\nUSERNOTICE\020\016\022\r\n\tUSERSTATE\020\017" +
-      "*\010\010d\020\200\200\200\200\002\"}\n\tIrcSource\022;\n\004type\030\001 \002(\0162-." +
-      "tv.v1x1.common.dto.proto.core.IrcSource." +
-      "Type\")\n\004Type\022\013\n\007UNKNOWN\020\000\022\n\n\006SERVER\020\001\022\010\n" +
-      "\004USER\020\002*\010\010d\020\200\200\200\200\002\"{\n\tIrcServer\022\014\n\004name\030\001" +
-      " \002(\t2`\n\004data\022(.tv.v1x1.common.dto.proto.",
-      "core.IrcSource\030e \001(\0132(.tv.v1x1.common.dt" +
-      "o.proto.core.IrcServer\"\237\001\n\007IrcUser\022\020\n\010ni" +
-      "ckname\030\001 \002(\t\022\020\n\010username\030\002 \002(\t\022\020\n\010hostna" +
-      "me\030\003 \002(\t2^\n\004data\022(.tv.v1x1.common.dto.pr" +
-      "oto.core.IrcSource\030f \001(\0132&.tv.v1x1.commo" +
-      "n.dto.proto.core.IrcUser\"\372\001\n\017TaggedIrcSt" +
-      "anza\022\r\n\005color\030\001 \001(\t\022\024\n\014display_name\030\002 \001(" +
-      "\t\022\013\n\003mod\030\003 \001(\010\022\022\n\nsubscriber\030\004 \001(\010\022\r\n\005tu" +
-      "rbo\030\005 \001(\010\022J\n\tuser_type\030\006 \001(\01627.tv.v1x1.c" +
-      "ommon.dto.proto.core.TaggedIrcStanza.Use",
-      "rType\"F\n\010UserType\022\013\n\007UNKNOWN\020\000\022\007\n\003MOD\020\001\022" +
-      "\016\n\nGLOBAL_MOD\020\002\022\t\n\005ADMIN\020\003\022\t\n\005STAFF\020\004\"m\n" +
-      "\021EmoteSetIrcStanza\022\021\n\temote_set\030\001 \003(\005\022E\n" +
-      "\rtagged_stanza\030\002 \002(\0132..tv.v1x1.common.dt" +
-      "o.proto.core.TaggedIrcStanza\"\304\004\n\026Message" +
-      "TaggedIrcStanza\022K\n\006badges\030\001 \003(\0162;.tv.v1x" +
-      "1.common.dto.proto.core.MessageTaggedIrc" +
-      "Stanza.Badge\022K\n\006emotes\030\002 \003(\0132;.tv.v1x1.c" +
-      "ommon.dto.proto.core.MessageTaggedIrcSta" +
-      "nza.Emote\022\017\n\007room_id\030\003 \001(\005\022\017\n\007user_id\030\004 ",
-      "\001(\005\022E\n\rtagged_stanza\030\005 \002(\0132..tv.v1x1.com" +
-      "mon.dto.proto.core.TaggedIrcStanza\032\227\001\n\005E" +
-      "mote\022\n\n\002id\030\001 \002(\t\022Q\n\006ranges\030\002 \003(\0132A.tv.v1" +
-      "x1.common.dto.proto.core.MessageTaggedIr" +
-      "cStanza.Emote.Range\032/\n\005Range\022\023\n\013begin_in" +
-      "dex\030\001 \002(\005\022\021\n\tend_index\030\002 \002(\005\"\214\001\n\005Badge\022\013" +
-      "\n\007UNKNOWN\020\000\022\t\n\005STAFF\020\001\022\t\n\005ADMIN\020\002\022\016\n\nGLO" +
-      "BAL_MOD\020\003\022\r\n\tMODERATOR\020\004\022\016\n\nSUBSCRIBER\020\005" +
-      "\022\t\n\005TURBO\020\006\022\013\n\007PREMIUM\020\007\022\010\n\004BITS\020\010\022\017\n\013BR" +
-      "OADCASTER\020\t\"\310\001\n\020ClearChatCommand\022\017\n\007chan",
-      "nel\030\001 \002(\t\022\020\n\010nickname\030\002 \001(\t\022\024\n\014ban_durat" +
-      "ion\030\003 \001(\005\022\022\n\nban_reason\030\004 \001(\t2g\n\004data\022(." +
-      "tv.v1x1.common.dto.proto.core.IrcStanza\030" +
-      "e \001(\0132/.tv.v1x1.common.dto.proto.core.Cl" +
-      "earChatCommand\"\344\001\n\026GlobalUserStateComman" +
-      "d\022\017\n\007user_id\030\001 \002(\005\022J\n\020emote_set_stanza\030\002" +
-      " \002(\01320.tv.v1x1.common.dto.proto.core.Emo" +
-      "teSetIrcStanza2m\n\004data\022(.tv.v1x1.common." +
-      "dto.proto.core.IrcStanza\030f \001(\01325.tv.v1x1" +
-      ".common.dto.proto.core.GlobalUserStateCo",
-      "mmand\"\246\001\n\021HostTargetCommand\022\017\n\007channel\030\001" +
-      " \002(\t\022\026\n\016target_channel\030\002 \001(\t2h\n\004data\022(.t" +
-      "v.v1x1.common.dto.proto.core.IrcStanza\030g" +
-      " \001(\01320.tv.v1x1.common.dto.proto.core.Hos" +
-      "tTargetCommand\"\202\001\n\013JoinCommand\022\017\n\007channe" +
-      "l\030\001 \002(\t2b\n\004data\022(.tv.v1x1.common.dto.pro" +
-      "to.core.IrcStanza\030h \001(\0132*.tv.v1x1.common" +
-      ".dto.proto.core.JoinCommand\"\252\001\n\013ModeComm" +
-      "and\022\017\n\007channel\030\001 \002(\t\022\023\n\013mode_string\030\002 \001(" +
-      "\t\022\021\n\tnicknames\030\003 \003(\t2b\n\004data\022(.tv.v1x1.c",
-      "ommon.dto.proto.core.IrcStanza\030i \001(\0132*.t" +
-      "v.v1x1.common.dto.proto.core.ModeCommand" +
-      "\"\203\006\n\rNoticeCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007m" +
-      "essage\030\002 \002(\t\022J\n\nmessage_id\030\003 \001(\01626.tv.v1" +
-      "x1.common.dto.proto.core.NoticeCommand.M" +
-      "essageId\"\235\004\n\tMessageId\022\013\n\007UNKNOWN\020\000\022\013\n\007S" +
-      "UBS_ON\020\001\022\023\n\017ALREADY_SUBS_ON\020\002\022\014\n\010SUBS_OF" +
-      "F\020\003\022\024\n\020ALREADY_SUBS_OFF\020\004\022\013\n\007SLOW_ON\020\005\022\014" +
-      "\n\010SLOW_OFF\020\006\022\n\n\006R9K_ON\020\007\022\022\n\016ALREADY_R9K_" +
-      "ON\020\010\022\013\n\007R9K_OFF\020\t\022\023\n\017ALREADY_R9K_OFF\020\n\022\013",
-      "\n\007HOST_ON\020\013\022\024\n\020BAD_HOST_HOSTING\020\014\022\014\n\010HOS" +
-      "T_OFF\020\r\022\023\n\017HOSTS_REMAINING\020\016\022\021\n\rEMOTE_ON" +
-      "LY_ON\020\017\022\031\n\025ALREADY_EMOTE_ONLY_ON\020\020\022\022\n\016EM" +
-      "OTE_ONLY_OFF\020\021\022\032\n\026ALREADY_EMOTE_ONLY_OFF" +
-      "\020\022\022\031\n\025MSG_CHANNEL_SUSPENDED\020\023\022\023\n\017TIMEOUT" +
-      "_SUCCESS\020\024\022\017\n\013BAN_SUCCESS\020\025\022\021\n\rUNBAN_SUC" +
-      "CESS\020\026\022\024\n\020BAD_UNBAN_NO_BAN\020\027\022\022\n\016ALREADY_" +
-      "BANNED\020\030\022\030\n\024UNRECOGNIZED_COMMAND\020\031\022\021\n\rMS" +
-      "G_DUPLICATE\020\032\022\021\n\rMSG_RATELIMIT\020\0332d\n\004data" +
-      "\022(.tv.v1x1.common.dto.proto.core.IrcStan",
-      "za\030j \001(\0132,.tv.v1x1.common.dto.proto.core" +
-      ".NoticeCommand\"\202\001\n\013PartCommand\022\017\n\007channe" +
-      "l\030\001 \002(\t2b\n\004data\022(.tv.v1x1.common.dto.pro" +
-      "to.core.IrcStanza\030k \001(\0132*.tv.v1x1.common" +
-      ".dto.proto.core.PartCommand\"\200\001\n\013PingComm" +
-      "and\022\r\n\005token\030\001 \001(\t2b\n\004data\022(.tv.v1x1.com" +
-      "mon.dto.proto.core.IrcStanza\030l \001(\0132*.tv." +
-      "v1x1.common.dto.proto.core.PingCommand\"\256" +
-      "\002\n\016PrivmsgCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007me" +
-      "ssage\030\002 \002(\t\022/\n\002id\030\003 \001(\0132#.tv.v1x1.common",
-      ".dto.proto.core.UUID\022\014\n\004bits\030\004 \001(\005\022T\n\025me" +
-      "ssage_tagged_stanza\030\005 \002(\01325.tv.v1x1.comm" +
-      "on.dto.proto.core.MessageTaggedIrcStanza" +
-      "2e\n\004data\022(.tv.v1x1.common.dto.proto.core" +
-      ".IrcStanza\030m \001(\0132-.tv.v1x1.common.dto.pr" +
-      "oto.core.PrivmsgCommand\"{\n\020ReconnectComm" +
-      "and2g\n\004data\022(.tv.v1x1.common.dto.proto.c" +
-      "ore.IrcStanza\030n \001(\0132/.tv.v1x1.common.dto" +
-      ".proto.core.ReconnectCommand\"\330\001\n\020RoomSta" +
-      "teCommand\022\017\n\007channel\030\001 \002(\t\022\034\n\024broadcaste",
-      "r_language\030\002 \001(\t\022\013\n\003r9k\030\003 \001(\010\022\021\n\tsubs_on" +
-      "ly\030\004 \001(\010\022\014\n\004slow\030\005 \001(\0052g\n\004data\022(.tv.v1x1" +
-      ".common.dto.proto.core.IrcStanza\030o \001(\0132/" +
-      ".tv.v1x1.common.dto.proto.core.RoomState" +
-      "Command\"\201\001\n\023RplEndOfMotdCommand2j\n\004data\022" +
+      "\022\013\n\007WHISPER\020\020*\010\010d\020\200\200\200\200\002\"}\n\tIrcSource\022;\n\004" +
+      "type\030\001 \002(\0162-.tv.v1x1.common.dto.proto.co" +
+      "re.IrcSource.Type\")\n\004Type\022\013\n\007UNKNOWN\020\000\022\n" +
+      "\n\006SERVER\020\001\022\010\n\004USER\020\002*\010\010d\020\200\200\200\200\002\"{\n\tIrcSer" +
+      "ver\022\014\n\004name\030\001 \002(\t2`\n\004data\022(.tv.v1x1.comm",
+      "on.dto.proto.core.IrcSource\030e \001(\0132(.tv.v" +
+      "1x1.common.dto.proto.core.IrcServer\"\237\001\n\007" +
+      "IrcUser\022\020\n\010nickname\030\001 \002(\t\022\020\n\010username\030\002 " +
+      "\002(\t\022\020\n\010hostname\030\003 \002(\t2^\n\004data\022(.tv.v1x1." +
+      "common.dto.proto.core.IrcSource\030f \001(\0132&." +
+      "tv.v1x1.common.dto.proto.core.IrcUser\"\372\001" +
+      "\n\017TaggedIrcStanza\022\r\n\005color\030\001 \001(\t\022\024\n\014disp" +
+      "lay_name\030\002 \001(\t\022\013\n\003mod\030\003 \001(\010\022\022\n\nsubscribe" +
+      "r\030\004 \001(\010\022\r\n\005turbo\030\005 \001(\010\022J\n\tuser_type\030\006 \001(" +
+      "\01627.tv.v1x1.common.dto.proto.core.Tagged",
+      "IrcStanza.UserType\"F\n\010UserType\022\013\n\007UNKNOW" +
+      "N\020\000\022\007\n\003MOD\020\001\022\016\n\nGLOBAL_MOD\020\002\022\t\n\005ADMIN\020\003\022" +
+      "\t\n\005STAFF\020\004\"m\n\021EmoteSetIrcStanza\022\021\n\temote" +
+      "_set\030\001 \003(\005\022E\n\rtagged_stanza\030\002 \002(\0132..tv.v" +
+      "1x1.common.dto.proto.core.TaggedIrcStanz" +
+      "a\"\304\004\n\026MessageTaggedIrcStanza\022K\n\006badges\030\001" +
+      " \003(\0162;.tv.v1x1.common.dto.proto.core.Mes" +
+      "sageTaggedIrcStanza.Badge\022K\n\006emotes\030\002 \003(" +
+      "\0132;.tv.v1x1.common.dto.proto.core.Messag" +
+      "eTaggedIrcStanza.Emote\022\017\n\007room_id\030\003 \001(\005\022",
+      "\017\n\007user_id\030\004 \001(\005\022E\n\rtagged_stanza\030\005 \002(\0132" +
+      "..tv.v1x1.common.dto.proto.core.TaggedIr" +
+      "cStanza\032\227\001\n\005Emote\022\n\n\002id\030\001 \002(\t\022Q\n\006ranges\030" +
+      "\002 \003(\0132A.tv.v1x1.common.dto.proto.core.Me" +
+      "ssageTaggedIrcStanza.Emote.Range\032/\n\005Rang" +
+      "e\022\023\n\013begin_index\030\001 \002(\005\022\021\n\tend_index\030\002 \002(" +
+      "\005\"\214\001\n\005Badge\022\013\n\007UNKNOWN\020\000\022\t\n\005STAFF\020\001\022\t\n\005A" +
+      "DMIN\020\002\022\016\n\nGLOBAL_MOD\020\003\022\r\n\tMODERATOR\020\004\022\016\n" +
+      "\nSUBSCRIBER\020\005\022\t\n\005TURBO\020\006\022\013\n\007PREMIUM\020\007\022\010\n" +
+      "\004BITS\020\010\022\017\n\013BROADCASTER\020\t\"\310\001\n\020ClearChatCo",
+      "mmand\022\017\n\007channel\030\001 \002(\t\022\020\n\010nickname\030\002 \001(\t" +
+      "\022\024\n\014ban_duration\030\003 \001(\005\022\022\n\nban_reason\030\004 \001" +
+      "(\t2g\n\004data\022(.tv.v1x1.common.dto.proto.co" +
+      "re.IrcStanza\030e \001(\0132/.tv.v1x1.common.dto." +
+      "proto.core.ClearChatCommand\"\344\001\n\026GlobalUs" +
+      "erStateCommand\022\017\n\007user_id\030\001 \002(\005\022J\n\020emote" +
+      "_set_stanza\030\002 \002(\01320.tv.v1x1.common.dto.p" +
+      "roto.core.EmoteSetIrcStanza2m\n\004data\022(.tv" +
+      ".v1x1.common.dto.proto.core.IrcStanza\030f " +
+      "\001(\01325.tv.v1x1.common.dto.proto.core.Glob",
+      "alUserStateCommand\"\246\001\n\021HostTargetCommand" +
+      "\022\017\n\007channel\030\001 \002(\t\022\026\n\016target_channel\030\002 \001(" +
+      "\t2h\n\004data\022(.tv.v1x1.common.dto.proto.cor" +
+      "e.IrcStanza\030g \001(\01320.tv.v1x1.common.dto.p" +
+      "roto.core.HostTargetCommand\"\202\001\n\013JoinComm" +
+      "and\022\017\n\007channel\030\001 \002(\t2b\n\004data\022(.tv.v1x1.c" +
+      "ommon.dto.proto.core.IrcStanza\030h \001(\0132*.t" +
+      "v.v1x1.common.dto.proto.core.JoinCommand" +
+      "\"\252\001\n\013ModeCommand\022\017\n\007channel\030\001 \002(\t\022\023\n\013mod" +
+      "e_string\030\002 \001(\t\022\021\n\tnicknames\030\003 \003(\t2b\n\004dat",
+      "a\022(.tv.v1x1.common.dto.proto.core.IrcSta" +
+      "nza\030i \001(\0132*.tv.v1x1.common.dto.proto.cor" +
+      "e.ModeCommand\"\203\006\n\rNoticeCommand\022\017\n\007chann" +
+      "el\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022J\n\nmessage_id\030" +
+      "\003 \001(\01626.tv.v1x1.common.dto.proto.core.No" +
+      "ticeCommand.MessageId\"\235\004\n\tMessageId\022\013\n\007U" +
+      "NKNOWN\020\000\022\013\n\007SUBS_ON\020\001\022\023\n\017ALREADY_SUBS_ON" +
+      "\020\002\022\014\n\010SUBS_OFF\020\003\022\024\n\020ALREADY_SUBS_OFF\020\004\022\013" +
+      "\n\007SLOW_ON\020\005\022\014\n\010SLOW_OFF\020\006\022\n\n\006R9K_ON\020\007\022\022\n" +
+      "\016ALREADY_R9K_ON\020\010\022\013\n\007R9K_OFF\020\t\022\023\n\017ALREAD",
+      "Y_R9K_OFF\020\n\022\013\n\007HOST_ON\020\013\022\024\n\020BAD_HOST_HOS" +
+      "TING\020\014\022\014\n\010HOST_OFF\020\r\022\023\n\017HOSTS_REMAINING\020" +
+      "\016\022\021\n\rEMOTE_ONLY_ON\020\017\022\031\n\025ALREADY_EMOTE_ON" +
+      "LY_ON\020\020\022\022\n\016EMOTE_ONLY_OFF\020\021\022\032\n\026ALREADY_E" +
+      "MOTE_ONLY_OFF\020\022\022\031\n\025MSG_CHANNEL_SUSPENDED" +
+      "\020\023\022\023\n\017TIMEOUT_SUCCESS\020\024\022\017\n\013BAN_SUCCESS\020\025" +
+      "\022\021\n\rUNBAN_SUCCESS\020\026\022\024\n\020BAD_UNBAN_NO_BAN\020" +
+      "\027\022\022\n\016ALREADY_BANNED\020\030\022\030\n\024UNRECOGNIZED_CO" +
+      "MMAND\020\031\022\021\n\rMSG_DUPLICATE\020\032\022\021\n\rMSG_RATELI" +
+      "MIT\020\0332d\n\004data\022(.tv.v1x1.common.dto.proto",
+      ".core.IrcStanza\030j \001(\0132,.tv.v1x1.common.d" +
+      "to.proto.core.NoticeCommand\"\202\001\n\013PartComm" +
+      "and\022\017\n\007channel\030\001 \002(\t2b\n\004data\022(.tv.v1x1.c" +
+      "ommon.dto.proto.core.IrcStanza\030k \001(\0132*.t" +
+      "v.v1x1.common.dto.proto.core.PartCommand" +
+      "\"\200\001\n\013PingCommand\022\r\n\005token\030\001 \001(\t2b\n\004data\022" +
       "(.tv.v1x1.common.dto.proto.core.IrcStanz" +
-      "a\030p \001(\01322.tv.v1x1.common.dto.proto.core." +
-      "RplEndOfMotdCommand\"\210\002\n\023RplNameReplyComm" +
-      "and\022\017\n\007channel\030\001 \002(\t\022J\n\007members\030\002 \003(\01329." +
-      "tv.v1x1.common.dto.proto.core.RplNameRep",
-      "lyCommand.Member\032(\n\006Member\022\020\n\010nickname\030\001" +
-      " \002(\t\022\014\n\004isOp\030\002 \002(\0102j\n\004data\022(.tv.v1x1.com" +
-      "mon.dto.proto.core.IrcStanza\030q \001(\01322.tv." +
-      "v1x1.common.dto.proto.core.RplNameReplyC" +
-      "ommand\"\241\003\n\021UserNoticeCommand\022\017\n\007channel\030" +
-      "\001 \002(\t\022\017\n\007message\030\002 \002(\t\022N\n\nmessage_id\030\003 \001" +
-      "(\0162:.tv.v1x1.common.dto.proto.core.UserN" +
-      "oticeCommand.MessageId\022\016\n\006months\030\004 \001(\005\022\026" +
-      "\n\016system_message\030\005 \001(\t\022\r\n\005login\030\006 \001(\t\022T\n" +
-      "\025message_tagged_stanza\030\007 \002(\01325.tv.v1x1.c",
-      "ommon.dto.proto.core.MessageTaggedIrcSta" +
-      "nza\"#\n\tMessageId\022\013\n\007UNKNOWN\020\000\022\t\n\005RESUB\020\001" +
-      "2h\n\004data\022(.tv.v1x1.common.dto.proto.core" +
-      ".IrcStanza\030r \001(\01320.tv.v1x1.common.dto.pr" +
-      "oto.core.UserNoticeCommand\"\330\001\n\020UserState" +
-      "Command\022\017\n\007channel\030\001 \002(\t\022J\n\020emote_set_st" +
-      "anza\030\002 \002(\01320.tv.v1x1.common.dto.proto.co" +
-      "re.EmoteSetIrcStanza2g\n\004data\022(.tv.v1x1.c" +
-      "ommon.dto.proto.core.IrcStanza\030s \001(\0132/.t" +
-      "v.v1x1.common.dto.proto.core.UserStateCo",
-      "mmand"
+      "a\030l \001(\0132*.tv.v1x1.common.dto.proto.core." +
+      "PingCommand\"\256\002\n\016PrivmsgCommand\022\017\n\007channe" +
+      "l\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022/\n\002id\030\003 \001(\0132#.t",
+      "v.v1x1.common.dto.proto.core.UUID\022\014\n\004bit" +
+      "s\030\004 \001(\005\022T\n\025message_tagged_stanza\030\005 \002(\01325" +
+      ".tv.v1x1.common.dto.proto.core.MessageTa" +
+      "ggedIrcStanza2e\n\004data\022(.tv.v1x1.common.d" +
+      "to.proto.core.IrcStanza\030m \001(\0132-.tv.v1x1." +
+      "common.dto.proto.core.PrivmsgCommand\"{\n\020" +
+      "ReconnectCommand2g\n\004data\022(.tv.v1x1.commo" +
+      "n.dto.proto.core.IrcStanza\030n \001(\0132/.tv.v1" +
+      "x1.common.dto.proto.core.ReconnectComman" +
+      "d\"\330\001\n\020RoomStateCommand\022\017\n\007channel\030\001 \002(\t\022",
+      "\034\n\024broadcaster_language\030\002 \001(\t\022\013\n\003r9k\030\003 \001" +
+      "(\010\022\021\n\tsubs_only\030\004 \001(\010\022\014\n\004slow\030\005 \001(\0052g\n\004d" +
+      "ata\022(.tv.v1x1.common.dto.proto.core.IrcS" +
+      "tanza\030o \001(\0132/.tv.v1x1.common.dto.proto.c" +
+      "ore.RoomStateCommand\"\201\001\n\023RplEndOfMotdCom" +
+      "mand2j\n\004data\022(.tv.v1x1.common.dto.proto." +
+      "core.IrcStanza\030p \001(\01322.tv.v1x1.common.dt" +
+      "o.proto.core.RplEndOfMotdCommand\"\210\002\n\023Rpl" +
+      "NameReplyCommand\022\017\n\007channel\030\001 \002(\t\022J\n\007mem" +
+      "bers\030\002 \003(\01329.tv.v1x1.common.dto.proto.co",
+      "re.RplNameReplyCommand.Member\032(\n\006Member\022" +
+      "\020\n\010nickname\030\001 \002(\t\022\014\n\004isOp\030\002 \002(\0102j\n\004data\022" +
+      "(.tv.v1x1.common.dto.proto.core.IrcStanz" +
+      "a\030q \001(\01322.tv.v1x1.common.dto.proto.core." +
+      "RplNameReplyCommand\"\241\003\n\021UserNoticeComman" +
+      "d\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022N\n\nm" +
+      "essage_id\030\003 \001(\0162:.tv.v1x1.common.dto.pro" +
+      "to.core.UserNoticeCommand.MessageId\022\016\n\006m" +
+      "onths\030\004 \001(\005\022\026\n\016system_message\030\005 \001(\t\022\r\n\005l" +
+      "ogin\030\006 \001(\t\022T\n\025message_tagged_stanza\030\007 \002(",
+      "\01325.tv.v1x1.common.dto.proto.core.Messag" +
+      "eTaggedIrcStanza\"#\n\tMessageId\022\013\n\007UNKNOWN" +
+      "\020\000\022\t\n\005RESUB\020\0012h\n\004data\022(.tv.v1x1.common.d" +
+      "to.proto.core.IrcStanza\030r \001(\01320.tv.v1x1." +
+      "common.dto.proto.core.UserNoticeCommand\"" +
+      "\330\001\n\020UserStateCommand\022\017\n\007channel\030\001 \002(\t\022J\n" +
+      "\020emote_set_stanza\030\002 \002(\01320.tv.v1x1.common" +
+      ".dto.proto.core.EmoteSetIrcStanza2g\n\004dat" +
+      "a\022(.tv.v1x1.common.dto.proto.core.IrcSta" +
+      "nza\030s \001(\0132/.tv.v1x1.common.dto.proto.cor",
+      "e.UserStateCommand\"\225\002\n\016WhisperCommand\022\016\n" +
+      "\006target\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022\021\n\tthread" +
+      "_id\030\003 \001(\t\022\022\n\nmessage_id\030\004 \001(\004\022T\n\025message" +
+      "_tagged_stanza\030\005 \002(\01325.tv.v1x1.common.dt" +
+      "o.proto.core.MessageTaggedIrcStanza2e\n\004d" +
+      "ata\022(.tv.v1x1.common.dto.proto.core.IrcS" +
+      "tanza\030t \001(\0132-.tv.v1x1.common.dto.proto.c" +
+      "ore.WhisperCommand"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -22373,6 +23597,12 @@ public final class IRC {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_core_UserStateCommand_descriptor,
         new java.lang.String[] { "Channel", "EmoteSetStanza", });
+    internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_descriptor =
+      getDescriptor().getMessageTypes().get(22);
+    internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_core_WhisperCommand_descriptor,
+        new java.lang.String[] { "Target", "Message", "ThreadId", "MessageId", "MessageTaggedStanza", });
     tv.v1x1.common.dto.proto.core.UUIDOuterClass.getDescriptor();
   }
 

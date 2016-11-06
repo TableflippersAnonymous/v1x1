@@ -1,5 +1,6 @@
 package tv.v1x1.common.dto.core;
 
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.proto.core.BotOuterClass;
 
 /**
@@ -21,6 +22,12 @@ public abstract class Bot {
     public Bot(final String name) {
         this.name = name;
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public abstract Platform getPlatform();
 
     public BotOuterClass.Bot toProto() {
         return toProtoBuilder().build();

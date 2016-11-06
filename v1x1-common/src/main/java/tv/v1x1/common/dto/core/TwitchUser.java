@@ -27,6 +27,11 @@ public class TwitchUser extends User {
     }
 
     @Override
+    public Platform getPlatform() {
+        return Platform.TWITCH;
+    }
+
+    @Override
     public UserOuterClass.User toProto() {
         return UserOuterClass.User.newBuilder()
                 .setPlatform(PlatformOuterClass.Platform.TWITCH)

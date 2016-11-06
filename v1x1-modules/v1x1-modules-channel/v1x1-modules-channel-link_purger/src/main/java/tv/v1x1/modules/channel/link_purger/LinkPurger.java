@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Josh
  */
-public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, LinkPurgerGlobalConfiguration, LinkPurgerTenantConfiguration> {
+public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, LinkPurgerGlobalConfiguration, LinkPurgerTenantConfiguration, LinkPurgerChannelConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     static {
         final Module module = new Module("link_purger");

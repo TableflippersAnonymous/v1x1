@@ -10,22 +10,24 @@ import tv.v1x1.common.dao.*;
 public class DAOManager {
     private final DAOTenant daoTenant;
     private final DAOGlobalUser daoGlobalUser;
-    private final DAOTenantUserPermissions daoTenantUserPermissions;
+    private final DAOTenantGroup daoTenantGroup;
     private final DAOKeyValueEntry daoKeyValueEntry;
     private final DAOTenantConfiguration daoTenantConfiguration;
     private final DAOGlobalConfiguration daoGlobalConfiguration;
     private final DAOLanguage daoLanguage;
     private final DAOConfigurationDefinition daoConfigurationDefinition;
+    private final DAOChannelConfiguration daoChannelConfiguration;
 
     public DAOManager(final MappingManager mappingManager) {
         daoTenant = new DAOTenant(mappingManager);
         daoGlobalUser = new DAOGlobalUser(mappingManager);
-        daoTenantUserPermissions = new DAOTenantUserPermissions(mappingManager);
+        daoTenantGroup = new DAOTenantGroup(mappingManager);
         daoKeyValueEntry = new DAOKeyValueEntry(mappingManager);
         daoTenantConfiguration = new DAOTenantConfiguration(mappingManager);
         daoGlobalConfiguration = new DAOGlobalConfiguration(mappingManager);
         daoLanguage = new DAOLanguage(mappingManager);
         daoConfigurationDefinition = new DAOConfigurationDefinition(mappingManager);
+        daoChannelConfiguration = new DAOChannelConfiguration(mappingManager);
     }
 
     public DAOTenant getDaoTenant() {
@@ -36,8 +38,8 @@ public class DAOManager {
         return daoGlobalUser;
     }
 
-    public DAOTenantUserPermissions getDaoTenantUserPermissions() {
-        return daoTenantUserPermissions;
+    public DAOTenantGroup getDaoTenantGroup() {
+        return daoTenantGroup;
     }
 
     public DAOKeyValueEntry getDaoKeyValueEntry() {
@@ -58,5 +60,9 @@ public class DAOManager {
 
     public DAOConfigurationDefinition getDaoConfigurationDefinition() {
         return daoConfigurationDefinition;
+    }
+
+    public DAOChannelConfiguration getDaoChannelConfiguration() {
+        return daoChannelConfiguration;
     }
 }

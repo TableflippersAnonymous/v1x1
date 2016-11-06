@@ -8,8 +8,10 @@ import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.*;
-import tv.v1x1.common.dto.db.Platform;
-import tv.v1x1.common.dto.db.TenantUserPermissions;
+import tv.v1x1.common.dto.core.GlobalUser;
+import tv.v1x1.common.dto.core.Permission;
+import tv.v1x1.common.dto.core.Tenant;
+import tv.v1x1.common.dto.db.*;
 import tv.v1x1.common.modules.ServiceModule;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.queue.MessageQueue;
@@ -31,17 +33,70 @@ import java.util.stream.Collectors;
 /**
  * Created by naomi on 10/8/2016.
  */
-public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration, TmiTenantConfiguration> {
+public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration, TmiTenantConfiguration, TmiChannelConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final LoadingCache<String, Tenant> tenantCache;
     private final LoadingCache<String, GlobalUser> globalUserCache;
-    private final LoadingCache<Pair<Tenant, GlobalUser>, List<Permission>> permissionCache;
+    private final LoadingCache<PermissionCacheKey, List<Permission>> permissionCache;
     private LoadBalancingDistributor channelDistributor;
     private final Map<String, TmiBot> bots = new ConcurrentHashMap<>();
     private ScheduledExecutorService scheduledExecutorService;
     private RateLimiter joinLimiter;
     private MessageQueue eventRouter;
+
+    private static class PermissionCacheKey {
+        private final Tenant tenant;
+        private final GlobalUser globalUser;
+        private final String channelId;
+        private final Set<String> channelGroups;
+
+        public PermissionCacheKey(final Tenant tenant, final GlobalUser globalUser, final String channelId, final Set<String> channelGroups) {
+            this.tenant = tenant;
+            this.globalUser = globalUser;
+            this.channelId = channelId;
+            this.channelGroups = channelGroups;
+        }
+
+        public Tenant getTenant() {
+            return tenant;
+        }
+
+        public GlobalUser getGlobalUser() {
+            return globalUser;
+        }
+
+        public String getChannelId() {
+            return channelId;
+        }
+
+        public Set<String> getChannelGroups() {
+            return channelGroups;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            final PermissionCacheKey that = (PermissionCacheKey) o;
+
+            if (tenant != null ? !tenant.equals(that.tenant) : that.tenant != null) return false;
+            if (globalUser != null ? !globalUser.equals(that.globalUser) : that.globalUser != null) return false;
+            if (channelId != null ? !channelId.equals(that.channelId) : that.channelId != null) return false;
+            return channelGroups != null ? channelGroups.equals(that.channelGroups) : that.channelGroups == null;
+
+        }
+
+        @Override
+        public int hashCode() {
+            int result = tenant != null ? tenant.hashCode() : 0;
+            result = 31 * result + (globalUser != null ? globalUser.hashCode() : 0);
+            result = 31 * result + (channelId != null ? channelId.hashCode() : 0);
+            result = 31 * result + (channelGroups != null ? channelGroups.hashCode() : 0);
+            return result;
+        }
+    }
 
     public TmiModule() {
         this.tenantCache = CacheBuilder.newBuilder()
@@ -74,15 +129,24 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 });
         this.permissionCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.SECONDS)
-                .build(new CacheLoader<Pair<Tenant, GlobalUser>, List<Permission>>() {
+                .build(new CacheLoader<PermissionCacheKey, List<Permission>>() {
                     @Override
-                    public List<Permission> load(final Pair<Tenant, GlobalUser> tenantGlobalUserPair) throws Exception {
+                    public List<Permission> load(final PermissionCacheKey permissionCacheKey) throws Exception {
                         try {
-                            LOG.debug("Loading tenant permissions for tenant={} globalUser={}", tenantGlobalUserPair.getFirst().getId(), tenantGlobalUserPair.getSecond().getId());
-                            final TenantUserPermissions permissions = getDaoManager().getDaoTenantUserPermissions().getByTenantAndUser(tenantGlobalUserPair.getFirst().getId().getValue(), tenantGlobalUserPair.getSecond().getId().getValue());
+                            LOG.debug("Loading tenant permissions for tenant={} globalUser={} channelGroups={}",
+                                    permissionCacheKey.getTenant().getId(), permissionCacheKey.getGlobalUser().getId(),
+                                    Joiner.on(", ").join(permissionCacheKey.getChannelGroups()));
+                            final Set<tv.v1x1.common.dto.db.Permission> permissions = getDaoManager().getDaoTenantGroup().getAllPermissions(
+                                    permissionCacheKey.getTenant(), permissionCacheKey.getGlobalUser(), Platform.TWITCH,
+                                    permissionCacheKey.getChannelId(), permissionCacheKey.getChannelGroups());
                             if(permissions == null)
                                 return ImmutableList.of();
-                            return permissions.getPermissions().stream().map(TenantUserPermissions.Permission::toCore).collect(Collectors.toList());
+                            final List<Permission> permissionList = permissions.stream().map(tv.v1x1.common.dto.db.Permission::toCore).collect(Collectors.toList());
+                            LOG.debug("Loaded tenant permissions for tenant={} globalUser={} channelGroups={}: {}",
+                                    permissionCacheKey.getTenant().getId(), permissionCacheKey.getGlobalUser().getId(),
+                                    Joiner.on(", ").join(permissionCacheKey.getChannelGroups()),
+                                    Joiner.on(", ").join(permissionList.stream().map(Permission::getNode).collect(Collectors.toList())));
+                            return permissionList;
                         } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
@@ -166,9 +230,9 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         }
     }
 
-    List<Permission> getPermissions(final Tenant tenant, final GlobalUser globalUser) {
+    List<Permission> getPermissions(final Tenant tenant, final GlobalUser globalUser, final String channelId, final Set<String> badges) {
         try {
-            return permissionCache.get(new Pair<>(tenant, globalUser));
+            return permissionCache.get(new PermissionCacheKey(tenant, globalUser, channelId, badges));
         } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }

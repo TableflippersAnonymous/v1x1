@@ -8,7 +8,7 @@ import tv.v1x1.modules.core.scheduler.config.SchedulerTenantConfiguration;
 /**
  * Created by naomi on 10/22/2016.
  */
-public class SchedulerModule extends ServiceModule<SchedulerSettings, SchedulerGlobalConfiguration, SchedulerTenantConfiguration> {
+public class SchedulerModule extends ServiceModule<SchedulerSettings, SchedulerGlobalConfiguration, SchedulerTenantConfiguration, SchedulerChannelConfiguration> {
     @Override
     public String getName() {
         return "scheduler";

@@ -17,7 +17,7 @@ import tv.v1x1.common.modules.TenantConfiguration;
 @DisplayName("Twitch")
 @Description("This module controls settings used when connecting to your Twitch Channel.")
 @Version(0)
-public class TmiTenantConfiguration extends TenantConfiguration {
+public class TmiTenantConfiguration implements TenantConfiguration {
     @DisplayName("Custom Bot?")
     @Description("This allows you to enter your own bot credentials to use.")
     @Type(ConfigType.BOOLEAN)

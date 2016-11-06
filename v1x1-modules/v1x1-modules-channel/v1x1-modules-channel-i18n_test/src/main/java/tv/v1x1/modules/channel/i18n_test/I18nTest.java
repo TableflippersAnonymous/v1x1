@@ -8,7 +8,7 @@ import tv.v1x1.common.util.commands.CommandDelegator;
 /**
  * @author Josh
  */
-public class I18nTest extends RegisteredThreadedModule<I18nTestSettings, I18nTestGlobalConfiguration, I18nTestTenantConfiguration> {
+public class I18nTest extends RegisteredThreadedModule<I18nTestSettings, I18nTestGlobalConfiguration, I18nTestTenantConfiguration, I18nTestChannelConfiguration> {
     ChatRouterServiceClient crsc;
     CommandDelegator delegator;
     Language language;

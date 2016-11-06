@@ -14,6 +14,7 @@ public abstract class Event extends Message {
         switch(event.getType()) {
             case CHAT_JOIN: return ChatJoinEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatJoinEvent.data));
             case CHAT_MESSAGE: return ChatMessageEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatMessageEvent.data));
+            case PRIVATE_MESSAGE: return PrivateMessageEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.PrivateMessageEvent.data));
             case CHAT_PART: return ChatPartEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatPartEvent.data));
             case TWITCH_BOT_CHANNEL_STATE: return TwitchBotChannelStateEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchBotChannelStateEvent.data));
             case TWITCH_BOT_CONNECTED: return TwitchBotConnectedEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchBotConnectedEvent.data));

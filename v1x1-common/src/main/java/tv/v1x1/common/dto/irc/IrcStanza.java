@@ -32,6 +32,7 @@ public abstract class IrcStanza {
             case RPL_NAMREPLY: return RplNameReplyCommand.fromProto(rawLine, tags, source, rawArgs, args, stanza.getExtension(IRC.RplNameReplyCommand.data));
             case USERNOTICE: return UserNoticeCommand.fromProto(rawLine, tags, source, rawArgs, args, stanza.getExtension(IRC.UserNoticeCommand.data));
             case USERSTATE: return UserStateCommand.fromProto(rawLine, tags, source, rawArgs, args, stanza.getExtension(IRC.UserStateCommand.data));
+            case WHISPER: return WhisperCommand.fromProto(rawLine, tags, source, rawArgs, args, stanza.getExtension(IRC.WhisperCommand.data));
             default: throw new IllegalStateException("Unknown serialized IRC command: " + stanza.getCommand());
         }
     }
@@ -43,7 +44,7 @@ public abstract class IrcStanza {
         CLEARCHAT, USERSTATE,
         RECONNECT, ROOMSTATE,
         USERNOTICE, GLOBALUSERSTATE,
-        PING
+        PING, WHISPER
     }
 
     private final String rawLine;
