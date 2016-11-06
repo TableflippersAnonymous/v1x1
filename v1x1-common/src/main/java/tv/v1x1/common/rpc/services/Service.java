@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.messages.Message;
 import tv.v1x1.common.dto.messages.Request;
 import tv.v1x1.common.dto.messages.Response;
+import tv.v1x1.common.dto.messages.responses.ExceptionResponse;
 import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.Module;
 import tv.v1x1.common.modules.ModuleSettings;
@@ -20,12 +21,12 @@ import java.util.concurrent.Executors;
  */
 public abstract class Service<T extends Request, U extends Response<T>> implements Comparable<Service<T, U>> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module;
+    private final Module<?, ?, ?, ?> module;
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
     private final String serviceName;
     private final Class<T> requestClass;
 
-    public Service(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, final String serviceName, final Class<T> requestClass) {
+    public Service(final Module<?, ?, ?, ?> module, final String serviceName, final Class<T> requestClass) {
         this.module = module;
         this.serviceName = serviceName;
         this.requestClass = requestClass;
@@ -60,11 +61,12 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
             module.send(request.getResponseQueueName(), call(request));
         } catch(final Exception e) {
             LOG.warn("Got exception while responding to request.", e);
+            module.send(request.getResponseQueueName(), new ExceptionResponse(module.toDto(), request.getMessageId(), e));
             throw e;
         }
     }
 
-    protected Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> getModule() {
+    protected Module<?, ?, ?, ?> getModule() {
         return module;
     }
 

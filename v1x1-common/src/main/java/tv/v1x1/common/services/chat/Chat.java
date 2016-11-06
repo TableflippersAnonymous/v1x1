@@ -23,7 +23,7 @@ public class Chat {
      * @param channel channel to send a message to
      * @param text the message to send
      */
-    public static void message(final Module<?, ?, ?> module, final Channel channel, final String text) {
+    public static void message(final Module<?, ?, ?, ?> module, final Channel channel, final String text) {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, text);
         else if(channel instanceof DiscordChannel)
@@ -39,7 +39,7 @@ public class Chat {
      * @param key
      * @param parameters
      */
-    public static void i18nMessage(final Module<?, ?, ?> module, final Channel channel, final String key, final Object... parameters) {
+    public static void i18nMessage(final Module<?, ?, ?, ?> module, final Channel channel, final String key, final Object... parameters) {
         if(parameters.length % 2 != 0) throw new IllegalArgumentException("Passed a non-even amount of arguments for i18n params");
         final Map<String, Object> castParams = new HashMap<String, Object>();
         for(int i = 0; i < parameters.length; ++i) {
@@ -59,7 +59,7 @@ public class Chat {
      * @param amount if a platform supports it, the number of messages to purge
      * @param reason reason for punishment, if supported
      */
-    public static void purge(final Module<?, ?, ?> module, final Channel channel, final User user, final int amount, final String reason) {
+    public static void purge(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final int amount, final String reason) {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s 1 %s", user.getId(), reason));
         else if(channel instanceof DiscordChannel)
@@ -78,7 +78,7 @@ public class Chat {
      * @param reason reason for punishment, if supported
      * @throws ChatException
      */
-    public static void timeout(final Module<?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) throws ChatException {
+    public static void timeout(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) throws ChatException {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s %d %s", user.getId(), length, reason));
         else if(channel instanceof DiscordChannel)
@@ -95,7 +95,7 @@ public class Chat {
      * @param user
      * @throws ChatException
      */
-    public static void untimeout(final Module<?, ?, ?> module, final Channel channel, final User user) throws ChatException {
+    public static void untimeout(final Module<?, ?, ?, ?> module, final Channel channel, final User user) throws ChatException {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/untimeout %s", user.getId()));
         else if(channel instanceof DiscordChannel)
@@ -113,7 +113,7 @@ public class Chat {
      * @param reason reason for punishment, if supported
      * @throws ChatException
      */
-    public static void kick(final Module<?, ?, ?> module, final Channel channel, final User user, final String reason) throws ChatException {
+    public static void kick(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final String reason) throws ChatException {
         if(channel instanceof TwitchChannel)
             throw new ChatException("TwitchChannel doesn't support kick()");
         else if(channel instanceof DiscordChannel)
@@ -131,7 +131,7 @@ public class Chat {
      * @param length time (in seconds) to ban for; 0 for indefinite (if supported)
      * @param reason reason for punishment, if supported
      */
-    public static void ban(final Module<?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) {
+    public static void ban(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) {
         if(channel instanceof TwitchChannel)
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/ban %s %s", user.getId(), reason));
         else if(channel instanceof DiscordChannel)
@@ -148,7 +148,7 @@ public class Chat {
      * @param length length of time to punish for, in seconds, if applicable
      * @param reason reason for punishment, if supported
      */
-    public static void punish(final Module<?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) {
+    public static void punish(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) {
         try {
             if(channel instanceof TwitchChannel) Chat.timeout(module, channel, user, length, reason);
             if(channel instanceof DiscordChannel) Chat.timeout(module, channel, user, length, reason);

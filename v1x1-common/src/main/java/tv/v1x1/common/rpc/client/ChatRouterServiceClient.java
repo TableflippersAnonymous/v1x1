@@ -16,7 +16,7 @@ import java.util.concurrent.Future;
  */
 public class ChatRouterServiceClient extends ServiceClient<SendMessageRequest, SendMessageResponse> {
 
-    public ChatRouterServiceClient(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
+    public ChatRouterServiceClient(final Module<?, ?, ?, ?> module) {
         super(module, SendMessageResponse.class);
     }
 
