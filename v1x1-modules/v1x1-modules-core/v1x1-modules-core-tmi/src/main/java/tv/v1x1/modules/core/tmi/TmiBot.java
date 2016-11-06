@@ -242,7 +242,7 @@ public class TmiBot implements Runnable {
     }
 
     private void event(final HostTargetCommand hostTargetCommand) {
-        event(new TwitchHostEvent(module, getChannel(hostTargetCommand.getChannel()), getChannel(hostTargetCommand.getTargetChannel()), hostTargetCommand));
+        event(new TwitchHostEvent(module, getChannel(hostTargetCommand.getChannel()), getChannel("#" + hostTargetCommand.getTargetChannel()), hostTargetCommand));
     }
 
     private void event(final JoinCommand joinCommand) {
