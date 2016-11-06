@@ -11,6 +11,7 @@ enum RequestType {
     MODULE_SHUTDOWN = 1;
     SEND_MESSAGE = 2;
     SCHEDULE = 3;
+    EXCEPTION = 4;
 };
 
 message Request {
@@ -93,4 +94,14 @@ message ScheduleResponse {
     extend Response {
         optional ScheduleResponse data = 103;
     }
+}
+
+message ExceptionResponse {
+    extend Response {
+        optional ExceptionResponse data = 104;
+    }
+
+    required string exception_class = 1;
+    required string exception_message = 2;
+    repeated string exception_stack_trace = 3;
 }

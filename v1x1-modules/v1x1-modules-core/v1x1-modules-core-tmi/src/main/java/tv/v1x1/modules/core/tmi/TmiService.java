@@ -20,7 +20,7 @@ public class TmiService extends Service<SendMessageRequest, SendMessageResponse>
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TmiBot bot;
 
-    public TmiService(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module, final String channel, final TmiBot bot) {
+    public TmiService(final Module<?, ?, ?, ?> module, final String channel, final TmiBot bot) {
         super(module, "Core|TMI|Channel|" + channel, SendMessageRequest.class);
         this.bot = bot;
     }

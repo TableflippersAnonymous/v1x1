@@ -15,6 +15,7 @@ public final class RequestOuterClass {
     registry.add(tv.v1x1.common.dto.proto.messages.RequestOuterClass.SendMessageResponse.data);
     registry.add(tv.v1x1.common.dto.proto.messages.RequestOuterClass.ScheduleRequest.data);
     registry.add(tv.v1x1.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.data);
+    registry.add(tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.data);
   }
 
   public static void registerAllExtensions(
@@ -43,6 +44,10 @@ public final class RequestOuterClass {
      * <code>SCHEDULE = 3;</code>
      */
     SCHEDULE(3),
+    /**
+     * <code>EXCEPTION = 4;</code>
+     */
+    EXCEPTION(4),
     ;
 
     /**
@@ -61,6 +66,10 @@ public final class RequestOuterClass {
      * <code>SCHEDULE = 3;</code>
      */
     public static final int SCHEDULE_VALUE = 3;
+    /**
+     * <code>EXCEPTION = 4;</code>
+     */
+    public static final int EXCEPTION_VALUE = 4;
 
 
     public final int getNumber() {
@@ -81,6 +90,7 @@ public final class RequestOuterClass {
         case 1: return MODULE_SHUTDOWN;
         case 2: return SEND_MESSAGE;
         case 3: return SCHEDULE;
+        case 4: return EXCEPTION;
         default: return null;
       }
     }
@@ -6294,6 +6304,930 @@ public final class RequestOuterClass {
           tv.v1x1.common.dto.proto.messages.RequestOuterClass.ScheduleResponse.getDefaultInstance());
   }
 
+  public interface ExceptionResponseOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.messages.ExceptionResponse)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required string exception_class = 1;</code>
+     */
+    boolean hasExceptionClass();
+    /**
+     * <code>required string exception_class = 1;</code>
+     */
+    java.lang.String getExceptionClass();
+    /**
+     * <code>required string exception_class = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getExceptionClassBytes();
+
+    /**
+     * <code>required string exception_message = 2;</code>
+     */
+    boolean hasExceptionMessage();
+    /**
+     * <code>required string exception_message = 2;</code>
+     */
+    java.lang.String getExceptionMessage();
+    /**
+     * <code>required string exception_message = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getExceptionMessageBytes();
+
+    /**
+     * <code>repeated string exception_stack_trace = 3;</code>
+     */
+    java.util.List<java.lang.String>
+        getExceptionStackTraceList();
+    /**
+     * <code>repeated string exception_stack_trace = 3;</code>
+     */
+    int getExceptionStackTraceCount();
+    /**
+     * <code>repeated string exception_stack_trace = 3;</code>
+     */
+    java.lang.String getExceptionStackTrace(int index);
+    /**
+     * <code>repeated string exception_stack_trace = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getExceptionStackTraceBytes(int index);
+  }
+  /**
+   * Protobuf type {@code tv.v1x1.common.dto.proto.messages.ExceptionResponse}
+   */
+  public  static final class ExceptionResponse extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.messages.ExceptionResponse)
+      ExceptionResponseOrBuilder {
+    // Use ExceptionResponse.newBuilder() to construct.
+    private ExceptionResponse(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ExceptionResponse() {
+      exceptionClass_ = "";
+      exceptionMessage_ = "";
+      exceptionStackTrace_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ExceptionResponse(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              exceptionClass_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              exceptionMessage_ = bs;
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                exceptionStackTrace_ = new com.google.protobuf.LazyStringArrayList();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              exceptionStackTrace_.add(bs);
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          exceptionStackTrace_ = exceptionStackTrace_.getUnmodifiableView();
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.v1x1.common.dto.proto.messages.RequestOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.v1x1.common.dto.proto.messages.RequestOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.class, tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int EXCEPTION_CLASS_FIELD_NUMBER = 1;
+    private volatile java.lang.Object exceptionClass_;
+    /**
+     * <code>required string exception_class = 1;</code>
+     */
+    public boolean hasExceptionClass() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string exception_class = 1;</code>
+     */
+    public java.lang.String getExceptionClass() {
+      java.lang.Object ref = exceptionClass_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          exceptionClass_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string exception_class = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getExceptionClassBytes() {
+      java.lang.Object ref = exceptionClass_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        exceptionClass_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EXCEPTION_MESSAGE_FIELD_NUMBER = 2;
+    private volatile java.lang.Object exceptionMessage_;
+    /**
+     * <code>required string exception_message = 2;</code>
+     */
+    public boolean hasExceptionMessage() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string exception_message = 2;</code>
+     */
+    public java.lang.String getExceptionMessage() {
+      java.lang.Object ref = exceptionMessage_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          exceptionMessage_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string exception_message = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getExceptionMessageBytes() {
+      java.lang.Object ref = exceptionMessage_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        exceptionMessage_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int EXCEPTION_STACK_TRACE_FIELD_NUMBER = 3;
+    private com.google.protobuf.LazyStringList exceptionStackTrace_;
+    /**
+     * <code>repeated string exception_stack_trace = 3;</code>
+     */
+    public com.google.protobuf.ProtocolStringList
+        getExceptionStackTraceList() {
+      return exceptionStackTrace_;
+    }
+    /**
+     * <code>repeated string exception_stack_trace = 3;</code>
+     */
+    public int getExceptionStackTraceCount() {
+      return exceptionStackTrace_.size();
+    }
+    /**
+     * <code>repeated string exception_stack_trace = 3;</code>
+     */
+    public java.lang.String getExceptionStackTrace(int index) {
+      return exceptionStackTrace_.get(index);
+    }
+    /**
+     * <code>repeated string exception_stack_trace = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getExceptionStackTraceBytes(int index) {
+      return exceptionStackTrace_.getByteString(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasExceptionClass()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasExceptionMessage()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, exceptionClass_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, exceptionMessage_);
+      }
+      for (int i = 0; i < exceptionStackTrace_.size(); i++) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, exceptionStackTrace_.getRaw(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, exceptionClass_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, exceptionMessage_);
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < exceptionStackTrace_.size(); i++) {
+          dataSize += computeStringSizeNoTag(exceptionStackTrace_.getRaw(i));
+        }
+        size += dataSize;
+        size += 1 * getExceptionStackTraceList().size();
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse)) {
+        return super.equals(obj);
+      }
+      tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse other = (tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse) obj;
+
+      boolean result = true;
+      result = result && (hasExceptionClass() == other.hasExceptionClass());
+      if (hasExceptionClass()) {
+        result = result && getExceptionClass()
+            .equals(other.getExceptionClass());
+      }
+      result = result && (hasExceptionMessage() == other.hasExceptionMessage());
+      if (hasExceptionMessage()) {
+        result = result && getExceptionMessage()
+            .equals(other.getExceptionMessage());
+      }
+      result = result && getExceptionStackTraceList()
+          .equals(other.getExceptionStackTraceList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasExceptionClass()) {
+        hash = (37 * hash) + EXCEPTION_CLASS_FIELD_NUMBER;
+        hash = (53 * hash) + getExceptionClass().hashCode();
+      }
+      if (hasExceptionMessage()) {
+        hash = (37 * hash) + EXCEPTION_MESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getExceptionMessage().hashCode();
+      }
+      if (getExceptionStackTraceCount() > 0) {
+        hash = (37 * hash) + EXCEPTION_STACK_TRACE_FIELD_NUMBER;
+        hash = (53 * hash) + getExceptionStackTraceList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.messages.ExceptionResponse}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.messages.ExceptionResponse)
+        tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponseOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.messages.RequestOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.messages.RequestOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.class, tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.Builder.class);
+      }
+
+      // Construct using tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        exceptionClass_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        exceptionMessage_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        exceptionStackTrace_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.v1x1.common.dto.proto.messages.RequestOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_descriptor;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse getDefaultInstanceForType() {
+        return tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.getDefaultInstance();
+      }
+
+      public tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse build() {
+        tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse buildPartial() {
+        tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse result = new tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.exceptionClass_ = exceptionClass_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.exceptionMessage_ = exceptionMessage_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          exceptionStackTrace_ = exceptionStackTrace_.getUnmodifiableView();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.exceptionStackTrace_ = exceptionStackTrace_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse) {
+          return mergeFrom((tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse other) {
+        if (other == tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.getDefaultInstance()) return this;
+        if (other.hasExceptionClass()) {
+          bitField0_ |= 0x00000001;
+          exceptionClass_ = other.exceptionClass_;
+          onChanged();
+        }
+        if (other.hasExceptionMessage()) {
+          bitField0_ |= 0x00000002;
+          exceptionMessage_ = other.exceptionMessage_;
+          onChanged();
+        }
+        if (!other.exceptionStackTrace_.isEmpty()) {
+          if (exceptionStackTrace_.isEmpty()) {
+            exceptionStackTrace_ = other.exceptionStackTrace_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureExceptionStackTraceIsMutable();
+            exceptionStackTrace_.addAll(other.exceptionStackTrace_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasExceptionClass()) {
+          return false;
+        }
+        if (!hasExceptionMessage()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object exceptionClass_ = "";
+      /**
+       * <code>required string exception_class = 1;</code>
+       */
+      public boolean hasExceptionClass() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string exception_class = 1;</code>
+       */
+      public java.lang.String getExceptionClass() {
+        java.lang.Object ref = exceptionClass_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            exceptionClass_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string exception_class = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getExceptionClassBytes() {
+        java.lang.Object ref = exceptionClass_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          exceptionClass_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string exception_class = 1;</code>
+       */
+      public Builder setExceptionClass(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        exceptionClass_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string exception_class = 1;</code>
+       */
+      public Builder clearExceptionClass() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        exceptionClass_ = getDefaultInstance().getExceptionClass();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string exception_class = 1;</code>
+       */
+      public Builder setExceptionClassBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        exceptionClass_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object exceptionMessage_ = "";
+      /**
+       * <code>required string exception_message = 2;</code>
+       */
+      public boolean hasExceptionMessage() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string exception_message = 2;</code>
+       */
+      public java.lang.String getExceptionMessage() {
+        java.lang.Object ref = exceptionMessage_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            exceptionMessage_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string exception_message = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getExceptionMessageBytes() {
+        java.lang.Object ref = exceptionMessage_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          exceptionMessage_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string exception_message = 2;</code>
+       */
+      public Builder setExceptionMessage(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        exceptionMessage_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string exception_message = 2;</code>
+       */
+      public Builder clearExceptionMessage() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        exceptionMessage_ = getDefaultInstance().getExceptionMessage();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string exception_message = 2;</code>
+       */
+      public Builder setExceptionMessageBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        exceptionMessage_ = value;
+        onChanged();
+        return this;
+      }
+
+      private com.google.protobuf.LazyStringList exceptionStackTrace_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+      private void ensureExceptionStackTraceIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          exceptionStackTrace_ = new com.google.protobuf.LazyStringArrayList(exceptionStackTrace_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public com.google.protobuf.ProtocolStringList
+          getExceptionStackTraceList() {
+        return exceptionStackTrace_.getUnmodifiableView();
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public int getExceptionStackTraceCount() {
+        return exceptionStackTrace_.size();
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public java.lang.String getExceptionStackTrace(int index) {
+        return exceptionStackTrace_.get(index);
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getExceptionStackTraceBytes(int index) {
+        return exceptionStackTrace_.getByteString(index);
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public Builder setExceptionStackTrace(
+          int index, java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureExceptionStackTraceIsMutable();
+        exceptionStackTrace_.set(index, value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public Builder addExceptionStackTrace(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureExceptionStackTraceIsMutable();
+        exceptionStackTrace_.add(value);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public Builder addAllExceptionStackTrace(
+          java.lang.Iterable<java.lang.String> values) {
+        ensureExceptionStackTraceIsMutable();
+        com.google.protobuf.AbstractMessageLite.Builder.addAll(
+            values, exceptionStackTrace_);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public Builder clearExceptionStackTrace() {
+        exceptionStackTrace_ = com.google.protobuf.LazyStringArrayList.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>repeated string exception_stack_trace = 3;</code>
+       */
+      public Builder addExceptionStackTraceBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  ensureExceptionStackTraceIsMutable();
+        exceptionStackTrace_.add(value);
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.messages.ExceptionResponse)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.messages.ExceptionResponse)
+    private static final tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse();
+    }
+
+    public static tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ExceptionResponse>
+        PARSER = new com.google.protobuf.AbstractParser<ExceptionResponse>() {
+      public ExceptionResponse parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ExceptionResponse(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ExceptionResponse> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ExceptionResponse> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 104;
+    /**
+     * <code>extend .tv.v1x1.common.dto.proto.messages.Response { ... }</code>
+     */
+    public static final
+      com.google.protobuf.GeneratedMessage.GeneratedExtension<
+        tv.v1x1.common.dto.proto.messages.RequestOuterClass.Response,
+        tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse> data = com.google.protobuf.GeneratedMessage
+            .newMessageScopedGeneratedExtension(
+          tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.getDefaultInstance(),
+          0,
+          tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.class,
+          tv.v1x1.common.dto.proto.messages.RequestOuterClass.ExceptionResponse.getDefaultInstance());
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_v1x1_common_dto_proto_messages_Request_descriptor;
   private static final 
@@ -6339,6 +7273,11 @@ public final class RequestOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_v1x1_common_dto_proto_messages_ScheduleResponse_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -6393,9 +7332,15 @@ public final class RequestOuterClass {
       "ssages.ScheduleRequest\"\202\001\n\020ScheduleRespo" +
       "nse2n\n\004data\022+.tv.v1x1.common.dto.proto.m" +
       "essages.Response\030g \001(\01323.tv.v1x1.common." +
-      "dto.proto.messages.ScheduleResponse*O\n\013R" +
-      "equestType\022\013\n\007UNKNOWN\020\000\022\023\n\017MODULE_SHUTDO" +
-      "WN\020\001\022\020\n\014SEND_MESSAGE\020\002\022\014\n\010SCHEDULE\020\003"
+      "dto.proto.messages.ScheduleResponse\"\327\001\n\021" +
+      "ExceptionResponse\022\027\n\017exception_class\030\001 \002" +
+      "(\t\022\031\n\021exception_message\030\002 \002(\t\022\035\n\025excepti" +
+      "on_stack_trace\030\003 \003(\t2o\n\004data\022+.tv.v1x1.c" +
+      "ommon.dto.proto.messages.Response\030h \001(\0132",
+      "4.tv.v1x1.common.dto.proto.messages.Exce" +
+      "ptionResponse*^\n\013RequestType\022\013\n\007UNKNOWN\020" +
+      "\000\022\023\n\017MODULE_SHUTDOWN\020\001\022\020\n\014SEND_MESSAGE\020\002" +
+      "\022\014\n\010SCHEDULE\020\003\022\r\n\tEXCEPTION\020\004"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -6466,6 +7411,12 @@ public final class RequestOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_messages_ScheduleResponse_descriptor,
         new java.lang.String[] { });
+    internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_descriptor =
+      getDescriptor().getMessageTypes().get(8);
+    internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_messages_ExceptionResponse_descriptor,
+        new java.lang.String[] { "ExceptionClass", "ExceptionMessage", "ExceptionStackTrace", });
     tv.v1x1.common.dto.proto.messages.MessageOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.ChannelOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.UUIDOuterClass.getDescriptor();
