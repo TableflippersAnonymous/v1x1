@@ -24,6 +24,7 @@ message IrcStanza {
         RPL_NAMREPLY = 13;
         USERNOTICE = 14;
         USERSTATE = 15;
+        WHISPER = 16;
     }
 
     required string raw_line = 1;
@@ -305,4 +306,18 @@ message UserStateCommand {
     required string channel = 1;
 
     required EmoteSetIrcStanza emote_set_stanza = 2;
+}
+
+message WhisperCommand {
+    extend IrcStanza {
+        optional WhisperCommand data = 116;
+    }
+
+    required string target = 1;
+    required string message = 2;
+
+    optional string thread_id = 3;
+    optional uint64 message_id = 4;
+
+    required MessageTaggedIrcStanza message_tagged_stanza = 5;
 }

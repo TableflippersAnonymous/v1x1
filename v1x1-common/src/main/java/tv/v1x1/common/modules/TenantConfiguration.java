@@ -6,5 +6,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * Created by cobi on 10/24/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TenantConfiguration {
+public interface TenantConfiguration {
 }

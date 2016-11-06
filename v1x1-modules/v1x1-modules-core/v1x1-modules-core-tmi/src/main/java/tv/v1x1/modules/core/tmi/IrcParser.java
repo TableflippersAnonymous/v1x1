@@ -45,6 +45,7 @@ public class IrcParser {
             case RPL_NAMREPLY: return new RplNameReplyCommand(rawLine, tags, source, rawArgs, args, args[2], Arrays.asList(args[3].split(" ")).stream().map(RplNameReplyCommand.Member::new).collect(Collectors.toList()));
             case USERNOTICE: return new UserNoticeCommand(rawLine, tags, source, rawArgs, args, args[0], args.length < 2 ? tags.get("system-msg") : args[1]);
             case USERSTATE: return new UserStateCommand(rawLine, tags, source, rawArgs, args, args[0]);
+            case WHISPER: return new WhisperCommand(rawLine, tags, source, rawArgs, args, args[0], args[1]);
             default: throw new IllegalStateException("Unknown command: " + command);
         }
     }

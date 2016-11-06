@@ -9,7 +9,7 @@ import tv.v1x1.common.config.Type;
 /**
  * Created by cobi on 10/5/16.
  */
-public class BasicTenantConfiguration extends TenantConfiguration {
+public class BasicTenantConfiguration implements TenantConfiguration {
     @DisplayName("Enabled?")
     @Description("This controls whether this module is enabled on your channel.")
     @Type(ConfigType.MASTER_ENABLE)

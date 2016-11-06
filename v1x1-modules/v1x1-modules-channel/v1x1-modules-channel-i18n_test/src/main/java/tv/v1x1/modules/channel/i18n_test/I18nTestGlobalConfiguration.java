@@ -5,5 +5,5 @@ import tv.v1x1.common.modules.GlobalConfiguration;
 /**
  * @author Josh
  */
-public class I18nTestGlobalConfiguration extends GlobalConfiguration {
+public class I18nTestGlobalConfiguration implements GlobalConfiguration {
 }

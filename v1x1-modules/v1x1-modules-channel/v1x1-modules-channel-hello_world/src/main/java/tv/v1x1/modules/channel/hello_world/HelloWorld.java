@@ -21,7 +21,7 @@ import java.lang.invoke.MethodHandles;
 /**
  * Created by Josh on 2016-10-06.
  */
-public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlobalConfiguration, HelloWorldTenantConfiguration> {
+public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlobalConfiguration, HelloWorldTenantConfiguration, HelloWorldChannelConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     static {
         final Module module = new Module("hello_world");
