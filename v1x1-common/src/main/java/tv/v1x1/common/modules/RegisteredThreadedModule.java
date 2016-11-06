@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author Josh
  */
-public abstract class RegisteredThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends ThreadedModule<T, U, V> {
+public abstract class RegisteredThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> extends ThreadedModule<T, U, V, W> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private EventListener listener;

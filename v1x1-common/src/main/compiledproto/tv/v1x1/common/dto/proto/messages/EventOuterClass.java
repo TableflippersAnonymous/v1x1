@@ -28,6 +28,8 @@ public final class EventOuterClass {
     registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchUserEvent.data);
     registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchUserModChangeEvent.data);
     registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.data);
+    registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.data);
+    registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.data);
   }
 
   public static void registerAllExtensions(
@@ -205,6 +207,10 @@ public final class EventOuterClass {
        * <code>SCHEDULER_NOTIFY = 17;</code>
        */
       SCHEDULER_NOTIFY(17),
+      /**
+       * <code>PRIVATE_MESSAGE = 18;</code>
+       */
+      PRIVATE_MESSAGE(18),
       ;
 
       /**
@@ -279,6 +285,10 @@ public final class EventOuterClass {
        * <code>SCHEDULER_NOTIFY = 17;</code>
        */
       public static final int SCHEDULER_NOTIFY_VALUE = 17;
+      /**
+       * <code>PRIVATE_MESSAGE = 18;</code>
+       */
+      public static final int PRIVATE_MESSAGE_VALUE = 18;
 
 
       public final int getNumber() {
@@ -313,6 +323,7 @@ public final class EventOuterClass {
           case 15: return TWITCH_USER;
           case 16: return TWITCH_USER_MOD_CHANGE;
           case 17: return SCHEDULER_NOTIFY;
+          case 18: return PRIVATE_MESSAGE;
           default: return null;
         }
       }
@@ -18688,6 +18699,1362 @@ public final class EventOuterClass {
           tv.v1x1.common.dto.proto.messages.EventOuterClass.SchedulerNotifyEvent.getDefaultInstance());
   }
 
+  public interface PrivateMessageEventOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.messages.PrivateMessageEvent)
+      com.google.protobuf.GeneratedMessageV3.
+          ExtendableMessageOrBuilder<PrivateMessageEvent> {
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+     */
+    boolean hasPrivateMessage();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage getPrivateMessage();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessageOrBuilder getPrivateMessageOrBuilder();
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Platform type = 2;</code>
+     */
+    boolean hasType();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Platform type = 2;</code>
+     */
+    tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform getType();
+  }
+  /**
+   * Protobuf type {@code tv.v1x1.common.dto.proto.messages.PrivateMessageEvent}
+   */
+  public  static final class PrivateMessageEvent extends
+      com.google.protobuf.GeneratedMessageV3.ExtendableMessage<
+        PrivateMessageEvent> implements
+      // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.messages.PrivateMessageEvent)
+      PrivateMessageEventOrBuilder {
+    // Use PrivateMessageEvent.newBuilder() to construct.
+    private PrivateMessageEvent(com.google.protobuf.GeneratedMessageV3.ExtendableBuilder<tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent, ?> builder) {
+      super(builder);
+    }
+    private PrivateMessageEvent() {
+      type_ = 0;
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PrivateMessageEvent(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = privateMessage_.toBuilder();
+              }
+              privateMessage_ = input.readMessage(tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(privateMessage_);
+                privateMessage_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 16: {
+              int rawValue = input.readEnum();
+              tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform value = tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(2, rawValue);
+              } else {
+                bitField0_ |= 0x00000002;
+                type_ = rawValue;
+              }
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.class, tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int PRIVATE_MESSAGE_FIELD_NUMBER = 1;
+    private tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage privateMessage_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+     */
+    public boolean hasPrivateMessage() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage getPrivateMessage() {
+      return privateMessage_ == null ? tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.getDefaultInstance() : privateMessage_;
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessageOrBuilder getPrivateMessageOrBuilder() {
+      return privateMessage_ == null ? tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.getDefaultInstance() : privateMessage_;
+    }
+
+    public static final int TYPE_FIELD_NUMBER = 2;
+    private int type_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Platform type = 2;</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Platform type = 2;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+      tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform result = tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+      return result == null ? tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasPrivateMessage()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasType()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getPrivateMessage().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!extensionsAreInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      com.google.protobuf.GeneratedMessageV3
+        .ExtendableMessage<tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent>.ExtensionWriter
+          extensionWriter = newExtensionWriter();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, getPrivateMessage());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeEnum(2, type_);
+      }
+      extensionWriter.writeUntil(536870912, output);
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getPrivateMessage());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(2, type_);
+      }
+      size += extensionsSerializedSize();
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent)) {
+        return super.equals(obj);
+      }
+      tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent other = (tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent) obj;
+
+      boolean result = true;
+      result = result && (hasPrivateMessage() == other.hasPrivateMessage());
+      if (hasPrivateMessage()) {
+        result = result && getPrivateMessage()
+            .equals(other.getPrivateMessage());
+      }
+      result = result && (hasType() == other.hasType());
+      if (hasType()) {
+        result = result && type_ == other.type_;
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      result = result &&
+          getExtensionFields().equals(other.getExtensionFields());
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasPrivateMessage()) {
+        hash = (37 * hash) + PRIVATE_MESSAGE_FIELD_NUMBER;
+        hash = (53 * hash) + getPrivateMessage().hashCode();
+      }
+      if (hasType()) {
+        hash = (37 * hash) + TYPE_FIELD_NUMBER;
+        hash = (53 * hash) + type_;
+      }
+      hash = hashFields(hash, getExtensionFields());
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.messages.PrivateMessageEvent}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.ExtendableBuilder<
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent, Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.messages.PrivateMessageEvent)
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEventOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.class, tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.Builder.class);
+      }
+
+      // Construct using tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getPrivateMessageFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (privateMessageBuilder_ == null) {
+          privateMessage_ = null;
+        } else {
+          privateMessageBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_descriptor;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent getDefaultInstanceForType() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.getDefaultInstance();
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent build() {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent buildPartial() {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent result = new tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (privateMessageBuilder_ == null) {
+          result.privateMessage_ = privateMessage_;
+        } else {
+          result.privateMessage_ = privateMessageBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.type_ = type_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public <Type> Builder setExtension(
+          com.google.protobuf.GeneratedMessage.GeneratedExtension<
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent, Type> extension,
+          Type value) {
+        return (Builder) super.setExtension(extension, value);
+      }
+      public <Type> Builder setExtension(
+          com.google.protobuf.GeneratedMessage.GeneratedExtension<
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent, java.util.List<Type>> extension,
+          int index, Type value) {
+        return (Builder) super.setExtension(extension, index, value);
+      }
+      public <Type> Builder addExtension(
+          com.google.protobuf.GeneratedMessage.GeneratedExtension<
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent, java.util.List<Type>> extension,
+          Type value) {
+        return (Builder) super.addExtension(extension, value);
+      }
+      public <Type> Builder clearExtension(
+          com.google.protobuf.GeneratedMessage.GeneratedExtension<
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent, ?> extension) {
+        return (Builder) super.clearExtension(extension);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent) {
+          return mergeFrom((tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent other) {
+        if (other == tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.getDefaultInstance()) return this;
+        if (other.hasPrivateMessage()) {
+          mergePrivateMessage(other.getPrivateMessage());
+        }
+        if (other.hasType()) {
+          setType(other.getType());
+        }
+        this.mergeExtensionFields(other);
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasPrivateMessage()) {
+          return false;
+        }
+        if (!hasType()) {
+          return false;
+        }
+        if (!getPrivateMessage().isInitialized()) {
+          return false;
+        }
+        if (!extensionsAreInitialized()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage privateMessage_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage, tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.Builder, tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessageOrBuilder> privateMessageBuilder_;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      public boolean hasPrivateMessage() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage getPrivateMessage() {
+        if (privateMessageBuilder_ == null) {
+          return privateMessage_ == null ? tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.getDefaultInstance() : privateMessage_;
+        } else {
+          return privateMessageBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      public Builder setPrivateMessage(tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage value) {
+        if (privateMessageBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          privateMessage_ = value;
+          onChanged();
+        } else {
+          privateMessageBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      public Builder setPrivateMessage(
+          tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.Builder builderForValue) {
+        if (privateMessageBuilder_ == null) {
+          privateMessage_ = builderForValue.build();
+          onChanged();
+        } else {
+          privateMessageBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      public Builder mergePrivateMessage(tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage value) {
+        if (privateMessageBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              privateMessage_ != null &&
+              privateMessage_ != tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.getDefaultInstance()) {
+            privateMessage_ =
+              tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.newBuilder(privateMessage_).mergeFrom(value).buildPartial();
+          } else {
+            privateMessage_ = value;
+          }
+          onChanged();
+        } else {
+          privateMessageBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      public Builder clearPrivateMessage() {
+        if (privateMessageBuilder_ == null) {
+          privateMessage_ = null;
+          onChanged();
+        } else {
+          privateMessageBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.Builder getPrivateMessageBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getPrivateMessageFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessageOrBuilder getPrivateMessageOrBuilder() {
+        if (privateMessageBuilder_ != null) {
+          return privateMessageBuilder_.getMessageOrBuilder();
+        } else {
+          return privateMessage_ == null ?
+              tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.getDefaultInstance() : privateMessage_;
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.PrivateMessage private_message = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage, tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.Builder, tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessageOrBuilder> 
+          getPrivateMessageFieldBuilder() {
+        if (privateMessageBuilder_ == null) {
+          privateMessageBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage, tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.Builder, tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessageOrBuilder>(
+                  getPrivateMessage(),
+                  getParentForChildren(),
+                  isClean());
+          privateMessage_ = null;
+        }
+        return privateMessageBuilder_;
+      }
+
+      private int type_ = 0;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Platform type = 2;</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Platform type = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform getType() {
+        tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform result = tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(type_);
+        return result == null ? tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Platform type = 2;</code>
+       */
+      public Builder setType(tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000002;
+        type_ = value.getNumber();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Platform type = 2;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        type_ = 0;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.messages.PrivateMessageEvent)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.messages.PrivateMessageEvent)
+    private static final tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent();
+    }
+
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<PrivateMessageEvent>
+        PARSER = new com.google.protobuf.AbstractParser<PrivateMessageEvent>() {
+      public PrivateMessageEvent parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PrivateMessageEvent(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<PrivateMessageEvent> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PrivateMessageEvent> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 118;
+    /**
+     * <code>extend .tv.v1x1.common.dto.proto.messages.Event { ... }</code>
+     */
+    public static final
+      com.google.protobuf.GeneratedMessage.GeneratedExtension<
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.Event,
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent> data = com.google.protobuf.GeneratedMessage
+            .newMessageScopedGeneratedExtension(
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.getDefaultInstance(),
+          0,
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.class,
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.getDefaultInstance());
+  }
+
+  public interface TwitchPrivateMessageEventOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.messages.TwitchPrivateMessageEvent)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+     */
+    boolean hasWhisperCommand();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+     */
+    tv.v1x1.common.dto.proto.core.IRC.IrcStanza getWhisperCommand();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+     */
+    tv.v1x1.common.dto.proto.core.IRC.IrcStanzaOrBuilder getWhisperCommandOrBuilder();
+  }
+  /**
+   * Protobuf type {@code tv.v1x1.common.dto.proto.messages.TwitchPrivateMessageEvent}
+   */
+  public  static final class TwitchPrivateMessageEvent extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.messages.TwitchPrivateMessageEvent)
+      TwitchPrivateMessageEventOrBuilder {
+    // Use TwitchPrivateMessageEvent.newBuilder() to construct.
+    private TwitchPrivateMessageEvent(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private TwitchPrivateMessageEvent() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private TwitchPrivateMessageEvent(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              tv.v1x1.common.dto.proto.core.IRC.IrcStanza.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = whisperCommand_.toBuilder();
+              }
+              whisperCommand_ = input.readMessage(tv.v1x1.common.dto.proto.core.IRC.IrcStanza.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(whisperCommand_);
+                whisperCommand_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.class, tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int WHISPER_COMMAND_FIELD_NUMBER = 1;
+    private tv.v1x1.common.dto.proto.core.IRC.IrcStanza whisperCommand_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+     */
+    public boolean hasWhisperCommand() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.IRC.IrcStanza getWhisperCommand() {
+      return whisperCommand_ == null ? tv.v1x1.common.dto.proto.core.IRC.IrcStanza.getDefaultInstance() : whisperCommand_;
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.IRC.IrcStanzaOrBuilder getWhisperCommandOrBuilder() {
+      return whisperCommand_ == null ? tv.v1x1.common.dto.proto.core.IRC.IrcStanza.getDefaultInstance() : whisperCommand_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasWhisperCommand()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getWhisperCommand().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, getWhisperCommand());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getWhisperCommand());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent)) {
+        return super.equals(obj);
+      }
+      tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent other = (tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent) obj;
+
+      boolean result = true;
+      result = result && (hasWhisperCommand() == other.hasWhisperCommand());
+      if (hasWhisperCommand()) {
+        result = result && getWhisperCommand()
+            .equals(other.getWhisperCommand());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasWhisperCommand()) {
+        hash = (37 * hash) + WHISPER_COMMAND_FIELD_NUMBER;
+        hash = (53 * hash) + getWhisperCommand().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.messages.TwitchPrivateMessageEvent}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.messages.TwitchPrivateMessageEvent)
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEventOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.class, tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.Builder.class);
+      }
+
+      // Construct using tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getWhisperCommandFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (whisperCommandBuilder_ == null) {
+          whisperCommand_ = null;
+        } else {
+          whisperCommandBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_descriptor;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent getDefaultInstanceForType() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.getDefaultInstance();
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent build() {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent buildPartial() {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent result = new tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (whisperCommandBuilder_ == null) {
+          result.whisperCommand_ = whisperCommand_;
+        } else {
+          result.whisperCommand_ = whisperCommandBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent) {
+          return mergeFrom((tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent other) {
+        if (other == tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.getDefaultInstance()) return this;
+        if (other.hasWhisperCommand()) {
+          mergeWhisperCommand(other.getWhisperCommand());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasWhisperCommand()) {
+          return false;
+        }
+        if (!getWhisperCommand().isInitialized()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private tv.v1x1.common.dto.proto.core.IRC.IrcStanza whisperCommand_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.IRC.IrcStanza, tv.v1x1.common.dto.proto.core.IRC.IrcStanza.Builder, tv.v1x1.common.dto.proto.core.IRC.IrcStanzaOrBuilder> whisperCommandBuilder_;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      public boolean hasWhisperCommand() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.IRC.IrcStanza getWhisperCommand() {
+        if (whisperCommandBuilder_ == null) {
+          return whisperCommand_ == null ? tv.v1x1.common.dto.proto.core.IRC.IrcStanza.getDefaultInstance() : whisperCommand_;
+        } else {
+          return whisperCommandBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      public Builder setWhisperCommand(tv.v1x1.common.dto.proto.core.IRC.IrcStanza value) {
+        if (whisperCommandBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          whisperCommand_ = value;
+          onChanged();
+        } else {
+          whisperCommandBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      public Builder setWhisperCommand(
+          tv.v1x1.common.dto.proto.core.IRC.IrcStanza.Builder builderForValue) {
+        if (whisperCommandBuilder_ == null) {
+          whisperCommand_ = builderForValue.build();
+          onChanged();
+        } else {
+          whisperCommandBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      public Builder mergeWhisperCommand(tv.v1x1.common.dto.proto.core.IRC.IrcStanza value) {
+        if (whisperCommandBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              whisperCommand_ != null &&
+              whisperCommand_ != tv.v1x1.common.dto.proto.core.IRC.IrcStanza.getDefaultInstance()) {
+            whisperCommand_ =
+              tv.v1x1.common.dto.proto.core.IRC.IrcStanza.newBuilder(whisperCommand_).mergeFrom(value).buildPartial();
+          } else {
+            whisperCommand_ = value;
+          }
+          onChanged();
+        } else {
+          whisperCommandBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      public Builder clearWhisperCommand() {
+        if (whisperCommandBuilder_ == null) {
+          whisperCommand_ = null;
+          onChanged();
+        } else {
+          whisperCommandBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.IRC.IrcStanza.Builder getWhisperCommandBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getWhisperCommandFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.IRC.IrcStanzaOrBuilder getWhisperCommandOrBuilder() {
+        if (whisperCommandBuilder_ != null) {
+          return whisperCommandBuilder_.getMessageOrBuilder();
+        } else {
+          return whisperCommand_ == null ?
+              tv.v1x1.common.dto.proto.core.IRC.IrcStanza.getDefaultInstance() : whisperCommand_;
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.IrcStanza whisper_command = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.IRC.IrcStanza, tv.v1x1.common.dto.proto.core.IRC.IrcStanza.Builder, tv.v1x1.common.dto.proto.core.IRC.IrcStanzaOrBuilder> 
+          getWhisperCommandFieldBuilder() {
+        if (whisperCommandBuilder_ == null) {
+          whisperCommandBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.IRC.IrcStanza, tv.v1x1.common.dto.proto.core.IRC.IrcStanza.Builder, tv.v1x1.common.dto.proto.core.IRC.IrcStanzaOrBuilder>(
+                  getWhisperCommand(),
+                  getParentForChildren(),
+                  isClean());
+          whisperCommand_ = null;
+        }
+        return whisperCommandBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.messages.TwitchPrivateMessageEvent)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.messages.TwitchPrivateMessageEvent)
+    private static final tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent();
+    }
+
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<TwitchPrivateMessageEvent>
+        PARSER = new com.google.protobuf.AbstractParser<TwitchPrivateMessageEvent>() {
+      public TwitchPrivateMessageEvent parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new TwitchPrivateMessageEvent(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<TwitchPrivateMessageEvent> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<TwitchPrivateMessageEvent> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 101;
+    /**
+     * <code>extend .tv.v1x1.common.dto.proto.messages.PrivateMessageEvent { ... }</code>
+     */
+    public static final
+      com.google.protobuf.GeneratedMessage.GeneratedExtension<
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent,
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent> data = com.google.protobuf.GeneratedMessage
+            .newMessageScopedGeneratedExtension(
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.getDefaultInstance(),
+          0,
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.class,
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.getDefaultInstance());
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_v1x1_common_dto_proto_messages_Event_descriptor;
   private static final 
@@ -18793,6 +20160,16 @@ public final class EventOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_v1x1_common_dto_proto_messages_SchedulerNotifyEvent_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -18806,9 +20183,9 @@ public final class EventOuterClass {
       "messages\032\rMessage.proto\032\021ChatMessage.pro" +
       "to\032\rChannel.proto\032\nUser.proto\032\tIRC.proto" +
       "\032\tBot.proto\032\016Platform.proto\032\014Module.prot" +
-      "o\032\nUUID.proto\"\311\004\n\005Event\022@\n\004type\030\001 \002(\01622." +
+      "o\032\nUUID.proto\"\336\004\n\005Event\022@\n\004type\030\001 \002(\01622." +
       "tv.v1x1.common.dto.proto.messages.Event." +
-      "EventType\"\217\003\n\tEventType\022\013\n\007UNKNOWN\020\000\022\020\n\014" +
+      "EventType\"\244\003\n\tEventType\022\013\n\007UNKNOWN\020\000\022\020\n\014" +
       "CHAT_MESSAGE\020\001\022\r\n\tCHAT_JOIN\020\002\022\r\n\tCHAT_PA" +
       "RT\020\003\022\034\n\030TWITCH_BOT_CHANNEL_STATE\020\004\022\030\n\024TW" +
       "ITCH_BOT_CONNECTED\020\005\022\033\n\027TWITCH_BOT_GLOBA",
@@ -18818,147 +20195,160 @@ public final class EventOuterClass {
       "\024\n\020TWITCH_RECONNECT\020\014\022\025\n\021TWITCH_ROOM_STA" +
       "TE\020\r\022\022\n\016TWITCH_TIMEOUT\020\016\022\017\n\013TWITCH_USER\020" +
       "\017\022\032\n\026TWITCH_USER_MOD_CHANGE\020\020\022\024\n\020SCHEDUL" +
-      "ER_NOTIFY\020\021*\010\010d\020\200\200\200\200\0022b\n\004data\022*.tv.v1x1." +
-      "common.dto.proto.messages.Message\030e \001(\0132" +
-      "(.tv.v1x1.common.dto.proto.messages.Even" +
-      "t\"\202\002\n\020ChatMessageEvent\022@\n\014chat_message\030\001",
-      " \002(\0132*.tv.v1x1.common.dto.proto.core.Cha" +
-      "tMessage\0225\n\004type\030\002 \002(\0162\'.tv.v1x1.common." +
-      "dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022k\n\004dat" +
-      "a\022(.tv.v1x1.common.dto.proto.messages.Ev" +
-      "ent\030e \001(\01323.tv.v1x1.common.dto.proto.mes" +
-      "sages.ChatMessageEvent\"\246\002\n\rChatJoinEvent" +
-      "\0221\n\004user\030\001 \002(\0132#.tv.v1x1.common.dto.prot" +
-      "o.core.User\0227\n\007channel\030\002 \002(\0132&.tv.v1x1.c" +
-      "ommon.dto.proto.core.Channel\0225\n\004type\030\003 \002" +
-      "(\0162\'.tv.v1x1.common.dto.proto.core.Platf",
-      "orm*\010\010d\020\200\200\200\200\0022h\n\004data\022(.tv.v1x1.common.d" +
-      "to.proto.messages.Event\030f \001(\01320.tv.v1x1." +
-      "common.dto.proto.messages.ChatJoinEvent\"" +
-      "\246\002\n\rChatPartEvent\0221\n\004user\030\001 \002(\0132#.tv.v1x" +
-      "1.common.dto.proto.core.User\0227\n\007channel\030" +
-      "\002 \002(\0132&.tv.v1x1.common.dto.proto.core.Ch" +
-      "annel\0225\n\004type\030\003 \002(\0162\'.tv.v1x1.common.dto" +
-      ".proto.core.Platform*\010\010d\020\200\200\200\200\0022h\n\004data\022(" +
+      "ER_NOTIFY\020\021\022\023\n\017PRIVATE_MESSAGE\020\022*\010\010d\020\200\200\200" +
+      "\200\0022b\n\004data\022*.tv.v1x1.common.dto.proto.me" +
+      "ssages.Message\030e \001(\0132(.tv.v1x1.common.dt" +
+      "o.proto.messages.Event\"\202\002\n\020ChatMessageEv",
+      "ent\022@\n\014chat_message\030\001 \002(\0132*.tv.v1x1.comm" +
+      "on.dto.proto.core.ChatMessage\0225\n\004type\030\002 " +
+      "\002(\0162\'.tv.v1x1.common.dto.proto.core.Plat" +
+      "form*\010\010d\020\200\200\200\200\0022k\n\004data\022(.tv.v1x1.common." +
+      "dto.proto.messages.Event\030e \001(\01323.tv.v1x1" +
+      ".common.dto.proto.messages.ChatMessageEv" +
+      "ent\"\246\002\n\rChatJoinEvent\0221\n\004user\030\001 \002(\0132#.tv" +
+      ".v1x1.common.dto.proto.core.User\0227\n\007chan" +
+      "nel\030\002 \002(\0132&.tv.v1x1.common.dto.proto.cor" +
+      "e.Channel\0225\n\004type\030\003 \002(\0162\'.tv.v1x1.common",
+      ".dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022h\n\004da" +
+      "ta\022(.tv.v1x1.common.dto.proto.messages.E" +
+      "vent\030f \001(\01320.tv.v1x1.common.dto.proto.me" +
+      "ssages.ChatJoinEvent\"\246\002\n\rChatPartEvent\0221" +
+      "\n\004user\030\001 \002(\0132#.tv.v1x1.common.dto.proto." +
+      "core.User\0227\n\007channel\030\002 \002(\0132&.tv.v1x1.com" +
+      "mon.dto.proto.core.Channel\0225\n\004type\030\003 \002(\016" +
+      "2\'.tv.v1x1.common.dto.proto.core.Platfor" +
+      "m*\010\010d\020\200\200\200\200\0022h\n\004data\022(.tv.v1x1.common.dto" +
+      ".proto.messages.Event\030g \001(\01320.tv.v1x1.co",
+      "mmon.dto.proto.messages.ChatPartEvent\"\303\002" +
+      "\n\032TwitchBotChannelStateEvent\0227\n\007channel\030" +
+      "\001 \002(\0132&.tv.v1x1.common.dto.proto.core.Ch" +
+      "annel\022/\n\003bot\030\002 \002(\0132\".tv.v1x1.common.dto." +
+      "proto.core.Bot\022D\n\022user_state_command\030\003 \002" +
+      "(\0132(.tv.v1x1.common.dto.proto.core.IrcSt" +
+      "anza2u\n\004data\022(.tv.v1x1.common.dto.proto." +
+      "messages.Event\030h \001(\0132=.tv.v1x1.common.dt" +
+      "o.proto.messages.TwitchBotChannelStateEv" +
+      "ent\"\211\002\n\027TwitchBotConnectedEvent\022/\n\003bot\030\001",
+      " \002(\0132\".tv.v1x1.common.dto.proto.core.Bot" +
+      "\022I\n\027rpl_end_of_motd_command\030\002 \002(\0132(.tv.v" +
+      "1x1.common.dto.proto.core.IrcStanza2r\n\004d" +
+      "ata\022(.tv.v1x1.common.dto.proto.messages." +
+      "Event\030i \001(\0132:.tv.v1x1.common.dto.proto.m" +
+      "essages.TwitchBotConnectedEvent\"\217\002\n\031Twit" +
+      "chBotGlobalStateEvent\022/\n\003bot\030\001 \002(\0132\".tv." +
+      "v1x1.common.dto.proto.core.Bot\022K\n\031global" +
+      "_user_state_command\030\002 \002(\0132(.tv.v1x1.comm" +
+      "on.dto.proto.core.IrcStanza2t\n\004data\022(.tv",
+      ".v1x1.common.dto.proto.messages.Event\030j " +
+      "\001(\0132<.tv.v1x1.common.dto.proto.messages." +
+      "TwitchBotGlobalStateEvent\"\217\002\n\022TwitchChan" +
+      "nelEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.comm" +
+      "on.dto.proto.core.Channel\022\017\n\007message\030\002 \002" +
+      "(\t\022@\n\016notice_command\030\003 \002(\0132(.tv.v1x1.com" +
+      "mon.dto.proto.core.IrcStanza2m\n\004data\022(.t" +
+      "v.v1x1.common.dto.proto.messages.Event\030k" +
+      " \001(\01325.tv.v1x1.common.dto.proto.messages" +
+      ".TwitchChannelEvent\"\304\002\n\027TwitchChannelUse",
+      "rsEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.commo" +
+      "n.dto.proto.core.Channel\0222\n\005users\030\002 \003(\0132" +
+      "#.tv.v1x1.common.dto.proto.core.User\022H\n\026" +
+      "rpl_name_reply_command\030\003 \002(\0132(.tv.v1x1.c" +
+      "ommon.dto.proto.core.IrcStanza2r\n\004data\022(" +
       ".tv.v1x1.common.dto.proto.messages.Event" +
-      "\030g \001(\01320.tv.v1x1.common.dto.proto.messag",
-      "es.ChatPartEvent\"\303\002\n\032TwitchBotChannelSta" +
-      "teEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.commo" +
-      "n.dto.proto.core.Channel\022/\n\003bot\030\002 \002(\0132\"." +
-      "tv.v1x1.common.dto.proto.core.Bot\022D\n\022use" +
-      "r_state_command\030\003 \002(\0132(.tv.v1x1.common.d" +
-      "to.proto.core.IrcStanza2u\n\004data\022(.tv.v1x" +
-      "1.common.dto.proto.messages.Event\030h \001(\0132" +
-      "=.tv.v1x1.common.dto.proto.messages.Twit" +
-      "chBotChannelStateEvent\"\211\002\n\027TwitchBotConn" +
-      "ectedEvent\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.common",
-      ".dto.proto.core.Bot\022I\n\027rpl_end_of_motd_c" +
-      "ommand\030\002 \002(\0132(.tv.v1x1.common.dto.proto." +
-      "core.IrcStanza2r\n\004data\022(.tv.v1x1.common." +
-      "dto.proto.messages.Event\030i \001(\0132:.tv.v1x1" +
-      ".common.dto.proto.messages.TwitchBotConn" +
-      "ectedEvent\"\217\002\n\031TwitchBotGlobalStateEvent" +
-      "\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.common.dto.proto" +
-      ".core.Bot\022K\n\031global_user_state_command\030\002" +
-      " \002(\0132(.tv.v1x1.common.dto.proto.core.Irc" +
-      "Stanza2t\n\004data\022(.tv.v1x1.common.dto.prot",
-      "o.messages.Event\030j \001(\0132<.tv.v1x1.common." +
-      "dto.proto.messages.TwitchBotGlobalStateE" +
-      "vent\"\217\002\n\022TwitchChannelEvent\0227\n\007channel\030\001" +
-      " \002(\0132&.tv.v1x1.common.dto.proto.core.Cha" +
-      "nnel\022\017\n\007message\030\002 \002(\t\022@\n\016notice_command\030" +
-      "\003 \002(\0132(.tv.v1x1.common.dto.proto.core.Ir" +
-      "cStanza2m\n\004data\022(.tv.v1x1.common.dto.pro" +
-      "to.messages.Event\030k \001(\01325.tv.v1x1.common" +
-      ".dto.proto.messages.TwitchChannelEvent\"\304" +
-      "\002\n\027TwitchChannelUsersEvent\0227\n\007channel\030\001 ",
-      "\002(\0132&.tv.v1x1.common.dto.proto.core.Chan" +
-      "nel\0222\n\005users\030\002 \003(\0132#.tv.v1x1.common.dto." +
-      "proto.core.User\022H\n\026rpl_name_reply_comman" +
-      "d\030\003 \002(\0132(.tv.v1x1.common.dto.proto.core." +
-      "IrcStanza2r\n\004data\022(.tv.v1x1.common.dto.p" +
-      "roto.messages.Event\030l \001(\0132:.tv.v1x1.comm" +
-      "on.dto.proto.messages.TwitchChannelUsers" +
-      "Event\"\315\001\n\023TwitchChatJoinEvent\022>\n\014join_co" +
-      "mmand\030\001 \002(\0132(.tv.v1x1.common.dto.proto.c" +
-      "ore.IrcStanza2v\n\004data\0220.tv.v1x1.common.d",
-      "to.proto.messages.ChatJoinEvent\030e \001(\01326." +
-      "tv.v1x1.common.dto.proto.messages.Twitch" +
-      "ChatJoinEvent\"\331\001\n\026TwitchChatMessageEvent" +
-      "\022A\n\017privmsg_command\030\001 \002(\0132(.tv.v1x1.comm" +
-      "on.dto.proto.core.IrcStanza2|\n\004data\0223.tv" +
-      ".v1x1.common.dto.proto.messages.ChatMess" +
-      "ageEvent\030e \001(\01329.tv.v1x1.common.dto.prot" +
-      "o.messages.TwitchChatMessageEvent\"\315\001\n\023Tw" +
-      "itchChatPartEvent\022>\n\014part_command\030\001 \002(\0132" +
-      "(.tv.v1x1.common.dto.proto.core.IrcStanz",
-      "a2v\n\004data\0220.tv.v1x1.common.dto.proto.mes" +
-      "sages.ChatPartEvent\030e \001(\01326.tv.v1x1.comm" +
-      "on.dto.proto.messages.TwitchChatPartEven" +
-      "t\"\275\002\n\017TwitchHostEvent\0227\n\007channel\030\001 \002(\0132&" +
-      ".tv.v1x1.common.dto.proto.core.Channel\022>" +
-      "\n\016target_channel\030\002 \001(\0132&.tv.v1x1.common." +
-      "dto.proto.core.Channel\022E\n\023host_target_co" +
-      "mmand\030\003 \002(\0132(.tv.v1x1.common.dto.proto.c" +
-      "ore.IrcStanza2j\n\004data\022(.tv.v1x1.common.d" +
-      "to.proto.messages.Event\030m \001(\01322.tv.v1x1.",
-      "common.dto.proto.messages.TwitchHostEven" +
-      "t\"\314\001\n\017TwitchPingEvent\022\r\n\005token\030\001 \002(\t\022>\n\014" +
-      "ping_command\030\002 \002(\0132(.tv.v1x1.common.dto." +
-      "proto.core.IrcStanza2j\n\004data\022(.tv.v1x1.c" +
-      "ommon.dto.proto.messages.Event\030n \001(\01322.t" +
-      "v.v1x1.common.dto.proto.messages.TwitchP" +
-      "ingEvent\"\370\001\n\025TwitchRawMessageEvent\022/\n\003bo" +
-      "t\030\001 \002(\0132\".tv.v1x1.common.dto.proto.core." +
-      "Bot\022<\n\nirc_stanza\030\002 \002(\0132(.tv.v1x1.common" +
-      ".dto.proto.core.IrcStanza2p\n\004data\022(.tv.v",
-      "1x1.common.dto.proto.messages.Event\030o \001(" +
-      "\01328.tv.v1x1.common.dto.proto.messages.Tw" +
-      "itchRawMessageEvent\"\375\001\n\024TwitchReconnectE" +
-      "vent\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.common.dto.p" +
-      "roto.core.Bot\022C\n\021reconnect_command\030\002 \002(\013" +
+      "\030l \001(\0132:.tv.v1x1.common.dto.proto.messag" +
+      "es.TwitchChannelUsersEvent\"\315\001\n\023TwitchCha" +
+      "tJoinEvent\022>\n\014join_command\030\001 \002(\0132(.tv.v1" +
+      "x1.common.dto.proto.core.IrcStanza2v\n\004da",
+      "ta\0220.tv.v1x1.common.dto.proto.messages.C" +
+      "hatJoinEvent\030e \001(\01326.tv.v1x1.common.dto." +
+      "proto.messages.TwitchChatJoinEvent\"\331\001\n\026T" +
+      "witchChatMessageEvent\022A\n\017privmsg_command" +
+      "\030\001 \002(\0132(.tv.v1x1.common.dto.proto.core.I" +
+      "rcStanza2|\n\004data\0223.tv.v1x1.common.dto.pr" +
+      "oto.messages.ChatMessageEvent\030e \001(\01329.tv" +
+      ".v1x1.common.dto.proto.messages.TwitchCh" +
+      "atMessageEvent\"\315\001\n\023TwitchChatPartEvent\022>" +
+      "\n\014part_command\030\001 \002(\0132(.tv.v1x1.common.dt",
+      "o.proto.core.IrcStanza2v\n\004data\0220.tv.v1x1" +
+      ".common.dto.proto.messages.ChatPartEvent" +
+      "\030e \001(\01326.tv.v1x1.common.dto.proto.messag" +
+      "es.TwitchChatPartEvent\"\275\002\n\017TwitchHostEve" +
+      "nt\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common.dto" +
+      ".proto.core.Channel\022>\n\016target_channel\030\002 " +
+      "\001(\0132&.tv.v1x1.common.dto.proto.core.Chan" +
+      "nel\022E\n\023host_target_command\030\003 \002(\0132(.tv.v1" +
+      "x1.common.dto.proto.core.IrcStanza2j\n\004da" +
+      "ta\022(.tv.v1x1.common.dto.proto.messages.E",
+      "vent\030m \001(\01322.tv.v1x1.common.dto.proto.me" +
+      "ssages.TwitchHostEvent\"\314\001\n\017TwitchPingEve" +
+      "nt\022\r\n\005token\030\001 \002(\t\022>\n\014ping_command\030\002 \002(\0132" +
+      "(.tv.v1x1.common.dto.proto.core.IrcStanz" +
+      "a2j\n\004data\022(.tv.v1x1.common.dto.proto.mes" +
+      "sages.Event\030n \001(\01322.tv.v1x1.common.dto.p" +
+      "roto.messages.TwitchPingEvent\"\370\001\n\025Twitch" +
+      "RawMessageEvent\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.c" +
+      "ommon.dto.proto.core.Bot\022<\n\nirc_stanza\030\002" +
+      " \002(\0132(.tv.v1x1.common.dto.proto.core.Irc",
+      "Stanza2p\n\004data\022(.tv.v1x1.common.dto.prot" +
+      "o.messages.Event\030o \001(\01328.tv.v1x1.common." +
+      "dto.proto.messages.TwitchRawMessageEvent" +
+      "\"\375\001\n\024TwitchReconnectEvent\022/\n\003bot\030\001 \002(\0132\"" +
+      ".tv.v1x1.common.dto.proto.core.Bot\022C\n\021re" +
+      "connect_command\030\002 \002(\0132(.tv.v1x1.common.d" +
+      "to.proto.core.IrcStanza2o\n\004data\022(.tv.v1x" +
+      "1.common.dto.proto.messages.Event\030p \001(\0132" +
+      "7.tv.v1x1.common.dto.proto.messages.Twit" +
+      "chReconnectEvent\"\206\002\n\024TwitchRoomStateEven",
+      "t\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common.dto." +
+      "proto.core.Channel\022D\n\022room_state_command" +
+      "\030\002 \002(\0132(.tv.v1x1.common.dto.proto.core.I" +
+      "rcStanza2o\n\004data\022(.tv.v1x1.common.dto.pr" +
+      "oto.messages.Event\030q \001(\01327.tv.v1x1.commo" +
+      "n.dto.proto.messages.TwitchRoomStateEven" +
+      "t\"\265\002\n\022TwitchTimeoutEvent\0227\n\007channel\030\001 \002(" +
+      "\0132&.tv.v1x1.common.dto.proto.core.Channe" +
+      "l\0221\n\004user\030\002 \002(\0132#.tv.v1x1.common.dto.pro" +
+      "to.core.User\022D\n\022clear_chat_command\030\003 \002(\013",
       "2(.tv.v1x1.common.dto.proto.core.IrcStan" +
-      "za2o\n\004data\022(.tv.v1x1.common.dto.proto.me" +
-      "ssages.Event\030p \001(\01327.tv.v1x1.common.dto." +
-      "proto.messages.TwitchReconnectEvent\"\206\002\n\024" +
-      "TwitchRoomStateEvent\0227\n\007channel\030\001 \002(\0132&.",
-      "tv.v1x1.common.dto.proto.core.Channel\022D\n" +
-      "\022room_state_command\030\002 \002(\0132(.tv.v1x1.comm" +
-      "on.dto.proto.core.IrcStanza2o\n\004data\022(.tv" +
-      ".v1x1.common.dto.proto.messages.Event\030q " +
-      "\001(\01327.tv.v1x1.common.dto.proto.messages." +
-      "TwitchRoomStateEvent\"\265\002\n\022TwitchTimeoutEv" +
-      "ent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common.dt" +
-      "o.proto.core.Channel\0221\n\004user\030\002 \002(\0132#.tv." +
-      "v1x1.common.dto.proto.core.User\022D\n\022clear" +
-      "_chat_command\030\003 \002(\0132(.tv.v1x1.common.dto",
-      ".proto.core.IrcStanza2m\n\004data\022(.tv.v1x1." +
-      "common.dto.proto.messages.Event\030r \001(\01325." +
-      "tv.v1x1.common.dto.proto.messages.Twitch" +
-      "TimeoutEvent\"\301\002\n\017TwitchUserEvent\0227\n\007chan" +
-      "nel\030\001 \002(\0132&.tv.v1x1.common.dto.proto.cor" +
-      "e.Channel\0221\n\004user\030\002 \002(\0132#.tv.v1x1.common" +
-      ".dto.proto.core.User\022\017\n\007message\030\003 \002(\t\022E\n" +
-      "\023user_notice_command\030\004 \002(\0132(.tv.v1x1.com" +
-      "mon.dto.proto.core.IrcStanza2j\n\004data\022(.t" +
-      "v.v1x1.common.dto.proto.messages.Event\030s",
-      " \001(\01322.tv.v1x1.common.dto.proto.messages" +
-      ".TwitchUserEvent\"\317\002\n\030TwitchUserModChange" +
-      "Event\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common." +
-      "dto.proto.core.Channel\0221\n\004user\030\002 \002(\0132#.t" +
-      "v.v1x1.common.dto.proto.core.User\022\022\n\nis_" +
-      "now_mod\030\003 \002(\010\022>\n\014mode_command\030\004 \002(\0132(.tv" +
-      ".v1x1.common.dto.proto.core.IrcStanza2s\n" +
-      "\004data\022(.tv.v1x1.common.dto.proto.message" +
-      "s.Event\030t \001(\0132;.tv.v1x1.common.dto.proto" +
-      ".messages.TwitchUserModChangeEvent\"\200\002\n\024S",
-      "chedulerNotifyEvent\0225\n\006module\030\001 \002(\0132%.tv" +
-      ".v1x1.common.dto.proto.core.Module\022/\n\002id" +
-      "\030\002 \002(\0132#.tv.v1x1.common.dto.proto.core.U" +
-      "UID\022\017\n\007payload\030\003 \002(\0142o\n\004data\022(.tv.v1x1.c" +
-      "ommon.dto.proto.messages.Event\030u \001(\01327.t" +
-      "v.v1x1.common.dto.proto.messages.Schedul" +
-      "erNotifyEvent"
+      "za2m\n\004data\022(.tv.v1x1.common.dto.proto.me" +
+      "ssages.Event\030r \001(\01325.tv.v1x1.common.dto." +
+      "proto.messages.TwitchTimeoutEvent\"\301\002\n\017Tw" +
+      "itchUserEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1" +
+      ".common.dto.proto.core.Channel\0221\n\004user\030\002" +
+      " \002(\0132#.tv.v1x1.common.dto.proto.core.Use" +
+      "r\022\017\n\007message\030\003 \002(\t\022E\n\023user_notice_comman" +
+      "d\030\004 \002(\0132(.tv.v1x1.common.dto.proto.core." +
+      "IrcStanza2j\n\004data\022(.tv.v1x1.common.dto.p",
+      "roto.messages.Event\030s \001(\01322.tv.v1x1.comm" +
+      "on.dto.proto.messages.TwitchUserEvent\"\317\002" +
+      "\n\030TwitchUserModChangeEvent\0227\n\007channel\030\001 " +
+      "\002(\0132&.tv.v1x1.common.dto.proto.core.Chan" +
+      "nel\0221\n\004user\030\002 \002(\0132#.tv.v1x1.common.dto.p" +
+      "roto.core.User\022\022\n\nis_now_mod\030\003 \002(\010\022>\n\014mo" +
+      "de_command\030\004 \002(\0132(.tv.v1x1.common.dto.pr" +
+      "oto.core.IrcStanza2s\n\004data\022(.tv.v1x1.com" +
+      "mon.dto.proto.messages.Event\030t \001(\0132;.tv." +
+      "v1x1.common.dto.proto.messages.TwitchUse",
+      "rModChangeEvent\"\200\002\n\024SchedulerNotifyEvent" +
+      "\0225\n\006module\030\001 \002(\0132%.tv.v1x1.common.dto.pr" +
+      "oto.core.Module\022/\n\002id\030\002 \002(\0132#.tv.v1x1.co" +
+      "mmon.dto.proto.core.UUID\022\017\n\007payload\030\003 \002(" +
+      "\0142o\n\004data\022(.tv.v1x1.common.dto.proto.mes" +
+      "sages.Event\030u \001(\01327.tv.v1x1.common.dto.p" +
+      "roto.messages.SchedulerNotifyEvent\"\216\002\n\023P" +
+      "rivateMessageEvent\022F\n\017private_message\030\001 " +
+      "\002(\0132-.tv.v1x1.common.dto.proto.core.Priv" +
+      "ateMessage\0225\n\004type\030\002 \002(\0162\'.tv.v1x1.commo",
+      "n.dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022n\n\004d" +
+      "ata\022(.tv.v1x1.common.dto.proto.messages." +
+      "Event\030v \001(\01326.tv.v1x1.common.dto.proto.m" +
+      "essages.PrivateMessageEvent\"\343\001\n\031TwitchPr" +
+      "ivateMessageEvent\022A\n\017whisper_command\030\001 \002" +
+      "(\0132(.tv.v1x1.common.dto.proto.core.IrcSt" +
+      "anza2\202\001\n\004data\0226.tv.v1x1.common.dto.proto" +
+      ".messages.PrivateMessageEvent\030e \001(\0132<.tv" +
+      ".v1x1.common.dto.proto.messages.TwitchPr" +
+      "ivateMessageEvent"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -19107,6 +20497,18 @@ public final class EventOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_messages_SchedulerNotifyEvent_descriptor,
         new java.lang.String[] { "Module", "Id", "Payload", });
+    internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_descriptor =
+      getDescriptor().getMessageTypes().get(21);
+    internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_messages_PrivateMessageEvent_descriptor,
+        new java.lang.String[] { "PrivateMessage", "Type", });
+    internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_descriptor =
+      getDescriptor().getMessageTypes().get(22);
+    internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_messages_TwitchPrivateMessageEvent_descriptor,
+        new java.lang.String[] { "WhisperCommand", });
     tv.v1x1.common.dto.proto.messages.MessageOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.ChannelOuterClass.getDescriptor();

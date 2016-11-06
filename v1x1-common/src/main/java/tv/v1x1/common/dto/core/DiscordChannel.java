@@ -27,6 +27,11 @@ public class DiscordChannel extends Channel {
     }
 
     @Override
+    public Platform getPlatform() {
+        return Platform.DISCORD;
+    }
+
+    @Override
     public ChannelOuterClass.Channel toProto() {
         return ChannelOuterClass.Channel.newBuilder()
                 .setId(id)

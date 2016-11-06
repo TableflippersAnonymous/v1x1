@@ -1,7 +1,22 @@
 package tv.v1x1.common.modules;
 
-import com.datastax.driver.core.*;
-import com.datastax.driver.core.policies.*;
+import com.datastax.driver.core.AuthProvider;
+import com.datastax.driver.core.Cluster;
+import com.datastax.driver.core.CodecRegistry;
+import com.datastax.driver.core.ConsistencyLevel;
+import com.datastax.driver.core.PerHostPercentileTracker;
+import com.datastax.driver.core.PlainTextAuthProvider;
+import com.datastax.driver.core.QueryOptions;
+import com.datastax.driver.core.Session;
+import com.datastax.driver.core.SimpleStatement;
+import com.datastax.driver.core.SocketOptions;
+import com.datastax.driver.core.policies.DCAwareRoundRobinPolicy;
+import com.datastax.driver.core.policies.DowngradingConsistencyRetryPolicy;
+import com.datastax.driver.core.policies.ExponentialReconnectionPolicy;
+import com.datastax.driver.core.policies.LatencyAwarePolicy;
+import com.datastax.driver.core.policies.LoggingRetryPolicy;
+import com.datastax.driver.core.policies.PercentileSpeculativeExecutionPolicy;
+import com.datastax.driver.core.policies.TokenAwarePolicy;
 import com.datastax.driver.extras.codecs.enums.EnumOrdinalCodec;
 import com.datastax.driver.mapping.MappingManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,6 +42,7 @@ import tv.v1x1.common.config.ConfigScanner;
 import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Permission;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
+import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.core.ModuleInstance;
 import tv.v1x1.common.dto.core.Tenant;
@@ -42,7 +58,15 @@ import tv.v1x1.common.rpc.client.ServiceClient;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributorImpl;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
-import tv.v1x1.common.services.persistence.*;
+import tv.v1x1.common.services.persistence.ChannelConfigurationProvider;
+import tv.v1x1.common.services.persistence.ConfigurationProvider;
+import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.common.services.persistence.Deduplicator;
+import tv.v1x1.common.services.persistence.KeyValueStore;
+import tv.v1x1.common.services.persistence.PersistentKeyValueStoreImpl;
+import tv.v1x1.common.services.persistence.TemporaryKeyValueStoreImpl;
+import tv.v1x1.common.services.persistence.TenantConfigurationProvider;
+import tv.v1x1.common.services.persistence.TenantKeyValueStoreImpl;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.queue.MessageQueueManagerImpl;
@@ -62,13 +86,14 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by cobi on 10/4/16.
  */
-public abstract class Module<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> {
+public abstract class Module<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /* Config */
     private T settings;
     private ConfigurationProvider<U> globalConfigProvider;
     private TenantConfigurationProvider<V> tenantConfigProvider;
+    private ChannelConfigurationProvider<W> channelConfigProvider;
     private final UUID instanceId = UUID.randomUUID();
     private String configFile;
 
@@ -194,6 +219,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
         globalConfigProvider = new ConfigurationProvider<U>(toDto(), daoManager, getGlobalConfigurationClass());
         tenantConfigProvider = new TenantConfigurationProvider<V>(toDto(), daoManager, getTenantConfigurationClass());
+        channelConfigProvider = new ChannelConfigurationProvider<W>(toDto(), daoManager, getChannelConfigurationClass());
         i18n = new I18n(daoManager);
         stateManager = new StateManager();
 
@@ -274,6 +300,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public TenantConfigurationProvider<V> getTenantConfigProvider() {
         return tenantConfigProvider;
+    }
+
+    public ChannelConfigurationProvider<W> getChannelConfigProvider() {
+        return channelConfigProvider;
     }
 
     protected KeyValueStore getTemporaryKeyValueStore() {
@@ -390,6 +420,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return getTenantConfigProvider().getTenantConfiguration(tenant);
     }
 
+    public W getChannelConfiguration(final Channel channel) {
+        return getChannelConfigProvider().getChannelConfiguration(channel);
+    }
+
     /* ******************************* UTILITY METHODS ******************************* */
     public tv.v1x1.common.dto.core.Module toDto() {
         return new tv.v1x1.common.dto.core.Module(getName());
@@ -426,6 +460,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     private Class<V> getTenantConfigurationClass() {
         return Generics.getTypeParameter(getClass(), TenantConfiguration.class);
+    }
+
+    private Class<W> getChannelConfigurationClass() {
+        return Generics.getTypeParameter(getClass(), ChannelConfiguration.class);
     }
 
     private void updateConfigurationDefinitions() {

@@ -1,5 +1,6 @@
 package tv.v1x1.common.dto.core;
 
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
 
 /**
@@ -44,6 +45,8 @@ public abstract class Channel {
     public Tenant getTenant() {
         return tenant;
     }
+
+    public abstract Platform getPlatform();
 
     public abstract ChannelOuterClass.Channel toProto();
     public abstract ChannelOuterClass.TenantEntry toProtoTenantEntry();

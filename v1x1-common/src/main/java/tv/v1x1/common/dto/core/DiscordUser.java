@@ -27,6 +27,11 @@ public class DiscordUser extends User {
     }
 
     @Override
+    public Platform getPlatform() {
+        return Platform.DISCORD;
+    }
+
+    @Override
     public UserOuterClass.User toProto() {
         return UserOuterClass.User.newBuilder()
                 .setPlatform(PlatformOuterClass.Platform.DISCORD)

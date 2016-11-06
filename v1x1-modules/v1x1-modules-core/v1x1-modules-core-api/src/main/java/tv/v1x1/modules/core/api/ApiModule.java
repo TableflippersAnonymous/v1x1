@@ -12,7 +12,7 @@ import java.lang.invoke.MethodHandles;
 /**
  * Created by cobi on 10/24/2016.
  */
-public class ApiModule extends ServiceModule<ApiSettings, ApiGlobalConfiguration, ApiTenantConfiguration> {
+public class ApiModule extends ServiceModule<ApiSettings, ApiGlobalConfiguration, ApiTenantConfiguration, ApiChannelConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private Thread applicationThread;
