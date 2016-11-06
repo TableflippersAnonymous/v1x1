@@ -6,7 +6,7 @@ import tv.v1x1.common.rpc.client.ChatRouterServiceClient;
 /**
  * @author Josh
  */
-public class Echo extends RegisteredThreadedModule<EchoModuleSettings, EchoGlobalConfiguration, EchoTenantConfiguration> {
+public class Echo extends RegisteredThreadedModule<EchoModuleSettings, EchoGlobalConfiguration, EchoTenantConfiguration, EchoChannelConfiguration> {
     ChatRouterServiceClient crsc;
 
     public static void main(final String[] args) throws Exception {

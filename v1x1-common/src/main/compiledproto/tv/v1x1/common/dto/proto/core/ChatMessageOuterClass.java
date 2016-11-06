@@ -1369,11 +1369,993 @@ public final class ChatMessageOuterClass {
 
   }
 
+  public interface PrivateMessageOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.core.PrivateMessage)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+     */
+    boolean hasSender();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+     */
+    tv.v1x1.common.dto.proto.core.UserOuterClass.User getSender();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+     */
+    tv.v1x1.common.dto.proto.core.UserOuterClass.UserOrBuilder getSenderOrBuilder();
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+     */
+    boolean hasTarget();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+     */
+    tv.v1x1.common.dto.proto.core.BotOuterClass.Bot getTarget();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+     */
+    tv.v1x1.common.dto.proto.core.BotOuterClass.BotOrBuilder getTargetOrBuilder();
+
+    /**
+     * <code>required string text = 3;</code>
+     */
+    boolean hasText();
+    /**
+     * <code>required string text = 3;</code>
+     */
+    java.lang.String getText();
+    /**
+     * <code>required string text = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getTextBytes();
+  }
+  /**
+   * Protobuf type {@code tv.v1x1.common.dto.proto.core.PrivateMessage}
+   */
+  public  static final class PrivateMessage extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.core.PrivateMessage)
+      PrivateMessageOrBuilder {
+    // Use PrivateMessage.newBuilder() to construct.
+    private PrivateMessage(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private PrivateMessage() {
+      text_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private PrivateMessage(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              tv.v1x1.common.dto.proto.core.UserOuterClass.User.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = sender_.toBuilder();
+              }
+              sender_ = input.readMessage(tv.v1x1.common.dto.proto.core.UserOuterClass.User.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(sender_);
+                sender_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 18: {
+              tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = target_.toBuilder();
+              }
+              target_ = input.readMessage(tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(target_);
+                target_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000004;
+              text_ = bs;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.class, tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int SENDER_FIELD_NUMBER = 1;
+    private tv.v1x1.common.dto.proto.core.UserOuterClass.User sender_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+     */
+    public boolean hasSender() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.UserOuterClass.User getSender() {
+      return sender_ == null ? tv.v1x1.common.dto.proto.core.UserOuterClass.User.getDefaultInstance() : sender_;
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.UserOuterClass.UserOrBuilder getSenderOrBuilder() {
+      return sender_ == null ? tv.v1x1.common.dto.proto.core.UserOuterClass.User.getDefaultInstance() : sender_;
+    }
+
+    public static final int TARGET_FIELD_NUMBER = 2;
+    private tv.v1x1.common.dto.proto.core.BotOuterClass.Bot target_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+     */
+    public boolean hasTarget() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.BotOuterClass.Bot getTarget() {
+      return target_ == null ? tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.getDefaultInstance() : target_;
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.BotOuterClass.BotOrBuilder getTargetOrBuilder() {
+      return target_ == null ? tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.getDefaultInstance() : target_;
+    }
+
+    public static final int TEXT_FIELD_NUMBER = 3;
+    private volatile java.lang.Object text_;
+    /**
+     * <code>required string text = 3;</code>
+     */
+    public boolean hasText() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required string text = 3;</code>
+     */
+    public java.lang.String getText() {
+      java.lang.Object ref = text_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          text_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string text = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTextBytes() {
+      java.lang.Object ref = text_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        text_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasSender()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTarget()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasText()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getSender().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getTarget().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, getSender());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, getTarget());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, text_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getSender());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getTarget());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, text_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage)) {
+        return super.equals(obj);
+      }
+      tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage other = (tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage) obj;
+
+      boolean result = true;
+      result = result && (hasSender() == other.hasSender());
+      if (hasSender()) {
+        result = result && getSender()
+            .equals(other.getSender());
+      }
+      result = result && (hasTarget() == other.hasTarget());
+      if (hasTarget()) {
+        result = result && getTarget()
+            .equals(other.getTarget());
+      }
+      result = result && (hasText() == other.hasText());
+      if (hasText()) {
+        result = result && getText()
+            .equals(other.getText());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasSender()) {
+        hash = (37 * hash) + SENDER_FIELD_NUMBER;
+        hash = (53 * hash) + getSender().hashCode();
+      }
+      if (hasTarget()) {
+        hash = (37 * hash) + TARGET_FIELD_NUMBER;
+        hash = (53 * hash) + getTarget().hashCode();
+      }
+      if (hasText()) {
+        hash = (37 * hash) + TEXT_FIELD_NUMBER;
+        hash = (53 * hash) + getText().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.core.PrivateMessage}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.core.PrivateMessage)
+        tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessageOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.class, tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.Builder.class);
+      }
+
+      // Construct using tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getSenderFieldBuilder();
+          getTargetFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (senderBuilder_ == null) {
+          sender_ = null;
+        } else {
+          senderBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (targetBuilder_ == null) {
+          target_ = null;
+        } else {
+          targetBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        text_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_descriptor;
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage getDefaultInstanceForType() {
+        return tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.getDefaultInstance();
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage build() {
+        tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage buildPartial() {
+        tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage result = new tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (senderBuilder_ == null) {
+          result.sender_ = sender_;
+        } else {
+          result.sender_ = senderBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (targetBuilder_ == null) {
+          result.target_ = target_;
+        } else {
+          result.target_ = targetBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.text_ = text_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage) {
+          return mergeFrom((tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage other) {
+        if (other == tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage.getDefaultInstance()) return this;
+        if (other.hasSender()) {
+          mergeSender(other.getSender());
+        }
+        if (other.hasTarget()) {
+          mergeTarget(other.getTarget());
+        }
+        if (other.hasText()) {
+          bitField0_ |= 0x00000004;
+          text_ = other.text_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasSender()) {
+          return false;
+        }
+        if (!hasTarget()) {
+          return false;
+        }
+        if (!hasText()) {
+          return false;
+        }
+        if (!getSender().isInitialized()) {
+          return false;
+        }
+        if (!getTarget().isInitialized()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private tv.v1x1.common.dto.proto.core.UserOuterClass.User sender_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.UserOuterClass.User, tv.v1x1.common.dto.proto.core.UserOuterClass.User.Builder, tv.v1x1.common.dto.proto.core.UserOuterClass.UserOrBuilder> senderBuilder_;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      public boolean hasSender() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.UserOuterClass.User getSender() {
+        if (senderBuilder_ == null) {
+          return sender_ == null ? tv.v1x1.common.dto.proto.core.UserOuterClass.User.getDefaultInstance() : sender_;
+        } else {
+          return senderBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      public Builder setSender(tv.v1x1.common.dto.proto.core.UserOuterClass.User value) {
+        if (senderBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          sender_ = value;
+          onChanged();
+        } else {
+          senderBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      public Builder setSender(
+          tv.v1x1.common.dto.proto.core.UserOuterClass.User.Builder builderForValue) {
+        if (senderBuilder_ == null) {
+          sender_ = builderForValue.build();
+          onChanged();
+        } else {
+          senderBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      public Builder mergeSender(tv.v1x1.common.dto.proto.core.UserOuterClass.User value) {
+        if (senderBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              sender_ != null &&
+              sender_ != tv.v1x1.common.dto.proto.core.UserOuterClass.User.getDefaultInstance()) {
+            sender_ =
+              tv.v1x1.common.dto.proto.core.UserOuterClass.User.newBuilder(sender_).mergeFrom(value).buildPartial();
+          } else {
+            sender_ = value;
+          }
+          onChanged();
+        } else {
+          senderBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      public Builder clearSender() {
+        if (senderBuilder_ == null) {
+          sender_ = null;
+          onChanged();
+        } else {
+          senderBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.UserOuterClass.User.Builder getSenderBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getSenderFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.UserOuterClass.UserOrBuilder getSenderOrBuilder() {
+        if (senderBuilder_ != null) {
+          return senderBuilder_.getMessageOrBuilder();
+        } else {
+          return sender_ == null ?
+              tv.v1x1.common.dto.proto.core.UserOuterClass.User.getDefaultInstance() : sender_;
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.User sender = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.UserOuterClass.User, tv.v1x1.common.dto.proto.core.UserOuterClass.User.Builder, tv.v1x1.common.dto.proto.core.UserOuterClass.UserOrBuilder> 
+          getSenderFieldBuilder() {
+        if (senderBuilder_ == null) {
+          senderBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.UserOuterClass.User, tv.v1x1.common.dto.proto.core.UserOuterClass.User.Builder, tv.v1x1.common.dto.proto.core.UserOuterClass.UserOrBuilder>(
+                  getSender(),
+                  getParentForChildren(),
+                  isClean());
+          sender_ = null;
+        }
+        return senderBuilder_;
+      }
+
+      private tv.v1x1.common.dto.proto.core.BotOuterClass.Bot target_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.BotOuterClass.Bot, tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.Builder, tv.v1x1.common.dto.proto.core.BotOuterClass.BotOrBuilder> targetBuilder_;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      public boolean hasTarget() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.BotOuterClass.Bot getTarget() {
+        if (targetBuilder_ == null) {
+          return target_ == null ? tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.getDefaultInstance() : target_;
+        } else {
+          return targetBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      public Builder setTarget(tv.v1x1.common.dto.proto.core.BotOuterClass.Bot value) {
+        if (targetBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          target_ = value;
+          onChanged();
+        } else {
+          targetBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      public Builder setTarget(
+          tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.Builder builderForValue) {
+        if (targetBuilder_ == null) {
+          target_ = builderForValue.build();
+          onChanged();
+        } else {
+          targetBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      public Builder mergeTarget(tv.v1x1.common.dto.proto.core.BotOuterClass.Bot value) {
+        if (targetBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              target_ != null &&
+              target_ != tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.getDefaultInstance()) {
+            target_ =
+              tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.newBuilder(target_).mergeFrom(value).buildPartial();
+          } else {
+            target_ = value;
+          }
+          onChanged();
+        } else {
+          targetBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      public Builder clearTarget() {
+        if (targetBuilder_ == null) {
+          target_ = null;
+          onChanged();
+        } else {
+          targetBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.Builder getTargetBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getTargetFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.BotOuterClass.BotOrBuilder getTargetOrBuilder() {
+        if (targetBuilder_ != null) {
+          return targetBuilder_.getMessageOrBuilder();
+        } else {
+          return target_ == null ?
+              tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.getDefaultInstance() : target_;
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.Bot target = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.BotOuterClass.Bot, tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.Builder, tv.v1x1.common.dto.proto.core.BotOuterClass.BotOrBuilder> 
+          getTargetFieldBuilder() {
+        if (targetBuilder_ == null) {
+          targetBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.BotOuterClass.Bot, tv.v1x1.common.dto.proto.core.BotOuterClass.Bot.Builder, tv.v1x1.common.dto.proto.core.BotOuterClass.BotOrBuilder>(
+                  getTarget(),
+                  getParentForChildren(),
+                  isClean());
+          target_ = null;
+        }
+        return targetBuilder_;
+      }
+
+      private java.lang.Object text_ = "";
+      /**
+       * <code>required string text = 3;</code>
+       */
+      public boolean hasText() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required string text = 3;</code>
+       */
+      public java.lang.String getText() {
+        java.lang.Object ref = text_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            text_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string text = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTextBytes() {
+        java.lang.Object ref = text_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          text_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string text = 3;</code>
+       */
+      public Builder setText(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        text_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string text = 3;</code>
+       */
+      public Builder clearText() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        text_ = getDefaultInstance().getText();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string text = 3;</code>
+       */
+      public Builder setTextBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        text_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.core.PrivateMessage)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.core.PrivateMessage)
+    private static final tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage();
+    }
+
+    public static tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<PrivateMessage>
+        PARSER = new com.google.protobuf.AbstractParser<PrivateMessage>() {
+      public PrivateMessage parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new PrivateMessage(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<PrivateMessage> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<PrivateMessage> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.PrivateMessage getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_v1x1_common_dto_proto_core_ChatMessage_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_v1x1_common_dto_proto_core_ChatMessage_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1385,12 +2367,16 @@ public final class ChatMessageOuterClass {
     java.lang.String[] descriptorData = {
       "\n\021ChatMessage.proto\022\035tv.v1x1.common.dto." +
       "proto.core\032\rChannel.proto\032\nUser.proto\032\020P" +
-      "ermission.proto\"\311\001\n\013ChatMessage\0227\n\007chann" +
-      "el\030\001 \002(\0132&.tv.v1x1.common.dto.proto.core" +
-      ".Channel\0223\n\006sender\030\002 \002(\0132#.tv.v1x1.commo" +
-      "n.dto.proto.core.User\022\014\n\004text\030\003 \002(\t\022>\n\013p" +
-      "ermissions\030\004 \003(\0132).tv.v1x1.common.dto.pr" +
-      "oto.core.Permission"
+      "ermission.proto\032\tBot.proto\"\311\001\n\013ChatMessa" +
+      "ge\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common.dto" +
+      ".proto.core.Channel\0223\n\006sender\030\002 \002(\0132#.tv" +
+      ".v1x1.common.dto.proto.core.User\022\014\n\004text" +
+      "\030\003 \002(\t\022>\n\013permissions\030\004 \003(\0132).tv.v1x1.co" +
+      "mmon.dto.proto.core.Permission\"\207\001\n\016Priva" +
+      "teMessage\0223\n\006sender\030\001 \002(\0132#.tv.v1x1.comm" +
+      "on.dto.proto.core.User\0222\n\006target\030\002 \002(\0132\"",
+      ".tv.v1x1.common.dto.proto.core.Bot\022\014\n\004te" +
+      "xt\030\003 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1406,6 +2392,7 @@ public final class ChatMessageOuterClass {
           tv.v1x1.common.dto.proto.core.ChannelOuterClass.getDescriptor(),
           tv.v1x1.common.dto.proto.core.UserOuterClass.getDescriptor(),
           tv.v1x1.common.dto.proto.core.PermissionOuterClass.getDescriptor(),
+          tv.v1x1.common.dto.proto.core.BotOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_v1x1_common_dto_proto_core_ChatMessage_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -1413,9 +2400,16 @@ public final class ChatMessageOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_core_ChatMessage_descriptor,
         new java.lang.String[] { "Channel", "Sender", "Text", "Permissions", });
+    internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_descriptor =
+      getDescriptor().getMessageTypes().get(1);
+    internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_core_PrivateMessage_descriptor,
+        new java.lang.String[] { "Sender", "Target", "Text", });
     tv.v1x1.common.dto.proto.core.ChannelOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.UserOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.PermissionOuterClass.getDescriptor();
+    tv.v1x1.common.dto.proto.core.BotOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

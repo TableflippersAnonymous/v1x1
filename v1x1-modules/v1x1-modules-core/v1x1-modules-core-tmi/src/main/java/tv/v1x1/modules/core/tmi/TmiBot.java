@@ -2,20 +2,65 @@ package tv.v1x1.modules.core.tmi;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tv.v1x1.common.dto.core.*;
+import tv.v1x1.common.dto.core.ChatMessage;
+import tv.v1x1.common.dto.core.Module;
+import tv.v1x1.common.dto.core.Permission;
+import tv.v1x1.common.dto.core.PrivateMessage;
+import tv.v1x1.common.dto.core.TwitchBot;
+import tv.v1x1.common.dto.core.TwitchChannel;
+import tv.v1x1.common.dto.core.TwitchUser;
 import tv.v1x1.common.dto.irc.IrcSource;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.IrcUser;
-import tv.v1x1.common.dto.irc.commands.*;
+import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
+import tv.v1x1.common.dto.irc.commands.ClearChatCommand;
+import tv.v1x1.common.dto.irc.commands.GlobalUserStateCommand;
+import tv.v1x1.common.dto.irc.commands.HostTargetCommand;
+import tv.v1x1.common.dto.irc.commands.JoinCommand;
+import tv.v1x1.common.dto.irc.commands.ModeCommand;
+import tv.v1x1.common.dto.irc.commands.NoticeCommand;
+import tv.v1x1.common.dto.irc.commands.PartCommand;
+import tv.v1x1.common.dto.irc.commands.PingCommand;
+import tv.v1x1.common.dto.irc.commands.PrivmsgCommand;
+import tv.v1x1.common.dto.irc.commands.ReconnectCommand;
+import tv.v1x1.common.dto.irc.commands.RoomStateCommand;
+import tv.v1x1.common.dto.irc.commands.RplEndOfMotdCommand;
+import tv.v1x1.common.dto.irc.commands.RplNameReplyCommand;
+import tv.v1x1.common.dto.irc.commands.UserNoticeCommand;
+import tv.v1x1.common.dto.irc.commands.UserStateCommand;
+import tv.v1x1.common.dto.irc.commands.WhisperCommand;
 import tv.v1x1.common.dto.messages.Event;
-import tv.v1x1.common.dto.messages.events.*;
+import tv.v1x1.common.dto.messages.events.TwitchBotChannelStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotConnectedEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotGlobalStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChannelEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChannelUsersEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatJoinEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatPartEvent;
+import tv.v1x1.common.dto.messages.events.TwitchHostEvent;
+import tv.v1x1.common.dto.messages.events.TwitchPingEvent;
+import tv.v1x1.common.dto.messages.events.TwitchPrivateMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchRawMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchReconnectEvent;
+import tv.v1x1.common.dto.messages.events.TwitchRoomStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchTimeoutEvent;
+import tv.v1x1.common.dto.messages.events.TwitchUserEvent;
+import tv.v1x1.common.dto.messages.events.TwitchUserModChangeEvent;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.queue.MessageQueue;
+import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.net.Socket;
+import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -118,6 +163,9 @@ public class TmiBot implements Runnable {
             handlePart((PartCommand) stanza);
         if(stanza.getTags().containsKey("id") && deduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.fromString(stanza.getTags().get("id")))))
             return;
+        if(stanza instanceof WhisperCommand && stanza.getTags().containsKey("thread-id") && stanza.getTags().containsKey("message-id")
+                && deduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(stanza.getTags().get("thread-id"), stanza.getTags().get("message-id"))))))
+            return;
         event(stanza);
     }
 
@@ -179,6 +227,8 @@ public class TmiBot implements Runnable {
             event((UserNoticeCommand) stanza);
         else if(stanza instanceof UserStateCommand)
             event((UserStateCommand) stanza);
+        else if(stanza instanceof WhisperCommand)
+            event((WhisperCommand) stanza);
         else
             throw new IllegalStateException("Unknown IrcStanza: " + stanza.getClass().getCanonicalName());
     }
@@ -221,7 +271,11 @@ public class TmiBot implements Runnable {
         final TwitchUser user = getUser(privmsgCommand);
         if(user.getId().equals(username))
             return;
-        event(new TwitchChatMessageEvent(module, new ChatMessage(channel, user, privmsgCommand.getMessage(), tmiModule.getPermissions(channel.getTenant(), user.getGlobalUser())), privmsgCommand));
+        final Set<String> badges = privmsgCommand.getBadges().stream().map(MessageTaggedIrcStanza.Badge::name).collect(Collectors.toSet());
+        badges.add("_DEFAULT_");
+        final List<Permission> permissions = tmiModule.getPermissions(channel.getTenant(), user.getGlobalUser(), channel.getId(), badges);
+        final ChatMessage chatMessage = new ChatMessage(channel, user, privmsgCommand.getMessage(), permissions);
+        event(new TwitchChatMessageEvent(module, chatMessage, privmsgCommand));
     }
 
     private void event(final ReconnectCommand reconnectCommand) {
@@ -246,6 +300,10 @@ public class TmiBot implements Runnable {
 
     private void event(final UserStateCommand userStateCommand) {
         event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand.getChannel()), bot, userStateCommand));
+    }
+
+    private void event(final WhisperCommand whisperCommand) {
+        event(new TwitchPrivateMessageEvent(module, new PrivateMessage(bot, getUser(whisperCommand), whisperCommand.getMessage()), whisperCommand));
     }
 
     private TwitchUser getUser(final IrcStanza stanza) {

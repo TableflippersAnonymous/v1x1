@@ -32,6 +32,7 @@ message Event {
         TWITCH_USER = 15;
         TWITCH_USER_MOD_CHANGE = 16;
         SCHEDULER_NOTIFY = 17;
+        PRIVATE_MESSAGE = 18;
     };
 
     extensions 100 to max; /* Convention is to use the same 100 + your EventType ID */
@@ -236,4 +237,23 @@ message SchedulerNotifyEvent {
     required core.Module module = 1;
     required core.UUID id = 2;
     required bytes payload = 3;
+}
+
+message PrivateMessageEvent {
+    extensions 100 to max;
+
+    extend Event {
+        optional PrivateMessageEvent data = 118;
+    }
+
+    required core.PrivateMessage private_message = 1;
+    required core.Platform type = 2;
+}
+
+message TwitchPrivateMessageEvent {
+    extend PrivateMessageEvent {
+        optional TwitchPrivateMessageEvent data = 101;
+    }
+
+    required core.IrcStanza whisper_command = 1;
 }

@@ -27,6 +27,11 @@ public class TwitchChannel extends Channel {
     }
 
     @Override
+    public Platform getPlatform() {
+        return Platform.TWITCH;
+    }
+
+    @Override
     public ChannelOuterClass.Channel toProto() {
         return ChannelOuterClass.Channel.newBuilder()
                 .setId(id)

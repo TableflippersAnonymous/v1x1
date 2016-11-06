@@ -1,5 +1,6 @@
 package tv.v1x1.common.dto.core;
 
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.proto.core.UserOuterClass;
 
 /**
@@ -45,6 +46,8 @@ public abstract class User {
     public String getDisplayName() {
         return displayName;
     }
+
+    public abstract Platform getPlatform();
 
     @Override
     public boolean equals(final Object o) {

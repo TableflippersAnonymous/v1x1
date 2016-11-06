@@ -21,7 +21,7 @@ import java.util.Map;
 @DisplayName("Twitch Global")
 @Description("Global configuration for TMI")
 @Version(0)
-public class TmiGlobalConfiguration extends GlobalConfiguration {
+public class TmiGlobalConfiguration implements GlobalConfiguration {
     @DisplayName("Global Bots:")
     @Description("These are the valid global bots and their OAuth tokens")
     @Type(ConfigType.STRING_MAP)

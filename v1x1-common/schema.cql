@@ -1,3 +1,4 @@
+/* Baseline */
 CREATE KEYSPACE v1x1 WITH REPLICATION = {
     'class' : 'SimpleStrategy',
     'replication_factor' : 1
@@ -137,4 +138,47 @@ CREATE TABLE tenant_configuration_definition (
     tenant_permission int,
     fields list<frozen<configuration_definition_field>>,
     PRIMARY KEY (name)
+);
+
+/* Version 2 */
+
+DROP TABLE tenant_user_permissions;
+
+CREATE TABLE channel_configuration (
+    module text,
+    tenant_id uuid,
+    platform int,
+    channel_id text,
+    json text,
+    PRIMARY KEY ((module, tenant_id), platform, channel_id)
+);
+
+CREATE TABLE channel_platform_mapping (
+    platform int,
+    channel_id text,
+    platform_group text,
+    group_id uuid,
+    PRIMARY KEY ((platform, channel_id), platform_group)
+);
+
+CREATE TABLE tenant_group (
+    tenant_id uuid,
+    group_id uuid,
+    name text,
+    permissions list<frozen<permission>>,
+    PRIMARY KEY (tenant_id, group_id)
+);
+
+CREATE TABLE tenant_groups_by_user (
+    user_id uuid,
+    tenant_id uuid,
+    groups list<uuid>,
+    PRIMARY KEY (user_id, tenant_id)
+);
+
+CREATE TABLE tenant_group_membership (
+    tenant_id uuid,
+    group_id uuid,
+    user_id uuid,
+    PRIMARY KEY ((tenant_id, group_id), user_id)
 );

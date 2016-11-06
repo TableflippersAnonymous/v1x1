@@ -12,7 +12,7 @@ import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
 /**
  * Created by cobi on 10/6/16.
  */
-public abstract class EasyThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration> extends ThreadedModule<T, U, V> {
+public abstract class EasyThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> extends ThreadedModule<T, U, V, W> {
 
     @Override
     protected void processMessage(final Message message) {
@@ -67,9 +67,17 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
             processTwitchUserModChangeEvent((TwitchUserModChangeEvent) event);
         else if(event instanceof SchedulerNotifyEvent)
             processSchedulerNotifyEvent((SchedulerNotifyEvent) event);
-        else
+        else if(event instanceof PrivateMessageEvent) {
+            processPrivateMessageEvent((PrivateMessageEvent) event);
+            if(event instanceof TwitchPrivateMessageEvent)
+                processTwitchPrivateMessageEvent((TwitchPrivateMessageEvent) event);
+        } else
             throw new IllegalStateException("Unknown event type " + event.getClass().getCanonicalName());
     }
+
+    protected abstract void processTwitchPrivateMessageEvent(TwitchPrivateMessageEvent event);
+
+    protected abstract void processPrivateMessageEvent(PrivateMessageEvent event);
 
     protected abstract void processSchedulerNotifyEvent(SchedulerNotifyEvent event);
 

@@ -5,5 +5,5 @@ import tv.v1x1.common.modules.TenantConfiguration;
 /**
  * Created by cobi on 10/22/2016.
  */
-public class SchedulerTenantConfiguration extends TenantConfiguration {
+public class SchedulerTenantConfiguration implements TenantConfiguration {
 }

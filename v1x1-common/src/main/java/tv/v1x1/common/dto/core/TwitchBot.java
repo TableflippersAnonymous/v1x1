@@ -1,5 +1,6 @@
 package tv.v1x1.common.dto.core;
 
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.proto.core.BotOuterClass;
 import tv.v1x1.common.dto.proto.core.PlatformOuterClass;
 
@@ -14,6 +15,11 @@ public class TwitchBot extends Bot {
 
     public TwitchBot(final String name) {
         super(name);
+    }
+
+    @Override
+    public Platform getPlatform() {
+        return Platform.TWITCH;
     }
 
     @Override
