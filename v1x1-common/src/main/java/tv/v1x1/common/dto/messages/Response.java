@@ -2,6 +2,7 @@ package tv.v1x1.common.dto.messages;
 
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.messages.responses.ExceptionResponse;
 import tv.v1x1.common.dto.messages.responses.ModuleShutdownResponse;
 import tv.v1x1.common.dto.messages.responses.ScheduleResponse;
 import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
@@ -18,6 +19,7 @@ public abstract class Response<T extends Request> extends Message {
             case MODULE_SHUTDOWN: return ModuleShutdownResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ModuleShutdownResponse.data));
             case SEND_MESSAGE: return SendMessageResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.SendMessageResponse.data));
             case SCHEDULE: return ScheduleResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ScheduleResponse.data));
+            case EXCEPTION: return ExceptionResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ExceptionResponse.data));
             default: throw new IllegalStateException("Unknown request type " + response.getType().name());
         }
     }
