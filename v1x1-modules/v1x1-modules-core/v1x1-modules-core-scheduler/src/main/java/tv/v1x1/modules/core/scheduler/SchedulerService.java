@@ -29,7 +29,7 @@ public class SchedulerService extends ThreadedService<ScheduleRequest, ScheduleR
     private final DelayScheduler delayScheduler;
     private final IntervalScheduler intervalScheduler;
 
-    public SchedulerService(final Module<? extends ModuleSettings, ? extends GlobalConfiguration, ? extends TenantConfiguration> module) {
+    public SchedulerService(final Module<?, ?, ?, ?> module) {
         super(module, "Scheduler", ScheduleRequest.class);
         final MessageQueue messageQueue = module.getMessageQueueManager().forName(Module.getMainQueueForModule(new tv.v1x1.common.dto.core.Module("event_router")));
         final MappingManager mappingManager = module.getMappingManager();
