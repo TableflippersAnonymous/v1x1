@@ -5,6 +5,7 @@ import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
+import tv.v1x1.common.dto.db.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
 
@@ -14,6 +15,7 @@ import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
 public class DAOConfigurationDefinition {
     private final Mapper<GlobalConfigurationDefinition> globalMapper;
     private final Mapper<TenantConfigurationDefinition> tenantMapper;
+    private final Mapper<ChannelConfigurationDefinition> channelMapper;
     private final ConfigurationDefinitionAccessor accessor;
 
     @Accessor
@@ -23,11 +25,15 @@ public class DAOConfigurationDefinition {
 
         @Query("SELECT * FROM tenant_configuration_definition")
         Result<TenantConfigurationDefinition> allTenant();
+
+        @Query("SELECT * FROM channel_configuration_definition")
+        Result<ChannelConfigurationDefinition> allChannel();
     }
 
     public DAOConfigurationDefinition(final MappingManager mappingManager) {
         globalMapper = mappingManager.mapper(GlobalConfigurationDefinition.class);
         tenantMapper = mappingManager.mapper(TenantConfigurationDefinition.class);
+        channelMapper = mappingManager.mapper(ChannelConfigurationDefinition.class);
         accessor = mappingManager.createAccessor(ConfigurationDefinitionAccessor.class);
     }
 
@@ -39,12 +45,20 @@ public class DAOConfigurationDefinition {
         return accessor.allTenant();
     }
 
+    public Iterable<ChannelConfigurationDefinition> getAllChannel() {
+        return accessor.allChannel();
+    }
+
     public GlobalConfigurationDefinition getGlobal(final String module) {
         return globalMapper.get(module);
     }
 
     public TenantConfigurationDefinition getTenant(final String module) {
         return tenantMapper.get(module);
+    }
+
+    public ChannelConfigurationDefinition getChannel(final String module) {
+        return channelMapper.get(module);
     }
 
     public void put(final GlobalConfigurationDefinition globalConfigurationDefinition) {
@@ -57,5 +71,11 @@ public class DAOConfigurationDefinition {
         final TenantConfigurationDefinition oldTenantConfigurationDefinition = getTenant(tenantConfigurationDefinition.getName());
         if(oldTenantConfigurationDefinition == null || oldTenantConfigurationDefinition.getVersion() <= tenantConfigurationDefinition.getVersion())
             tenantMapper.save(tenantConfigurationDefinition);
+    }
+
+    public void put(final ChannelConfigurationDefinition channelConfigurationDefinition) {
+        final ChannelConfigurationDefinition oldChannelConfigurationDefinition = getChannel(channelConfigurationDefinition.getName());
+        if(oldChannelConfigurationDefinition == null || oldChannelConfigurationDefinition.getVersion() <= oldChannelConfigurationDefinition.getVersion())
+            channelMapper.save(channelConfigurationDefinition);
     }
 }

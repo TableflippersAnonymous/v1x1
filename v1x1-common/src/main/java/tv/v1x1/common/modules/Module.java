@@ -43,6 +43,7 @@ import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Permission;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
 import tv.v1x1.common.dto.core.Channel;
+import tv.v1x1.common.dto.core.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.core.ModuleInstance;
 import tv.v1x1.common.dto.core.Tenant;
@@ -474,5 +475,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         final TenantConfigurationDefinition tenantConfigurationDefinition = ConfigScanner.scanTenant(getTenantConfigurationClass());
         if(tenantConfigurationDefinition != null)
             daoConfigurationDefinition.put(tenantConfigurationDefinition.toDB());
+        final ChannelConfigurationDefinition channelConfigurationDefinition = ConfigScanner.scanChannel(getChannelConfigurationClass());
+        if(channelConfigurationDefinition != null)
+            daoConfigurationDefinition.put(channelConfigurationDefinition.toDB());
     }
 }

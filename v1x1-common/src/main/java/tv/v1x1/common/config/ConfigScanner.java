@@ -7,9 +7,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
+import tv.v1x1.common.dto.core.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.core.ConfigurationDefinition;
 import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.core.TenantConfigurationDefinition;
+import tv.v1x1.common.modules.ChannelConfiguration;
 import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.TenantConfiguration;
 
@@ -17,7 +19,9 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by naomi on 10/24/2016.
@@ -36,8 +40,9 @@ public class ConfigScanner {
         final String description = getDescription(clazz);
         final int version = getVersion(clazz);
         final Permission tenantPermission = getTenantPermission(clazz);
-        final List<ConfigurationDefinition.Field> fields = scanFields(clazz);
-        return new GlobalConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields);
+        final Map<String, List<ConfigurationDefinition.Field>> complexFields = new HashMap<>();
+        final List<ConfigurationDefinition.Field> fields = scanFields(clazz, complexFields);
+        return new GlobalConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields, complexFields);
     }
 
     public static <T extends TenantConfiguration> TenantConfigurationDefinition scanTenant(final Class<T> clazz) {
@@ -48,8 +53,22 @@ public class ConfigScanner {
         final String description = getDescription(clazz);
         final int version = getVersion(clazz);
         final Permission tenantPermission = getTenantPermission(clazz);
-        final List<ConfigurationDefinition.Field> fields = scanFields(clazz);
-        return new TenantConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields);
+        final Map<String, List<ConfigurationDefinition.Field>> complexFields = new HashMap<>();
+        final List<ConfigurationDefinition.Field> fields = scanFields(clazz, complexFields);
+        return new TenantConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields, complexFields);
+    }
+
+    public static <T extends ChannelConfiguration> ChannelConfigurationDefinition scanChannel(final Class<T> clazz) {
+        final String name = getName(clazz);
+        if(name == null)
+            return null;
+        final String displayName = getDisplayName(clazz);
+        final String description = getDescription(clazz);
+        final int version = getVersion(clazz);
+        final Permission tenantPermission = getTenantPermission(clazz);
+        final Map<String, List<ConfigurationDefinition.Field>> complexFields = new HashMap<>();
+        final List<ConfigurationDefinition.Field> fields = scanFields(clazz, complexFields);
+        return new ChannelConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields, complexFields);
     }
 
     private static String getName(final Class<?> clazz) {
@@ -97,26 +116,26 @@ public class ConfigScanner {
         return null;
     }
 
-    private static List<ConfigurationDefinition.Field> scanFields(final Class<?> clazz) {
+    private static List<ConfigurationDefinition.Field> scanFields(final Class<?> clazz, final Map<String, List<ConfigurationDefinition.Field>> complexFields) {
         final List<ConfigurationDefinition.Field> fields = new ArrayList<>();
         final Class<?> superClass = clazz.getSuperclass();
         if(superClass != null)
-            fields.addAll(scanFields(superClass));
-        fields.addAll(scanFieldsOnClass(clazz));
+            fields.addAll(scanFields(superClass, complexFields));
+        fields.addAll(scanFieldsOnClass(clazz, complexFields));
         return fields;
     }
 
-    private static List<ConfigurationDefinition.Field> scanFieldsOnClass(final Class<?> clazz) {
+    private static List<ConfigurationDefinition.Field> scanFieldsOnClass(final Class<?> clazz, final Map<String, List<ConfigurationDefinition.Field>> complexFields) {
         final List<ConfigurationDefinition.Field> fields = new ArrayList<>();
         for(final Field field : clazz.getDeclaredFields()) {
-            final ConfigurationDefinition.Field scannedField = scanField(field);
+            final ConfigurationDefinition.Field scannedField = scanField(field, complexFields);
             if(scannedField != null)
                 fields.add(scannedField);
         }
         return fields;
     }
 
-    private static ConfigurationDefinition.Field scanField(final Field field) {
+    private static ConfigurationDefinition.Field scanField(final Field field, final Map<String, List<ConfigurationDefinition.Field>> complexFields) {
         final DisplayName displayNameAnnotation = field.getAnnotation(DisplayName.class);
         final String displayName = displayNameAnnotation == null ? field.getName() : displayNameAnnotation.value();
         final Description descriptionAnnotation = field.getAnnotation(Description.class);
@@ -136,6 +155,15 @@ public class ConfigScanner {
         final JsonElement defaultValue = defaultString == null
                 ? (defaultInteger == null ? JsonNull.INSTANCE : new JsonPrimitive(defaultInteger))
                 : new JsonPrimitive(defaultString);
-        return new ConfigurationDefinition.Field(displayName, description, GSON.toJson(defaultValue), configType, requires, tenantPermission, jsonProperty);
+        String complexType = null;
+        if(configType.isComplex()) {
+            Class<?> clazz = field.getType();
+            complexType = clazz.getCanonicalName();
+            if(!complexFields.containsKey(complexType)) {
+                complexFields.put(complexType, ImmutableList.of());
+                complexFields.put(complexType, scanFields(clazz, complexFields));
+            }
+        }
+        return new ConfigurationDefinition.Field(displayName, description, GSON.toJson(defaultValue), configType, requires, tenantPermission, jsonProperty, complexType);
     }
 }
