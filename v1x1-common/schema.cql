@@ -182,3 +182,53 @@ CREATE TABLE tenant_group_membership (
     user_id uuid,
     PRIMARY KEY ((tenant_id, group_id), user_id)
 );
+
+/* Version 3 */
+
+DROP TABLE tenant_configuration_definition;
+DROP TABLE global_configuration_definition;
+DROP TYPE configuration_definition_field;
+
+CREATE TYPE configuration_definition_field (
+    display_name text,
+    description text,
+    default_value text,
+    config_type int,
+    requires list<text>,
+    tenant_permission int,
+    json_field text,
+    complex_type text
+);
+
+CREATE TABLE global_configuration_definition (
+    name text,
+    display_name text,
+    description text,
+    version int,
+    tenant_permission int,
+    fields list<frozen<configuration_definition_field>>,
+    complex_fields map<text, frozen<list<configuration_definition_field>>>,
+    PRIMARY KEY (name)
+);
+
+CREATE TABLE tenant_configuration_definition (
+    name text,
+    display_name text,
+    description text,
+    version int,
+    tenant_permission int,
+    fields list<frozen<configuration_definition_field>>,
+    complex_fields map<text, frozen<list<configuration_definition_field>>>,
+    PRIMARY KEY (name)
+);
+
+CREATE TABLE channel_configuration_definition (
+    name text,
+    display_name text,
+    description text,
+    version int,
+    tenant_permission int,
+    fields list<frozen<configuration_definition_field>>,
+    complex_fields map<text, frozen<list<configuration_definition_field>>>,
+    PRIMARY KEY (name)
+);

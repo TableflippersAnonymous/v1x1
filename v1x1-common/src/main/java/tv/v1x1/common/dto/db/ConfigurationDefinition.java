@@ -1,12 +1,14 @@
 package tv.v1x1.common.dto.db;
 
 import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.Field;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.UDT;
 import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Permission;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by cobi on 10/24/2016.
@@ -21,6 +23,8 @@ public abstract class ConfigurationDefinition {
     @Column(name = "tenant_permission")
     private Permission tenantPermission;
     private List<Field> fields;
+    @Column(name = "complex_fields")
+    private Map<String, List<Field>> complexFields;
 
     @UDT(name = "configuration_definition_field")
     public static class Field {
@@ -36,11 +40,13 @@ public abstract class ConfigurationDefinition {
         private Permission tenantPermission;
         @com.datastax.driver.mapping.annotations.Field(name = "json_field")
         private String jsonField;
+        @com.datastax.driver.mapping.annotations.Field(name = "complex_type")
+        private String complexType;
 
         public Field() {
         }
 
-        public Field(final String displayName, final String description, final String defaultValue, final ConfigType configType, final List<String> requires, final Permission tenantPermission, final String jsonField) {
+        public Field(final String displayName, final String description, final String defaultValue, final ConfigType configType, final List<String> requires, final Permission tenantPermission, final String jsonField, final String complexType) {
             this.displayName = displayName;
             this.description = description;
             this.defaultValue = defaultValue;
@@ -48,6 +54,7 @@ public abstract class ConfigurationDefinition {
             this.requires = requires;
             this.tenantPermission = tenantPermission;
             this.jsonField = jsonField;
+            this.complexType = complexType;
         }
 
         public String getDisplayName() {
@@ -78,21 +85,26 @@ public abstract class ConfigurationDefinition {
             return jsonField;
         }
 
+        public String getComplexType() {
+            return complexType;
+        }
+
         public tv.v1x1.common.dto.core.ConfigurationDefinition.Field toCore() {
-            return new tv.v1x1.common.dto.core.ConfigurationDefinition.Field(displayName, description, defaultValue, configType, requires, tenantPermission, jsonField);
+            return new tv.v1x1.common.dto.core.ConfigurationDefinition.Field(displayName, description, defaultValue, configType, requires, tenantPermission, jsonField, complexType);
         }
     }
 
     public ConfigurationDefinition() {
     }
 
-    public ConfigurationDefinition(final String name, final String displayName, final String description, final int version, final Permission tenantPermission, final List<Field> fields) {
+    public ConfigurationDefinition(final String name, final String displayName, final String description, final int version, final Permission tenantPermission, final List<Field> fields, final Map<String, List<Field>> complexFields) {
         this.name = name;
         this.displayName = displayName;
         this.description = description;
         this.version = version;
         this.tenantPermission = tenantPermission;
         this.fields = fields;
+        this.complexFields = complexFields;
     }
 
     public String getName() {
@@ -117,6 +129,10 @@ public abstract class ConfigurationDefinition {
 
     public List<Field> getFields() {
         return fields;
+    }
+
+    public Map<String, List<Field>> getComplexFields() {
+        return complexFields;
     }
 
     public abstract tv.v1x1.common.dto.core.ConfigurationDefinition toCore();
