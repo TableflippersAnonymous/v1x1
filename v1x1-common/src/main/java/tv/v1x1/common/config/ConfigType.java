@@ -4,7 +4,7 @@ package tv.v1x1.common.config;
  * @author Naomi
  */
 public enum ConfigType {
-    INTEGER, STRING, CREDENTIAL, TWITCH_OAUTH, MASTER_ENABLE, BOOLEAN, BOT_NAME, STRING_LIST, STRING_MAP, COMPLEX(true), COMPLEX_LIST(true);
+    INTEGER, STRING, CREDENTIAL, TWITCH_OAUTH, MASTER_ENABLE, BOOLEAN, BOT_NAME, STRING_LIST, STRING_MAP, COMPLEX(true), COMPLEX_LIST(true), COMPLEX_STRING_MAP(true);
 
     private final boolean complex;
 
