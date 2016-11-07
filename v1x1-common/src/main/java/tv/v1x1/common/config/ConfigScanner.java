@@ -157,7 +157,8 @@ public class ConfigScanner {
                 : new JsonPrimitive(defaultString);
         String complexType = null;
         if(configType.isComplex()) {
-            Class<?> clazz = field.getType();
+            final ComplexType complexTypeAnnotation = field.getAnnotation(ComplexType.class);
+            final Class<?> clazz = complexTypeAnnotation == null ? field.getType() : complexTypeAnnotation.value();
             complexType = clazz.getCanonicalName();
             if(!complexFields.containsKey(complexType)) {
                 complexFields.put(complexType, ImmutableList.of());

@@ -1,6 +1,7 @@
 package tv.v1x1.modules.channel.timed_messages;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import tv.v1x1.common.config.ComplexType;
 import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Description;
 import tv.v1x1.common.config.DisplayName;
@@ -20,7 +21,8 @@ public class Timer {
     @JsonProperty("entries")
     @DisplayName("Timer Entries")
     @Description("The list of messages this rotation will feature")
-    @Type(ConfigType.COMPLEX)
+    @Type(ConfigType.COMPLEX_LIST)
+    @ComplexType(TimerEntry.class)
     private List<TimerEntry> entries;
     @JsonProperty("interval")
     @DisplayName("Interval")
