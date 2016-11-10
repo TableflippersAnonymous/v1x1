@@ -1,6 +1,8 @@
 package tv.v1x1.modules.channel.link_purger;
 
 import com.google.common.collect.ImmutableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
@@ -11,6 +13,7 @@ import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
 import tv.v1x1.common.services.chat.Chat;
 
+import java.lang.invoke.MethodHandles;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -20,6 +23,7 @@ import java.net.UnknownHostException;
  * @author Josh
  */
 public class LinkPurgerListener implements EventListener {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final LinkPurger module;
 
     public LinkPurgerListener(LinkPurger linkPurger) {
@@ -72,7 +76,9 @@ public class LinkPurgerListener implements EventListener {
 
     private boolean canResolve(final String host) {
         try {
-            return !reservedAddress(InetAddress.getByName(host));
+            final InetAddress linkedIp = InetAddress.getByName(host);
+            LOG.debug("Link resolves to {}", linkedIp.getHostAddress());
+            return !reservedAddress(linkedIp);
         } catch (UnknownHostException e) {
             return false;
         }
@@ -82,6 +88,7 @@ public class LinkPurgerListener implements EventListener {
         return ip.isLinkLocalAddress() ||
                 ip.isLoopbackAddress() ||
                 ip.isMulticastAddress() ||
+                ip.isAnyLocalAddress() ||
                 ip.isSiteLocalAddress();
     }
 }
