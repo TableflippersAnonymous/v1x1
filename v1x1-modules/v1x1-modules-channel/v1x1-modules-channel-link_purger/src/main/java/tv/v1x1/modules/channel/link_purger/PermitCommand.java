@@ -57,15 +57,21 @@ public class PermitCommand extends Command {
                 .getDisplayNameService()
                 .getIdFromDisplayName(channel, args.get(0));
         if(targetId == null) {
-            Chat.message(module, channel, module.language.message(module.toDto(), "notarget",
-                    ImmutableMap.of("commander", commanderName, "target", args.get(0))));
+            Chat.i18nMessage(module, channel, "notarget",
+                    "commander",  commanderName,
+                    "target", args.get(0)
+            );
         }
         if(module.permitUser(channel, targetId)) {
             // TODO: final String targetName = module.getStateManager().getDisplayNameService().getDisplayNameFromId(channel, targetId);
-            Chat.message(module, channel, module.language.message(module.toDto(), "permit",
-                   ImmutableMap.of("target", targetId)));
+            Chat.i18nMessage(module, channel, "permit",
+                    "target", targetId
+            );
         } else {
-            Chat.message(module, channel, module.language.message(module.toDto(), "permitfailed", ImmutableMap.of("commander", commanderName)));
+            Chat.i18nMessage(module, channel, "permitfailed",
+                    "commander", commanderName,
+                    "target", targetId
+            );
         }
     }
 }

@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
+import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
 import tv.v1x1.common.dto.irc.commands.PrivmsgCommand;
@@ -24,12 +25,20 @@ import java.net.UnknownHostException;
  */
 public class LinkPurgerListener implements EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Permission whitelistPerm = new Permission("link_purger.permit");
     private final LinkPurger module;
 
     public LinkPurgerListener(LinkPurger linkPurger) {
         module = linkPurger;
     }
 
+    /*
+    Eventually, fix these cases:
+    http://2809293708/          - octal IP -> decimal
+    http://0xA7726B8C           - octal IP -> hex
+    http://[::ffff:A772:6B8C]   - IPv6/No dot
+    hxxp://google.com           - invalid protocol
+     */
     @EventHandler
     public void onChatMessage(final ChatMessageEvent ev) {
         if(!module.getTenantConfiguration(ev.getChatMessage().getChannel().getTenant()).isEnabled())
@@ -59,32 +68,31 @@ public class LinkPurgerListener implements EventListener {
     private void punish(final Channel channel, final User sender, final int offenseNumber) {
         if(offenseNumber < 2) {
             Chat.purge(module, channel, sender, 1, "Unpermitted link");
-            Chat.message(module, channel, module.language.message(module.toDto(), "purged", ImmutableMap.of("user", sender.getDisplayName())));
+            Chat.i18nMessage(module, channel, "purged",
+                    "user", sender.getDisplayName()
+            );
         } else {
             Chat.punish(module, channel, sender, 600, "Unpermitted link");
-            Chat.message(module, channel, module.language.message(module.toDto(), "timeout", ImmutableMap.of("user", sender.getDisplayName())));
+            Chat.i18nMessage(module, channel, "timeout",
+                    "user", sender.getDisplayName()
+            );
         }
     }
 
     private boolean shouldMonitorUser(ChatMessageEvent ev) {
-        // TODO: Support other platforms
-        if(!(ev instanceof TwitchChatMessageEvent)) return false;
-        PrivmsgCommand msg = ((TwitchChatMessageEvent) ev).getPrivmsgCommand();
-        return !(msg.isMod() || msg.getBadges().contains(PrivmsgCommand.Badge.BROADCASTER) || msg.getUserType() != null || msg.getBadges().contains(PrivmsgCommand.Badge.SUBSCRIBER));
-
+        return !ev.getChatMessage().getPermissions().contains(whitelistPerm);
     }
 
     private boolean canResolve(final String host) {
         try {
-            final InetAddress linkedIp = InetAddress.getByName(host);
-            LOG.debug("Link resolves to {}", linkedIp.getHostAddress());
-            return !reservedAddress(linkedIp);
+            return !reservedAddress(InetAddress.getByName(host));
         } catch (UnknownHostException e) {
             return false;
         }
     }
 
     private boolean reservedAddress(final InetAddress ip) {
+        LOG.debug("Checking if {} is a reserved address", ip.getHostAddress());
         return ip.isLinkLocalAddress() ||
                 ip.isLoopbackAddress() ||
                 ip.isMulticastAddress() ||

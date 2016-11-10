@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class LinkPurger extends RegisteredThreadedModule<LinkPurgerSettings, LinkPurgerGlobalConfiguration, LinkPurgerTenantConfiguration, LinkPurgerChannelConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     static {
         final Module module = new Module("link_purger");
         I18n.registerDefault(module, "purged", "Hey %user%, please ask before posting a link! I've purged your messages; feel free to keep chatting!");
