@@ -1,15 +1,11 @@
 package tv.v1x1.modules.channel.link_purger;
 
-import com.google.common.collect.ImmutableMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.User;
-import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
-import tv.v1x1.common.dto.irc.commands.PrivmsgCommand;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
-import tv.v1x1.common.dto.messages.events.TwitchChatMessageEvent;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
 import tv.v1x1.common.services.chat.Chat;
@@ -19,13 +15,15 @@ import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.util.regex.Pattern;
 
 /**
  * @author Josh
  */
 public class LinkPurgerListener implements EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static final Permission whitelistPerm = new Permission("link_purger.permit");
+    private static final Permission WHITELIST_PERM = new Permission("link_purger.permit");
+    private static final Pattern EXCLUDE_REGEX = Pattern.compile("^[0-9.]{1,6}$");
     private final LinkPurger module;
 
     public LinkPurgerListener(LinkPurger linkPurger) {
@@ -51,6 +49,7 @@ public class LinkPurgerListener implements EventListener {
         for(final String word : words) {
             final URL url;
             if(!word.contains(".")) continue;
+            if(EXCLUDE_REGEX.matcher(word).matches()) continue;
             try {
                 if(!word.matches("^.+://.+")) url = new URL("http://" + word);
                 else url = new URL(word);
@@ -80,7 +79,7 @@ public class LinkPurgerListener implements EventListener {
     }
 
     private boolean shouldMonitorUser(ChatMessageEvent ev) {
-        return !ev.getChatMessage().getPermissions().contains(whitelistPerm);
+        return !ev.getChatMessage().getPermissions().contains(WHITELIST_PERM);
     }
 
     private boolean canResolve(final String host) {
