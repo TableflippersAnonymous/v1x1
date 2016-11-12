@@ -1,0 +1,10 @@
+Known issues:
+- Cannot delete identical TimerEntrys from a timer due to countMatching()
+- Currently running timers don't get disabled when the module is disabled
+
+Things to do:
+- Support for modifying intervals isn't built in, but easy to add later
+- Auto enable/disable on online/offline
+- Expose the "always on" flag in the CUI
+- Finish enable/disable CUI
+- CUI !timers list ?

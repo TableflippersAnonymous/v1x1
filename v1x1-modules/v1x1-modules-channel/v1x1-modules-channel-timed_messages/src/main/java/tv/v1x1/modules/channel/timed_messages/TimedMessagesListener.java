@@ -32,6 +32,7 @@ public class TimedMessagesListener implements EventListener {
         if(!ev.getModule().equals(module.toDto()))
             return;
         // payload comes from module.enableTimer();
+        final UUID uuid = ev.getId();
         final byte[][] keys = CompositeKey.getKeys(ev.getPayload());
         final String timerName = new String(keys[0]);
         final String type = new String(keys[1]);
@@ -39,22 +40,34 @@ public class TimedMessagesListener implements EventListener {
         if(type.equals("tenant")) {
             final Tenant tenant;
             try {
-                tenant = Tenant.fromProto(ChannelOuterClass.Tenant.parseFrom(keys[1]));
+                tenant = Tenant.fromProto(ChannelOuterClass.Tenant.parseFrom(keys[2]));
             } catch(InvalidProtocolBufferException e) {
-                LOG.warn("Failed to deserialize tenant from scheduler payload");
-                e.printStackTrace();
+                LOG.warn("Failed to deserialize tenant from scheduler payload; cancelling schedule", e);
+                module.disableTimer(uuid);
                 return;
             }
-            final UUID uuid = ev.getId();
+            LOG.trace("incoming UUID is {}", uuid.getValue());
             Timer t = module.getTenantConfiguration(tenant).getTimer(timerName);
+            if(t == null) {
+                LOG.warn("Got a timer payload for a non-existent timer; disabling it...");
+                module.disableTimer(uuid);
+            }
+            LOG.trace("saved UUID is {}", t.getActiveTimer());
             int cursor = module.getCursor(uuid);
+            LOG.trace("Just got cursor. Cursor is {}", cursor);
             if(cursor == -1) {
-                LOG.warn("Got a timer with no cursor; deleting it...");
-                module.disableTimer(tenant, ev.getId());
+                LOG.warn("Got a timer with no cursor; disabling it...");
+                module.disableTimer(uuid);
                 return;
             }
-            final String message = t.nextEntry(cursor).getMessage();
-            // TODO: Save cursor back to Redis
+            if(cursor >= t.getEntries().size())
+                cursor = 0;
+            final TimerEntry nextEntry = t.getEntry(cursor++);
+            if(nextEntry == null) {
+                LOG.warn("Running, and therefore skipping, an empty timer");
+                return;
+            }
+            final String message = nextEntry.getMessage();
             module.saveCursor(uuid, cursor);
             for(Channel channel : tenant.getChannels()) {
                 Chat.message(module, channel, message);
@@ -66,6 +79,7 @@ public class TimedMessagesListener implements EventListener {
 
     @EventHandler
     public void onChatMessage(ChatMessageEvent ev) {
-        module.delegator.handleChatMessage(ev);
+        if(module.isEnabled(ev.getChatMessage().getChannel()))
+            module.delegator.handleChatMessage(ev);
     }
 }

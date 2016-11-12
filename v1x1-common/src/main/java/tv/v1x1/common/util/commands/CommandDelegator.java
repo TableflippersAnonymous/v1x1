@@ -78,7 +78,7 @@ public class CommandDelegator {
                     (command.getMaxArgs() != -1 && parsedCmd.getArgs().size() > command.getMaxArgs())) {
                 command.handleArgMismatch(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
                 LOG.trace("Command had invalid args");
-                continue;
+                return true;
             }
             final List<Permission> allowedPermissions = command.getAllowedPermissions();
             if(allowedPermissions == null) {
@@ -99,7 +99,7 @@ public class CommandDelegator {
             if(!hasPerm) {
                 LOG.trace("No permissions");
                 command.handleNoPermissions(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
-                continue;
+                return true;
             }
             LOG.debug("Command is allowed and valid enough; executing...");
             command.run(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());

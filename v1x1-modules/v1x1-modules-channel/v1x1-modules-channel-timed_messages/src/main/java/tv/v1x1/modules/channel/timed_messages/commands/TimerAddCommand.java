@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
+import tv.v1x1.common.util.text.Shorten;
 import tv.v1x1.modules.channel.timed_messages.TimedMessages;
 
 import java.util.List;
@@ -13,10 +14,10 @@ import java.util.List;
 /**
  * @author Josh
  */
-public class TimerAddCommand extends Command {
+/* pkg-private */ class TimerAddCommand extends Command {
     private TimedMessages module;
 
-    public TimerAddCommand(final TimedMessages module) {
+    TimerAddCommand(final TimedMessages module) {
         this.module = module;
     }
 
@@ -32,10 +33,17 @@ public class TimerAddCommand extends Command {
 
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
-        Chat.i18nMessage(module, chatMessage.getChannel(), "entry.add.notarget",
-                "commander", chatMessage.getSender().getDisplayName(),
-                "usage", getUsage()
-                );
+        switch (args.size()) {
+            case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "add.notarget",
+                    "commander", chatMessage.getSender().getDisplayName(),
+                    "usage", getUsage()
+            );
+                break;
+            case 1: Chat.i18nMessage(module, chatMessage.getChannel(), "add.nomessage",
+                    "commander", chatMessage.getSender().getDisplayName(),
+                    "usage", getUsage());
+                break;
+        }
     }
 
     @Override
@@ -43,16 +51,15 @@ public class TimerAddCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String senderName = chatMessage.getSender().getDisplayName();
         final String timerName = args.remove(0);
-        final StringBuilder message = new StringBuilder();
-        for(String arg : args)
-            message.append(arg);
-        if(module.addTimerEntry(channel.getTenant(), timerName, message.toString()))
-            Chat.i18nMessage(module, channel, "entry.add.success",
+        final String message = String.join(" ", args);
+        if(module.addTimerEntry(channel.getTenant(), timerName, message))
+            Chat.i18nMessage(module, channel, "add.success",
                     "commander", senderName,
-                    "id", timerName
+                    "id", timerName,
+                    "preview", Shorten.genPreview(message)
             );
         else
-            Chat.i18nMessage(module, channel, "entry.add.badtarget",
+            Chat.i18nMessage(module, channel, "invalid.timer",
                     "commander", senderName,
                     "id", timerName
             );
