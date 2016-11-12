@@ -9,16 +9,20 @@ import tv.v1x1.common.config.Type;
  * @author Josh
  */
 public class TimerEntry {
-    @JsonProperty("value")
+    @JsonProperty("message")
     @DisplayName("Message")
     @Type(ConfigType.STRING)
-    private String value;
+    private String message;
+
+    public TimerEntry() {
+        // For Jackson
+    }
 
     public TimerEntry(final String message) {
-        value = message;
+        this.message = message;
     }
 
     public String getMessage() {
-        return value;
+        return message;
     }
 }
