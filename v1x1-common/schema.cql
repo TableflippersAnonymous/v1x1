@@ -232,3 +232,29 @@ CREATE TABLE channel_configuration_definition (
     complex_fields map<text, frozen<list<configuration_definition_field>>>,
     PRIMARY KEY (name)
 );
+
+/* Version 4 */
+
+CREATE TABLE third_party_credential (
+    name text,
+    credential blob,
+    PRIMARY KEY (name)
+);
+
+CREATE TABLE twitch_oauth_token (
+    global_user_id uuid,
+    user_id text,
+    oauth_token text,
+    scopes list<text>,
+    PRIMARY KEY (global_user_id, user_id)
+);
+
+CREATE TABLE twitch_user_information (
+    name text,
+    id bigint,
+    staff boolean,
+    display_name text,
+    email text,
+    partnered boolean,
+    PRIMARY KEY (name)
+);

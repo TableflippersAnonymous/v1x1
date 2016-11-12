@@ -17,6 +17,7 @@ public class DAOManager {
     private final DAOLanguage daoLanguage;
     private final DAOConfigurationDefinition daoConfigurationDefinition;
     private final DAOChannelConfiguration daoChannelConfiguration;
+    private final DAOThirdPartyCredential daoThirdPartyCredential;
 
     public DAOManager(final MappingManager mappingManager) {
         daoTenant = new DAOTenant(mappingManager);
@@ -28,6 +29,7 @@ public class DAOManager {
         daoLanguage = new DAOLanguage(mappingManager);
         daoConfigurationDefinition = new DAOConfigurationDefinition(mappingManager);
         daoChannelConfiguration = new DAOChannelConfiguration(mappingManager);
+        daoThirdPartyCredential = new DAOThirdPartyCredential(mappingManager);
     }
 
     public DAOTenant getDaoTenant() {
@@ -64,5 +66,9 @@ public class DAOManager {
 
     public DAOChannelConfiguration getDaoChannelConfiguration() {
         return daoChannelConfiguration;
+    }
+
+    public DAOThirdPartyCredential getDaoThirdPartyCredential() {
+        return daoThirdPartyCredential;
     }
 }
