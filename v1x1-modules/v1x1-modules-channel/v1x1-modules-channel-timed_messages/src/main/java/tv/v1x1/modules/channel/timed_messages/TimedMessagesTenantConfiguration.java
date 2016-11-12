@@ -9,6 +9,7 @@ import tv.v1x1.common.config.ModuleConfig;
 import tv.v1x1.common.config.Type;
 import tv.v1x1.common.modules.BasicTenantConfiguration;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -23,7 +24,7 @@ public class TimedMessagesTenantConfiguration extends BasicTenantConfiguration {
     @Type(ConfigType.COMPLEX_STRING_MAP)
     @ComplexType(Timer.class)
     @JsonProperty("timers")
-    private Map<String, Timer> timers;
+    private Map<String, Timer> timers = new HashMap<>();
 
     Map<String, Timer> getTimers() {
         return timers;
