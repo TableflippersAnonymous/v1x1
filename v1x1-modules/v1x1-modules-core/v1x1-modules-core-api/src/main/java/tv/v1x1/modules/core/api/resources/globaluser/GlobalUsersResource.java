@@ -5,9 +5,11 @@ import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Platform;
+import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -30,15 +32,19 @@ import java.util.UUID;
 @Consumes(MediaType.APPLICATION_JSON)
 public class GlobalUsersResource {
     private final DAOGlobalUser daoGlobalUser;
+    private final Authorizer authorizer;
 
     @Inject
-    public GlobalUsersResource(final DAOGlobalUser daoGlobalUser) {
+    public GlobalUsersResource(final DAOGlobalUser daoGlobalUser, final Authorizer authorizer) {
         this.daoGlobalUser = daoGlobalUser;
+        this.authorizer = authorizer;
     }
 
     @Path("/{global_user_id: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}")
     @GET
-    public List<String> listGlobalUserEndpoints(@PathParam("global_user_id") final String globalUserId) {
+    public List<String> listGlobalUserEndpoints(@HeaderParam("Authorization") final String authorization,
+                                                @PathParam("global_user_id") final String globalUserId) {
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.list");
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
@@ -47,7 +53,10 @@ public class GlobalUsersResource {
 
     @Path("/{platform: [a-z]+}/{id}")
     @GET
-    public String getGlobalUserId(@PathParam("platform") final String platformString, @PathParam("id") final String id) {
+    public String getGlobalUserId(@HeaderParam("Authorization") final String authorization,
+                                  @PathParam("platform") final String platformString,
+                                  @PathParam("id") final String id) {
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read");
         final Platform platform = Platform.valueOf(platformString.toUpperCase());
         final GlobalUser globalUser = daoGlobalUser.getByUser(platform, id);
         if(globalUser == null)

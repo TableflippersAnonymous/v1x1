@@ -6,10 +6,13 @@ import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.modules.core.api.api.User;
+import tv.v1x1.modules.core.api.auth.AuthorizationContext;
+import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -37,14 +40,18 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsersResource {
     private final DAOGlobalUser daoGlobalUser;
+    private final Authorizer authorizer;
 
     @Inject
-    public UsersResource(final DAOGlobalUser daoGlobalUser) {
+    public UsersResource(final DAOGlobalUser daoGlobalUser, final Authorizer authorizer) {
         this.daoGlobalUser = daoGlobalUser;
+        this.authorizer = authorizer;
     }
 
     @GET
-    public List<String> listPlatforms(@PathParam("global_user_id") final String globalUserId) {
+    public List<String> listPlatforms(@HeaderParam("Authorization") final String authorization,
+                                      @PathParam("global_user_id") final String globalUserId) {
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read").ensurePrincipal(globalUserId);
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
@@ -53,7 +60,10 @@ public class UsersResource {
 
     @Path("/{platform}")
     @GET
-    public List<String> listUsers(@PathParam("global_user_id") final String globalUserId, @PathParam("platform") final String platformString) {
+    public List<String> listUsers(@HeaderParam("Authorization") final String authorization,
+                                  @PathParam("global_user_id") final String globalUserId,
+                                  @PathParam("platform") final String platformString) {
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read").ensurePrincipal(globalUserId);
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
@@ -63,21 +73,27 @@ public class UsersResource {
 
     @Path("/{platform}/{user_id}")
     @GET
-    public User getUser(@PathParam("global_user_id") final String globalUserId, @PathParam("platform") final String platform,
+    public User getUser(@HeaderParam("Authorization") final String authorization,
+                        @PathParam("global_user_id") final String globalUserId,
+                        @PathParam("platform") final String platform,
                         @PathParam("user_id") final String userId) {
         return null; //TODO
     }
 
     @Path("/{platform}/{user_id}")
     @PUT
-    public User linkUser(@PathParam("global_user_id") final String globalUserId, @PathParam("platform") final String platform,
+    public User linkUser(@HeaderParam("Authorization") final String authorization,
+                         @PathParam("global_user_id") final String globalUserId,
+                         @PathParam("platform") final String platform,
                          @PathParam("user_id") final String userId, final User user) {
         return null; //TODO
     }
 
     @Path("/{platform}/{user_id}")
     @DELETE
-    public Response unlinkUser(@PathParam("global_user_id") final String globalUserId, @PathParam("platform") final String platform,
+    public Response unlinkUser(@HeaderParam("Authorization") final String authorization,
+                               @PathParam("global_user_id") final String globalUserId,
+                               @PathParam("platform") final String platform,
                                @PathParam("user_id") final String userId) {
         return null; //TODO
     }
