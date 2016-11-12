@@ -13,10 +13,10 @@ import java.util.List;
 /**
  * @author Josh
  */
-public class TimerDestroyCommand extends Command {
+/* pkg-private */ class TimerDestroyCommand extends Command {
     private TimedMessages module;
 
-    public TimerDestroyCommand(final TimedMessages module) {
+    /* pkg-private */ TimerDestroyCommand(final TimedMessages module) {
         this.module = module;
     }
 
@@ -35,12 +35,12 @@ public class TimerDestroyCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String senderName = chatMessage.getSender().getDisplayName();
         if(module.destroyTimer(channel.getTenant(), args.get(0))) {
-            Chat.i18nMessage(module, channel, "timer.destroy.success",
+            Chat.i18nMessage(module, channel, "destroy.success",
                     "commander", senderName,
                     "id", args.get(0)
                     );
         } else {
-            Chat.i18nMessage(module, channel, "timer.destroy.notarget",
+            Chat.i18nMessage(module, channel, "invalid.timer",
                     "commander", senderName,
                     "id", args.get(0)
             );
@@ -64,9 +64,16 @@ public class TimerDestroyCommand extends Command {
 
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
-        Chat.i18nMessage(module, chatMessage.getChannel(), "timer.destroy.notarget",
-                "commander", chatMessage.getSender().getDisplayName(),
-                "usage", getUsage()
-        );
+        switch(args.size()) {
+            case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "destroy.notarget",
+                    "commander", chatMessage.getSender().getDisplayName(),
+                    "usage", getUsage());
+                break;
+            default:
+                Chat.i18nMessage(module, chatMessage.getChannel(), "toomanyargs",
+                        "commander", chatMessage.getSender().getDisplayName(),
+                        "usage", getUsage()
+                );
+        }
     }
 }

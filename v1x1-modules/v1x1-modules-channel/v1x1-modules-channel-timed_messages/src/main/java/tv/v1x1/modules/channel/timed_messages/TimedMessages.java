@@ -6,6 +6,7 @@ import org.redisson.api.RMapCache;
 import org.redisson.client.codec.ByteArrayCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
@@ -25,36 +26,33 @@ import java.util.concurrent.TimeUnit;
  */ // TODO: Handle (hard) disabled but saved timers
     // TODO: Handle (soft) enable/disable of timers for offline strimmers
 public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSettings, TimedMessagesGlobalConfiguration, TimedMessagesTenantConfiguration, TimedMessagesChannelConfiguration> {
-    public static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     static {
         Module module = new Module("timed_messages");
-        /*
-        TODO: Add these messages
-        timer.create.toomanyargs
-        entry.add.badtarget - commander, id
-         */
         // base/shared
         I18n.registerDefault(module, "invalid.subcommand", "%commander%, I don't know that subcommand. Usage: %usage%");
-        I18n.registerDefault(module, "invalid.timer", "%commander%, I can't find a timer called \"%id%.\"");
+        I18n.registerDefault(module, "invalid.timer", "%commander%, I can't find a timer called \"%id%\".");
+        I18n.registerDefault(module, "toomanyargs", "Whoa settle down there, %commander%. There's too many things there. Usage: %usage%");
 
         // subcmd success
-        I18n.registerDefault(module, "timer.create.success", "%commander%, I've created a timer named \"%id%\". Now add stuff to it!");
-        I18n.registerDefault(module, "entry.add.success", "%commander%, I've added your entry to the rotation. Here's a preview: %preview%");
-        I18n.registerDefault(module, "entry.remove.success", "%commander%, I've removed the following entry from the rotation: %preview%");
-        I18n.registerDefault(module, "timer.destroy.success", "%commander%, I've destroyed the timer named \"%id%\". It will no longer message the chat.");
-        I18n.registerDefault(module, "timer.enable.success", "%commander%, I've re-enabled the timer \"%id%\" rotation.");
-        I18n.registerDefault(module, "timer.disable.success", "%commander%, I've disabled the timer \"%id%\" rotation.");
+        I18n.registerDefault(module, "create.success", "%commander%, I've created a timer named \"%id%\". Now add stuff to it!");
+        I18n.registerDefault(module, "add.success", "%commander%, I've added your entry (\"%preview%\") to the rotation.");
+        I18n.registerDefault(module, "delete.success", "%commander%, I've deleted the following entry from the rotation: %preview%");
+        I18n.registerDefault(module, "destroy.success", "%commander%, I've destroyed the timer named \"%id%\". It will no longer message the chat.");
+        I18n.registerDefault(module, "enable.success", "%commander%, I've re-enabled the timer \"%id%\" rotation.");
+        I18n.registerDefault(module, "disable.success", "%commander%, I've disabled the timer \"%id%\" rotation.");
 
         // subcmd failure
-        I18n.registerDefault(module, "timer.create.alreadyexists", "%commander%, there's already a timer named \"%id%\". Do you wanna to add entries with %cmd%?");
-        I18n.registerDefault(module, "timer.create.notarget", "%commander%, what's the name of the timer we're creating? Usage: %usage%");
-        I18n.registerDefault(module, "timer.create.badinterval", "%commander%, that interval doesn't look right. Try a number, which will be the number of minutes between each message.");
-        I18n.registerDefault(module, "entry.nomatch", "%commander%, I can't find a timer entry that starts with %preview%");
-        I18n.registerDefault(module, "entry.add.invalidmessage", "%commander%, I'd love to add a timer, but what should it say? Usage: %usage%");
-        I18n.registerDefault(module, "entry.add.notarget", "%commander%, add to what timer? Also, what message? Usage: %usage%");
-        I18n.registerDefault(module, "entry.remove.notarget", "%commander%, remove from what timer? Also, what message? Usage: %usage%");
-        I18n.registerDefault(module, "timer.destroy.notarget", "%commander%, destroy what timer? Also, what message? Usage: %usage%");
-        I18n.registerDefault(module, "timer.alreadytoggled", "%commander%, the \"%id%\" timer is already %state%");
+        I18n.registerDefault(module, "create.alreadyexists", "%commander%, there's already a timer named \"%id%\". Do you wanna to add entries with %cmd%?");
+        I18n.registerDefault(module, "create.notarget", "%commander%, what's the name of the timer we're creating? Usage: %usage%");
+        I18n.registerDefault(module, "create.badinterval", "%commander%, that interval doesn't look right. Try a number, which will be the number of seconds between each message.");
+        I18n.registerDefault(module, "add.nomessage", "%commander%, I'd love to add a timer, but what should it say? Usage: %usage%");
+        I18n.registerDefault(module, "add.notarget", "%commander%, add to what timer? Also, what message? Usage: %usage%");
+        I18n.registerDefault(module, "delete.notarget", "%commander%, delete from what timer? Also, what message? Usage: %usage%");
+        I18n.registerDefault(module, "delete.nomessage", "%commander%, what are we deleting from the timer? Usage: %usage%");
+        I18n.registerDefault(module, "delete.nomatch", "%commander%, I can't find a timer entry that starts with \"%preview%\"");
+        I18n.registerDefault(module, "destroy.notarget", "%commander%, destroy what timer? Also, what message? Usage: %usage%");
+        I18n.registerDefault(module, "alreadytoggled", "%commander%, the \"%id%\" timer is already %state%");
     }
 
     CommandDelegator delegator;
@@ -108,7 +106,9 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         if(t == null) return false;
         boolean success = getTenantConfiguration(tenant).delTimer(timerName);
         if(success) {
-            disableTimer(tenant, t.getActiveTimer());
+            final UUID activeTimer = t.getDtoActiveTimer();
+            if(activeTimer.getValue() != null)
+                disableTimer(activeTimer);
             getTenantConfigProvider().save(tenant, config);
         }
         return success;
@@ -122,6 +122,21 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         if(success)
             getTenantConfigProvider().save(tenant, config);
         return success;
+    }
+
+    public int countMatchingTimerEntries(final Tenant tenant, final String timerName, final String message) {
+        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final Timer t = config.getTimer(timerName);
+        if(t == null) return -1;
+        int found = 0;
+        int entryIdx = 0;
+        List<TimerEntry> entries = t.getEntries();
+        for(; entryIdx < entries.size(); ++entryIdx) {
+            TimerEntry entry = entries.get(entryIdx);
+            if(entry.getMessage().startsWith(message))
+                ++found;
+        }
+        return found;
     }
 
     public TimerEntry deleteTimerEntry(final Tenant tenant, final String timerName, final String message) {
@@ -146,32 +161,36 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         return null;
     }
 
+
     /**
      * Find a timer in the DB and add it to the scheduler
      * @param tenant
      * @param timerName
      */
     public void enableTimer(final Tenant tenant, final String timerName) {
-        final Timer t = getTenantConfiguration(tenant).getTimer(timerName);
+        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final Timer t = config.getTimer(timerName);
         if(t == null) {
             LOG.warn("Asked to kick off a non-existing timer.");
             return;
         }
         final UUID uuid = new UUID(java.util.UUID.randomUUID());
-        cursors.putAsync(uuid.toProto().toByteArray(), Ints.toByteArray(0), t.getInterval() + (t.getInterval() / 2), TimeUnit.MILLISECONDS);
+        t.setActiveTimer(uuid.getValue());
+        cursors.fastPut(uuid.toProto().toByteArray(), Ints.toByteArray(0)); // , t.getInterval() + (t.getInterval() / 2), TimeUnit.MILLISECONDS
         final byte[] payload = CompositeKey.makeKey(new byte[][]{timerName.getBytes(), "tenant".getBytes(), tenant.toProto().toByteArray()});
         ssc.scheduleRepeating(t.getInterval(), uuid, payload);
+        getTenantConfigProvider().save(tenant, config);
     }
 
     /**
      * Remove a timer from the scheduler but leaves it in the DB
-     * @param tenant
      * @param timerId
      */
-    public void disableTimer(final Tenant tenant, final UUID timerId) {
-        // TODO: Remove activeTimer from Timer
-        cursors.removeAsync(timerId.toProto().toByteArray());
-        ssc.scheduleRepeating(-1, timerId, null);
+    public void disableTimer(final UUID timerId) {
+        LOG.trace("asked to remove timer {}", timerId.getValue());
+        //cursors.fastRemove(timerId.toProto().toByteArray());
+        cursors.fastPut(timerId.toProto().toByteArray(), Ints.toByteArray(-1), 1, TimeUnit.MILLISECONDS);
+        ssc.scheduleRepeating(-1, timerId, "foobar".getBytes());
     }
 
     /* pkg-private */ int getCursor(final UUID id) {
@@ -181,6 +200,10 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
     }
 
     public void saveCursor(final UUID timerId, final int cursor) {
-        cursors.putAsync(timerId.toProto().toByteArray(), Ints.toByteArray(cursor));
+        cursors.fastPut(timerId.toProto().toByteArray(), Ints.toByteArray(cursor));
+    }
+
+    public boolean isEnabled(final Channel channel) {
+        return getTenantConfiguration(channel.getTenant()).isEnabled();
     }
 }

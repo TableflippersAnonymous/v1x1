@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
+import tv.v1x1.common.util.text.Shorten;
 import tv.v1x1.modules.channel.timed_messages.TimedMessages;
 import tv.v1x1.modules.channel.timed_messages.TimerEntry;
 
@@ -36,20 +37,31 @@ public class TimerDeleteCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String senderName = chatMessage.getSender().getDisplayName();
         final String timerName = args.remove(0);
-        final StringBuilder message = new StringBuilder();
-        for(String arg : args)
-            message.append(arg);
-        TimerEntry entry = module.deleteTimerEntry(channel.getTenant(), timerName, message.toString());
-        if(entry == null) {
-            Chat.i18nMessage(module, channel, "entry.delete.nomatch",
+        final String message = String.join(" ", args);
+        final int matches = module.countMatchingTimerEntries(channel.getTenant(), timerName, message);
+        if(matches == -1) {
+            Chat.i18nMessage(module, channel, "invalid.timer",
                     "commander", senderName,
-                    "id", timerName
-            );
-        } else {
-            Chat.i18nMessage(module, channel, "entry.delete.success",
+                    "id", timerName);
+            return;
+        } else if(matches > 1) {
+            Chat.i18nMessage(module, channel, "delete.toomanymatches",
+                    "commander", senderName,
+                    "id", timerName);
+            return;
+        }
+        TimerEntry entry = module.deleteTimerEntry(channel.getTenant(), timerName, message);
+        if(entry == null) {
+            Chat.i18nMessage(module, channel, "delete.nomatch",
                     "commander", senderName,
                     "id", timerName,
-                    "preview", "<preview here>"
+                    "preview", Shorten.genPreview(message)
+            );
+        } else {
+            Chat.i18nMessage(module, channel, "delete.success",
+                    "commander", senderName,
+                    "id", timerName,
+                    "preview", Shorten.genPreview(entry.getMessage(), 128)
             );
         }
     }
@@ -71,8 +83,17 @@ public class TimerDeleteCommand extends Command {
 
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
-        Chat.i18nMessage(module, chatMessage.getChannel(), "entry.delete.notarget",
-                "commander", chatMessage.getSender().getDisplayName(),
-                "usage", getUsage());
+        switch(args.size()) {
+            case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "delete.notarget",
+                    "commander", chatMessage.getSender().getDisplayName(),
+                    "usage", getUsage()
+                );
+                break;
+            case 1: Chat.i18nMessage(module, chatMessage.getChannel(), "delete.nomessage",
+                    "commander", chatMessage.getSender().getDisplayName(),
+                    "usage", getUsage()
+                );
+                break;
+        }
     }
 }

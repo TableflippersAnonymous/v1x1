@@ -1,6 +1,15 @@
 package tv.v1x1.modules.channel.timed_messages;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.deser.std.CollectionDeserializer;
+import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
+import com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer;
+import com.fasterxml.jackson.databind.ser.std.UUIDSerializer;
 import tv.v1x1.common.config.ComplexType;
 import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Description;
@@ -38,8 +47,15 @@ public class Timer {
     @JsonProperty("alwayson") // #okta
     private boolean alwaysOn;
     @JsonProperty("active_uuid")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @JsonSerialize(using = UUIDSerializer.class)
+    @JsonDeserialize(using = UUIDDeserializer.class)
     @TenantPermission(Permission.NONE)
     private java.util.UUID activeTimer;
+
+    public Timer() {
+        // For Jackson
+    }
 
     public Timer(final long interval) {
         this.interval = interval;
@@ -54,9 +70,9 @@ public class Timer {
         return interval;
     }
 
-    public TimerEntry nextEntry(int cursor) {
-        if(cursor > entries.size())
-            cursor = 0;
+    public TimerEntry getEntry(int cursor) {
+        if(entries.size() < 1)
+            return null;
         return entries.get(cursor);
     }
 
@@ -68,8 +84,12 @@ public class Timer {
         isEnabled = enabled;
     }
 
-    public UUID getActiveTimer() {
-        return new UUID(activeTimer);
+    public java.util.UUID getActiveTimer() {
+        return activeTimer;
+    }
+
+    public void setActiveTimer(final java.util.UUID activeTimer) {
+        this.activeTimer = activeTimer;
     }
 
     public boolean isAlwaysOn() {
@@ -78,5 +98,10 @@ public class Timer {
 
     public void setAlwaysOn(final boolean alwaysOn) {
         this.alwaysOn = alwaysOn;
+    }
+
+    @JsonIgnore
+    public UUID getDtoActiveTimer() {
+        return new UUID(activeTimer);
     }
 }

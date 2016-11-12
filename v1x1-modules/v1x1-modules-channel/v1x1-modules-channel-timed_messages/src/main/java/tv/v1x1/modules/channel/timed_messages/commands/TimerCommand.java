@@ -44,12 +44,12 @@ public class TimerCommand extends Command {
 
     @Override
     public String getUsage() {
-        return "<create|destroy|add|remove> <timer> [args]";
+        return "<create|destroy|add|delete> <timer> [args]";
     }
 
     @Override
     public int getMinArgs() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TimerCommand extends Command {
 
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
-        Chat.i18nMessage(module, chatMessage.getChannel(), "timer.invalid.subcommand",
+        Chat.i18nMessage(module, chatMessage.getChannel(), "invalid.subcommand",
                 "commander", chatMessage.getSender().getDisplayName(),
                 "usage", getUsage()
         );
@@ -67,15 +67,8 @@ public class TimerCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        // TODO: Don't respond if globally disabled
-        module.LOG.info("Timer command received");
         String subCmd = args.remove(0).toLowerCase();
         if(!delegator.handleParsedCommand(chatMessage, new ParsedCommand(subCmd, args)))
             handleArgMismatch(chatMessage, command, args);
-    }
-
-    @Override
-    public void handleNoPermissions(final ChatMessage chatMessage, final String command, final List<String> args) {
-        Chat.message(module, chatMessage.getChannel(), "No perms for you");
     }
 }
