@@ -3,6 +3,8 @@ package tv.v1x1.common.dto.db;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
+import java.nio.ByteBuffer;
+
 /**
  * Created by cobi on 10/17/2016.
  */
@@ -11,31 +13,35 @@ public class KeyValueEntry {
     @PartitionKey(0)
     private String name;
     @PartitionKey(1)
-    private byte[] key;
-    private byte[] value;
+    private ByteBuffer key;
+    private ByteBuffer value;
 
     public KeyValueEntry() {
     }
 
     public KeyValueEntry(final String name, final byte[] key, final byte[] value) {
         this.name = name;
-        this.key = key;
-        this.value = value;
+        this.key = ByteBuffer.wrap(key);
+        this.value = ByteBuffer.wrap(value);
     }
 
     public String getName() {
         return name;
     }
 
-    public byte[] getKey() {
-        return key;
+    public synchronized byte[] getKey() {
+        final byte[] ret = new byte[key.remaining()];
+        key.mark();
+        key.get(ret);
+        key.reset();
+        return ret;
     }
 
-    public byte[] getValue() {
-        return value;
-    }
-
-    public void setValue(final byte[] value) {
-        this.value = value;
+    public synchronized byte[] getValue() {
+        final byte[] ret = new byte[value.remaining()];
+        value.mark();
+        value.get(ret);
+        value.reset();
+        return ret;
     }
 }
