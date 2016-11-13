@@ -18,6 +18,7 @@ public class DAOManager {
     private final DAOConfigurationDefinition daoConfigurationDefinition;
     private final DAOChannelConfiguration daoChannelConfiguration;
     private final DAOThirdPartyCredential daoThirdPartyCredential;
+    private final DAOTwitchOauthToken daoTwitchOauthToken;
 
     public DAOManager(final MappingManager mappingManager) {
         daoTenant = new DAOTenant(mappingManager);
@@ -30,6 +31,7 @@ public class DAOManager {
         daoConfigurationDefinition = new DAOConfigurationDefinition(mappingManager);
         daoChannelConfiguration = new DAOChannelConfiguration(mappingManager);
         daoThirdPartyCredential = new DAOThirdPartyCredential(mappingManager);
+        daoTwitchOauthToken = new DAOTwitchOauthToken(mappingManager);
     }
 
     public DAOTenant getDaoTenant() {
@@ -70,5 +72,9 @@ public class DAOManager {
 
     public DAOThirdPartyCredential getDaoThirdPartyCredential() {
         return daoThirdPartyCredential;
+    }
+
+    public DAOTwitchOauthToken getDaoTwitchOauthToken() {
+        return daoTwitchOauthToken;
     }
 }

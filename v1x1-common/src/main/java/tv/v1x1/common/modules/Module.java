@@ -45,10 +45,13 @@ import tv.v1x1.common.dao.DAOConfigurationDefinition;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
+import tv.v1x1.common.dto.core.GlobalUser;
 import tv.v1x1.common.dto.core.ModuleInstance;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.TenantConfigurationDefinition;
 import tv.v1x1.common.dto.db.Platform;
+import tv.v1x1.common.dto.db.ThirdPartyCredential;
+import tv.v1x1.common.dto.db.TwitchOauthToken;
 import tv.v1x1.common.dto.messages.Message;
 import tv.v1x1.common.dto.messages.Request;
 import tv.v1x1.common.dto.messages.Response;
@@ -74,6 +77,7 @@ import tv.v1x1.common.services.queue.MessageQueueManagerImpl;
 import tv.v1x1.common.services.state.StateManager;
 import tv.v1x1.common.services.stats.NoopStatsCollector;
 import tv.v1x1.common.services.stats.StatsCollector;
+import tv.v1x1.common.services.twitch.TwitchApi;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,6 +124,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private StatsCollector statsCollector;
     private I18n i18n;
     private StateManager stateManager;
+    private TwitchApi twitchApi;
 
     /* Third-Party Clients */
     private CuratorFramework curatorFramework;
@@ -218,11 +223,13 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         persistentGlobalKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry());
         persistentKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry(), toDto());
 
-        globalConfigProvider = new ConfigurationProvider<U>(toDto(), daoManager, getGlobalConfigurationClass());
-        tenantConfigProvider = new TenantConfigurationProvider<V>(toDto(), daoManager, getTenantConfigurationClass());
-        channelConfigProvider = new ChannelConfigurationProvider<W>(toDto(), daoManager, getChannelConfigurationClass());
+        globalConfigProvider = new ConfigurationProvider<>(toDto(), daoManager, getGlobalConfigurationClass());
+        tenantConfigProvider = new TenantConfigurationProvider<>(toDto(), daoManager, getTenantConfigurationClass());
+        channelConfigProvider = new ChannelConfigurationProvider<>(toDto(), daoManager, getChannelConfigurationClass());
         i18n = new I18n(daoManager);
         stateManager = new StateManager();
+
+        twitchApi = new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), new String(requireCredential("Common|Twitch|OAuthToken")));
 
         updateConfigurationDefinitions();
     }
@@ -371,6 +378,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return configFile;
     }
 
+    public TwitchApi getTwitchApi() {
+        return twitchApi;
+    }
+
     /* ******************************* COMPLEX GETTERS ******************************* */
     protected KeyValueStore getTemporaryTenantKeyValueStore(final Tenant tenant) {
         return new TenantKeyValueStoreImpl(tenant, temporaryKeyValueStore);
@@ -425,6 +436,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return getChannelConfigProvider().getChannelConfiguration(channel);
     }
 
+    public TwitchApi getTwitchApi(final String userId) {
+        return new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), getTwitchOAuthToken(userId));
+    }
+
     /* ******************************* UTILITY METHODS ******************************* */
     public tv.v1x1.common.dto.core.Module toDto() {
         return new tv.v1x1.common.dto.core.Module(getName());
@@ -448,6 +463,47 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public static String getMainQueueForModule(final tv.v1x1.common.dto.core.Module module) {
         return "Module|" + module.getName();
+    }
+
+    protected byte[] getCredential(final String key) {
+        final ThirdPartyCredential thirdPartyCredential = daoManager.getDaoThirdPartyCredential().get(key);
+        if(thirdPartyCredential == null)
+            return null;
+        return thirdPartyCredential.getCredential();
+    }
+
+    protected byte[] requireCredential(final String key) {
+        final byte[] ret = getCredential(key);
+        if(ret == null)
+            throw new IllegalStateException("No such key: " + key);
+        return ret;
+    }
+
+    protected String requireTwitchOAuthToken(final String userId) {
+        final String oauthToken = getTwitchOAuthToken(userId);
+        if(oauthToken == null)
+            throw new IllegalStateException("No OAuth Token for: " + userId);
+        return oauthToken;
+    }
+
+    protected String getTwitchOAuthToken(final String userId) {
+        return getTwitchOAuthToken(daoManager.getDaoGlobalUser().getByUser(Platform.TWITCH, userId).toCore(), userId);
+    }
+
+    protected String requireTwitchOAuthToken(final GlobalUser globalUser, final String userId) {
+        final String oauthToken = getTwitchOAuthToken(globalUser, userId);
+        if(oauthToken == null)
+            throw new IllegalStateException("No OAuth Token for: " + userId);
+        return oauthToken;
+    }
+
+    protected String getTwitchOAuthToken(final GlobalUser globalUser, final String userId) {
+        if(globalUser == null)
+            return null;
+        final TwitchOauthToken twitchOauthToken = daoManager.getDaoTwitchOauthToken().get(globalUser.getId().getValue(), userId);
+        if(twitchOauthToken == null)
+            return null;
+        return twitchOauthToken.getOauthToken();
     }
 
     /* ******************************* PRIVATE METHODS ******************************* */
