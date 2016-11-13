@@ -29,7 +29,7 @@ public class KeyValueEntry {
         return name;
     }
 
-    public synchronized byte[] getKey() {
+    public synchronized byte[] getKeyAsByteArray() {
         final byte[] ret = new byte[key.remaining()];
         key.mark();
         key.get(ret);
@@ -37,7 +37,7 @@ public class KeyValueEntry {
         return ret;
     }
 
-    public synchronized byte[] getValue() {
+    public synchronized byte[] getValueAsByteArray() {
         final byte[] ret = new byte[value.remaining()];
         value.mark();
         value.get(ret);
