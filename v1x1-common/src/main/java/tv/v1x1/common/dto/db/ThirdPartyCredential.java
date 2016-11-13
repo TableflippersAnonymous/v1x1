@@ -26,7 +26,7 @@ public class ThirdPartyCredential {
         return name;
     }
 
-    public byte[] getCredential() {
+    public synchronized byte[] getCredential() {
         final byte[] ret = new byte[credential.remaining()];
         credential.mark();
         credential.get(ret);
