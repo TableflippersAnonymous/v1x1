@@ -469,7 +469,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         final ThirdPartyCredential thirdPartyCredential = daoManager.getDaoThirdPartyCredential().get(key);
         if(thirdPartyCredential == null)
             return null;
-        return thirdPartyCredential.getCredential();
+        return thirdPartyCredential.getCredentialAsByteArray();
     }
 
     protected byte[] requireCredential(final String key) {
