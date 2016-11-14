@@ -54,6 +54,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         I18n.registerDefault(module, "delete.notarget", "%commander%, delete from what timer? Also, what message? Usage: %usage%");
         I18n.registerDefault(module, "delete.nomessage", "%commander%, what are we deleting from the timer? Usage: %usage%");
         I18n.registerDefault(module, "delete.nomatch", "%commander%, I can't find a timer entry that starts with \"%preview%\"");
+        I18n.registerDefault(module, "delete.toomanymatches", "%commander%, there's %count% things that start with \"%preview%\" in \"%id%\". Can you be more specific?");
         I18n.registerDefault(module, "destroy.notarget", "%commander%, destroy what timer? Also, what message? Usage: %usage%");
         I18n.registerDefault(module, "alreadytoggled", "%commander%, the \"%id%\" timer is already %state%");
     }

@@ -25,7 +25,8 @@ public class Shorten {
             if(sb.length() > length)
                 break;
         }
-        if(i != words.length) sb.append("...");
+        if(i < (words.length-1)) sb.append("...");
+        if(i == 0) return message.substring(0, length) +  "...";
         return sb.toString();
     }
 }

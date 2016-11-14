@@ -3,12 +3,9 @@ package tv.v1x1.modules.channel.timed_messages;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.deser.std.CollectionDeserializer;
 import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
-import com.fasterxml.jackson.databind.ser.impl.IndexedListSerializer;
 import com.fasterxml.jackson.databind.ser.std.UUIDSerializer;
 import tv.v1x1.common.config.ComplexType;
 import tv.v1x1.common.config.ConfigType;
@@ -18,7 +15,6 @@ import tv.v1x1.common.config.Permission;
 import tv.v1x1.common.config.TenantPermission;
 import tv.v1x1.common.config.Type;
 import tv.v1x1.common.dto.core.UUID;
-import tv.v1x1.common.dto.proto.core.UUIDOuterClass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +36,7 @@ public class Timer {
     @JsonProperty("enabled")
     @DisplayName("Enabled?")
     @Description("Whether or not this rotation will run")
-    private boolean isEnabled;
+    private boolean enabled;
     @DisplayName("Always On")
     @Type(ConfigType.BOOLEAN)
     @Description("Should this rotation run while you're offline?")
@@ -61,6 +57,7 @@ public class Timer {
         this.interval = interval;
         this.entries = new ArrayList<>();
         this.alwaysOn = true;
+        this.enabled = true;
     }
 
     public List<TimerEntry> getEntries() {
@@ -78,11 +75,11 @@ public class Timer {
     }
 
     public boolean isEnabled() {
-        return isEnabled;
+        return enabled;
     }
 
     public void setEnabled(final boolean enabled) {
-        isEnabled = enabled;
+        this.enabled = enabled;
     }
 
     public java.util.UUID getActiveTimer() {
