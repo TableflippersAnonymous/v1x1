@@ -84,7 +84,7 @@ public class Authorizer {
 
     private Principal getJWTPrincipal(final String jwtString) {
         Jwts.parser()
-                .setSigningKey(daoThirdPartyCredential.get("Module|Core|API|JWT|Public").getCredential())
+                .setSigningKey(daoThirdPartyCredential.get("Module|Core|API|JWT|Public").credentialAsByteArray())
                 .parseClaimsJws(jwtString);
         return null;
     }
