@@ -2,10 +2,11 @@ package tv.v1x1.common.services.twitch;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
+import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 
 /**
- * Created by naomi on 10/30/2016.
+ * @author Naomi
  */
 public class TwitchApiRequestFilter implements ClientRequestFilter {
     private final String clientId;

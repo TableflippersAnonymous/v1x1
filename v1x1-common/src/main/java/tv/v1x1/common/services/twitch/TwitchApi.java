@@ -1,5 +1,6 @@
 package tv.v1x1.common.services.twitch;
 
+import org.glassfish.jersey.jackson.JacksonFeature;
 import tv.v1x1.common.services.twitch.resources.BlocksResource;
 import tv.v1x1.common.services.twitch.resources.ChannelFeedResource;
 import tv.v1x1.common.services.twitch.resources.ChannelsResource;
@@ -18,6 +19,7 @@ import tv.v1x1.common.services.twitch.resources.VideosResource;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
 
 /**
  * Created by naomi on 10/28/2016.
@@ -44,6 +46,7 @@ public class TwitchApi {
     public TwitchApi(final String clientId, final String oauthToken) {
         final TwitchApiRequestFilter twitchApiRequestFilter = new TwitchApiRequestFilter(clientId, oauthToken);
         final Client client = ClientBuilder.newClient();
+        client.register(JacksonFeature.class);
         client.register(twitchApiRequestFilter);
         final WebTarget api = client.target(BASE_URL);
         blocks = new BlocksResource(api.path("users"));

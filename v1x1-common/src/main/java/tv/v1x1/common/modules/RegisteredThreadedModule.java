@@ -43,7 +43,7 @@ public abstract class RegisteredThreadedModule<T extends ModuleSettings, U exten
                     try {
                         m.invoke(listener, message);
                     } catch (IllegalAccessException | InvocationTargetException e) {
-                        LOG.warn("Failure calling handler for module", e);
+                        LOG.warn("Failure calling handler for module", e.getCause());
                     }
                 }
             }

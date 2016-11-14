@@ -201,6 +201,10 @@ message NoticeCommand {
         UNRECOGNIZED_COMMAND = 25;
         MSG_DUPLICATE = 26;
         MSG_RATELIMIT = 27;
+        BAD_TIMEOUT_BROADCASTER = 28;
+        BAD_TIMEOUT_MOD = 29;
+        HOST_TARGET_WENT_OFFLINE = 30;
+        NO_PERMISSION = 31;
     }
 
     required string channel = 1;
