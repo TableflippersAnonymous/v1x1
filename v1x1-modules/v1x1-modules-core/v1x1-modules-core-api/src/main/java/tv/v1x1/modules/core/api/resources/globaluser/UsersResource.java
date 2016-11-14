@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Platform;
+import tv.v1x1.modules.core.api.api.PrivateUser;
 import tv.v1x1.modules.core.api.api.User;
 import tv.v1x1.modules.core.api.auth.AuthorizationContext;
 import tv.v1x1.modules.core.api.auth.Authorizer;
@@ -22,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -77,7 +79,14 @@ public class UsersResource {
                         @PathParam("global_user_id") final String globalUserId,
                         @PathParam("platform") final String platform,
                         @PathParam("user_id") final String userId) {
-        return null; //TODO
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read").ensurePrincipal(globalUserId);
+        final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
+        if(globalUser == null)
+            throw new NotFoundException();
+        final Optional<GlobalUser.Entry> entry = globalUser.getEntries().stream().filter(e -> e.getPlatform().name().toLowerCase().equals(platform) && e.getUserId().equals(userId)).findFirst();
+        if(!entry.isPresent())
+            throw new NotFoundException();
+        return new User(globalUser.getId(), entry.get().getPlatform(), entry.get().getUserId(), entry.get().getDisplayName());
     }
 
     @Path("/{platform}/{user_id}")
@@ -85,7 +94,14 @@ public class UsersResource {
     public User linkUser(@HeaderParam("Authorization") final String authorization,
                          @PathParam("global_user_id") final String globalUserId,
                          @PathParam("platform") final String platform,
-                         @PathParam("user_id") final String userId, final User user) {
+                         @PathParam("user_id") final String userId, final PrivateUser user) {
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.write").ensurePrincipal(globalUserId);
+        final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
+        if(globalUser == null)
+            throw new NotFoundException();
+        final Optional<GlobalUser.Entry> entry = globalUser.getEntries().stream().filter(e -> e.getPlatform().name().toLowerCase().equals(platform) && e.getUserId().equals(userId)).findFirst();
+        if(!entry.isPresent())
+            throw new NotFoundException();
         return null; //TODO
     }
 
@@ -95,6 +111,18 @@ public class UsersResource {
                                @PathParam("global_user_id") final String globalUserId,
                                @PathParam("platform") final String platform,
                                @PathParam("user_id") final String userId) {
-        return null; //TODO
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.write").ensurePrincipal(globalUserId);
+        final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
+        if(globalUser == null)
+            throw new NotFoundException();
+        final Optional<GlobalUser.Entry> entry = globalUser.getEntries().stream().filter(e -> e.getPlatform().name().toLowerCase().equals(platform) && e.getUserId().equals(userId)).findFirst();
+        if(!entry.isPresent())
+            throw new NotFoundException();
+        unlinkUser(globalUser, entry.get());
+        return Response.noContent().build();
+    }
+
+    private void unlinkUser(final GlobalUser globalUser, final GlobalUser.Entry entry) {
+        daoGlobalUser.removeChannel(globalUser, entry.getPlatform(), entry.getUserId());
     }
 }
