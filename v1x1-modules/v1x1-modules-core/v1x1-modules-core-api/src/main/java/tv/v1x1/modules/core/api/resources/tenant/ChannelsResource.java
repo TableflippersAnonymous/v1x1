@@ -42,7 +42,6 @@ public class ChannelsResource {
     private final DAOTenant daoTenant;
     private final Authorizer authorizer;
 
-
     @Inject
     public ChannelsResource(final DAOTenant daoTenant, final Authorizer authorizer) {
         this.daoTenant = daoTenant;
@@ -61,8 +60,8 @@ public class ChannelsResource {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
         final Platform platform = getDtoPlatform(platformStr);
-        final List<String> channels = (tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
-                .map(Tenant.Entry::getChannelId).collect(Collectors.toList()));
+        final List<String> channels = tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
+                .map(Tenant.Entry::getChannelId).collect(Collectors.toList());
         return channels;
     }
 
