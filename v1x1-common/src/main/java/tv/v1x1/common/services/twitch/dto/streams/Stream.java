@@ -1,12 +1,14 @@
 package tv.v1x1.common.services.twitch.dto.streams;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.services.twitch.dto.misc.Image;
 import tv.v1x1.common.services.twitch.dto.channels.Channel;
 
 /**
- * Created by cobi on 10/30/2016.
+ * @author Cobi
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Stream {
     @JsonProperty
     private String game;

@@ -50,7 +50,7 @@ public class CommandDelegator {
      */
     public void handleChatMessage(final ChatMessageEvent chatMessageEvent) {
         LOG.trace("Asked to handle chat message: {}", chatMessageEvent.getChatMessage().getText());
-        final ParsedCommand parsedCmd = CommandParser.parse(chatMessageEvent, prefix);
+        final ParsedCommand parsedCmd = CommandParser.parse(chatMessageEvent.getChatMessage().getText(), prefix);
         if(parsedCmd == null)
             return;
         LOG.debug("Got parsedCommand: {}", parsedCmd.getCommand());
