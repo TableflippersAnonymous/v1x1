@@ -1,11 +1,13 @@
 package tv.v1x1.common.services.twitch.dto.channels;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.services.twitch.dto.users.User;
 
 /**
  * Created by naomi on 10/30/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Subscriber {
     @JsonProperty("_id")
     private String id;

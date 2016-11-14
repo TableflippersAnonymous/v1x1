@@ -1,5 +1,6 @@
 package tv.v1x1.common.services.twitch.dto.emotes;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
@@ -7,6 +8,7 @@ import java.util.List;
 /**
  * Created by naomi on 10/29/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class EmoticonList {
     @JsonProperty
     private List<Emoticon> emoticons;
