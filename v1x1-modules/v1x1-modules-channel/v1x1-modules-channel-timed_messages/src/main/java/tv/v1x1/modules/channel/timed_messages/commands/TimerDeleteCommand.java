@@ -47,6 +47,8 @@ public class TimerDeleteCommand extends Command {
         } else if(matches > 1) {
             Chat.i18nMessage(module, channel, "delete.toomanymatches",
                     "commander", senderName,
+                    "preview", Shorten.genPreview(message),
+                    "count", matches,
                     "id", timerName);
             return;
         }
