@@ -14,7 +14,8 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * Created by cobi on 10/16/2016.
+ * Retreives Tenants from the database
+ * @author Cobi
  */
 public class DAOTenant {
     private final Session session;
