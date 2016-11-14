@@ -8,3 +8,5 @@ Things to do:
 - Expose the "always on" flag in the CUI
 - Finish enable/disable CUI
 - CUI !timers list ?
+- Add restrictions on timer duration
+- Cache Kraken responses for "is streaming"

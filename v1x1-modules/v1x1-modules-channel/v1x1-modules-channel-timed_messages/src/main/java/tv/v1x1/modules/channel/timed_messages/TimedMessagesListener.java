@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
@@ -70,6 +71,12 @@ public class TimedMessagesListener implements EventListener {
             final String message = nextEntry.getMessage();
             module.saveCursor(uuid, cursor);
             for(Channel channel : tenant.getChannels()) {
+                if(channel.getPlatform().equals(Platform.TWITCH)) {
+                    if(t.isAlwaysOn() && !module.isStreaming(channel)) {
+                        LOG.trace("Skipping non-streaming channel {}", channel.getDisplayName());
+                        continue;
+                    }
+                }
                 Chat.message(module, channel, message);
             }
         } else {
