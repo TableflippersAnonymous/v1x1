@@ -1,11 +1,13 @@
 package tv.v1x1.common.services.twitch.dto.videos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.services.twitch.dto.channels.ShortChannel;
 
 /**
  * Created by cobi on 10/30/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Video {
     @JsonProperty
     private String title;

@@ -1,11 +1,13 @@
 package tv.v1x1.common.services.twitch.dto.feed;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.services.twitch.dto.users.User;
 
 /**
  * Created by cobi on 10/29/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ReactionResponse {
     @JsonProperty
     private String id;

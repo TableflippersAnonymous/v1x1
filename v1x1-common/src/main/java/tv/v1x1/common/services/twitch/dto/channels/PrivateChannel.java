@@ -1,11 +1,13 @@
 package tv.v1x1.common.services.twitch.dto.channels;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.services.twitch.dto.channels.Channel;
 
 /**
  * Created by cobi on 10/29/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PrivateChannel extends Channel {
     @JsonProperty
     private String email;

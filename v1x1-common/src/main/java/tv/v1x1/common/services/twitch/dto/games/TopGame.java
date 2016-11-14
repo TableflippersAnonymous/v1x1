@@ -1,11 +1,13 @@
 package tv.v1x1.common.services.twitch.dto.games;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.services.twitch.dto.games.Game;
 
 /**
  * Created by cobi on 10/30/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TopGame {
     @JsonProperty
     private Game game;

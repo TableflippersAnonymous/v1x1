@@ -1,10 +1,12 @@
 package tv.v1x1.common.services.twitch.unsupported.tmi.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Created by cobi on 11/13/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ChatterResponse {
     @JsonProperty("chatter_count")
     private long chatterCount;
