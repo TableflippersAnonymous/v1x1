@@ -2,7 +2,6 @@ package tv.v1x1.common.util.commands;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -15,12 +14,11 @@ import java.util.List;
 public class CommandParser {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    public static ParsedCommand parse(final ChatMessageEvent chatMessageEvent, final String prefix) {
-        final String msg = chatMessageEvent.getChatMessage().getText();
-        if(msg == null) return null;
-        LOG.debug("prefix={} msg={}", prefix, msg);
-        if(msg.startsWith(prefix)) {
-            final List<String> args = new ArrayList<>(Arrays.asList(msg.substring(prefix.length()).split(" ")));
+    public static ParsedCommand parse(final String message, final String prefix) {
+        if(message == null) return null;
+        LOG.debug("prefix={} msg={}", prefix, message);
+        if(message.startsWith(prefix)) {
+            final List<String> args = new ArrayList<>(Arrays.asList(message.substring(prefix.length()).split(" ")));
             final String command = args.remove(0);
             return new ParsedCommand(command, args);
         }
