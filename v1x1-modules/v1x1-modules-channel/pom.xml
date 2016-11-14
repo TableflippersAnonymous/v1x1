@@ -20,6 +20,7 @@
     <module>v1x1-modules-channel-i18n_test</module>
       <module>v1x1-modules-channel-link_purger</module>
       <module>v1x1-modules-channel-timed_messages</module>
+      <module>v1x1-modules-channel-quotes</module>
   </modules>
 
   <dependencies>

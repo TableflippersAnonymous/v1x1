@@ -10,9 +10,12 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
+import tv.v1x1.common.services.twitch.TwitchApi;
+import tv.v1x1.common.services.twitch.dto.streams.StreamResponse;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.timed_messages.commands.TimerCommand;
@@ -205,5 +208,12 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
 
     public boolean isEnabled(final Channel channel) {
         return getTenantConfiguration(channel.getTenant()).isEnabled();
+    }
+
+    public boolean isStreaming(final Channel channel) {
+        if(!channel.getPlatform().equals(Platform.TWITCH))
+            throw new IllegalArgumentException("Requested platform doesn't support streaming: " + channel.getPlatform().name());
+        return (getTwitchApi().getStreams().getStream(channel.getId().substring(1, channel.getId().length())).getStream() != null);
+
     }
 }
