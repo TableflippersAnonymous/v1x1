@@ -60,6 +60,7 @@ public class Timer {
     public Timer(final long interval) {
         this.interval = interval;
         this.entries = new ArrayList<>();
+        this.alwaysOn = true;
     }
 
     public List<TimerEntry> getEntries() {
