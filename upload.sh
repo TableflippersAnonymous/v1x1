@@ -5,9 +5,9 @@ MODULECOUNT=0
 cd $(dirname $0)
 echo -n "Finding modules... "
 while read MODULE; do
-  MODULES="$MODULES v1x1-$MODULE"
+  MODULES="$MODULES $MODULE"
   MODULECOUNT=$(($MODULECOUNT + 1))
-done < <(find v1x1-modules -mindepth 2 -iname "v1x1-modules-*" -type d -printf '%f\n'|cut -f4- -d- --)
+done < <(docker image ls --format '{{.Repository}}' 'v1x1-*:latest')
 echo "Found $MODULECOUNT"
 echo -n "Getting current revision... "
 VERSION=$(git rev-parse --short HEAD)
