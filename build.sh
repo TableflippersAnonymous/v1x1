@@ -31,10 +31,11 @@ MAVEN_OPTS=-Djava.io.tmpdir=${HOME}/tmp mvn clean install -Denvironmnent=$APP_EN
 
 if [ ${APP_ENV} == "prod" ]; then
     ./upload.sh
-fi
-if [ $(getBoolAnswer "Run new build locally?") == "y" ]; then
-    docker-compose up -d cass1 redis zoo1
-    echo "Waiting for core services to start..."
-    sleep 45
-    docker-compose up -d
+else
+    if [ $(getBoolAnswer "Run new build locally?") == "y" ]; then
+        docker-compose up -d cass1 redis zoo1
+        echo "Waiting for core services to start..."
+        sleep 45
+        docker-compose up -d
+    fi
 fi
