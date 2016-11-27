@@ -13,5 +13,6 @@ deployment:
     commands:
     - sudo mkdir -p /etc/docker/certs.d/registry.tblflp.zone:5443
     - sudo wget -O /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt http://pki.tblflp.zone/Tableflippers-Anonymous-Root-CA.pem
+    - cat /etc/ssl/certs/ca-certificates.crt | sudo tee -a /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS registry.tblflp.zone:5443
     - ./upload.sh
