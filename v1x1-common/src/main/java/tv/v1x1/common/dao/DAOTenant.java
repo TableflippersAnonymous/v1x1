@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * Retreives Tenants from the database
+ * Sends/Retrieves Tenants to/from the database
  * @author Cobi
  */
 public class DAOTenant {
