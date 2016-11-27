@@ -16,3 +16,16 @@ deployment:
     - cat /etc/ssl/certs/ca-certificates.crt | sudo tee -a /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS registry.tblflp.zone:5443
     - ./upload.sh
+  prod_prep:
+    branch: master
+    commands:
+    - echo '#!/bin/bash' > codedeploy/login.sh
+    - echo "docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS registry.tblflp.zone:5443" >> codedeploy/login.sh
+    - chmod +x codedeploy/login.sh
+    - codedeploy/prepare.sh
+  prod:
+    branch: master
+    codedeploy:
+      v1x1:
+        deployment_group: prod
+
