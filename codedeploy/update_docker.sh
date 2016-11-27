@@ -1,8 +1,10 @@
 #!/bin/bash
 
-VERSION="$(cat version.txt)"
+VERSION="$(cat /tmp/v1x1-version.txt)"
+rm -f /tmp/v1x1-version.txt
 
-./login.sh
+source /tmp/v1x1-login.sh
+rm -f /tmp/v1x1-login.sh
 
 for service_id in $(docker service ls -f 'label=deploy-group=v1x1' -q)
 do
