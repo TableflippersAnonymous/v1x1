@@ -1,6 +1,9 @@
 dependencies:
   override:
   - mvn --fail-never dependency:go-offline || true
+test:
+  override:
+  - mvn integration-test -Denvironmnent=prod
 machine:
   services:
   - docker
@@ -8,6 +11,7 @@ deployment:
   hub:
     branch: master
     commands:
-    - wget -O /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt http://pki.tblflp.zone/Tableflippers-Anonymous-Root-CA.pem
+    - sudo mkdir -p /etc/docker/certs.d/registry.tblflp.zone:5443
+    - sudo wget -O /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt http://pki.tblflp.zone/Tableflippers-Anonymous-Root-CA.pem
     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS registry.tblflp.zone:5443
-    - ./upload.sh 
+    - ./upload.sh
