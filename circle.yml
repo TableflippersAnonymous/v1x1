@@ -3,7 +3,7 @@ dependencies:
   - mvn --fail-never dependency:go-offline || true
 test:
   override:
-  - mvn integration-test -Denvironmnent=prod
+  - mvn integration-test -Denvironment=prod
 machine:
   services:
   - docker
