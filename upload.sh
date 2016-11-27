@@ -7,7 +7,7 @@ echo -n "Finding modules... "
 while read MODULE; do
   MODULES="$MODULES $MODULE"
   MODULECOUNT=$(($MODULECOUNT + 1))
-done < <(docker images 'v1x1-*:latest'|grep -vF 'v1x1-base'|egrep -v '^REPOSITORY'|awk '{print $1":latest"}')
+done < <(docker images 'v1x1-*:latest'|grep -vF 'v1x1-base'|egrep -v '^REPOSITORY'|awk '{print $1}')
 echo "Found $MODULECOUNT"
 echo -n "Getting current revision... "
 VERSION=$(git rev-parse --short HEAD)
