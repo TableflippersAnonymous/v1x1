@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
+import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.modules.core.api.api.Channel;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
@@ -68,7 +69,8 @@ public class ChannelsResource {
     @Path("/{platform}/{channel_id}")
     @GET
     public Channel getChannel(@HeaderParam("Authorization") final String authorization,
-                              @PathParam("tenant_id") final String tenantId, @PathParam("platform") final String platformStr,
+                              @PathParam("tenant_id") final String tenantId,
+                              @PathParam("platform") final String platformStr,
                               @PathParam("channel_id") final String channelId) {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
@@ -79,9 +81,14 @@ public class ChannelsResource {
 
     @Path("/{platform}/{channel_id}")
     @PUT
-    public Channel linkChannel(@PathParam("tenant_id") final String tenantId, @PathParam("platform") final String platform,
-                               @PathParam("channel_id") final String channelId, final Channel channel) {
-        return null; //TODO
+    public Channel linkChannel(@HeaderParam("Authorization") final String authorization,
+                               @PathParam("tenant_id") final String tenantId,
+                               @PathParam("platform") final String platform,
+                               @PathParam("channel_id") final String channelId,
+                               final Channel channel) {
+        final Tenant tenant = getDtoTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.link");
+        return null; // TODO I have no idea what I'm doing
     }
 
     @Path("/{platform}/{channel_id}")
@@ -107,9 +114,18 @@ public class ChannelsResource {
 
     @Path("/{platform}/{channel_id}/message")
     @POST
-    public Response postMessage(@PathParam("tenant_id") final String tenantId, @PathParam("platform") final String platform,
-                                @PathParam("channel_id") final String channelId, final String message) {
-        return null; //TODO
+    public Response postMessage(@HeaderParam("Authorization") final String authorization,
+                                @PathParam("tenant_id") final String tenantId,
+                                @PathParam("platform") final String platformStr,
+                                @PathParam("channel_id") final String channelId,
+                                final String message) {
+        final Tenant tenant = getDtoTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.message");
+        final Platform platform = getDtoPlatform(platformStr);
+        final Channel apiChannel = getDtoChannel(tenant, platform, channelId);
+        final tv.v1x1.common.dto.core.Channel coreChannel = getCoreChannel(apiChannel, platform);
+        Chat.message(null, coreChannel, message);
+        return Response.ok().build();
     }
 
     private Tenant getDtoTenant(final String tenantIdStr) {
@@ -140,4 +156,7 @@ public class ChannelsResource {
        return new Channel(tenant.getId(), channelEntry.getPlatform(), channelEntry.getDisplayName(), channelEntry.getChannelId());
     }
 
+    private tv.v1x1.common.dto.core.Channel getCoreChannel(final Channel apiChannel, final Platform platform) {
+        return null; // TODO: Programmatically return the correct type of t.v.c.d.core.Channel
+    }
 }
