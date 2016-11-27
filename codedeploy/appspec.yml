@@ -1,10 +1,10 @@
 version: 0.0
 os: linux
 files:
-- source: version.txt
-  destination: /tmp/v1x1-version.txt
-- source: login.sh
-  destination: /tmp/v1x1-login.sh
+- source: v1x1-version.txt
+  destination: /tmp
+- source: v1x1-login.sh
+  destination: /tmp
 hooks:
   AfterInstall:
   - location: update_docker.sh
