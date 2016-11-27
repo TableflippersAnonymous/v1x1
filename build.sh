@@ -27,7 +27,8 @@ echo "Clearing out old Docker images..."
 docker rmi ${MODULES}
 
 echo "Rebuilding..."
-MAVEN_OPTS=-Djava.io.tmpdir=${HOME}/tmp mvn clean install -Denvironmnent=$APP_ENV
+echo "APP ENV IS ${APP_ENV}"
+MAVEN_OPTS=-Djava.io.tmpdir=${HOME}/tmp mvn clean install -Denvironment=$APP_ENV
 
 if [ ${APP_ENV} == "prod" ]; then
     ./upload.sh
