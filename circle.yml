@@ -39,4 +39,3 @@ deployment:
       v1x1:
         deployment_group: prod
         deployment_config: CodeDeployDefault.AllAtOnce
-
