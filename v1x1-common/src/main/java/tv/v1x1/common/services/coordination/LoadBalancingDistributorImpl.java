@@ -128,6 +128,16 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     }
 
     @Override
+    public void removeEntry(String entry) throws Exception {
+        framework.delete().forPath(path + "/entries/" + entry);
+    }
+
+    @Override
+    public List<String> listEntries() throws Exception {
+        return entryCache.getCurrentData().stream().map(ChildData::getData).map(String::new).collect(Collectors.toList());
+    }
+
+    @Override
     public void addInstance(final UUID instanceId) throws Exception {
         instanceDiscovery.registerService(serviceInstanceFor(new InstanceId(instanceId)));
     }
@@ -144,7 +154,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         if(instances.size() == 0)
             return;
         final int realisticRedundancy = Math.min(redundancy, instances.size());
-        final List<String> entries = entryCache.getCurrentData().stream().map(ChildData::getData).map(String::new).collect(Collectors.toList());
+        final List<String> entries = listEntries();
         final TreeMap<java.util.UUID, InstanceId> instanceLookupTable = new TreeMap<>();
         final Map<InstanceId, Set<String>> newEntriesByInstance = new HashMap<>();
         for(final InstanceId instanceId : instances) {

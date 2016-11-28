@@ -258,3 +258,10 @@ CREATE TABLE twitch_user_information (
     partnered boolean,
     PRIMARY KEY (name)
 );
+
+/* Version 5 */
+
+CREATE TABLE joined_twitch_channel (
+    channel text,
+    PRIMARY KEY (channel)
+);

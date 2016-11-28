@@ -18,7 +18,7 @@ public class CompositeKey {
 
     }
 
-    public static byte[] makeKey(final byte[][] keys) {
+    public static byte[] makeKey(final byte[]... keys) {
         final ByteArrayOutputStream bos = new ByteArrayOutputStream();
         final DataOutputStream dos = new DataOutputStream(bos);
         try {
