@@ -3,6 +3,7 @@ package tv.v1x1.common.services.coordination;
 import tv.v1x1.common.dto.core.UUID;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -14,6 +15,8 @@ public interface LoadBalancingDistributor {
     }
 
     void addEntry(String entry) throws Exception;
+    void removeEntry(String entry) throws Exception;
+    List<String> listEntries() throws Exception;
     void addInstance(UUID instanceId) throws Exception; // Will be bound to our client
     Set<String> getEntriesForInstance(UUID instanceId) throws Exception;
     void addListener(Listener listener);

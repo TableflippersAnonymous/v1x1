@@ -1,6 +1,7 @@
 package tv.v1x1.common.services.persistence;
 
 import com.datastax.driver.mapping.MappingManager;
+import org.redisson.api.RedissonClient;
 import tv.v1x1.common.dao.*;
 
 /**
@@ -19,10 +20,11 @@ public class DAOManager {
     private final DAOChannelConfiguration daoChannelConfiguration;
     private final DAOThirdPartyCredential daoThirdPartyCredential;
     private final DAOTwitchOauthToken daoTwitchOauthToken;
+    private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
 
-    public DAOManager(final MappingManager mappingManager) {
-        daoTenant = new DAOTenant(mappingManager);
-        daoGlobalUser = new DAOGlobalUser(mappingManager);
+    public DAOManager(final RedissonClient redissonClient, final MappingManager mappingManager) {
+        daoTenant = new DAOTenant(redissonClient, mappingManager);
+        daoGlobalUser = new DAOGlobalUser(redissonClient, mappingManager);
         daoTenantGroup = new DAOTenantGroup(mappingManager);
         daoKeyValueEntry = new DAOKeyValueEntry(mappingManager);
         daoTenantConfiguration = new DAOTenantConfiguration(mappingManager);
@@ -32,6 +34,7 @@ public class DAOManager {
         daoChannelConfiguration = new DAOChannelConfiguration(mappingManager);
         daoThirdPartyCredential = new DAOThirdPartyCredential(mappingManager);
         daoTwitchOauthToken = new DAOTwitchOauthToken(mappingManager);
+        daoJoinedTwitchChannel = new DAOJoinedTwitchChannel(mappingManager);
     }
 
     public DAOTenant getDaoTenant() {
@@ -76,5 +79,9 @@ public class DAOManager {
 
     public DAOTwitchOauthToken getDaoTwitchOauthToken() {
         return daoTwitchOauthToken;
+    }
+
+    public DAOJoinedTwitchChannel getDaoJoinedTwitchChannel() {
+        return daoJoinedTwitchChannel;
     }
 }

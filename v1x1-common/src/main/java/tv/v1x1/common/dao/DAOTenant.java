@@ -4,11 +4,18 @@ import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import com.datastax.driver.mapping.Result;
+import com.datastax.driver.mapping.annotations.Accessor;
+import com.datastax.driver.mapping.annotations.Query;
+import org.redisson.api.RedissonClient;
 import tv.v1x1.common.dto.db.Channel;
 import tv.v1x1.common.dto.db.DiscordChannel;
+import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TwitchChannel;
+import tv.v1x1.common.services.persistence.Deduplicator;
+import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -18,16 +25,18 @@ import java.util.UUID;
  * @author Naomi
  */
 public class DAOTenant {
+    private final Deduplicator createDeduplicator;
     private final Session session;
     private final Mapper<Tenant> tenantMapper;
     private final Mapper<DiscordChannel> discordChannelMapper;
     private final Mapper<TwitchChannel> twitchChannelMapper;
 
-    public DAOTenant(final MappingManager mappingManager) {
+    public DAOTenant(final RedissonClient redissonClient, final MappingManager mappingManager) {
         this.session = mappingManager.getSession();
         this.tenantMapper = mappingManager.mapper(Tenant.class);
         this.discordChannelMapper = mappingManager.mapper(DiscordChannel.class);
         this.twitchChannelMapper = mappingManager.mapper(TwitchChannel.class);
+        this.createDeduplicator = new Deduplicator(redissonClient, "Common|DAOTenant");
     }
 
     public Tenant getById(final UUID id) {
@@ -53,6 +62,14 @@ public class DAOTenant {
     }
 
     public Tenant getOrCreate(final Platform platform, final String channelId, final String displayName) {
+        if(createDeduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(platform.name(), channelId))))) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return getOrCreate(platform, channelId, displayName);
+        }
         final Channel channel = getChannel(platform, channelId);
         if(channel == null)
             return createTenant(platform, channelId, displayName);

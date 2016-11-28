@@ -5,14 +5,18 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.dto.core.GlobalUser;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
+import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.db.*;
+import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.modules.ServiceModule;
+import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.util.data.Pair;
@@ -23,10 +27,7 @@ import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
  */
 public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration, TmiTenantConfiguration, TmiChannelConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final UUID SCHEDULER_UPDATE_CHANNELS = new UUID(java.util.UUID.nameUUIDFromBytes("Module|TMI|UpdateChannels".getBytes()));
 
     private final LoadingCache<String, Tenant> tenantCache;
     private final LoadingCache<String, GlobalUser> globalUserCache;
@@ -191,6 +193,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
+        getServiceClient(SchedulerServiceClient.class).schedule(ImmutableSet.of(-1), ImmutableSet.of(-1), ImmutableSet.of(-1), ImmutableSet.of(-1), ImmutableSet.of(-1), SCHEDULER_UPDATE_CHANNELS, new byte[] {});
     }
 
     @Override
@@ -207,6 +210,37 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 e.printStackTrace();
             }
         super.shutdown();
+    }
+
+    @Override
+    protected void processSchedulerNotifyEvent(SchedulerNotifyEvent event) {
+        if(!event.getModule().equals(toDto()))
+            return;
+        if(!event.getId().equals(SCHEDULER_UPDATE_CHANNELS))
+            return;
+        LOG.info("Beginning join check.");
+        try {
+            Set<String> entries = new HashSet<>(channelDistributor.listEntries());
+            for(final JoinedTwitchChannel joinedTwitchChannel : getDaoManager().getDaoJoinedTwitchChannel().list()) {
+                if(entries.remove(joinedTwitchChannel.getChannel()))
+                    continue;
+                try {
+                    channelDistributor.addEntry(joinedTwitchChannel.getChannel());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            for(final String entry : entries) {
+                try {
+                    channelDistributor.removeEntry(entry);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LOG.info("End join check.");
     }
 
     @Override

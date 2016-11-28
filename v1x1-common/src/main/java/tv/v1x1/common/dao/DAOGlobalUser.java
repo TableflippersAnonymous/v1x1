@@ -4,9 +4,12 @@ import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import org.redisson.api.RedissonClient;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.InverseGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
+import tv.v1x1.common.services.persistence.Deduplicator;
+import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -15,14 +18,16 @@ import java.util.UUID;
  * Created by naomi on 10/16/2016.
  */
 public class DAOGlobalUser {
+    private final Deduplicator createDeduplicator;
     private final Session session;
     private final Mapper<GlobalUser> globalUserMapper;
     private final Mapper<InverseGlobalUser> inverseGlobalUserMapper;
 
-    public DAOGlobalUser(final MappingManager mappingManager) {
+    public DAOGlobalUser(final RedissonClient redissonClient, final MappingManager mappingManager) {
         session = mappingManager.getSession();
         globalUserMapper = mappingManager.mapper(GlobalUser.class);
         inverseGlobalUserMapper = mappingManager.mapper(InverseGlobalUser.class);
+        createDeduplicator = new Deduplicator(redissonClient, "Common|DAOGlobalUser");
     }
 
     public GlobalUser getById(final UUID id) {
@@ -54,6 +59,14 @@ public class DAOGlobalUser {
     }
 
     public GlobalUser createGlobalUser(final Platform platform, final String userId, final String displayName) {
+        if(createDeduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(platform.name(), userId))))) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return getOrCreate(platform, userId, displayName);
+        }
         final GlobalUser globalUser = new GlobalUser(UUID.randomUUID(), new ArrayList<>());
         globalUser.getEntries().add(new GlobalUser.Entry(platform, displayName, userId));
         final InverseGlobalUser inverseGlobalUser = new InverseGlobalUser(platform, userId, globalUser.getId());
