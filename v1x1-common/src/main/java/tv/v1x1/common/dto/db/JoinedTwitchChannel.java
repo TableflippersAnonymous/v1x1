@@ -11,6 +11,9 @@ public class JoinedTwitchChannel {
     @PartitionKey
     private String channel;
 
+    public JoinedTwitchChannel() {
+    }
+
     public JoinedTwitchChannel(String channel) {
         this.channel = channel;
     }
