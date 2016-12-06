@@ -62,14 +62,6 @@ public class DAOTenant {
     }
 
     public Tenant getOrCreate(final Platform platform, final String channelId, final String displayName) {
-        if(createDeduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(platform.name(), channelId))))) {
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            return getOrCreate(platform, channelId, displayName);
-        }
         final Channel channel = getChannel(platform, channelId);
         if(channel == null)
             return createTenant(platform, channelId, displayName);
@@ -80,6 +72,14 @@ public class DAOTenant {
     }
 
     public Tenant createTenant(final Platform platform, final String channelId, final String displayName) {
+        if(createDeduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(platform.name(), channelId))))) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return getOrCreate(platform, channelId, displayName);
+        }
         final Tenant tenant = new Tenant(UUID.randomUUID(), new ArrayList<>());
         tenant.getEntries().add(new Tenant.Entry(platform, displayName, channelId));
         final BatchStatement b = new BatchStatement();
