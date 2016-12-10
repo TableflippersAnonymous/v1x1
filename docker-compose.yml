@@ -61,3 +61,10 @@ services:
       - chat_router
       - event_router
       - scheduler
+  caster:
+    image: v1x1-caster:latest
+    depends_on:
+      - redis
+      - zoo1
+      - cass1
+      - chat_router
