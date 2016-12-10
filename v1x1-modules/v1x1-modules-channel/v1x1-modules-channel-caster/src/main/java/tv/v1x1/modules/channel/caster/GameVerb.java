@@ -85,7 +85,7 @@ public class GameVerb {
             case "pixelart":
                 return new GenericAction("creating pixel art");
             case "fiberarts":
-                return new GenericAction("making fiber arts")
+                return new GenericAction("making fiber arts");
             case "vector":
                 return new GenericAction("creating vector art");
             case "music":
