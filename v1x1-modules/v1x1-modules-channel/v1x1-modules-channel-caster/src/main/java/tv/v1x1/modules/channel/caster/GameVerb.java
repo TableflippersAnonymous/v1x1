@@ -134,6 +134,8 @@ public class GameVerb {
                 return new GenericAction("tinkering with autos");
             case "3dmodeling":
                 return new GenericAction("3D modeling");
+            case "makeup":
+                return new GenericAction("doing makeup");
             default: return null;
         }
     }
