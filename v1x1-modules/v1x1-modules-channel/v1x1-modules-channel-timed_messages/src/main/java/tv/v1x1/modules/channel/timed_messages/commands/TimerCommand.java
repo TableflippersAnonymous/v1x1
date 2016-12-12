@@ -25,6 +25,7 @@ public class TimerCommand extends Command {
         delegator.registerCommand(new TimerCreateCommand(module));
         delegator.registerCommand(new TimerDeleteCommand(module));
         delegator.registerCommand(new TimerDestroyCommand(module));
+        delegator.registerCommand(new TimerListCommand(module));
     }
 
     @Override
@@ -44,7 +45,7 @@ public class TimerCommand extends Command {
 
     @Override
     public String getUsage() {
-        return "<create|destroy|add|delete> <timer> [args]";
+        return "<create|destroy|add|delete|list> <timer> [args]";
     }
 
     @Override
