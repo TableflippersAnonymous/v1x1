@@ -1,4 +1,4 @@
-package tv.v1x1.modules.channel.timed_messages;
+package tv.v1x1.modules.channel.timed_messages.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.config.ComplexType;
@@ -8,6 +8,7 @@ import tv.v1x1.common.config.DisplayName;
 import tv.v1x1.common.config.ModuleConfig;
 import tv.v1x1.common.config.Type;
 import tv.v1x1.common.modules.BasicTenantConfiguration;
+import tv.v1x1.modules.channel.timed_messages.Timer;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,15 +27,15 @@ public class TimedMessagesTenantConfiguration extends BasicTenantConfiguration {
     @JsonProperty("timers")
     private Map<String, Timer> timers = new HashMap<>();
 
-    Map<String, Timer> getTimers() {
+    public Map<String, Timer> getTimers() {
         return timers;
     }
 
-    Timer getTimer(final String name) {
+    public Timer getTimer(final String name) {
         return timers.get(name);
     }
 
-    boolean addTimer(final String name, final Timer timer) {
+    public boolean addTimer(final String name, final Timer timer) {
         if(timers.get(name) == null) {
             timers.putIfAbsent(name, timer);
             return true;
@@ -42,7 +43,7 @@ public class TimedMessagesTenantConfiguration extends BasicTenantConfiguration {
         return false;
     }
 
-    boolean delTimer(final String name) {
+    public boolean delTimer(final String name) {
         return (timers.remove(name) != null);
     }
 }
