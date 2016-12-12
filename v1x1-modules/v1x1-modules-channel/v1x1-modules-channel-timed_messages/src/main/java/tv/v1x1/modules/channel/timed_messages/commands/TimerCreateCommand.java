@@ -48,6 +48,11 @@ public class TimerCreateCommand extends Command {
                     "commander", senderName);
             return;
         }
+        if(interval < (10*1000)) {
+            Chat.i18nMessage(module, channel, "create.badinterval",
+                    "commander", senderName);
+            return;
+        }
         LOG.debug("Creating timer with interval {}", interval);
         final Timer timer = new Timer(interval);
         final String timerId = args.get(0);
