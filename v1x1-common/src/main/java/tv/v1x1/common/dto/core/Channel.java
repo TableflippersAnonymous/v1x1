@@ -46,6 +46,11 @@ public abstract class Channel {
         return tenant;
     }
 
+    @Override
+    public String toString() {
+        return displayName + "{" + id + "/" + getClass().getSimpleName() + "}";
+    }
+
     public abstract Platform getPlatform();
 
     public abstract ChannelOuterClass.Channel toProto();
