@@ -2,6 +2,7 @@ package tv.v1x1.modules.channel.timed_messages;
 
 
 import com.google.common.primitives.Ints;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.redisson.api.RMapCache;
 import org.redisson.client.codec.ByteArrayCodec;
 import org.slf4j.Logger;
@@ -14,14 +15,17 @@ import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
-import tv.v1x1.common.services.twitch.TwitchApi;
-import tv.v1x1.common.services.twitch.dto.streams.StreamResponse;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.timed_messages.commands.TimerCommand;
+import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesChannelConfiguration;
+import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesGlobalConfiguration;
+import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesSettings;
+import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesTenantConfiguration;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -44,11 +48,13 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         I18n.registerDefault(module, "destroy.success", "%commander%, I've destroyed the timer named \"%id%\". It will no longer message the chat.");
         I18n.registerDefault(module, "enable.success", "%commander%, I've re-enabled the timer \"%id%\" rotation.");
         I18n.registerDefault(module, "disable.success", "%commander%, I've disabled the timer \"%id%\" rotation.");
+        I18n.registerDefault(module, "list.response", "%commander%, here's the list of timers: %timers%");
+        I18n.registerDefault(module, "list.empty", "%commander%, there are no timers set up.");
 
         // subcmd failure
         I18n.registerDefault(module, "create.alreadyexists", "%commander%, there's already a timer named \"%id%\". Do you wanna to add entries with %cmd%?");
         I18n.registerDefault(module, "create.notarget", "%commander%, what's the name of the timer we're creating? Usage: %usage%");
-        I18n.registerDefault(module, "create.badinterval", "%commander%, that interval doesn't look right. Try a number, which will be the number of seconds between each message.");
+        I18n.registerDefault(module, "create.badinterval", "%commander%, that interval doesn't look right. Try a number, greater than ten, in seconds.");
         I18n.registerDefault(module, "add.nomessage", "%commander%, I'd love to add a timer, but what should it say? Usage: %usage%");
         I18n.registerDefault(module, "add.notarget", "%commander%, add to what timer? Also, what message? Usage: %usage%");
         I18n.registerDefault(module, "delete.notarget", "%commander%, delete from what timer? Also, what message? Usage: %usage%");
@@ -90,12 +96,18 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      */
     public boolean createTimer(final Tenant tenant, final String name, final Timer timer) {
         TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        if(timer.getInterval() < 1000)
+            throw new IllegalArgumentException("Refusing to create a timer with sub-second interval");
         boolean success = config.addTimer(name, timer);
         if(success) {
             getTenantConfigProvider().save(tenant, config);
             enableTimer(tenant, name);
         }
         return success;
+    }
+
+    public Set<String> listTimers(final Tenant tenant) {
+        return getTenantConfiguration(tenant).getTimers().keySet();
     }
 
     /**
