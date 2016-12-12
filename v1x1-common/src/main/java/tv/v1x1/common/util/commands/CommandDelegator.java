@@ -101,7 +101,7 @@ public class CommandDelegator {
                 command.handleNoPermissions(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
                 return true;
             }
-            LOG.debug("Command is allowed and valid enough; executing...");
+            LOG.info("Executing {} from {} in {}...", parsedCmd.getCommand(), chatMessage.getSender(), chatMessage.getChannel());
             command.run(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
             return true;
         }

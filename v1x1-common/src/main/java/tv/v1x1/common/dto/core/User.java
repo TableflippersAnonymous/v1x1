@@ -57,7 +57,11 @@ public abstract class User {
         final User user = (User) o;
 
         return id != null ? id.equals(user.id) : user.id == null;
+    }
 
+    @Override
+    public String toString() {
+        return displayName + "{" + id + "/" + globalUser.getId() + "}";
     }
 
     @Override
