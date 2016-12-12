@@ -10,5 +10,15 @@
 
     <root level="info">
         <appender-ref ref="STDOUT" />
+        <appender-ref ref="Sentry"/>
     </root>
+
+    <appender name="Sentry" class="com.getsentry.raven.logback.SentryAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>WARN</level>
+        </filter>
+        <dsn>${SENTRY_URL}</dsn>
+        <!-- Optional, allows to select the ravenFactory -->
+        <!--<ravenFactory>com.getsentry.raven.DefaultRavenFactory</ravenFactory>-->
+    </appender>
 </configuration>
