@@ -2,6 +2,7 @@ package tv.v1x1.modules.channel.link_purger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.User;
@@ -58,7 +59,8 @@ public class LinkPurgerListener implements EventListener {
             }
             String host = url.getHost();
             if(!canResolve(host)) continue;
-            if(module.usePermit(channel, sender)) return;
+            if(module.usePermit(channel, sender)) break;
+            LOG.info("Timing out {} for saying {}", sender, word);
             punish(channel, sender, module.addOffense(channel, sender));
             break;
         }
