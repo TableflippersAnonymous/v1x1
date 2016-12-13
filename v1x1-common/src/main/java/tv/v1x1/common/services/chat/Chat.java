@@ -8,6 +8,7 @@ import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.i18n.Language;
 import tv.v1x1.common.modules.Module;
 import tv.v1x1.common.rpc.client.ChatRouterServiceClient;
+import tv.v1x1.common.util.text.Splitter;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +25,21 @@ public class Chat {
      * @param text the message to send
      */
     public static void message(final Module<?, ?, ?, ?> module, final Channel channel, final String text) {
-        if(channel instanceof TwitchChannel)
-            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, text);
+        int maxLength = 2000;
+        boolean escapeCommand = false;
+        if(channel instanceof TwitchChannel) {
+            if(text.startsWith(".") || text.startsWith("/"))
+                escapeCommand = true;
+            maxLength = 500;
+        }
         else if(channel instanceof DiscordChannel)
             throw new IllegalArgumentException("Discord messages not yet supported");
         else
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
+
+        for(final String line : Splitter.split(maxLength, "...", (escapeCommand ? ". " : "") + text)) {
+            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, line);
+        }
     }
 
     /**
@@ -41,7 +51,7 @@ public class Chat {
      */
     public static void i18nMessage(final Module<?, ?, ?, ?> module, final Channel channel, final String key, final Object... parameters) {
         if(parameters.length % 2 != 0) throw new IllegalArgumentException("Passed a non-even amount of arguments for i18n params");
-        final Map<String, Object> castParams = new HashMap<String, Object>();
+        final Map<String, Object> castParams = new HashMap<>();
         for(int i = 0; i < parameters.length; ++i) {
             if(!(parameters[i] instanceof String)) throw new IllegalArgumentException("Passed a non-String key for i18n params");
             castParams.put((String)parameters[i], parameters[++i]);
