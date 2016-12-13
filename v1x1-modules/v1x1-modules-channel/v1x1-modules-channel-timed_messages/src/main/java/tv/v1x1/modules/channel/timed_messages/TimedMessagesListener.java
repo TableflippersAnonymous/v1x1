@@ -3,6 +3,7 @@ package tv.v1x1.modules.channel.timed_messages;
 import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
@@ -47,11 +48,20 @@ public class TimedMessagesListener implements EventListener {
                 module.disableTimer(uuid);
                 return;
             }
+            MDC.put("tenant", tenant.getId().toString());
             LOG.trace("incoming UUID is {}", uuid.getValue());
+            if(module.getTenantConfiguration(tenant).isEnabled()) {
+                LOG.debug("Module is disabled, disabling timer...");
+                module.disableTimer(uuid);
+                MDC.remove("tenant");
+                return;
+            }
             Timer t = module.getTenantConfiguration(tenant).getTimer(timerName);
             if(t == null) {
-                LOG.warn("Got a timer payload for a non-existent timer; disabling it...");
+                LOG.warn("Got a timer payload for a non-existent timer id {}; disabling it...", uuid.getValue().toString());
                 module.disableTimer(uuid);
+                MDC.remove("tenant");
+                return;
             }
             LOG.trace("saved UUID is {}", t.getActiveTimer());
             int cursor = module.getCursor(uuid);
@@ -59,13 +69,15 @@ public class TimedMessagesListener implements EventListener {
             if(cursor == -1) {
                 LOG.warn("Got a timer with no cursor; disabling it...");
                 module.disableTimer(uuid);
+                MDC.remove("tenant");
                 return;
             }
             if(cursor >= t.getEntries().size())
                 cursor = 0;
             final TimerEntry nextEntry = t.getEntry(cursor++);
             if(nextEntry == null) {
-                LOG.warn("Running, and therefore skipping, an empty timer");
+                LOG.debug("Running, and therefore skipping, an empty timer");
+                MDC.remove("tenant");
                 return;
             }
             final String message = nextEntry.getMessage();
@@ -80,7 +92,7 @@ public class TimedMessagesListener implements EventListener {
                 Chat.message(module, channel, message);
             }
         } else {
-            LOG.warn("Got unknown timer type {}", type);
+            LOG.error("Got unknown timer type {}", type);
         }
     }
 
