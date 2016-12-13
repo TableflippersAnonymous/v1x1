@@ -38,6 +38,7 @@ import org.redisson.connection.balancer.LoadBalancer;
 import org.redisson.liveobject.provider.ResolverProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import tv.v1x1.common.config.ConfigScanner;
 import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Permission;
@@ -265,7 +266,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
                     reply(msr, new ModuleShutdownResponse(toDto(), msr.getMessageId()));
                     break;
                 }
-                handle(message);
+
+                try (AutoCloseable messageId = MDC.putCloseable("messageId", message.getMessageId().getValue().toString())) {
+                    handle(message);
+                }
             } catch (final Exception e) {
                 e.printStackTrace();
                 throw e;
