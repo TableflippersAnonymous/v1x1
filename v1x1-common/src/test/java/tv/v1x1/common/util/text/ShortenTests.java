@@ -26,6 +26,7 @@ public class ShortenTests {
     public void testGenPreviewWordBoundary() {
         Assert.assertEquals(Shorten.genPreview("This is just a test.", 10), "This is just...");
     }
+
     @Test
     public void testGenPreviewWords() {
         Assert.assertEquals(Shorten.genPreview("If we test, then we test", 9), "If we test,...");
