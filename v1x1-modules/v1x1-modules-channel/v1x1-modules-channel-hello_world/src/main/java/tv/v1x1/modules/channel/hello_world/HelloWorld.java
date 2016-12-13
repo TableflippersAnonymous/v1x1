@@ -47,8 +47,7 @@ public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlob
         super.initialize();
         delegator = new CommandDelegator("!");
         delegator.registerCommand(new HelloWorldCommand(this));
-        delegator.registerCommand(new DelayCommand(this));
-        delegator.registerCommand(new RepeatCommand(this));
+        delegator.registerCommand(new LorumCommand(this));
         crsc = getServiceClient(ChatRouterServiceClient.class);
         ssc = getServiceClient(SchedulerServiceClient.class);
         language = getI18n().getLanguage(null);
