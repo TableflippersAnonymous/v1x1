@@ -1,7 +1,9 @@
 package tv.v1x1.common.modules;
 
+import org.slf4j.MDC;
 import tv.v1x1.common.dto.messages.Message;
 
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
@@ -38,7 +40,16 @@ public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalC
 
     @Override
     protected void handle(final Message message) {
-        executorService.submit(() -> processMessageWrapper(message));
+        final Map<String, String> contextMap = MDC.getCopyOfContextMap();
+        executorService.submit(() -> {
+            final Map<String, String> oldContextMap = MDC.getCopyOfContextMap();
+            MDC.setContextMap(contextMap);
+            try {
+                processMessageWrapper(message);
+            } finally {
+                MDC.setContextMap(oldContextMap);
+            }
+        });
     }
 
     @Override
