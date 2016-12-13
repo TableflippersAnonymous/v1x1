@@ -38,7 +38,7 @@ public class TimedMessagesListener implements EventListener {
         final byte[][] keys = CompositeKey.getKeys(ev.getPayload());
         final String timerName = new String(keys[0]);
         final String type = new String(keys[1]);
-        // TODO: Deal with timers that come in and the module is tenant/channel disabled
+        // TODO: Deal with timers that come in and the module is channel disabled
         if(type.equals("tenant")) {
             final Tenant tenant;
             try {
@@ -50,7 +50,7 @@ public class TimedMessagesListener implements EventListener {
             }
             MDC.put("tenant", tenant.getId().toString());
             LOG.trace("incoming UUID is {}", uuid.getValue());
-            if(module.getTenantConfiguration(tenant).isEnabled()) {
+            if(!module.getTenantConfiguration(tenant).isEnabled()) {
                 LOG.debug("Module is disabled, disabling timer...");
                 module.disableTimer(uuid);
                 MDC.remove("tenant");
