@@ -2,7 +2,6 @@ package tv.v1x1.modules.channel.timed_messages;
 
 
 import com.google.common.primitives.Ints;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import org.redisson.api.RMapCache;
 import org.redisson.client.codec.ByteArrayCodec;
 import org.slf4j.Logger;
@@ -48,8 +47,10 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         I18n.registerDefault(module, "destroy.success", "%commander%, I've destroyed the timer named \"%id%\". It will no longer message the chat.");
         I18n.registerDefault(module, "enable.success", "%commander%, I've re-enabled the timer \"%id%\" rotation.");
         I18n.registerDefault(module, "disable.success", "%commander%, I've disabled the timer \"%id%\" rotation.");
-        I18n.registerDefault(module, "list.response", "%commander%, here's the list of timers: %timers%");
+        I18n.registerDefault(module, "list.success", "%commander%, here's the list of timers: %timers%");
         I18n.registerDefault(module, "list.empty", "%commander%, there are no timers set up.");
+        I18n.registerDefault(module, "info.noentries", "%commander%, \"%id%\" is set up to message every %interval% seconds, but there's no timer entries in the rotation");
+        I18n.registerDefault(module, "info.success", "%commander%, \"%id%\" is set up to message every %interval% seconds. Here's a list of timer entries: %entries%");
 
         // subcmd failure
         I18n.registerDefault(module, "create.alreadyexists", "%commander%, there's already a timer named \"%id%\". Do you wanna to add entries with %cmd%?");
@@ -108,6 +109,10 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
 
     public Set<String> listTimers(final Tenant tenant) {
         return getTenantConfiguration(tenant).getTimers().keySet();
+    }
+
+    public Timer getTimer(final Tenant tenant, final String timerName) {
+        return getTenantConfiguration(tenant).getTimers().get(timerName);
     }
 
     /**
