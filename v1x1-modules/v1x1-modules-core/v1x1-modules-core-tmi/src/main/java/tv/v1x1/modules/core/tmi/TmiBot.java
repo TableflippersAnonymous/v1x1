@@ -126,7 +126,7 @@ public class TmiBot implements Runnable {
                 log("Init: Attempting disconnect");
                 disconnect();
             } catch (final Exception e) {
-                e.printStackTrace();
+                LOG.error("Exception while parsing TMI line", e);
             } finally {
                 log("Init: Attempting cleanup");
                 cleanup();
