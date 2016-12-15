@@ -33,6 +33,7 @@ public class GameVerb {
             case "twitch plays":
             case "gaming talk shows": return "hosting " + game;
             case "music": return "performing music";
+            case "irl": return "talking about real life";
             case "social eating": return "social eating";
             default: return "playing " + game;
         }
