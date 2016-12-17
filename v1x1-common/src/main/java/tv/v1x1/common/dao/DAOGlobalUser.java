@@ -77,7 +77,7 @@ public class DAOGlobalUser {
         return globalUser;
     }
 
-    public GlobalUser addChannel(final GlobalUser globalUser, final Platform platform, final String userId, final String displayName) {
+    public GlobalUser addUser(final GlobalUser globalUser, final Platform platform, final String userId, final String displayName) {
         globalUser.getEntries().add(new GlobalUser.Entry(platform, displayName, userId));
         final InverseGlobalUser inverseGlobalUser = new InverseGlobalUser(platform, userId, globalUser.getId());
         final BatchStatement b = new BatchStatement();
@@ -87,7 +87,7 @@ public class DAOGlobalUser {
         return globalUser;
     }
 
-    public GlobalUser removeChannel(final GlobalUser globalUser, final Platform platform, final String userId) {
+    public GlobalUser removeUser(final GlobalUser globalUser, final Platform platform, final String userId) {
         final BatchStatement b = new BatchStatement();
         if (globalUser.getEntries().removeIf(entry -> entry.getPlatform() == platform && entry.getUserId().equals(userId)))
             b.add(globalUserMapper.saveQuery(globalUser));

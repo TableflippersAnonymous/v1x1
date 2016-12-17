@@ -4,12 +4,17 @@ import com.hubspot.dropwizard.guice.GuiceBundle;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.core.api.config.ApiConfiguration;
+
+import java.lang.invoke.MethodHandles;
 
 /**
  * Created by cobi on 10/24/2016.
  */
 public class ApiApplication extends Application<ApiConfiguration> {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ApiModule module;
 
     public ApiApplication(final ApiModule module) {
@@ -33,6 +38,13 @@ public class ApiApplication extends Application<ApiConfiguration> {
 
     @Override
     public void run(final ApiConfiguration configuration, final Environment environment) throws Exception {
-
+        LOG.info("Acquiring module lock.");
+        synchronized (module) {
+            LOG.info("Waking module.");
+            module.notifyAll();
+            LOG.info("Waiting on module.");
+            module.wait();
+        }
+        LOG.info("Woken by module.");
     }
 }
