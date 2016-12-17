@@ -3,6 +3,8 @@ package tv.v1x1.modules.core.api;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.common.services.persistence.KeyValueStore;
+import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 /**
@@ -32,6 +34,16 @@ public class ApiGuiceModule extends AbstractModule {
 
     @Provides
     public Authorizer provideAuthorizer() {
-        return new Authorizer(apiModule.getDaoManager().getDaoTenantGroup(), apiModule.getDaoManager().getDaoTenant(), apiModule.getDaoManager().getDaoThirdPartyCredential());
+        return new Authorizer(apiModule.getDaoManager().getDaoTenantGroup(), apiModule.getDaoManager().getDaoTenant(), apiModule.getDaoManager().getDaoThirdPartyCredential(), apiModule.getDaoManager().getDaoGlobalUser());
+    }
+
+    @Provides
+    public TwitchApi provideTwitchApi() {
+        return apiModule.getTwitchApi();
+    }
+
+    @Provides
+    public KeyValueStore provideKeyValueStore() {
+        return apiModule.getTemporaryGlobalKeyValueStore();
     }
 }

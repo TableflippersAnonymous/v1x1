@@ -1,9 +1,9 @@
 package tv.v1x1.modules.core.api.resources.tenant;
 
+import com.google.inject.Inject;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.api.Configuration;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;

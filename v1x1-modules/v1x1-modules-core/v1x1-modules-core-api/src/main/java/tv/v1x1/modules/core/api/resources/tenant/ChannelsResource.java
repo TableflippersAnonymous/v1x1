@@ -5,6 +5,7 @@ import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.chat.Chat;
+import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.api.Channel;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
@@ -44,8 +45,8 @@ public class ChannelsResource {
     private final Authorizer authorizer;
 
     @Inject
-    public ChannelsResource(final DAOTenant daoTenant, final Authorizer authorizer) {
-        this.daoTenant = daoTenant;
+    public ChannelsResource(final DAOManager daoManager, final Authorizer authorizer) {
+        this.daoTenant = daoManager.getDaoTenant();
         this.authorizer = authorizer;
     }
 
@@ -61,9 +62,8 @@ public class ChannelsResource {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
         final Platform platform = getDtoPlatform(platformStr);
-        final List<String> channels = tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
+        return tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
                 .map(Tenant.Entry::getChannelId).collect(Collectors.toList());
-        return channels;
     }
 
     @Path("/{platform}/{channel_id}")

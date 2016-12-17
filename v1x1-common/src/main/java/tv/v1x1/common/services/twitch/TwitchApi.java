@@ -8,6 +8,7 @@ import tv.v1x1.common.services.twitch.resources.ChatResource;
 import tv.v1x1.common.services.twitch.resources.FollowsResource;
 import tv.v1x1.common.services.twitch.resources.GamesResource;
 import tv.v1x1.common.services.twitch.resources.IngestsResource;
+import tv.v1x1.common.services.twitch.resources.OAuth2Resource;
 import tv.v1x1.common.services.twitch.resources.RootResource;
 import tv.v1x1.common.services.twitch.resources.SearchResource;
 import tv.v1x1.common.services.twitch.resources.StreamsResource;
@@ -35,6 +36,7 @@ public class TwitchApi {
     private final FollowsResource follows;
     private final GamesResource games;
     private final IngestsResource ingests;
+    private final OAuth2Resource oauth2;
     private final RootResource root;
     private final SearchResource search;
     private final StreamsResource streams;
@@ -43,7 +45,14 @@ public class TwitchApi {
     private final UsersResource users;
     private final VideosResource videos;
 
-    public TwitchApi(final String clientId, final String oauthToken) {
+    private final String clientId;
+    private final String clientSecret;
+    private final String redirectUri;
+
+    public TwitchApi(final String clientId, final String oauthToken, final String clientSecret, final String redirectUri) {
+        this.clientId = clientId;
+        this.clientSecret = clientSecret;
+        this.redirectUri = redirectUri;
         final TwitchApiRequestFilter twitchApiRequestFilter = new TwitchApiRequestFilter(clientId, oauthToken);
         final Client client = ClientBuilder.newClient();
         client.register(JacksonFeature.class);
@@ -56,6 +65,7 @@ public class TwitchApi {
         follows = new FollowsResource(api.path("channels"), api.path("users"));
         games = new GamesResource(api.path("games"));
         ingests = new IngestsResource(api.path("ingests"));
+        oauth2 = new OAuth2Resource(api.path("oauth2"), clientId, clientSecret, redirectUri);
         root = new RootResource(api);
         search = new SearchResource(api.path("search"));
         streams = new StreamsResource(api.path("streams"));
@@ -63,6 +73,10 @@ public class TwitchApi {
         teams = new TeamsResource(api.path("teams"));
         users = new UsersResource(api.path("users"), api.path("user"), api.path("streams"), api.path("videos"));
         videos = new VideosResource(api.path("videos"), api.path("channels"));
+    }
+
+    public TwitchApi withToken(final String token) {
+        return new TwitchApi(clientId, token, clientSecret, redirectUri);
     }
 
     public BlocksResource getBlocks() {
@@ -91,6 +105,10 @@ public class TwitchApi {
 
     public IngestsResource getIngests() {
         return ingests;
+    }
+
+    public OAuth2Resource getOauth2() {
+        return oauth2;
     }
 
     public RootResource getRoot() {

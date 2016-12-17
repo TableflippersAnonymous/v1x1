@@ -86,7 +86,7 @@ public class FixedRMapCache implements RMapCache<byte[], byte[]> {
         //return mapCache.remove(key);
         if(!(key instanceof byte[]))
             return null;
-        return put((byte[]) key, null, 1, TimeUnit.NANOSECONDS);
+        return put((byte[]) key, new byte[] {}, 1, TimeUnit.NANOSECONDS);
     }
 
     @Override
@@ -118,7 +118,7 @@ public class FixedRMapCache implements RMapCache<byte[], byte[]> {
     public long fastRemove(final byte[]... keys) {
         // return mapCache.fastRemove(keys);
         for(final byte[] key : keys) {
-            mapCache.fastPut(key, null, 1, TimeUnit.NANOSECONDS);
+            mapCache.fastPut(key, new byte[] {}, 1, TimeUnit.NANOSECONDS);
         }
         return keys.length;
     }

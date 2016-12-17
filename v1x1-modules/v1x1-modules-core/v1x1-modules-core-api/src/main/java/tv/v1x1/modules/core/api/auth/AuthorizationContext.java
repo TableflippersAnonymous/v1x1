@@ -30,4 +30,12 @@ public class AuthorizationContext {
             throw new NotAuthorizedException("Not authorized");
         return this;
     }
+
+    public GlobalUser getGlobalUser() {
+        return globalUser;
+    }
+
+    public Set<String> getPermissions() {
+        return permissions;
+    }
 }

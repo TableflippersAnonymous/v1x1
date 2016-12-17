@@ -134,6 +134,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     public abstract String getName();
     protected abstract void handle(Message message);
     protected abstract void initialize();
+    protected void preinit() {
+        /* No implementation */
+    }
     protected abstract void shutdown();
 
     /* ******************************* Initialization ******************************* */
@@ -171,7 +174,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         temporaryGlobalKeyValueStore = new TemporaryKeyValueStoreImpl(redisson);
         deduplicator = new Deduplicator(redisson, toDto());
 
-        curatorFramework = CuratorFrameworkFactory.newClient(settings.getZookeeperConnectionString(), new BoundedExponentialBackoffRetry(50, 1000, 50));
+        curatorFramework = CuratorFrameworkFactory.newClient(settings.getZookeeperConnectionString(), new BoundedExponentialBackoffRetry(50, 1000, 29));
         curatorFramework.start();
         moduleRegistry = new ModuleRegistry(curatorFramework, toModuleInstance());
         statsCollector = new NoopStatsCollector();
@@ -231,7 +234,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         registerGlobalMessages();
         stateManager = new StateManager();
 
-        twitchApi = new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), new String(requireCredential("Common|Twitch|OAuthToken")));
+        twitchApi = new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), new String(requireCredential("Common|Twitch|OAuthToken")), new String(requireCredential("Common|Twitch|ClientSecret")), new String(requireCredential("Common|Twitch|RedirectUri")));
 
         updateConfigurationDefinitions();
     }
@@ -243,6 +246,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
             LOG.info("Waiting {}ms before starting up...", settings.getWaitStartMs());
             Thread.sleep(settings.getWaitStartMs());
         }
+        preinit();
         initializeInternal();
         initialize();
         try {
@@ -323,7 +327,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return temporaryKeyValueStore;
     }
 
-    protected KeyValueStore getTemporaryGlobalKeyValueStore() {
+    public KeyValueStore getTemporaryGlobalKeyValueStore() {
         return temporaryGlobalKeyValueStore;
     }
 
@@ -442,7 +446,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     public TwitchApi getTwitchApi(final String userId) {
-        return new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), getTwitchOAuthToken(userId));
+        return new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), getTwitchOAuthToken(userId), new String(requireCredential("Common|Twitch|ClientSecret")), new String(requireCredential("Common|Twitch|RedirectUri")));
     }
 
     /* ******************************* UTILITY METHODS ******************************* */
