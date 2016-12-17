@@ -1,8 +1,12 @@
 package tv.v1x1.modules.core.api;
 
+import com.squarespace.jersey2.guice.JerseyGuiceUtils;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.extension.ServiceLocatorGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.modules.ServiceModule;
+import tv.v1x1.modules.core.api.config.ApiChannelConfiguration;
 import tv.v1x1.modules.core.api.config.ApiGlobalConfiguration;
 import tv.v1x1.modules.core.api.config.ApiSettings;
 import tv.v1x1.modules.core.api.config.ApiTenantConfiguration;
@@ -24,8 +28,9 @@ public class ApiModule extends ServiceModule<ApiSettings, ApiGlobalConfiguration
     }
 
     @Override
-    protected void initialize() {
-        super.initialize();
+    protected void preinit() {
+        super.preinit();
+        LOG.info("Creating application.");
         application = new ApiApplication(this);
         applicationThread = new Thread(() -> {
             try {
@@ -35,11 +40,34 @@ public class ApiModule extends ServiceModule<ApiSettings, ApiGlobalConfiguration
             }
         });
         applicationThread.start();
+        LOG.info("Waiting on application.");
+        synchronized (this) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        LOG.info("Woken by application.");
+    }
+
+    @Override
+    protected void initialize() {
+        super.initialize();
+        LOG.info("Acquiring module lock.");
+        synchronized (this) {
+            LOG.info("Waking application.");
+            notifyAll();
+        }
     }
 
     @Override
     protected void shutdown() {
         applicationThread.interrupt();
         super.shutdown();
+    }
+
+    public static void main(final String[] args) throws Exception {
+        new ApiModule().entryPoint(args);
     }
 }
