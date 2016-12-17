@@ -3,13 +3,18 @@ package tv.v1x1.modules.core.api.resources.globaluser;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOGlobalUser;
+import tv.v1x1.common.dao.DAOTwitchOauthToken;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Platform;
-import tv.v1x1.modules.core.api.api.PrivateUser;
+import tv.v1x1.common.dto.db.TwitchOauthToken;
+import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.common.services.twitch.TwitchApi;
+import tv.v1x1.common.services.twitch.dto.auth.TokenResponse;
+import tv.v1x1.modules.core.api.api.TwitchOauthCode;
 import tv.v1x1.modules.core.api.api.User;
-import tv.v1x1.modules.core.api.auth.AuthorizationContext;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -21,7 +26,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -42,12 +46,16 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 public class UsersResource {
     private final DAOGlobalUser daoGlobalUser;
+    private final DAOTwitchOauthToken daoTwitchOauthToken;
     private final Authorizer authorizer;
+    private final TwitchApi twitchApi;
 
     @Inject
-    public UsersResource(final DAOGlobalUser daoGlobalUser, final Authorizer authorizer) {
-        this.daoGlobalUser = daoGlobalUser;
+    public UsersResource(final DAOManager daoManager, final Authorizer authorizer, final TwitchApi twitchApi) {
+        this.daoGlobalUser = daoManager.getDaoGlobalUser();
+        this.daoTwitchOauthToken = daoManager.getDaoTwitchOauthToken();
         this.authorizer = authorizer;
+        this.twitchApi = twitchApi;
     }
 
     @GET
@@ -94,15 +102,24 @@ public class UsersResource {
     public User linkUser(@HeaderParam("Authorization") final String authorization,
                          @PathParam("global_user_id") final String globalUserId,
                          @PathParam("platform") final String platform,
-                         @PathParam("user_id") final String userId, final PrivateUser user) {
+                         @PathParam("user_id") final String userId, final TwitchOauthCode twitchOauthCode) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_users.write").ensurePrincipal(globalUserId);
+        if(!platform.equalsIgnoreCase("twitch"))
+            throw new NotFoundException();
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
         final Optional<GlobalUser.Entry> entry = globalUser.getEntries().stream().filter(e -> e.getPlatform().name().toLowerCase().equals(platform) && e.getUserId().equals(userId)).findFirst();
         if(!entry.isPresent())
             throw new NotFoundException();
-        return null; //TODO
+        final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(twitchOauthCode.getOauthCode(), twitchOauthCode.getOauthState());
+        if(tokenResponse == null)
+            throw new BadRequestException();
+        daoTwitchOauthToken.put(new TwitchOauthToken(globalUser.getId(), userId, tokenResponse.getAccessToken(), tokenResponse.getScope()));
+        final String displayName = twitchApi.withToken(tokenResponse.getAccessToken()).getUsers().getUser().getDisplayName();
+        unlinkUserIfLinked(Platform.TWITCH, userId);
+        linkUser(globalUser, Platform.TWITCH, userId, displayName);
+        return new User(globalUser.getId(), entry.get().getPlatform(), entry.get().getUserId(), entry.get().getDisplayName());
     }
 
     @Path("/{platform}/{user_id}")
@@ -122,7 +139,21 @@ public class UsersResource {
         return Response.noContent().build();
     }
 
+    private void linkUser(final GlobalUser globalUser, final Platform platform, final String userId, final String displayName) {
+        daoGlobalUser.addUser(globalUser, platform, userId, displayName);
+    }
+
+    private void unlinkUserIfLinked(final Platform platform, final String userId) {
+        final GlobalUser globalUser = daoGlobalUser.getByUser(platform, userId);
+        if(globalUser == null)
+            return;
+        final Optional<GlobalUser.Entry> entry = globalUser.getEntries().stream().filter(e -> e.getPlatform() == platform && e.getUserId().equals(userId)).findFirst();
+        if(!entry.isPresent())
+            return;
+        unlinkUser(globalUser, entry.get());
+    }
+
     private void unlinkUser(final GlobalUser globalUser, final GlobalUser.Entry entry) {
-        daoGlobalUser.removeChannel(globalUser, entry.getPlatform(), entry.getUserId());
+        daoGlobalUser.removeUser(globalUser, entry.getPlatform(), entry.getUserId());
     }
 }

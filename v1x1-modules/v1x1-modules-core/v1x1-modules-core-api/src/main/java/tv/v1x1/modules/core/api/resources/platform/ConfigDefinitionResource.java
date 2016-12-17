@@ -1,11 +1,11 @@
 package tv.v1x1.modules.core.api.resources.platform;
 
+import com.google.inject.Inject;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.api.ConfigurationDefinition;
 
-import javax.inject.Inject;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -63,7 +63,7 @@ public class ConfigDefinitionResource {
         return ret;
     }
 
-    @Path("/tenant/{name}")
+    @Path("/global/{name}")
     @GET
     public ConfigurationDefinition getGlobalConfigurationDefinition(@PathParam("name") final String name) {
         return null; //TODO

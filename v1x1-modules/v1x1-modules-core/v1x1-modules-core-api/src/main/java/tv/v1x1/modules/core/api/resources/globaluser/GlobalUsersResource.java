@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Platform;
+import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.Consumes;
@@ -35,8 +36,8 @@ public class GlobalUsersResource {
     private final Authorizer authorizer;
 
     @Inject
-    public GlobalUsersResource(final DAOGlobalUser daoGlobalUser, final Authorizer authorizer) {
-        this.daoGlobalUser = daoGlobalUser;
+    public GlobalUsersResource(final DAOManager daoManager, final Authorizer authorizer) {
+        this.daoGlobalUser = daoManager.getDaoGlobalUser();
         this.authorizer = authorizer;
     }
 
