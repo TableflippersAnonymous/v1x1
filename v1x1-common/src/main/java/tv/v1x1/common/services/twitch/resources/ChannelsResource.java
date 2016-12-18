@@ -24,7 +24,7 @@ public class ChannelsResource {
     }
 
     public Channel getChannel(final String channel) {
-        return channels.path(channel).request(TwitchApi.ACCEPT).get().readEntity(Channel.class);
+        return channels.path(channel).request(TwitchApi.ACCEPT).get(Channel.class);
     }
 
     public PrivateChannel getChannel() {
