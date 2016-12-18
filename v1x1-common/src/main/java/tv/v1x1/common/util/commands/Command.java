@@ -36,11 +36,18 @@ public abstract class Command {
     public String getUsage() { return getCommands().get(0) + " [args]"; }
 
     /**
-     * Description of the command, for help pages
+     * Short description of the command, for help pages
      * @return
      */
-    public String getDescription() { return "-"; }
+    public String getDescription() { return "no description available"; }
 
+    /**
+     * Long description on how to use the command, for help pages
+     * @return
+     */
+    public String getHelp() {
+        return null;
+    }
     /**
      * Required minimum args for the command to be fired. 0 means it expects no args
      * @return

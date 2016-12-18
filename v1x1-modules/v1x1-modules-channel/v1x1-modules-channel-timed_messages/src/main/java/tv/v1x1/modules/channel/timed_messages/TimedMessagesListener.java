@@ -33,7 +33,7 @@ public class TimedMessagesListener implements EventListener {
     public void onScheduledNotify(SchedulerNotifyEvent ev) {
         if(!ev.getModule().equals(module.toDto()))
             return;
-        // payload comes from module.enableTimer();
+        // payload comes from module.unpauseTimer();
         final UUID uuid = ev.getId();
         final byte[][] keys = CompositeKey.getKeys(ev.getPayload());
         final String timerName = new String(keys[0]);
@@ -45,21 +45,21 @@ public class TimedMessagesListener implements EventListener {
                 tenant = Tenant.fromProto(ChannelOuterClass.Tenant.parseFrom(keys[2]));
             } catch(InvalidProtocolBufferException e) {
                 LOG.warn("Failed to deserialize tenant from scheduler payload; cancelling schedule", e);
-                module.disableTimer(uuid);
+                module.pauseTimer(uuid);
                 return;
             }
             MDC.put("tenant", tenant.getId().toString());
             LOG.trace("incoming UUID is {}", uuid.getValue());
             if(!module.getTenantConfiguration(tenant).isEnabled()) {
-                LOG.debug("Module is disabled, disabling timer...");
-                module.disableTimer(uuid);
+                LOG.debug("Module is disabled, pausing timer...");
+                module.pauseTimer(uuid);
                 MDC.remove("tenant");
                 return;
             }
             Timer t = module.getTenantConfiguration(tenant).getTimer(timerName);
             if(t == null) {
-                LOG.warn("Got a timer payload for a non-existent timer id {}; disabling it...", uuid.getValue().toString());
-                module.disableTimer(uuid);
+                LOG.warn("Got a timer payload for a non-existent timer id {}; pausing it...", uuid.getValue().toString());
+                module.pauseTimer(uuid);
                 MDC.remove("tenant");
                 return;
             }
@@ -67,8 +67,8 @@ public class TimedMessagesListener implements EventListener {
             int cursor = module.getCursor(uuid);
             LOG.trace("Just got cursor. Cursor is {}", cursor);
             if(cursor == -1) {
-                LOG.warn("Got a timer with no cursor; disabling it...");
-                module.disableTimer(uuid);
+                LOG.warn("Got a timer with no cursor; pausing it...");
+                module.pauseTimer(uuid);
                 MDC.remove("tenant");
                 return;
             }

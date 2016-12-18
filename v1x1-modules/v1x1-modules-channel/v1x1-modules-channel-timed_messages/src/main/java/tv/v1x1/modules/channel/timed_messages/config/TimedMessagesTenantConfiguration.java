@@ -37,7 +37,7 @@ public class TimedMessagesTenantConfiguration extends BasicTenantConfiguration {
 
     public boolean addTimer(final String name, final Timer timer) {
         if(timers.get(name) == null) {
-            timers.putIfAbsent(name, timer);
+            timers.put(name, timer);
             return true;
         }
         return false;

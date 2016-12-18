@@ -50,6 +50,11 @@ import java.util.Set;
 
     @Override
     public String getUsage() {
-        return "list";
+        return "<no args>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "list all rotations";
     }
 }

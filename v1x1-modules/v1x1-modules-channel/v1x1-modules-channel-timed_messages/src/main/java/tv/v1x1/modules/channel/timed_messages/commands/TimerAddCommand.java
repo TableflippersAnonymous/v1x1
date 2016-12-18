@@ -67,7 +67,12 @@ import java.util.List;
 
     @Override
     public String getUsage() {
-        return "add <id> <message>";
+        return "<timer> <message>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "add an entry to a rotation";
     }
 
     @Override
