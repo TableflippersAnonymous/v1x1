@@ -15,16 +15,16 @@ import java.util.List;
 /**
  * @author Josh
  */
-public class TimerDeleteCommand extends Command {
+public class TimerRemoveCommand extends Command {
     private TimedMessages module;
 
-    public TimerDeleteCommand(final TimedMessages module) {
+    public TimerRemoveCommand(final TimedMessages module) {
         this.module = module;
     }
 
     @Override
     public List<String> getCommands() {
-        return ImmutableList.of("delete");
+        return ImmutableList.of("remove");
     }
 
     @Override
@@ -45,22 +45,22 @@ public class TimerDeleteCommand extends Command {
                     "id", timerName);
             return;
         } else if(matches > 1) {
-            Chat.i18nMessage(module, channel, "delete.toomanymatches",
+            Chat.i18nMessage(module, channel, "remove.toomanymatches",
                     "commander", senderName,
                     "preview", Shorten.genPreview(message),
                     "count", matches,
                     "id", timerName);
             return;
         }
-        TimerEntry entry = module.deleteTimerEntry(channel.getTenant(), timerName, message);
+        TimerEntry entry = module.removeTimerEntry(channel.getTenant(), timerName, message);
         if(entry == null) {
-            Chat.i18nMessage(module, channel, "delete.nomatch",
+            Chat.i18nMessage(module, channel, "remove.nomatch",
                     "commander", senderName,
                     "id", timerName,
                     "preview", Shorten.genPreview(message)
             );
         } else {
-            Chat.i18nMessage(module, channel, "delete.success",
+            Chat.i18nMessage(module, channel, "remove.success",
                     "commander", senderName,
                     "id", timerName,
                     "preview", Shorten.genPreview(entry.getMessage(), 128)
@@ -96,12 +96,12 @@ public class TimerDeleteCommand extends Command {
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         switch(args.size()) {
-            case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "delete.notarget",
+            case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "remove.notarget",
                     "commander", chatMessage.getSender().getDisplayName(),
                     "usage", getUsage()
                 );
                 break;
-            case 1: Chat.i18nMessage(module, chatMessage.getChannel(), "delete.nomessage",
+            case 1: Chat.i18nMessage(module, chatMessage.getChannel(), "remove.nomessage",
                     "commander", chatMessage.getSender().getDisplayName(),
                     "usage", getUsage()
                 );
