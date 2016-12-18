@@ -15,9 +15,9 @@ import tv.v1x1.common.util.commands.CommandDelegator;
 public class Caster extends RegisteredThreadedModule<CasterModuleSettings, CasterGlobalConfig, CasterTenantSettings, CasterChannelSettings> implements EventListener {
     static {
         Module module = new Module("caster");
-        I18n.registerDefault(module, "notfound", "%commander%, I can't find %target% on Twitch :[");
-        I18n.registerDefault(module, "nogame", "Everyone give %target% a follow! https://twitch.tv/%target%");
-        I18n.registerDefault(module, "response", "Everyone give %target% a follow! They were last seen %summary%. Check them out at https://twitch.tv/%target%");
+        I18n.registerDefault(module, "notfound", "%commander%, I can't find %target% on Twitch BibleThump");
+        I18n.registerDefault(module, "nogame", "Everyone give %target% a follow! https://twitch.tv/%targetId%");
+        I18n.registerDefault(module, "response", "Everyone give %target% a follow! They were last seen %summary%. Check them out at https://twitch.tv/%targetId%");
     }
     private CommandDelegator delegator;
 

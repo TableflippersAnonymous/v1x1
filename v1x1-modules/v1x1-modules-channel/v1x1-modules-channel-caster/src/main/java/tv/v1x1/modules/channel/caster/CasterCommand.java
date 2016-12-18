@@ -53,21 +53,22 @@ class CasterCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final TotalledVideoList videos = caster.getTwitchApi().getVideos().getVideos(args.get(0), 1, 0, true, true);
+        final String targetId = args.get(0).toLowerCase();
+        final TotalledVideoList videos = caster.getTwitchApi().getVideos().getVideos(targetId, 1, 0, true, true);
         final Channel channel = chatMessage.getChannel();
         if(videos.getVideos() == null) {
             Chat.i18nMessage(caster, channel, "notfound",
                     "commander", chatMessage.getSender().getDisplayName(),
-                    "target", args.get(0));
+                    "target", targetId);
             return;
         }
         final Video lastVideo;
         if(videos.getTotal() < 1) {
-            final TotalledVideoList highlights = caster.getTwitchApi().getVideos().getVideos(args.get(0), 1, 0, false, true);
+            final TotalledVideoList highlights = caster.getTwitchApi().getVideos().getVideos(targetId, 1, 0, false, true);
             if(highlights.getTotal() < 1) {
                 Chat.i18nMessage(caster, channel, "nogame",
                         "commander", chatMessage.getSender().getDisplayName(),
-                        "target", args.get(0));
+                        "target", targetId);
                 return;
             }
             lastVideo = highlights.getVideos().get(0);
@@ -83,6 +84,7 @@ class CasterCommand extends Command {
             verb = GameVerb.getVerb(lastGame);
         Chat.i18nMessage(caster, channel, "response",
                 "target", targetCaster,
+                "targetId", targetId,
                 "summary", verb);
     }
 }
