@@ -544,11 +544,16 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     /* ******************************* LANGUAGE ******************************* */
     private void registerGlobalMessages() {
         tv.v1x1.common.dto.core.Module module = new tv.v1x1.common.dto.core.Module("_GLOBAL_");
-        getI18n().registerDefault(module, "generic.error",
+        I18n.registerDefault(module, "generic.error",
                 "Sorry, I've run into an internal problem... BibleThump My Bot Operators have been alerted. If " +
                         "you need help, please contact them with the time, date, your timezone, what happened leading up" +
                         " to this, and this message: %message%. My apologies for the inconvenience!");
-        getI18n().registerDefault(module, "generic.noperms",
+        I18n.registerDefault(module, "generic.noperms",
                 "%commander%, sorry, looks like you don't have permission to do that.");
+        I18n.registerDefault(module, "generic.twitchapi.error",
+                "Sorry, there was a problem talking with the Twitch API. BibleThump If this persists, please con" +
+                        "tact the Bot Operators");
+        I18n.registerDefault(module, "generic.invalid.user",
+                "%commander%, \"%input%\" is not a valid username here");
     }
 }

@@ -8,7 +8,10 @@ import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.twitch.dto.videos.TotalledVideoList;
 import tv.v1x1.common.services.twitch.dto.videos.Video;
 import tv.v1x1.common.util.commands.Command;
+import tv.v1x1.common.util.validation.TwitchValidator;
 
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import java.util.List;
 
 /**
@@ -54,32 +57,38 @@ class CasterCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final String targetId = args.get(0).toLowerCase();
-        final TotalledVideoList videos = caster.getTwitchApi().getVideos().getVideos(targetId, 1, 0, true, true);
         final Channel channel = chatMessage.getChannel();
-        if(videos.getVideos() == null) {
+        if(!TwitchValidator.isValidUsername(targetId)) {
+            Chat.i18nMessage(caster, channel, "generic.invalid.user",
+                    "commander", chatMessage.getSender().getDisplayName(),
+                    "input", args.get(0));
+            return;
+        }
+        final tv.v1x1.common.services.twitch.dto.channels.Channel videoChannel;
+        try {
+            videoChannel = caster.getTwitchApi().getChannels().getChannel(targetId);
+        } catch(NotFoundException ex) {
             Chat.i18nMessage(caster, channel, "notfound",
                     "commander", chatMessage.getSender().getDisplayName(),
                     "target", targetId);
             return;
+        } catch(WebApplicationException ex) {
+            Chat.i18nMessage(caster, channel, "nogame",
+                    "target", targetId,
+                    "targetId", targetId);
+            throw ex;
         }
-        final Video lastVideo;
-        if(videos.getTotal() < 1) {
-            final TotalledVideoList highlights = caster.getTwitchApi().getVideos().getVideos(targetId, 1, 0, false, true);
-            if(highlights.getTotal() < 1) {
-                Chat.i18nMessage(caster, channel, "nogame",
-                        "commander", chatMessage.getSender().getDisplayName(),
-                        "target", targetId);
-                return;
-            }
-            lastVideo = highlights.getVideos().get(0);
-        } else {
-            lastVideo = videos.getVideos().get(0);
+        final String targetCaster = videoChannel.getDisplayName();
+        final String lastGame = videoChannel.getGame();
+        if(lastGame == null) {
+            Chat.i18nMessage(caster, channel, "nogame",
+                    "target", targetCaster,
+                    "targetId", targetId);
+            return;
         }
-        final String lastGame = lastVideo.getGame();
         final String verb;
-        final String targetCaster = lastVideo.getChannel().getDisplayName();
         if(lastGame.equals("Creative"))
-            verb = GameVerb.getCreativeVerb(lastVideo.getTitle());
+            verb = GameVerb.getCreativeVerb(videoChannel.getStatus());
         else
             verb = GameVerb.getVerb(lastGame);
         Chat.i18nMessage(caster, channel, "response",
