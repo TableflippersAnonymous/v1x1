@@ -70,7 +70,17 @@ public class TimerDeleteCommand extends Command {
 
     @Override
     public String getUsage() {
-        return "delete <id> <message>";
+        return "<timer> <message>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "remove an entry from a rotation";
+    }
+
+    @Override
+    public String getHelp() {
+        return "You don't need to type the entire message, the first part of it";
     }
 
     @Override
