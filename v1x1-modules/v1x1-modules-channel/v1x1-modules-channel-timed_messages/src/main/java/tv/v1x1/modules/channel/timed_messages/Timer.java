@@ -68,6 +68,10 @@ public class Timer {
         return interval;
     }
 
+    public void setInterval(final long interval) {
+        this.interval = interval;
+    }
+
     public TimerEntry getEntry(int cursor) {
         if(entries.size() < 1)
             return null;

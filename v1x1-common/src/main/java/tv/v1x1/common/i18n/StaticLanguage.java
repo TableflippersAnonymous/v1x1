@@ -17,7 +17,8 @@ public class StaticLanguage extends Language {
 
     @Override
     public String message(final Module module, final String key, final Map<String, Object> parameters) {
-        final String template = strings.get(getKey(module, key));
+        String template = strings.get(getKey(module, key));
+        if(template == null) template = strings.get("_GLOBAL_".concat(key));
         return format((template == null ? getKey(module, key) : template), parameters);
     }
 
