@@ -21,12 +21,15 @@ public class TimerCommand extends Command {
     public TimerCommand(TimedMessages module) {
         this.module = module;
         delegator = new CommandDelegator();
-        delegator.registerCommand(new TimerAddCommand(module));
         delegator.registerCommand(new TimerCreateCommand(module));
-        delegator.registerCommand(new TimerDeleteCommand(module));
         delegator.registerCommand(new TimerDestroyCommand(module));
+        delegator.registerCommand(new TimerEnableCommand(module));
+        delegator.registerCommand(new TimerRescheduleCommand(module));
         delegator.registerCommand(new TimerListCommand(module));
         delegator.registerCommand(new TimerInfoCommand(module));
+        delegator.registerCommand(new TimerAddCommand(module));
+        delegator.registerCommand(new TimerRemoveCommand(module));
+        delegator.registerCommand(new TimerHelpCommand(module, delegator));
     }
 
     @Override
@@ -46,7 +49,7 @@ public class TimerCommand extends Command {
 
     @Override
     public String getUsage() {
-        return "<create|list|destroy|add|info|delete> <timer> [args]";
+        return "<command> [args]";
     }
 
     @Override
@@ -65,6 +68,7 @@ public class TimerCommand extends Command {
                 "commander", chatMessage.getSender().getDisplayName(),
                 "usage", getUsage()
         );
+        Chat.i18nMessage(module, chatMessage.getChannel(), "help");
     }
 
     @Override

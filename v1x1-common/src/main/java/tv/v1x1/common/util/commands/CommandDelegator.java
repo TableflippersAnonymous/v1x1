@@ -1,5 +1,6 @@
 package tv.v1x1.common.util.commands;
 
+import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.ChatMessage;
@@ -42,6 +43,22 @@ public class CommandDelegator {
      */
     public void registerCommand(final Command command) {
         registeredCommands.add(command);
+    }
+
+    /**
+     * Get a list of commands registered to this delegator
+     * @return list of Commands
+     */
+    public ImmutableList<Command> getRegisteredCommands() {
+        return ImmutableList.copyOf(registeredCommands);
+    }
+
+    /**
+     * Get the prefix for this command delegator
+     * @return
+     */
+    public String getPrefix() {
+        return prefix;
     }
 
     /**

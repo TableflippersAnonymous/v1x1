@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
-import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.timed_messages.TimedMessages;
@@ -18,52 +17,53 @@ import java.util.List;
 /**
  * @author Josh
  */
-public class TimerCreateCommand extends Command {
+public class TimerRescheduleCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private TimedMessages module;
 
-    public TimerCreateCommand(final TimedMessages module) {
+    public TimerRescheduleCommand(final TimedMessages module) {
         this.module = module;
     }
 
     @Override
     public List<String> getCommands() {
-        return ImmutableList.of("create");
+        return ImmutableList.of("reschedule");
     }
 
     @Override
     public List<Permission> getAllowedPermissions() {
         return null;
     }
+
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
         final String senderName = chatMessage.getSender().getDisplayName();
+        final String timerStr = args.get(0);
         final long interval;
         try {
             interval = Long.parseLong(args.get(1)) * 1000;
         } catch (NumberFormatException e) {
             Chat.i18nMessage(module, channel, "invalid.interval",
-                    "commander", senderName);
+                    "commander", senderName,
+                    "usage", getUsage());
             return;
         }
         if(interval < (10*1000)) {
             Chat.i18nMessage(module, channel, "invalid.interval",
-                    "commander", senderName);
+                    "commander", senderName,
+                    "usage", getUsage());
             return;
         }
-        LOG.debug("Creating timer with interval {}", interval);
-        final Timer timer = new Timer(interval);
-        final String timerId = args.get(0);
-        if(module.createTimer(channel.getTenant(), timerId, timer)) {
-            Chat.i18nMessage(module, channel, "create.success",
-                    "commander", senderName,
-                    "id", timerId
-            );
+        if(module.rescheduleTimer(channel.getTenant(), timerStr, interval)) {
+        Chat.i18nMessage(module, channel, "reschedule.success",
+                "commander", senderName,
+                "id", timerStr,
+                "interval", interval/1000);
         } else {
-            Chat.i18nMessage(module, channel, "create.alreadyexists",
+            Chat.i18nMessage(module, channel, "invalid.timer",
                     "commander", senderName,
-                    "id", timerId);
+                    "id", timerStr);
         }
     }
 
@@ -74,12 +74,7 @@ public class TimerCreateCommand extends Command {
 
     @Override
     public String getDescription() {
-        return "create a new timer";
-    }
-
-    @Override
-    public String getHelp() {
-        return "Timers cannot be scheduled for under ten seconds";
+        return "change interval of a rotation's messaging";
     }
 
     @Override
@@ -98,15 +93,16 @@ public class TimerCreateCommand extends Command {
         final String displayName = chatMessage.getSender().getDisplayName();
         switch (args.size()) {
             case 0:
-                Chat.i18nMessage(module, channel, "create.notarget",
+                Chat.i18nMessage(module, channel, "reschedule.notarget",
                         "commander", displayName,
                         "usage", getUsage()
                 );
                 break;
             case 1:
                 Chat.i18nMessage(module, channel, "invalid.interval",
-                        "commander", displayName
-                );
+                        "commander", displayName,
+                        "usage", getUsage()
+                        );
                 break;
             default:
                 Chat.i18nMessage(module, channel, "toomanyargs",

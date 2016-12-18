@@ -228,6 +228,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         tenantConfigProvider = new TenantConfigurationProvider<>(toDto(), daoManager, getTenantConfigurationClass());
         channelConfigProvider = new ChannelConfigurationProvider<>(toDto(), daoManager, getChannelConfigurationClass());
         i18n = new I18n(daoManager);
+        registerGlobalMessages();
         stateManager = new StateManager();
 
         twitchApi = new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), new String(requireCredential("Common|Twitch|OAuthToken")));
@@ -538,5 +539,16 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         final ChannelConfigurationDefinition channelConfigurationDefinition = ConfigScanner.scanChannel(getChannelConfigurationClass());
         if(channelConfigurationDefinition != null)
             daoConfigurationDefinition.put(channelConfigurationDefinition.toDB());
+    }
+
+    /* ******************************* LANGUAGE ******************************* */
+    private void registerGlobalMessages() {
+        tv.v1x1.common.dto.core.Module module = new tv.v1x1.common.dto.core.Module("_GLOBAL_");
+        getI18n().registerDefault(module, "generic.error",
+                "Sorry, I've run into an internal problem... BibleThump My Bot Operators have been alerted. If " +
+                        "you need help, please contact them with the time, date, your timezone, what happened leading up" +
+                        " to this, and this message: %message%. My apologies for the inconvenience!");
+        getI18n().registerDefault(module, "generic.noperms",
+                "%commander%, sorry, looks like you don't have permission to do that.");
     }
 }

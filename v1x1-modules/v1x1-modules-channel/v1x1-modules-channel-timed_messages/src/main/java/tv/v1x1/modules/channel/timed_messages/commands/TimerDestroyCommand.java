@@ -49,7 +49,12 @@ import java.util.List;
 
     @Override
     public String getUsage() {
-        return "destroy <id>";
+        return "<timer>";
+    }
+
+    @Override
+    public String getDescription() {
+        return "destroy a timer rotation";
     }
 
     @Override
