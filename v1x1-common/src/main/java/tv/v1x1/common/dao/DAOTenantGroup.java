@@ -64,7 +64,7 @@ public class DAOTenantGroup {
     }
 
     public TenantGroupsByUser getGroupsByUser(final Tenant tenant, final GlobalUser globalUser) {
-        return getGroupsByUser(globalUser.getId().getValue(), tenant.getId().getValue());
+        return getGroupsByUser(tenant.getId().getValue(), globalUser.getId().getValue());
     }
 
     public TenantGroup getTenantGroup(final Tenant tenant, final UUID groupId) {
@@ -188,5 +188,13 @@ public class DAOTenantGroup {
     public void deleteGroup(final TenantGroup tenantGroup) {
         getUsersByGroup(tenantGroup).forEach(userId -> removeUserFromGroup(tenantGroup, userId));
         tenantGroupMapper.delete(tenantGroup);
+    }
+
+    public void setChannelPlatformMapping(final Platform platform, final String channelId, final String platformGroup, final TenantGroup tenantGroup) {
+        channelPlatformMappingMapper.save(new ChannelPlatformMapping(platform, channelId, platformGroup, tenantGroup.getGroupId()));
+    }
+
+    public void clearChannelPlatformMapping(final Platform platform, final String channelId, final String platformGroup) {
+        channelPlatformMappingMapper.delete(new ChannelPlatformMapping(platform, channelId, platformGroup, null));
     }
 }
