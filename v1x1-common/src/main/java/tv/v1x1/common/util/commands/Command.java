@@ -80,4 +80,9 @@ public abstract class Command {
     public void handleNoPermissions(ChatMessage chatMessage, final String command, final List<String> args) {
         // Deliberately do nothing unless overridden
     }
+
+    @Override
+    public String toString() {
+        return getCommands().get(0);
+    }
 }
