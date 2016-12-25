@@ -205,6 +205,8 @@ message NoticeCommand {
         BAD_TIMEOUT_MOD = 29;
         HOST_TARGET_WENT_OFFLINE = 30;
         NO_PERMISSION = 31;
+        FOLLOWERS_OFF = 32;
+        FOLLOWERS_ON = 33;
     }
 
     required string channel = 1;
