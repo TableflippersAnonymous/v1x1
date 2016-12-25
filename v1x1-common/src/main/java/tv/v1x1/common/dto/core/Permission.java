@@ -44,4 +44,9 @@ public class Permission {
     public int hashCode() {
         return node != null ? node.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return getNode();
+    }
 }
