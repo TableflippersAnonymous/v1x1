@@ -43,6 +43,7 @@ public class CommandDelegator {
      */
     public void registerCommand(final Command command) {
         registeredCommands.add(command);
+        LOG.debug("registered command " + command);
     }
 
     /**

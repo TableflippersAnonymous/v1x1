@@ -61,4 +61,9 @@ public class Tenant {
     public int hashCode() {
         return id != null ? id.hashCode() : 0;
     }
+
+    @Override
+    public String toString() {
+        return "{Tenant/" + id.toString() + "}";
+    }
 }
