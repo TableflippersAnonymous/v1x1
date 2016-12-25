@@ -68,3 +68,10 @@ services:
       - zoo1
       - cass1
       - chat_router
+  ops_tool:
+    image: v1x1-ops_tool:latest
+    depends_on:
+      - redis
+      - zoo1
+      - cass1
+      - chat_router
