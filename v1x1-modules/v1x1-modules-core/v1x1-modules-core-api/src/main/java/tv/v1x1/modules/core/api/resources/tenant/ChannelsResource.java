@@ -76,7 +76,6 @@ public class ChannelsResource {
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
         final Platform platform = getDtoPlatform(platformStr);
         return getDtoChannel(tenant, platform, channelId);
-
     }
 
     @Path("/{platform}/{channel_id}")

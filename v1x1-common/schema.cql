@@ -265,3 +265,73 @@ CREATE TABLE joined_twitch_channel (
     channel text,
     PRIMARY KEY (channel)
 );
+
+/* Version 6 */
+
+CREATE TABLE naive_bayes_classifier (
+    name text,
+    stats_id uuid,
+    min_words int,
+    min_training int,
+    PRIMARY KEY (name)
+);
+
+CREATE TABLE naive_bayes_classifier_stats (
+    id uuid,
+    trained counter,
+    classified counter,
+    classified_0 counter,
+    classified_5 counter,
+    classified_10 counter,
+    classified_15 counter,
+    classified_20 counter,
+    classified_25 counter,
+    classified_30 counter,
+    classified_35 counter,
+    classified_40 counter,
+    classified_45 counter,
+    classified_50 counter,
+    classified_55 counter,
+    classified_60 counter,
+    classified_65 counter,
+    classified_70 counter,
+    classified_75 counter,
+    classified_80 counter,
+    classified_85 counter,
+    classified_90 counter,
+    classified_95 counter,
+    classified_100 counter,
+    unclassifiable counter,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE naive_bayes_word_stats (
+    id uuid,
+    word text,
+    good counter,
+    bad counter,
+    seen counter,
+    PRIMARY KEY (id, word)
+);
+
+CREATE TABLE artificial_neural_network (
+    name text,
+    id uuid,
+    training_ttl int,
+    layout list<int>,
+    PRIMARY KEY (name)
+);
+
+CREATE TABLE artificial_neural_network_training_entry (
+    id uuid,
+    training_id timeuuid,
+    inputs list<float>,
+    outputs list<float>,
+    PRIMARY KEY (id, training_id)
+);
+
+CREATE TABLE artificial_neural_network_rdb (
+    id uuid,
+    data blob,
+    PRIMARY KEY (id)
+);
