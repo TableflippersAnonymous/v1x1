@@ -335,3 +335,15 @@ CREATE TABLE artificial_neural_network_rdb (
     data blob,
     PRIMARY KEY (id)
 );
+
+/* Version 7 */
+
+CREATE TABLE quote (
+    id int,
+    tenant_id uuid,
+    quote text,
+    game text,
+    date timestamp,
+    deleted boolean,
+    PRIMARY KEY (tenant_id, id)
+);

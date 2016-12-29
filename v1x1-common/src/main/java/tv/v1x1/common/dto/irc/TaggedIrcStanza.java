@@ -31,8 +31,11 @@ public abstract class TaggedIrcStanza extends IrcStanza {
         super(rawLine, tags, source, command, rawArgs, args);
         if(tags.containsKey("color") && !tags.get("color").isEmpty())
             color = tags.get("color");
-        if(tags.containsKey("display-name") && !tags.get("display-name").isEmpty())
+        if(tags.containsKey("display-name") && !tags.get("display-name").isEmpty()) {
             displayName = tags.get("display-name");
+        } else if(source instanceof IrcUser) {
+            displayName = ((IrcUser)source).getNickname();
+        }
         if(tags.containsKey("mod") && !tags.get("mod").isEmpty())
             mod = tags.get("mod").equals("1");
         if(tags.containsKey("subscriber") && !tags.get("subscriber").isEmpty())

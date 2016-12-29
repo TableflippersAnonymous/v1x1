@@ -81,3 +81,9 @@ services:
       - redis
       - zoo1
       - cass1
+  quotes:
+    image: v1x1-quotes:latest
+    depends_on:
+      - redis
+      - zoo1
+      - cass1
