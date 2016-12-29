@@ -16,18 +16,20 @@ public abstract class Command {
     public abstract List<String> getCommands();
 
     /**
-     * List of permissions required for this command to be used
-     * @return
-     */
-    public abstract List<Permission> getAllowedPermissions();
-
-    /**
      * Callback to run command should it match all criteria
      * @param chatMessage raw chat message object that triggered this command
      * @param command String alias that triggered this command
      * @param args List<String> args for this command invocation
      */
     public abstract void run(ChatMessage chatMessage, String command, List<String> args);
+
+    /**
+     * List of permissions required for this command to be used
+     * @return
+     */
+    public List<Permission> getAllowedPermissions() {
+        return null;
+    }
 
     /**
      * Syntax of the command, for help pages

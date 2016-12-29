@@ -1,9 +1,9 @@
 package tv.v1x1.modules.channel.quotes.config;
 
-import tv.v1x1.common.modules.TenantConfiguration;
+import tv.v1x1.common.modules.BasicTenantConfiguration;
 
 /**
  * @author Josh
  */
-public class QuotesTenantConfiguration implements TenantConfiguration {
+public class QuotesTenantConfiguration extends BasicTenantConfiguration {
 }
