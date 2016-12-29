@@ -1,6 +1,7 @@
 package tv.v1x1.modules.core.api.resources.platform;
 
 import com.google.inject.Inject;
+import tv.v1x1.common.dto.db.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
 import tv.v1x1.common.services.persistence.DAOManager;
@@ -8,6 +9,7 @@ import tv.v1x1.modules.core.api.api.ConfigurationDefinition;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -37,6 +39,25 @@ public class ConfigDefinitionResource {
         this.daoManager = daoManager;
     }
 
+    @Path("/channel")
+    @GET
+    public List<String> listChannelConfigDefinitions() {
+        final List<String> ret = new ArrayList<>();
+        for(final ChannelConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllChannel()) {
+            ret.add(def.getName());
+        }
+        return ret;
+    }
+
+    @Path("/channel/{name}")
+    @GET
+    public ConfigurationDefinition getChannelConfigurationDefinition(@PathParam("name") final String name) {
+        final ChannelConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getChannel(name);
+        if(definition == null)
+            throw new NotFoundException();
+        return ConfigurationDefinition.fromCore(definition.toCore());
+    }
+
     @Path("/tenant")
     @GET
     public List<String> listTenantConfigDefinitions() {
@@ -50,7 +71,10 @@ public class ConfigDefinitionResource {
     @Path("/tenant/{name}")
     @GET
     public ConfigurationDefinition getTenantConfigurationDefinition(@PathParam("name") final String name) {
-        return null; //TODO
+        final TenantConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getTenant(name);
+        if(definition == null)
+            throw new NotFoundException();
+        return ConfigurationDefinition.fromCore(definition.toCore());
     }
 
     @Path("/global")
@@ -66,6 +90,9 @@ public class ConfigDefinitionResource {
     @Path("/global/{name}")
     @GET
     public ConfigurationDefinition getGlobalConfigurationDefinition(@PathParam("name") final String name) {
-        return null; //TODO
+        final GlobalConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getGlobal(name);
+        if(definition == null)
+            throw new NotFoundException();
+        return ConfigurationDefinition.fromCore(definition.toCore());
     }
 }
