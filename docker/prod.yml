@@ -24,3 +24,15 @@ cassandra:
   username: v1x1
   password: klx1tOCEL8otSFWNP56DNKXZ283HKB2f5borTYTcXLzO
 zookeeper_connection_string: zk1:2181,zk2:2181,zk3:2181
+server:
+  applicationConnectors:
+    - type: https
+      port: 8443
+      keyStorePath: /tmp/keystore.jks
+      keyStorePassword: notsecure
+      validateCerts: false
+      validatePeers: false
+  adminConnectors:
+    - type: http
+      port: 8081
+      bindHost: 127.0.0.1

@@ -1,11 +1,13 @@
 package tv.v1x1.common.modules;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.redisson.config.Config;
 
 /**
  * Created by cobi on 10/6/16.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ModuleSettings {
     private Config redissonConfig;
     private String zookeeperConnectionString;
