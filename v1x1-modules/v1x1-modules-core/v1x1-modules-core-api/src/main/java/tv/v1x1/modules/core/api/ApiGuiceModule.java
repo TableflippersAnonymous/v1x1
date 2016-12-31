@@ -2,6 +2,7 @@ package tv.v1x1.modules.core.api;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import tv.v1x1.common.services.coordination.ModuleRegistry;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
 import tv.v1x1.common.services.twitch.TwitchApi;
@@ -45,5 +46,10 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public KeyValueStore provideKeyValueStore() {
         return apiModule.getTemporaryGlobalKeyValueStore();
+    }
+
+    @Provides
+    public ModuleRegistry provideModuleRegistry() {
+        return apiModule.getModuleRegistry();
     }
 }

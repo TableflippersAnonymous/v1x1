@@ -343,7 +343,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return statsCollector;
     }
 
-    protected ModuleRegistry getModuleRegistry() {
+    public ModuleRegistry getModuleRegistry() {
         return moduleRegistry;
     }
 
