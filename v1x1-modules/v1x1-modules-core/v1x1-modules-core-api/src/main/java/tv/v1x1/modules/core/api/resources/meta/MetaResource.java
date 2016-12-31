@@ -98,7 +98,7 @@ public class MetaResource {
         final byte[] state = new byte[32];
         secureRandom.nextBytes(state);
         stateStore.put(state, Longs.toByteArray(new Date().getTime() + 3600000));
-        return new StateResponse(BaseEncoding.base64().encode(state), 3600000);
+        return new StateResponse(BaseEncoding.base64Url().encode(state), 3600000);
     }
 
     @Path("/long-term-token")
@@ -111,7 +111,7 @@ public class MetaResource {
     }
 
     private String useState(final String stateStr) {
-        final byte[] state = BaseEncoding.base64().decode(stateStr);
+        final byte[] state = BaseEncoding.base64Url().decode(stateStr);
         final byte[] expiryBytes = stateStore.get(state);
         if(expiryBytes == null)
             throw new BadRequestException("State not found");
