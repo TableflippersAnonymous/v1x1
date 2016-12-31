@@ -235,10 +235,9 @@ public class Authorizer {
     private byte[] getPemBytes(final ThirdPartyCredential thirdPartyCredential) {
         if(thirdPartyCredential == null)
             throw new IllegalStateException("No key found for Authorizer JWTs.");
-        final PemReader pemReader = new PemReader(new StringReader(new String(thirdPartyCredential.credentialAsByteArray())));
-        try {
+        try (final PemReader pemReader = new PemReader(new StringReader(new String(thirdPartyCredential.credentialAsByteArray())))) {
             return pemReader.readPemObject().getContent();
-        } catch (IOException e) {
+        } catch (final IOException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }

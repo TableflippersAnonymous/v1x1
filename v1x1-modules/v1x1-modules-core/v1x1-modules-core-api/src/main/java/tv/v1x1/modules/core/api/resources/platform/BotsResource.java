@@ -1,5 +1,7 @@
 package tv.v1x1.modules.core.api.resources.platform;
 
+import tv.v1x1.modules.core.api.api.ApiList;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,13 +25,13 @@ import java.util.List;
 public class BotsResource {
     @Path("/{platform}")
     @GET
-    public List<String> listBotsOnPlatform(@PathParam("platform") final String platform) {
+    public ApiList<String> listBotsOnPlatform(@PathParam("platform") final String platform) {
         return null; //TODO
     }
 
     @Path("/{platform}/{botname}")
     @GET
-    public List<String> listChannelsBotOn(@PathParam("platform") final String platform, @PathParam("botname") final String botName) {
+    public ApiList<String> listChannelsBotOn(@PathParam("platform") final String platform, @PathParam("botname") final String botName) {
         return null; //TODO
     }
 }

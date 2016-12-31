@@ -1,5 +1,8 @@
 package tv.v1x1.modules.core.api.resources.tenant;
 
+import tv.v1x1.modules.core.api.api.ApiList;
+import tv.v1x1.modules.core.api.api.ApiPrimitive;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -22,19 +25,19 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class TenantsResource {
     @GET
-    public List<String> listTenantsForUser() {
+    public ApiList<String> listTenantsForUser() {
         return null; //TODO
     }
 
     @Path("/{tenant_id: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}")
     @GET
-    public List<String> listTenantEndpoints(@PathParam("tenant_id") final String tenantId) {
+    public ApiList<String> listTenantEndpoints(@PathParam("tenant_id") final String tenantId) {
         return null; //TODO
     }
 
     @Path("/{platform: [a-z]+}/{id}")
     @GET
-    public String getTenantId(@PathParam("platform") final String platform, @PathParam("id") final String id) {
+    public ApiPrimitive<String> getTenantId(@PathParam("platform") final String platform, @PathParam("id") final String id) {
         return null; //TODO
     }
 }
