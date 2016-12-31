@@ -1,5 +1,8 @@
 package tv.v1x1.modules.core.api.resources.tenant;
 
+import tv.v1x1.modules.core.api.api.ApiList;
+import tv.v1x1.modules.core.api.api.ApiPrimitive;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -28,14 +31,14 @@ import java.util.List;
 public class PermissionsResource {
     @Path("/{user}")
     @GET
-    public List<String> listPermissionsForUser(@PathParam("tenant") final String tenantId, @PathParam("user") final String userId) {
+    public ApiList<String> listPermissionsForUser(@PathParam("tenant") final String tenantId, @PathParam("user") final String userId) {
         return null; //TODO
     }
 
     @Path("/{user}")
     @POST
-    public List<String> addPermissionToUser(@PathParam("tenant") final String tenantId, @PathParam("user") final String userId,
-                                            final String permissionNode) {
+    public ApiList<String> addPermissionToUser(@PathParam("tenant") final String tenantId, @PathParam("user") final String userId,
+                                               final ApiPrimitive<String> permissionNode) {
         return null; //TODO
     }
 

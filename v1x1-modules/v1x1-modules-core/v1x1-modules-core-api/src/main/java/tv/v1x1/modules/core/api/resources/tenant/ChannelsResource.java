@@ -6,6 +6,8 @@ import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.modules.core.api.api.ApiList;
+import tv.v1x1.modules.core.api.api.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.Channel;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
@@ -21,6 +23,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -36,6 +39,7 @@ import java.util.stream.Collectors;
           /{channel} - GET: channel object; PUT: link a channel; DELETE: unlink a channel
             /state - GET: whether bot is in channel or not; PUT: change whether bot should be in channel or not
             /message - POST: send message as bot to channel
+            /config - GET: configuration; PUT: update configuration
  */
 @Path("/api/v1/tenants/{tenant_id}/channels")
 @Produces(MediaType.APPLICATION_JSON)
@@ -51,19 +55,24 @@ public class ChannelsResource {
     }
 
     @GET
-    public List<String> listPlatforms(@PathParam("tenant_id") final String tenantId) {
-        return null; //TODO
+    public ApiList<String> listPlatforms(@HeaderParam("Authorization") final String authorization,
+                                         @PathParam("tenant_id") final String tenantId) {
+        final Tenant tenant = getDtoTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
+        return new ApiList<>(new ArrayList<>(tenant.getEntries().stream().map(Tenant.Entry::getPlatform)
+                .map(Platform::name).map(String::toLowerCase).collect(Collectors.toSet())));
     }
 
     @Path("/{platform}")
     @GET
-    public List<String> listChannels(@HeaderParam("Authorization") final String authorization,
-                                     @PathParam("tenant_id") final String tenantId, @PathParam("platform") final String platformStr) {
+    public ApiList<String> listChannels(@HeaderParam("Authorization") final String authorization,
+                                        @PathParam("tenant_id") final String tenantId,
+                                        @PathParam("platform") final String platformStr) {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
         final Platform platform = getDtoPlatform(platformStr);
-        return tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
-                .map(Tenant.Entry::getChannelId).collect(Collectors.toList());
+        return new ApiList<>(tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
+                .map(Tenant.Entry::getChannelId).collect(Collectors.toList()));
     }
 
     @Path("/{platform}/{channel_id}")
@@ -99,15 +108,18 @@ public class ChannelsResource {
 
     @Path("/{platform}/{channel_id}/state")
     @GET
-    public String getState(@PathParam("tenant_id") final String tenantId, @PathParam("platform") final String platform,
-                           @PathParam("channel_id") final String channelId) {
+    public ApiPrimitive<String> getState(@PathParam("tenant_id") final String tenantId,
+                                         @PathParam("platform") final String platform,
+                                         @PathParam("channel_id") final String channelId) {
         return null; //TODO
     }
 
     @Path("/{platform}/{channel_id}/state")
     @PUT
-    public String putState(@PathParam("tenant_id") final String tenantId, @PathParam("platform") final String platform,
-                           @PathParam("channel_id") final String channelId, final String newState) {
+    public ApiPrimitive<String> putState(@PathParam("tenant_id") final String tenantId,
+                                         @PathParam("platform") final String platform,
+                                         @PathParam("channel_id") final String channelId,
+                                         final ApiPrimitive<String> newState) {
         return null; //TODO
     }
 
@@ -117,13 +129,13 @@ public class ChannelsResource {
                                 @PathParam("tenant_id") final String tenantId,
                                 @PathParam("platform") final String platformStr,
                                 @PathParam("channel_id") final String channelId,
-                                final String message) {
+                                final ApiPrimitive<String> message) {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.message");
         final Platform platform = getDtoPlatform(platformStr);
         final Channel apiChannel = getDtoChannel(tenant, platform, channelId);
         final tv.v1x1.common.dto.core.Channel coreChannel = getCoreChannel(apiChannel, platform);
-        Chat.message(null, coreChannel, message);
+        Chat.message(null, coreChannel, message.getValue());
         return Response.ok().build();
     }
 
