@@ -1,5 +1,8 @@
 package tv.v1x1.modules.core.api;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.util.ContextInitializer;
+import ch.qos.logback.core.joran.spi.JoranException;
 import com.squarespace.jersey2.guice.JerseyGuiceUtils;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.extension.ServiceLocatorGenerator;
@@ -49,6 +52,14 @@ public class ApiModule extends ServiceModule<ApiSettings, ApiGlobalConfiguration
             }
         }
         LOG.info("Woken by application.");
+        final LoggerContext context = (LoggerContext)LoggerFactory.getILoggerFactory();
+        context.reset();
+        final ContextInitializer initializer = new ContextInitializer(context);
+        try {
+            initializer.autoConfig();
+        } catch (final JoranException e) {
+            LOG.warn("Caught exception during startup: ", e);
+        }
     }
 
     @Override
