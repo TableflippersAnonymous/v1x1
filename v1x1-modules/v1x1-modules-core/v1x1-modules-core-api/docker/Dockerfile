@@ -1,6 +1,6 @@
 FROM v1x1-base
 USER 0
-RUN apk add openssl
+RUN apk update && apk add openssl
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 RUN mkdir -p /tmp
