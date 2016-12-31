@@ -6,6 +6,8 @@ import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.modules.core.api.api.ApiList;
+import tv.v1x1.modules.core.api.api.ApiPrimitive;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.Consumes;
@@ -43,25 +45,25 @@ public class GlobalUsersResource {
 
     @Path("/{global_user_id: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}")
     @GET
-    public List<String> listGlobalUserEndpoints(@HeaderParam("Authorization") final String authorization,
-                                                @PathParam("global_user_id") final String globalUserId) {
+    public ApiList<String> listGlobalUserEndpoints(@HeaderParam("Authorization") final String authorization,
+                                                   @PathParam("global_user_id") final String globalUserId) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_users.list");
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
-        return ImmutableList.of("users");
+        return new ApiList<>(ImmutableList.of("users"));
     }
 
     @Path("/{platform: [a-z]+}/{id}")
     @GET
-    public String getGlobalUserId(@HeaderParam("Authorization") final String authorization,
-                                  @PathParam("platform") final String platformString,
-                                  @PathParam("id") final String id) {
+    public ApiPrimitive<String> getGlobalUserId(@HeaderParam("Authorization") final String authorization,
+                                                @PathParam("platform") final String platformString,
+                                                @PathParam("id") final String id) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read");
         final Platform platform = Platform.valueOf(platformString.toUpperCase());
         final GlobalUser globalUser = daoGlobalUser.getByUser(platform, id);
         if(globalUser == null)
             throw new NotFoundException();
-        return globalUser.getId().toString();
+        return new ApiPrimitive<>(globalUser.getId().toString());
     }
 }

@@ -10,6 +10,7 @@ import tv.v1x1.common.dto.db.TwitchOauthToken;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.auth.TokenResponse;
+import tv.v1x1.modules.core.api.api.ApiList;
 import tv.v1x1.modules.core.api.api.TwitchOauthCode;
 import tv.v1x1.modules.core.api.api.User;
 import tv.v1x1.modules.core.api.auth.Authorizer;
@@ -59,26 +60,26 @@ public class UsersResource {
     }
 
     @GET
-    public List<String> listPlatforms(@HeaderParam("Authorization") final String authorization,
-                                      @PathParam("global_user_id") final String globalUserId) {
+    public ApiList<String> listPlatforms(@HeaderParam("Authorization") final String authorization,
+                                         @PathParam("global_user_id") final String globalUserId) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read").ensurePrincipal(globalUserId);
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
-        return ImmutableList.copyOf(globalUser.getEntries().stream().map(GlobalUser.Entry::getPlatform).map(Platform::name).map(String::toLowerCase).collect(Collectors.toSet()));
+        return new ApiList<>(ImmutableList.copyOf(globalUser.getEntries().stream().map(GlobalUser.Entry::getPlatform).map(Platform::name).map(String::toLowerCase).collect(Collectors.toSet())));
     }
 
     @Path("/{platform}")
     @GET
-    public List<String> listUsers(@HeaderParam("Authorization") final String authorization,
-                                  @PathParam("global_user_id") final String globalUserId,
-                                  @PathParam("platform") final String platformString) {
+    public ApiList<String> listUsers(@HeaderParam("Authorization") final String authorization,
+                                     @PathParam("global_user_id") final String globalUserId,
+                                     @PathParam("platform") final String platformString) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read").ensurePrincipal(globalUserId);
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
         final Platform platform = Platform.valueOf(platformString.toUpperCase());
-        return globalUser.getEntries().stream().filter(e -> e.getPlatform().equals(platform)).map(GlobalUser.Entry::getUserId).collect(Collectors.toList());
+        return new ApiList<>(globalUser.getEntries().stream().filter(e -> e.getPlatform().equals(platform)).map(GlobalUser.Entry::getUserId).collect(Collectors.toList()));
     }
 
     @Path("/{platform}/{user_id}")
