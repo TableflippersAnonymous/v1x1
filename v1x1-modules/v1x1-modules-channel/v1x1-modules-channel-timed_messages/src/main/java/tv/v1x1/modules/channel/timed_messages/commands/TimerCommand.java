@@ -34,7 +34,7 @@ public class TimerCommand extends Command {
 
     @Override
     public List<String> getCommands() {
-        return ImmutableList.of("timer");
+        return ImmutableList.of("timer", "timers");
     }
 
     @Override
