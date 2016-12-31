@@ -10,6 +10,8 @@ import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Permission;
 import tv.v1x1.common.dto.db.TenantGroup;
 import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.modules.core.api.api.ApiList;
+import tv.v1x1.modules.core.api.api.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.Group;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
@@ -57,9 +59,9 @@ public class GroupsResource {
     }
 
     @GET
-    public List<String> listGroups(@HeaderParam("Authorization") final String authorization) {
+    public ApiList<String> listGroups(@HeaderParam("Authorization") final String authorization) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_permissions.read");
-        return Lists.newArrayList(StreamSupport.stream(
+        return new ApiList<>(StreamSupport.stream(
                 daoTenantGroup.getAllGroupsByTenant(DAOTenantGroup.GLOBAL_TENANT).spliterator(), false)
                 .map(tenantGroup -> tenantGroup.getGroupId().toString())
                 .collect(Collectors.toList()));
@@ -67,9 +69,9 @@ public class GroupsResource {
 
     @POST
     public Group createGroup(@HeaderParam("Authorization") final String authorization,
-                             final String name) {
+                             final ApiPrimitive<String> name) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_permissions.write");
-        final TenantGroup tenantGroup = daoTenantGroup.createGroup(DAOTenantGroup.GLOBAL_TENANT, name);
+        final TenantGroup tenantGroup = daoTenantGroup.createGroup(DAOTenantGroup.GLOBAL_TENANT, name.getValue());
         return new Group(tenantGroup);
     }
 
@@ -98,28 +100,28 @@ public class GroupsResource {
 
     @Path("/{group}/users")
     @GET
-    public List<String> getUsersInGroup(@HeaderParam("Authorization") final String authorization,
-                                        @PathParam("group") final String groupId) {
+    public ApiList<String> getUsersInGroup(@HeaderParam("Authorization") final String authorization,
+                                           @PathParam("group") final String groupId) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_permissions.read");
         final TenantGroup tenantGroup = daoTenantGroup.getTenantGroup(DAOTenantGroup.GLOBAL_TENANT, UUID.fromString(groupId));
         if(tenantGroup == null)
             throw new NotFoundException();
-        return Lists.newArrayList(Iterables.transform(daoTenantGroup.getUsersByGroup(tenantGroup), UUID::toString));
+        return new ApiList<>(Lists.newArrayList(Iterables.transform(daoTenantGroup.getUsersByGroup(tenantGroup), UUID::toString)));
     }
 
     @Path("/{group}/users")
     @POST
-    public List<String> addUserToGroup(@HeaderParam("Authorization") final String authorization,
-                                       @PathParam("group") final String groupId, final String userId) {
+    public ApiList<String> addUserToGroup(@HeaderParam("Authorization") final String authorization,
+                                          @PathParam("group") final String groupId, final ApiPrimitive<String> userId) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_permissions.write");
-        final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(userId));
+        final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(userId.getValue()));
         if(globalUser == null)
             throw new NotFoundException();
         final TenantGroup tenantGroup = daoTenantGroup.getTenantGroup(DAOTenantGroup.GLOBAL_TENANT, UUID.fromString(groupId));
         if(tenantGroup == null)
             throw new NotFoundException();
         daoTenantGroup.addUserToGroup(tenantGroup, globalUser.toCore());
-        return daoTenantGroup.getGroupsByUser(DAOTenantGroup.GLOBAL_TENANT, globalUser.toCore()).getGroups().stream().map(UUID::toString).collect(Collectors.toList());
+        return new ApiList<>(daoTenantGroup.getGroupsByUser(DAOTenantGroup.GLOBAL_TENANT, globalUser.toCore()).getGroups().stream().map(UUID::toString).collect(Collectors.toList()));
     }
 
     @Path("/{group}/users/{user}")
@@ -140,25 +142,27 @@ public class GroupsResource {
 
     @Path("/{group}/permissions")
     @GET
-    public List<String> listPermissionsForGroup(@HeaderParam("Authorization") final String authorization,
-                                                @PathParam("group") final String groupId) {
+    public ApiList<String> listPermissionsForGroup(@HeaderParam("Authorization") final String authorization,
+                                                   @PathParam("group") final String groupId) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_permissions.read");
         final TenantGroup tenantGroup = daoTenantGroup.getTenantGroup(DAOTenantGroup.GLOBAL_TENANT, UUID.fromString(groupId));
         if(tenantGroup == null)
             throw new NotFoundException();
-        return tenantGroup.getPermissions().stream().map(Permission::getNode).collect(Collectors.toList());
+        return new ApiList<>(tenantGroup.getPermissions().stream().map(Permission::getNode).collect(Collectors.toList()));
     }
 
     @Path("/{group}/permissions")
     @POST
-    public List<String> grantPermissionToGroup(@HeaderParam("Authorization") final String authorization,
-                                               @PathParam("group") final String groupId, final String permissionNode) {
+    public ApiList<String> grantPermissionToGroup(@HeaderParam("Authorization") final String authorization,
+                                                  @PathParam("group") final String groupId,
+                                                  final ApiPrimitive<String> permissionNode) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_permissions.write");
         final TenantGroup tenantGroup = daoTenantGroup.getTenantGroup(DAOTenantGroup.GLOBAL_TENANT, UUID.fromString(groupId));
         if(tenantGroup == null)
             throw new NotFoundException();
-        daoTenantGroup.addPermissionsToGroup(tenantGroup, ImmutableSet.of(new Permission(permissionNode)));
-        return daoTenantGroup.getTenantGroup(DAOTenantGroup.GLOBAL_TENANT, UUID.fromString(groupId)).getPermissions().stream().map(Permission::getNode).collect(Collectors.toList());
+        daoTenantGroup.addPermissionsToGroup(tenantGroup, ImmutableSet.of(new Permission(permissionNode.getValue())));
+        return new ApiList<>(daoTenantGroup.getTenantGroup(DAOTenantGroup.GLOBAL_TENANT, UUID.fromString(groupId))
+                .getPermissions().stream().map(Permission::getNode).collect(Collectors.toList()));
     }
 
     @Path("/{group}/permissions/{permission}")

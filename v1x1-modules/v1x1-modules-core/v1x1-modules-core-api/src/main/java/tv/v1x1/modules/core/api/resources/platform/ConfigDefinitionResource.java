@@ -5,6 +5,7 @@ import tv.v1x1.common.dto.db.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
 import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.modules.core.api.api.ApiList;
 import tv.v1x1.modules.core.api.api.ConfigurationDefinition;
 
 import javax.ws.rs.Consumes;
@@ -41,12 +42,12 @@ public class ConfigDefinitionResource {
 
     @Path("/channel")
     @GET
-    public List<String> listChannelConfigDefinitions() {
+    public ApiList<String> listChannelConfigDefinitions() {
         final List<String> ret = new ArrayList<>();
         for(final ChannelConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllChannel()) {
             ret.add(def.getName());
         }
-        return ret;
+        return new ApiList<>(ret);
     }
 
     @Path("/channel/{name}")
@@ -60,12 +61,12 @@ public class ConfigDefinitionResource {
 
     @Path("/tenant")
     @GET
-    public List<String> listTenantConfigDefinitions() {
+    public ApiList<String> listTenantConfigDefinitions() {
         final List<String> ret = new ArrayList<>();
         for(final TenantConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllTenant()) {
             ret.add(def.getName());
         }
-        return ret;
+        return new ApiList<>(ret);
     }
 
     @Path("/tenant/{name}")
@@ -79,12 +80,12 @@ public class ConfigDefinitionResource {
 
     @Path("/global")
     @GET
-    public List<String> listGlobalConfigDefinitions() {
+    public ApiList<String> listGlobalConfigDefinitions() {
         final List<String> ret = new ArrayList<>();
         for(final GlobalConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllGlobal()) {
             ret.add(def.getName());
         }
-        return ret;
+        return new ApiList<>(ret);
     }
 
     @Path("/global/{name}")
