@@ -2,6 +2,8 @@ version: '2'
 services:
   redis:
     image: redis:alpine
+  neural-redis:
+    image: registry.tblflp.zone:5443/tblflp-neural-redis:4.0-rc2-nrdev-1
   zoo1:
     image: zookeeper:latest
     environment:
@@ -20,35 +22,41 @@ services:
     image: v1x1-chat_router:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
   event_router:
     image: v1x1-event_router:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
   tmi:
     image: v1x1-tmi:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
   scheduler:
     image: v1x1-scheduler:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
   hello_world:
     image: v1x1-hello_world:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
   link_purger:
     image: v1x1-link_purger:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
       - chat_router
@@ -56,6 +64,7 @@ services:
     image: v1x1-timed_messages:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
       - chat_router
@@ -65,6 +74,7 @@ services:
     image: v1x1-caster:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
       - chat_router
@@ -72,6 +82,7 @@ services:
     image: v1x1-ops_tool:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
       - chat_router
@@ -79,6 +90,7 @@ services:
     image: v1x1-api:latest
     depends_on:
       - redis
+      - neural-redis
       - zoo1
       - cass1
   quotes:

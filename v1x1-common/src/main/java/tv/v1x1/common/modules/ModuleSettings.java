@@ -13,6 +13,7 @@ public class ModuleSettings {
     private String zookeeperConnectionString;
     private CassandraConfig cassandraConfig;
     private long waitStartMs = 0;
+    private NeuralRedisConfig neuralRedisConfig;
 
     @JsonProperty("redisson")
     public Config getRedissonConfig() {
@@ -52,5 +53,15 @@ public class ModuleSettings {
     @JsonProperty("wait_start_ms")
     public void setWaitStartMs(final long waitStartMs) {
         this.waitStartMs = waitStartMs;
+    }
+
+    @JsonProperty("neural_redis")
+    public NeuralRedisConfig getNeuralRedisConfig() {
+        return neuralRedisConfig;
+    }
+
+    @JsonProperty("neural_redis")
+    public void setNeuralRedisConfig(final NeuralRedisConfig neuralRedisConfig) {
+        this.neuralRedisConfig = neuralRedisConfig;
     }
 }

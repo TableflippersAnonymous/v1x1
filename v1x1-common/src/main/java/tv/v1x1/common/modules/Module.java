@@ -21,6 +21,7 @@ import com.datastax.driver.extras.codecs.enums.EnumOrdinalCodec;
 import com.datastax.driver.mapping.MappingManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.lambdaworks.redis.RedisClient;
 import io.dropwizard.util.Generics;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -117,6 +118,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private MappingManager mappingManager;
     private DAOManager daoManager;
     private Deduplicator deduplicator;
+    private RedisClient neuralRedis;
 
     /* Services */
     private ModuleRegistry moduleRegistry;
@@ -237,6 +239,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         twitchApi = new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), new String(requireCredential("Common|Twitch|OAuthToken")), new String(requireCredential("Common|Twitch|ClientSecret")), new String(requireCredential("Common|Twitch|RedirectUri")));
 
         updateConfigurationDefinitions();
+
+        neuralRedis = RedisClient.create(settings.getNeuralRedisConfig().getRedisUri());
     }
 
     /* ******************************* CALL THIS FROM main() ******************************* */

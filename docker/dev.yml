@@ -4,6 +4,8 @@ redisson:
   singleServerConfig:
     address:
     - "//redis:6379"
+neural_redis:
+  redis_uri: "redis://neural-redis:6379"
 cassandra:
   cluster_name: "v1x1_dev"
   keyspace: "v1x1"
