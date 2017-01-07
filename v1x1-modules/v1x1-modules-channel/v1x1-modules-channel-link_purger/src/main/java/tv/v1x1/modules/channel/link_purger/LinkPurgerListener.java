@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class LinkPurgerListener implements EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final Permission WHITELIST_PERM = new Permission("link_purger.whitelisted");
-    private static final Pattern EXCLUDE_REGEX = Pattern.compile("^[0-9.]{1,6}$");
+    private static final Pattern EXCLUDE_REGEX = Pattern.compile("^[0-9.]{1,6}([^0-9.].*)?$");
     private final LinkPurger module;
 
     public LinkPurgerListener(LinkPurger linkPurger) {
