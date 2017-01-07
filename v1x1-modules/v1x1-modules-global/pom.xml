@@ -16,6 +16,7 @@
 
   <modules>
     <module>v1x1-modules-global-log</module>
+    <module>v1x1-modules-global-ops_tool</module>
   </modules>
 
   <dependencies>
