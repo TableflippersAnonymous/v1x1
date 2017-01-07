@@ -15,13 +15,12 @@
   <name>v1x1-modules-channel</name>
 
   <modules>
-    <module>v1x1-modules-channel-hello_world</module>
-    <module>v1x1-modules-channel-echo</module>
+      <module>v1x1-modules-channel-hello_world</module>
+      <module>v1x1-modules-channel-echo</module>
       <module>v1x1-modules-channel-link_purger</module>
       <module>v1x1-modules-channel-timed_messages</module>
       <module>v1x1-modules-channel-quotes</module>
       <module>v1x1-modules-channel-caster</module>
-      <module>v1x1-modules-channel-ops_tool</module>
   </modules>
 
   <dependencies>
