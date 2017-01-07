@@ -52,6 +52,8 @@ import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -330,9 +332,8 @@ public class TmiBot implements Runnable {
     }
 
     private void connect() throws IOException {
-        socket = new Socket("irc.chat.twitch.tv", 6667);
-        final InputStream inputStream = socket.getInputStream();
-        reader = new BufferedReader(new InputStreamReader(inputStream));
+        socket = SSLSocketFactory.getDefault().createSocket("irc.chat.twitch.tv", 6697);
+        reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         outputStream = new BufferedOutputStream(socket.getOutputStream());
     }
 
@@ -408,6 +409,6 @@ public class TmiBot implements Runnable {
     }
 
     private void log(final String m) {
-        LOG.info("[{}:{}] [{}] {}", username, id, channel, m);
+        LOG.info("[{}:{}] [{}] {}", username, id, channel, m.replace(oauthToken, "<oauth token removed>"));
     }
 }
