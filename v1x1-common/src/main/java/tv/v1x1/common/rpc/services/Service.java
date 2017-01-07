@@ -40,6 +40,7 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
                 for(;;) {
                     try {
                         final Message m = messageQueue.get();
+                        LOG.debug("Processing message id={} from={} class={}", m.getMessageId(), m.getFrom().getName(), m.getClass().getCanonicalName());
                         if(!requestClass.isInstance(m)) {
                             LOG.warn("Invalid class seen on request queue: {} expected: {}", m.getClass().getCanonicalName(), requestClass.getCanonicalName());
                             continue;
@@ -47,9 +48,10 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
                         @SuppressWarnings("unchecked") final T request = (T) m;
                         handleRequest(request);
                     } catch (final InterruptedException e) {
+                        LOG.info("Exiting service due to InterruptedException", e);
                         break;
                     } catch (final Exception e) {
-                        e.printStackTrace();
+                        LOG.warn("Caught exception processing service call:", e);
                     }
                 }
             }
