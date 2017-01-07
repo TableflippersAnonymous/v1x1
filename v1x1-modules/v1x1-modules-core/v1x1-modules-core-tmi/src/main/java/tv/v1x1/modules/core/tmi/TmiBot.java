@@ -86,6 +86,7 @@ public class TmiBot implements Runnable {
     private final TmiModule tmiModule;
     private final String channel;
     private final UUID id = UUID.randomUUID();
+    private Thread thread;
 
     public TmiBot(final String username, final String oauthToken, final MessageQueue queue,
                   final Module module, final RateLimiter joinLimiter, final RateLimiter messageLimiter,
@@ -105,6 +106,7 @@ public class TmiBot implements Runnable {
 
     @Override
     public void run() {
+        thread = Thread.currentThread();
         log("Init: Hello, World!");
         running = true;
         while(running) {
@@ -380,7 +382,9 @@ public class TmiBot implements Runnable {
 
     public void shutdown() throws IOException {
         running = false;
-        quit();
+        disconnect();
+        if(thread != null)
+            thread.interrupt();
     }
 
     public void sendMessage(final String channel, final String text) throws IOException, InterruptedException {
