@@ -4,6 +4,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.redisson.api.RBlockingQueue;
 import tv.v1x1.common.dto.messages.Message;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * @author Naomi
  */
@@ -17,7 +19,13 @@ public class MessageQueueImpl implements MessageQueue {
 
     @Override
     public Message get() throws InterruptedException, InvalidProtocolBufferException {
-        return Message.fromBytes(blockingQueue.take());
+        while (!Thread.interrupted()) {
+            final byte[] bytes = blockingQueue.poll(50, TimeUnit.MILLISECONDS);
+            if (bytes == null)
+                continue;
+            return Message.fromBytes(bytes);
+        }
+        throw new InterruptedException();
     }
 
     @Override
