@@ -347,3 +347,14 @@ CREATE TABLE quote (
     deleted boolean,
     PRIMARY KEY (tenant_id, id)
 );
+
+/* Version 8 */
+
+CREATE TABLE factoid (
+    tenant_id uuid,
+    id text,
+    alias boolean,
+    permission frozen<permission>,
+    data text,
+    PRIMARY KEY (tenant_id, id)
+);
