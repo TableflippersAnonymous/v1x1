@@ -87,3 +87,9 @@ services:
       - redis
       - zoo1
       - cass1
+  factoids:
+    image: v1x1-factoids:latest
+    depends_on:
+      - redis
+      - zoo1
+      - cass1
