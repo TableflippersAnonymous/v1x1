@@ -8,7 +8,6 @@ import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 
 import java.lang.invoke.MethodHandles;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ public class CommandDelegator {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private final String prefix;
-    private final List<Command> registeredCommands;
+    private final CommandProvider commandProvider;
 
     /**
      * CommandDelegator tracks {@link Command Commands} to be run with no prefix;
@@ -33,25 +32,12 @@ public class CommandDelegator {
      */
     public CommandDelegator(final String prefix) {
         this.prefix = prefix;
-        registeredCommands = new ArrayList<>();
+        this.commandProvider = new StaticCommandProvider();
     }
 
-    /**
-     * Register a new command for later execution
-     * @see Command
-     * @param command
-     */
-    public void registerCommand(final Command command) {
-        registeredCommands.add(command);
-        LOG.debug("registered command " + command);
-    }
-
-    /**
-     * Get a list of commands registered to this delegator
-     * @return list of Commands
-     */
-    public ImmutableList<Command> getRegisteredCommands() {
-        return ImmutableList.copyOf(registeredCommands);
+    public CommandDelegator(final CommandProvider commandProvider, final String prefix) {
+        this.prefix = prefix;
+        this.commandProvider = commandProvider;
     }
 
     /**
@@ -63,7 +49,7 @@ public class CommandDelegator {
     }
 
     /**
-     * Interpret chat message for commands and args, then execute found commands
+     * Interpret chat message for commands and args, then try to execute found commands
      * @param chatMessageEvent
      */
     public void handleChatMessage(final ChatMessageEvent chatMessageEvent) {
@@ -76,53 +62,63 @@ public class CommandDelegator {
     }
 
     /**
-     * Semi-internal utility to check all the critera on running a command
+     * Semi-internal utility to check all the critera on running a command (if it exists/has args/perms ...)
      * @param chatMessage
      * @param parsedCmd
      * @return true if we ran the command or one of its error handling functions
      * or false if we didn't find a command to run
      */
     public boolean handleParsedCommand(final ChatMessage chatMessage, final ParsedCommand parsedCmd) {
-        for(final Command command : registeredCommands) {
-            boolean isFound = false;
-            boolean hasPerm = false;
-            for(final String commandAlias : command.getCommands())
-                if(parsedCmd.getCommand().equalsIgnoreCase(commandAlias))
-                    isFound = true;
-            if(!isFound)
-                continue;
-            LOG.debug("Found valid command: {}", parsedCmd.getCommand());
-            if((parsedCmd.getArgs().size() < command.getMinArgs()) ||
-                    (command.getMaxArgs() != -1 && parsedCmd.getArgs().size() > command.getMaxArgs())) {
-                command.handleArgMismatch(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
-                LOG.trace("Command had invalid args");
-                return true;
-            }
-            final List<Permission> allowedPermissions = command.getAllowedPermissions();
-            if(allowedPermissions == null) {
-                hasPerm = true;
-            } else {
-                LOG.trace("User has these perms: ");
-                for(Permission p : chatMessage.getPermissions())
-                    LOG.trace(p.getNode());
-                for(Permission p : allowedPermissions) {
-                    LOG.trace("Command has " + p.getNode());
-                    if(chatMessage.getPermissions().contains(p)) {
-                        LOG.trace("Found permission");
-                        hasPerm = true;
-                        break;
-                    }
-                }
-            }
-            if(!hasPerm) {
-                LOG.trace("No permissions");
-                command.handleNoPermissions(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
-                return true;
-            }
-            LOG.info("Executing {} from {} in {}...", parsedCmd.getCommand(), chatMessage.getSender(), chatMessage.getChannel());
-            command.run(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
+        final Command command = commandProvider.provide(parsedCmd.getCommand(), chatMessage);
+        if(command == null) return false;
+        LOG.debug("Found valid command: {}", parsedCmd.getCommand());
+        boolean hasPerm = false;
+        // Check arguments
+        if((parsedCmd.getArgs().size() < command.getMinArgs()) ||
+                (command.getMaxArgs() != -1 && parsedCmd.getArgs().size() > command.getMaxArgs())) {
+            command.handleArgMismatch(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
+            LOG.trace("Command had invalid args");
             return true;
         }
-        return false;
+        // Check permissions
+        final List<Permission> allowedPermissions = command.getAllowedPermissions();
+        if(allowedPermissions == null) {
+            hasPerm = true;
+        } else {
+            LOG.trace("User has these perms: ");
+            for(Permission p : chatMessage.getPermissions())
+                LOG.trace(p.getNode());
+            for(Permission p : allowedPermissions) {
+                LOG.trace("Command has " + p.getNode());
+                if(chatMessage.getPermissions().contains(p)) {
+                    LOG.trace("Found permission");
+                    hasPerm = true;
+                    break;
+                }
+            }
+        }
+        if(!hasPerm) {
+            LOG.trace("No permissions");
+            command.handleNoPermissions(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
+            return true;
+        }
+        // Go go go
+        LOG.info("Executing {} from {} in {}...", parsedCmd.getCommand(), chatMessage.getSender(), chatMessage.getChannel());
+        command.run(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
+        return true;
+    }
+
+    public void registerCommand(final Command command) {
+        if(commandProvider instanceof StaticCommandProvider)
+            ((StaticCommandProvider)commandProvider).registerCommand(command);
+        else
+            throw new UnsupportedOperationException("Only StaticCommandProviders support registering commands");
+    }
+
+    public ImmutableList<Command> getRegisteredCommands() {
+        if(commandProvider instanceof StaticCommandProvider)
+            return ((StaticCommandProvider)commandProvider).getRegisteredCommands();
+        else
+            throw new UnsupportedOperationException("Only StaticCommandProviders support getRegisteredCommands()");
     }
 }
