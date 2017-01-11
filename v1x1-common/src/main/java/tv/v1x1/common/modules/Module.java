@@ -20,6 +20,9 @@ import com.datastax.driver.core.policies.TokenAwarePolicy;
 import com.datastax.driver.extras.codecs.enums.EnumOrdinalCodec;
 import com.datastax.driver.mapping.MappingManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.FilterProvider;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.dropwizard.util.Generics;
 import org.apache.curator.framework.CuratorFramework;
@@ -160,6 +163,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         mapper.addMixIn(Codec.class, ConfigSupport.ClassMixIn.class);
         mapper.addMixIn(RedissonNodeInitializer.class, ConfigSupport.ClassMixIn.class);
         mapper.addMixIn(LoadBalancer.class, ConfigSupport.ClassMixIn.class);
+        final FilterProvider filterProvider = new SimpleFilterProvider()
+                .addFilter("classFilter", SimpleBeanPropertyFilter.filterOutAllExcept());
+        mapper.setFilterProvider(filterProvider);
 
         configFile = filename;
         settings = mapper.readValue(new File(filename), getSettingsClass());
