@@ -39,6 +39,7 @@ import org.redisson.config.MasterSlaveServersConfig;
 import org.redisson.config.SingleServerConfig;
 import org.redisson.connection.balancer.LoadBalancer;
 import org.redisson.liveobject.provider.ResolverProvider;
+import org.redisson.misc.URLBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -166,6 +167,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         final FilterProvider filterProvider = new SimpleFilterProvider()
                 .addFilter("classFilter", SimpleBeanPropertyFilter.filterOutAllExcept());
         mapper.setFilterProvider(filterProvider);
+        URLBuilder.init();
 
         configFile = filename;
         settings = mapper.readValue(new File(filename), getSettingsClass());
