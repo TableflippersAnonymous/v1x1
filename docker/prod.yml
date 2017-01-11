@@ -13,6 +13,7 @@ redisson:
     - "//redis3-3:6379"
     clientName: v1x1
     readMode: MASTER
+    masterConnectionPoolSize: 1024
 cassandra:
   cluster_name: "Tableflippers Cluster"
   keyspace: "v1x1"
