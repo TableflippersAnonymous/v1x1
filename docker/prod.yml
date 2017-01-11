@@ -2,15 +2,15 @@
 redisson:
   clusterServersConfig:
     nodeAddresses:
-    - "redis://redis1-1:6379"
-    - "redis://redis1-2:6379"
-    - "redis://redis1-3:6379"
-    - "redis://redis2-1:6379"
-    - "redis://redis2-2:6379"
-    - "redis://redis2-3:6379"
-    - "redis://redis3-1:6379"
-    - "redis://redis3-2:6379"
-    - "redis://redis3-3:6379"
+    - "//redis1-1:6379"
+    - "//redis1-2:6379"
+    - "//redis1-3:6379"
+    - "//redis2-1:6379"
+    - "//redis2-2:6379"
+    - "//redis2-3:6379"
+    - "//redis3-1:6379"
+    - "//redis3-2:6379"
+    - "//redis3-3:6379"
     clientName: v1x1
     readMode: MASTER
     masterConnectionPoolSize: 1024
