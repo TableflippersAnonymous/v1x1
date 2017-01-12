@@ -3,7 +3,7 @@
 redisson:
   singleServerConfig:
     address:
-    - "//redis:6379"
+    - "redis://redis:6379"
 cassandra:
   cluster_name: "v1x1_dev"
   keyspace: "v1x1"
