@@ -5,36 +5,52 @@
   "description": "v1x1 Web Interface",
   "repository": "https://github.com/LegionServers/v1x1",
   "license": "All Rights Reserved",
-  "devDependencies": {
-    "bower": "^1.7.7",
-    "http-server": "^0.9.0",
-    "jasmine-core": "^2.4.1",
-    "karma": "^0.13.22",
-    "karma-chrome-launcher": "^0.2.3",
-    "karma-firefox-launcher": "^0.1.7",
-    "karma-jasmine": "^0.3.8",
-    "karma-junit-reporter": "^0.4.1",
-    "protractor": "^4.0.9"
-  },
   "scripts": {
-    "postinstall": "bower install",
+    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
+    "e2e": "tsc && concurrently \"http-server -s\" \"protractor protractor.config.js\" --kill-others --success first",
+    "lint": "tslint ./app/**/*.ts -t verbose",
+    "lite": "lite-server",
+    "pree2e": "webdriver-manager update",
+    "test": "tsc && concurrently \"tsc -w\" \"karma start karma.conf.js\"",
+    "test-once": "tsc && karma start karma.conf.js --single-run",
+    "tsc": "tsc",
+    "tsc:w": "tsc -w"
+  },
+  "dependencies": {
+    "@angular/common": "~2.4.0",
+    "@angular/compiler": "~2.4.0",
+    "@angular/core": "~2.4.0",
+    "@angular/forms": "~2.4.0",
+    "@angular/http": "~2.4.0",
+    "@angular/platform-browser": "~2.4.0",
+    "@angular/platform-browser-dynamic": "~2.4.0",
+    "@angular/router": "~3.4.0",
 
-    "update-deps": "npm update",
-    "postupdate-deps": "bower update",
+    "angular-in-memory-web-api": "~0.2.4",
+    "systemjs": "0.19.40",
+    "core-js": "^2.4.1",
+    "rxjs": "5.0.1",
+    "zone.js": "^0.7.4"
+  },
+  "devDependencies": {
+    "concurrently": "^3.1.0",
+    "lite-server": "^2.2.2",
+    "typescript": "~2.0.10",
 
-    "prestart": "npm install",
-    "start": "http-server -a localhost -p 8000 -c-1 ./app",
+    "canonical-path": "0.0.2",
+    "http-server": "^0.9.0",
+    "tslint": "^3.15.1",
+    "lodash": "^4.16.4",
+    "jasmine-core": "~2.4.1",
+    "karma": "^1.3.0",
+    "karma-chrome-launcher": "^2.0.0",
+    "karma-cli": "^1.0.1",
+    "karma-jasmine": "^1.0.2",
+    "karma-jasmine-html-reporter": "^0.2.2",
+    "protractor": "~4.0.14",
+    "rimraf": "^2.5.4",
 
-    "pretest": "npm install",
-    "test": "karma start karma.conf.js",
-    "test-single-run": "karma start karma.conf.js --single-run",
-
-    "preupdate-webdriver": "npm install",
-    "update-webdriver": "webdriver-manager update",
-
-    "preprotractor": "npm run update-webdriver",
-    "protractor": "protractor e2e-tests/protractor.conf.js",
-
-    "update-index-async": "node -e \"var fs=require('fs'),indexFile='app/index-async.html',loaderFile='app/bower_components/angular-loader/angular-loader.min.js',loaderText=fs.readFileSync(loaderFile,'utf-8').split(/sourceMappingURL=angular-loader.min.js.map/).join('sourceMappingURL=bower_components/angular-loader/angular-loader.min.js.map'),indexText=fs.readFileSync(indexFile,'utf-8').split(/\\/\\/@@NG_LOADER_START@@[\\s\\S]*\\/\\/@@NG_LOADER_END@@/).join('//@@NG_LOADER_START@@\\n'+loaderText+'    //@@NG_LOADER_END@@');fs.writeFileSync(indexFile,indexText);\""
+    "@types/node": "^6.0.46",
+    "@types/jasmine": "^2.5.36"
   }
 }
