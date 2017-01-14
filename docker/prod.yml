@@ -11,9 +11,11 @@ redisson:
     - "redis://redis3-1:6379"
     - "redis://redis3-2:6379"
     - "redis://redis3-3:6379"
-    clientName: v1x1
+    clientName: "v1x1-{{module_name}}"
     readMode: MASTER
     masterConnectionPoolSize: 1024
+    retryAttempts: 10
+    failedAttempts: 10
 cassandra:
   cluster_name: "Tableflippers Cluster"
   keyspace: "v1x1"
