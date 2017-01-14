@@ -85,9 +85,12 @@ import tv.v1x1.common.services.stats.StatsCollector;
 import tv.v1x1.common.services.twitch.TwitchApi;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -170,7 +173,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         URLBuilder.init();
 
         configFile = filename;
-        settings = mapper.readValue(new File(filename), getSettingsClass());
+        final String settingsString = new String(Files.readAllBytes(Paths.get(filename)));
+        final String fixedSettings = settingsString.replace("{{module_name}}", getClass().getCanonicalName());
+        settings = mapper.readValue(fixedSettings, getSettingsClass());
     }
 
     private void initializeInternal() {
