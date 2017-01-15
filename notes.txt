@@ -11,3 +11,62 @@ Notes for technology to use:
 - Netflix Atlas for real-time stats
 - Look into GRPC
 -
+
+
+Ideas for RPG game that viewers could play while channel is offline (or online, if so configured):
+- The universe is a collection of worlds.
+- A world (generally one per tenant) has:
+- - set of maps
+- - set of characters
+- - spawn point
+- - respawn point
+- - currency unit ("points", etc)
+- - exchange
+- A map has:
+- - set of tiles (generally arranged in a 2d grid)
+- - whether or not the map is available to be viewed as a whole
+- A tile has:
+- - a type: cave, outside, building, town, ...
+- - exits: east, west, north, south are customary, but others may exist
+- - items on ground
+- - set of characters
+- - set of NPCs
+- - set of monsters
+- - set of actions ("open chest")
+- - set of features
+- - description
+- - whether characters are attackable
+- - whether monsters are attackable
+- - whether NPCs are attackable
+- - reset timer
+- An exit has:
+- - name: "NORTH", "SOUTH", "EAST", "WEST", "EXIT", "GENERAL STORE", ...
+- - type: door, cave, open, ...
+- - traversable (reason if not traversable)
+- - blocked_by: monsters, etc
+- - destination location (tile to travel to if you go through this exit)
+- An item has:
+- - type: weapon, armor, edible, miscellaneous
+- - name
+- - description
+- - weight
+- - rarity: common, uncommon, rare, legendary, unique
+- - weapon:
+- - - range
+- - - damage
+- - - durability
+- - - aoe
+- - armor:
+- - - type: helm, pauldrons, rerebraces, vambraces, gauntlets, breastplate, cuisses, greaves, sabatons, shield, chainmail
+- - - protection
+- - - durability
+- - edible:
+- - - set of effects:
+- - - - attribute: hp, strength, mana, etc.
+- - - - increase
+- - - - ignore max?
+- - - - temporary?
+- A character has:
+- A monster has:
+- An NPC has:
+- ...
