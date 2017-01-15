@@ -3,4 +3,11 @@ export class V1x1ConfigurationDefinitionSet {
   global: V1x1ConfigurationDefinition;
   tenant: V1x1ConfigurationDefinition;
   channel: V1x1ConfigurationDefinition;
+
+
+  constructor(global: V1x1ConfigurationDefinition, tenant: V1x1ConfigurationDefinition, channel: V1x1ConfigurationDefinition) {
+    this.global = global;
+    this.tenant = tenant;
+    this.channel = channel;
+  }
 }
