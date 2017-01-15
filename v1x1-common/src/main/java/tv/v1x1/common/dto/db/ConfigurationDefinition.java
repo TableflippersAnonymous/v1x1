@@ -4,6 +4,8 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.Field;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.UDT;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Permission;
 
@@ -74,7 +76,7 @@ public abstract class ConfigurationDefinition {
         }
 
         public List<String> getRequires() {
-            return requires;
+            return requires == null ? ImmutableList.of() : requires;
         }
 
         public Permission getTenantPermission() {
@@ -128,11 +130,11 @@ public abstract class ConfigurationDefinition {
     }
 
     public List<Field> getFields() {
-        return fields;
+        return fields == null ? ImmutableList.of() : fields;
     }
 
     public Map<String, List<Field>> getComplexFields() {
-        return complexFields;
+        return complexFields == null ? ImmutableMap.of() : complexFields;
     }
 
     public abstract tv.v1x1.common.dto.core.ConfigurationDefinition toCore();
