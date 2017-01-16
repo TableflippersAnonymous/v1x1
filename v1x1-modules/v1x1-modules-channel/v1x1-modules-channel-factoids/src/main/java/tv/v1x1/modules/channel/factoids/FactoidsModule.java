@@ -29,7 +29,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
         I18n.registerDefault(module, "invalid.args", "%commander%, that command is missing something. Usage: %usage%");
         I18n.registerDefault(module, "invalid.subcommand", "%commander%, what do you want to do with a fact? Type !fact help for a list");
         I18n.registerDefault(module, "noexist", "%commander%, fact \"%id%\" doesn't exist");
-        I18n.registerDefault(module, "alreadyexists", "%commander%, \"%fact%\" already exists");
+        I18n.registerDefault(module, "alreadyexists", "%commander%, the fact \"%fact%\" already exists");
         /* success */
         I18n.registerDefault(module, "add.success", "%commander%, \"%id%\" has been added as \"%fact%\"");
         I18n.registerDefault(module, "alias.success", "%commander%, \"%id%\" is now aliased to \"%alias%\"");
