@@ -2,8 +2,7 @@
 # Devel config
 redisson:
   singleServerConfig:
-    address:
-    - "redis://redis:6379"
+    address: "redis://redis:6379"
     clientName: "v1x1-{{module_name}}"
 cassandra:
   cluster_name: "v1x1_dev"
