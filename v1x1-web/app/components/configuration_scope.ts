@@ -5,8 +5,12 @@ import {V1x1Configuration} from "../model/v1x1_configuration";
 @Component({
   selector: 'configuration-scope',
   template: `
-    <configuration-field *ngFor="let field of configurationDefinition.fields" [field]="field" [configuration]="configuration[field.jsonField]"></configuration-field>
-`
+    <div class="container-fluid">
+      <form>
+        <configuration-field *ngFor="let field of configurationDefinition.fields" [field]="field" [complexFields]="configurationDefinition.complexFields" [configuration]="configuration[field.jsonField]"></configuration-field>
+      </form>
+    </div>
+  `
 })
 export class ConfigurationScopeComponent {
   @Input() public v1x1Module: V1x1Module;
