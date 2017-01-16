@@ -39,7 +39,7 @@ public class FactAliasCommand extends Command {
                     "id", aliasTargetName);
             return;
         }
-        final Factoid oldFact = module.getFact(channel.getTenant(), aliasTargetName);
+        final Factoid oldFact = module.getFactDirectly(channel.getTenant(), aliasName);
         if(oldFact != null) {
             Chat.i18nMessage(module, channel, "alreadyexists",
                     "commander", commander,
@@ -54,7 +54,7 @@ public class FactAliasCommand extends Command {
         } else {
             Chat.i18nMessage(module, channel, "alias.success",
                     "commander", commander,
-                    "id", aliasTarget.getId(),
+                    "id", fact.getId(),
                     "alias", fact.getData());
         }
     }
