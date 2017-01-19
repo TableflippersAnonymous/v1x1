@@ -1,3 +1,12 @@
+.tabs-left, .tabs-right {
+  display: flex;
+}
+
+.tabs-left > .tab-content,
+.tabs-right > .tab-content {
+  width: 100%;
+}
+
 .v1x1-color {
   color: #0070a0 !important;
 }
@@ -5,6 +14,7 @@
 .tabs-right > .nav-tabs,
 .tabs-left > .nav-tabs {
   border-bottom: 0;
+  min-width: 175px;
 }
 
 .tab-content > .tab-pane,
