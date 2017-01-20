@@ -20,9 +20,10 @@ import {ConfigurationFieldValueStringComponent} from "../components/configuratio
 import {ConfigurationFieldValueStringListComponent} from "../components/configuration_field_value_string_list";
 import {ConfigurationFieldValueStringMapComponent} from "../components/configuration_field_value_string_map";
 import {ConfigurationFieldValueTwitchOauthComponent} from "../components/configuration_field_value_twitch_oauth";
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
-  imports:      [ NgbModule.forRoot(), BrowserModule ],
+  imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule ],
   declarations: [
     AppComponent, ConfigurationPageComponent, ConfigurationModuleComponent,
     ConfigurationScopeComponent, ConfigurationFieldComponent, ConfigurationFieldValueComponent,
