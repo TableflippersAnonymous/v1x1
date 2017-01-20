@@ -7,12 +7,21 @@ import {Permission, V1x1ConfigurationDefinitionField, ConfigType} from "../model
 @Component({
   selector: 'configuration-page',
   template: `<ngb-tabset class="tabs-left">
-    <ngb-tab *ngFor="let v1x1Module of v1x1Modules" [title]="v1x1Module.displayName">
-      <template ngbTabContent>
-        <configuration-module [v1x1Module]="v1x1Module"></configuration-module>
-      </template>
-    </ngb-tab>
-  </ngb-tabset>`
+    <div *ngFor="let v1x1Module of v1x1Modules; let i = index">
+      <ngb-tab *ngIf="(v1x1Module.configurationDefinitionSet.global !== null && v1x1Module.configurationDefinitionSet.global.tenantPermission !== permissions.NONE)
+                   || (v1x1Module.configurationDefinitionSet.tenant !== null && v1x1Module.configurationDefinitionSet.tenant.tenantPermission !== permissions.NONE)
+                   || (v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== permissions.NONE)"
+               [title]="v1x1Module.displayName">
+        <template ngbTabContent>
+          <configuration-module [(v1x1Module)]="v1x1Modules[i]"></configuration-module>
+        </template>
+      </ngb-tab>
+    </div>
+  </ngb-tabset>
+  <div>
+    {{json.stringify(v1x1Modules.map(mapper))}}
+  </div>
+`
 })
 export class ConfigurationPageComponent {
   /* This will eventually be pulled from the API. */
@@ -278,4 +287,8 @@ export class ConfigurationPageComponent {
       null
     )),
   ]
+  public permissions = Permission;
+  public json = JSON;
+
+  public mapper = function(m: V1x1Module, _idx: number, _ary: V1x1Module[]) { return [m.name, m.configurationSet] };
 }
