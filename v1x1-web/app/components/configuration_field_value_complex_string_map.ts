@@ -8,7 +8,7 @@ import {ConfigurableComponent} from "./configurable";
       <div class="row" *ngFor="let elem of object.keys(configuration || {})" >
         <div class="col-2">
           <div class="input-group">
-            <input type="text" class="form-control" [ngModel]="elem" (ngModelChange)="changeKey(elem, $event);">
+            <input type="text" class="form-control" [ngModel]="elem" (blur)="changeKey(elem, $event.target.value);">
             <span class="input-group-btn">
               <button class="btn btn-danger" (click)="delKey(elem)">&times;</button>
             </span>
@@ -45,6 +45,8 @@ export class ConfigurationFieldValueComplexStringMapComponent extends Configurab
   }
 
   public changeKey(oldKey: string, newKey: string) {
+    if(oldKey === newKey)
+      return;
     this.configuration[newKey] = this.configuration[oldKey];
     delete this.configuration[oldKey];
   }
