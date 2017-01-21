@@ -56,7 +56,7 @@ public class RedisCache implements SharedCache<byte[]> {
 
     @Override
     public void put(final byte[] key, final byte[] value) {
-        cache.put(key, value, ttl, timeUnit);
+        cache.fastPut(key, value, ttl, timeUnit);
     }
 
     @Override
