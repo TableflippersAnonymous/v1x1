@@ -17,6 +17,8 @@ import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
 import tv.v1x1.common.dto.proto.core.UUIDOuterClass;
 import tv.v1x1.common.modules.ChannelConfiguration;
 import tv.v1x1.common.services.cache.CacheManager;
+import tv.v1x1.common.services.cache.CodecCache;
+import tv.v1x1.common.services.cache.JsonCodec;
 import tv.v1x1.common.services.cache.RedisCache;
 
 import java.util.concurrent.ExecutionException;
@@ -26,8 +28,7 @@ import java.util.concurrent.TimeUnit;
  * Created by cobi on 11/5/2016.
  */
 public class ChannelConfigurationProvider<T extends ChannelConfiguration> {
-    private final LoadingCache<byte[], T> cache;
-    private final RedisCache sharedCache;
+    private final CodecCache<Channel, T> sharedCache;
     private final DAOChannelConfiguration daoChannelConfiguration;
     private final ObjectMapper mapper;
     private final Module module;
@@ -37,34 +38,20 @@ public class ChannelConfigurationProvider<T extends ChannelConfiguration> {
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
 
-        sharedCache = cacheManager.redisCache("ChannelConfigurationProvider|" + module.getName(), 10, TimeUnit.MINUTES, new CacheLoader<byte[], byte[]>() {
+        sharedCache = cacheManager.codec(cacheManager.redisCache("ChannelConfigurationProvider|" + module.getName(), 10, TimeUnit.MINUTES, new CacheLoader<byte[], byte[]>() {
             @Override
             public byte[] load(final byte[] channelData) throws Exception {
-                final tv.v1x1.common.dto.db.ChannelConfiguration channelConfiguration = daoChannelConfiguration.get(module, Channel.fromProto(ChannelOuterClass.Channel.parseFrom(channelData)));
+                final tv.v1x1.common.dto.db.ChannelConfiguration channelConfiguration = daoChannelConfiguration.get(module, Channel.KEY_CODEC.decode(channelData));
                 if(channelConfiguration == null)
                     return "{}".getBytes();
                 return channelConfiguration.getJson().getBytes();
             }
-        });
-
-        cache = CacheBuilder.newBuilder()
-                .expireAfterWrite(10, TimeUnit.SECONDS)
-                .build(new CacheLoader<byte[], T>() {
-                    @Override
-                    public T load(final byte[] key) throws Exception {
-                        try {
-                            return mapper.readValue(new String(key), clazz);
-                        } catch(final Exception e) {
-                            e.printStackTrace();
-                            throw e;
-                        }
-                    }
-                });
+        }), Channel.KEY_CODEC, new JsonCodec<>(clazz));
     }
 
     public T getChannelConfiguration(final Channel channel) {
         try {
-            return cache.get(sharedCache.get(channel.toProto().toByteArray()));
+            return sharedCache.get(channel);
         } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
@@ -75,7 +62,7 @@ public class ChannelConfigurationProvider<T extends ChannelConfiguration> {
             final tv.v1x1.common.dto.db.ChannelConfiguration dbConfiguration = new tv.v1x1.common.dto.db.ChannelConfiguration(module.getName(), channel.getTenant().getId().getValue(),
                     channel.getPlatform(), channel.getId(), mapper.writeValueAsString(configuration));
             daoChannelConfiguration.put(dbConfiguration);
-            sharedCache.put(channel.toProto().toByteArray(), dbConfiguration.getJson().getBytes());
+            sharedCache.put(channel, configuration);
         } catch (final JsonProcessingException e) {
             throw new RuntimeException(e);
         }

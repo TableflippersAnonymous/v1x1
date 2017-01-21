@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by cobi on 1/21/2017.
  */
-public class RedisCache implements SharedCache<byte[]> {
+public class RedisCache implements SharedCache<byte[], byte[]> {
     private final RMapCache<byte[], byte[]> cache;
     private final long ttl;
     private final TimeUnit timeUnit;
