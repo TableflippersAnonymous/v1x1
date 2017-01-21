@@ -11,12 +11,12 @@ import java.util.concurrent.ExecutionException;
 /**
  * Created by cobi on 1/21/2017.
  */
-public class NotifyingCache<V> implements SharedCache<V> {
+public class NotifyingCache<V> implements SharedCache<byte[], V> {
     private final RTopic<byte[]> topic;
     private final int listenerId;
-    private final SharedCache<V> cache;
+    private final SharedCache<byte[], V> cache;
 
-    public NotifyingCache(final RedissonClient redisson, final String name, final SharedCache<V> cache) {
+    public NotifyingCache(final RedissonClient redisson, final String name, final SharedCache<byte[], V> cache) {
         this.topic = redisson.getTopic("Common|NotifyingCache|" + name, ByteArrayCodec.INSTANCE);
         this.listenerId = this.topic.addListener((channel, msg) -> {
             final byte[][] keys = CompositeKey.getKeys(msg);
@@ -47,5 +47,6 @@ public class NotifyingCache<V> implements SharedCache<V> {
     @Override
     public void close() throws IOException {
         topic.removeListener(listenerId);
+        cache.close();
     }
 }

@@ -1,12 +1,24 @@
 package tv.v1x1.common.dto.core;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import tv.v1x1.common.dto.proto.core.ModuleOuterClass;
+import tv.v1x1.common.services.cache.CodecCache;
+import tv.v1x1.common.services.cache.LambdaCodec;
 
 /**
  * Represents a module that the bot has available to it
  * @author Cobi
  */
 public class Module {
+    public static final CodecCache.Codec<Module> KEY_CODEC = new LambdaCodec<>(m -> m.getName().getBytes(), b -> new Module(new String(b)));
+    public static final CodecCache.Codec<Module> VAL_CODEC = new LambdaCodec<>(m -> m.toProto().toByteArray(), b -> {
+        try {
+            return Module.fromProto(ModuleOuterClass.Module.parseFrom(b));
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
+    });
+
     public static Module fromProto(final ModuleOuterClass.Module module) {
         return new Module(module.getName());
     }
