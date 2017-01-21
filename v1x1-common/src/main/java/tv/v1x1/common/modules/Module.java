@@ -64,8 +64,10 @@ import tv.v1x1.common.dto.messages.requests.ModuleShutdownRequest;
 import tv.v1x1.common.dto.messages.responses.ModuleShutdownResponse;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.rpc.client.ServiceClient;
+import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributorImpl;
+import tv.v1x1.common.services.coordination.LockManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
 import tv.v1x1.common.services.persistence.ChannelConfigurationProvider;
 import tv.v1x1.common.services.persistence.ConfigurationProvider;
@@ -133,6 +135,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private I18n i18n;
     private StateManager stateManager;
     private TwitchApi twitchApi;
+    private LockManager lockManager;
+    private CacheManager cacheManager;
 
     /* Third-Party Clients */
     private CuratorFramework curatorFramework;
@@ -191,6 +195,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         curatorFramework.start();
         moduleRegistry = new ModuleRegistry(curatorFramework, toModuleInstance());
         statsCollector = new NoopStatsCollector();
+        lockManager = new LockManager(curatorFramework);
+
+        cacheManager = new CacheManager(lockManager, redisson);
 
         final CassandraConfig cassandraConfig = settings.getCassandraConfig();
         cassandraCluster = Cluster.builder() /* Yay, options! */
@@ -240,9 +247,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         persistentGlobalKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry());
         persistentKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry(), toDto());
 
-        globalConfigProvider = new ConfigurationProvider<>(toDto(), daoManager, getGlobalConfigurationClass());
-        tenantConfigProvider = new TenantConfigurationProvider<>(toDto(), daoManager, getTenantConfigurationClass());
-        channelConfigProvider = new ChannelConfigurationProvider<>(toDto(), daoManager, getChannelConfigurationClass());
+        globalConfigProvider = new ConfigurationProvider<>(toDto(), cacheManager, daoManager, getGlobalConfigurationClass());
+        tenantConfigProvider = new TenantConfigurationProvider<>(toDto(), cacheManager, daoManager, getTenantConfigurationClass());
+        channelConfigProvider = new ChannelConfigurationProvider<>(toDto(), cacheManager, daoManager, getChannelConfigurationClass());
         i18n = new I18n(daoManager);
         registerGlobalMessages();
         stateManager = new StateManager();
@@ -402,6 +409,14 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public TwitchApi getTwitchApi() {
         return twitchApi;
+    }
+
+    public LockManager getLockManager() {
+        return lockManager;
+    }
+
+    public CacheManager getCacheManager() {
+        return cacheManager;
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */
