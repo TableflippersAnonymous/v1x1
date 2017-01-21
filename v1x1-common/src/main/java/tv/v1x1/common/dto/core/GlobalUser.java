@@ -1,6 +1,11 @@
 package tv.v1x1.common.dto.core;
 
+import com.google.common.collect.ImmutableList;
+import com.google.protobuf.InvalidProtocolBufferException;
+import tv.v1x1.common.dto.proto.core.UUIDOuterClass;
 import tv.v1x1.common.dto.proto.core.UserOuterClass;
+import tv.v1x1.common.services.cache.CodecCache;
+import tv.v1x1.common.services.cache.LambdaCodec;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +17,21 @@ import java.util.stream.Collectors;
  * @author Naomi
  */
 public class GlobalUser {
+    public static final CodecCache.Codec<GlobalUser> KEY_CODEC = new LambdaCodec<>(u -> u.getId().toProto().toByteArray(), b -> {
+        try {
+            return new GlobalUser(UUID.fromProto(UUIDOuterClass.UUID.parseFrom(b)), ImmutableList.of());
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
+    });
+    public static final CodecCache.Codec<GlobalUser> VAL_CODEC = new LambdaCodec<>(u -> u.toProto().toByteArray(), b -> {
+        try {
+            return GlobalUser.fromProto(UserOuterClass.GlobalUser.parseFrom(b));
+        } catch (InvalidProtocolBufferException e) {
+            throw new RuntimeException(e);
+        }
+    });
+
     public static GlobalUser fromProto(final UserOuterClass.GlobalUser proto) {
         final List<User> list = new ArrayList<>();
         final UUID uuid = UUID.fromProto(proto.getId());
