@@ -5,7 +5,10 @@ import {ConfigurableComponent} from "../configurable";
   selector: 'configuration-field-value-complex',
   template: `
     <div class="container-fluid">
-      <configuration-field *ngFor="let complexField of complexFields[field.complexType]" [field]="complexField" [complexFields]="complexFields" [(configuration)]="configuration[complexField.jsonField]"></configuration-field> 
+      <configuration-field *ngFor="let complexField of complexFields[field.complexType]"
+                           [field]="complexField" [complexFields]="complexFields"
+                           [originalConfiguration]="originalConfiguration[complexField.jsonField]"
+                           [configuration]="configuration[complexField.jsonField]" (configurationChange)="setConfigField(complexField.jsonField, $event)"></configuration-field> 
     </div>
   `
 })

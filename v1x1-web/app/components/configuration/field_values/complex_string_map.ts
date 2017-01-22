@@ -1,4 +1,4 @@
-import {Component, Input, Output} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {V1x1ConfigurationDefinitionField} from "../../../model/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "../configurable";
 @Component({
@@ -15,7 +15,7 @@ import {ConfigurableComponent} from "../configurable";
           </div>
         </div>
         <div class="col" style="border-left: 2px solid rgb(238, 238, 238); margin-bottom: 1rem;">
-          <configuration-field-value-complex [field]="field" [complexFields]="complexFields" [(configuration)]="configuration[elem]"></configuration-field-value-complex>
+          <configuration-field-value-complex [field]="field" [complexFields]="complexFields" [originalConfiguration]="originalConfiguration[elem]" [configuration]="configuration[elem]" (configurationChange)="setConfigField(elem, $event)"></configuration-field-value-complex>
         </div>
       </div>
       <div class="row">
@@ -38,21 +38,19 @@ export class ConfigurationFieldValueComplexStringMapComponent extends Configurab
   public nextValue: string;
 
   public addValue(value: string) {
-    if(this.configuration === undefined)
-      this.configuration = {};
-    this.configuration[value] = {};
+    this.setConfigField(value, {});
     this.nextValue = "";
   }
 
   public changeKey(oldKey: string, newKey: string) {
     if(oldKey === newKey)
       return;
-    this.configuration[newKey] = this.configuration[oldKey];
-    delete this.configuration[oldKey];
+    this.setConfigField(newKey, this.configuration[oldKey]);
+    this.deleteConfigField(oldKey);
   }
 
   public delKey(key: string) {
-    delete this.configuration[key];
+    this.deleteConfigField(key);
   }
 
   public object = Object;
