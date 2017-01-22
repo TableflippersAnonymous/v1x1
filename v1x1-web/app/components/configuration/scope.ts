@@ -1,8 +1,6 @@
-import {Component, Input, Output} from "@angular/core";
-import {V1x1Module} from "../model/v1x1_module";
-import {V1x1ConfigurationDefinition} from "../model/v1x1_configuration_definition";
-import {V1x1Configuration} from "../model/v1x1_configuration";
-import {Permission} from "../model/v1x1_configuration_definition_field";
+import {Component, Input} from "@angular/core";
+import {V1x1Module} from "../../model/v1x1_module";
+import {V1x1ConfigurationDefinition} from "../../model/v1x1_configuration_definition";
 import {ConfigurableComponent} from "./configurable";
 @Component({
   selector: 'configuration-scope',

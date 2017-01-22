@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
-import {V1x1Module} from "../model/v1x1_module";
+import {V1x1Module} from "../../model/v1x1_module";
 
 @Component({
   selector: 'configuration-module',

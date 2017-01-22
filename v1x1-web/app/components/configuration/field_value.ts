@@ -1,5 +1,5 @@
 import {Component, Input, Output, EventEmitter} from "@angular/core";
-import {V1x1ConfigurationDefinitionField, ConfigType} from "../model/v1x1_configuration_definition_field";
+import {V1x1ConfigurationDefinitionField, ConfigType} from "../../model/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "./configurable";
 
 @Component({
