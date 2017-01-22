@@ -6,7 +6,7 @@ import {ConfigurableComponent} from "../configurable";
   template: `
     <div *ngFor="let elem of configuration; let i = index" style="border-left: 2px solid rgb(238, 238, 238); margin-bottom: 1rem;">
       <button class="btn btn-sm btn-danger float-left" style="margin-left: 5px; margin-right: 5px; z-index: 10; position: relative;" (click)="delIdx(i);">&times;</button>
-      <configuration-field-value-complex [field]="field" [complexFields]="complexFields" [(configuration)]="configuration[i]"></configuration-field-value-complex>
+      <configuration-field-value-complex [field]="field" [complexFields]="complexFields" [originalConfiguration]="originalConfiguration[i]" [configuration]="configuration[i]" (configurationChange)="configuration[i] = $event; configChanged()"></configuration-field-value-complex>
     </div>
     <button class="btn btn-warning" (click)="addList()">+</button>
   `
@@ -19,9 +19,11 @@ export class ConfigurationFieldValueComplexListComponent extends ConfigurableCom
     if(!(this.configuration instanceof Array))
       this.configuration = [];
     this.configuration.push({});
+    this.configChanged();
   }
 
   public delIdx(index: number) {
     this.configuration.splice(index, 1);
+    this.configChanged();
   }
 }

@@ -10,7 +10,7 @@ import {V1x1Api} from "../../services/api";
       <ngb-tab *ngIf="(v1x1Module.configurationDefinitionSet.global !== null && v1x1Module.configurationDefinitionSet.global.tenantPermission !== permissions.NONE)
                    || (v1x1Module.configurationDefinitionSet.tenant !== null && v1x1Module.configurationDefinitionSet.tenant.tenantPermission !== permissions.NONE)
                    || (v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== permissions.NONE)"
-               [title]="v1x1Module.displayName">
+               [title]="v1x1Module.displayName + (v1x1Module.dirty() ? '*' : '')">
         <template ngbTabContent>
           <configuration-module [(v1x1Module)]="v1x1Modules[i]"></configuration-module>
         </template>
