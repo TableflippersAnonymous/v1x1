@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 
 @Component({
   selector: 'v1x1-app',
-  template: `<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+  /*template: `<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
     <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle Navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -53,6 +53,39 @@ import {Component} from '@angular/core';
       </ul>
     </div>
   </nav>
-  <configuration-page></configuration-page>`,
+  <configuration-page *ngIf=""></configuration-page>`,*/
+  /* */
+  template: `
+    <top-nav>
+      <top-nav-entry [justify]="'left'" [title]="'Dashboard'">
+        <template top-nav-entry-content>
+          <dashboard-page></dashboard-page>
+        </template>
+      </top-nav-entry>
+      <top-nav-entry [justify]="'left'" [title]="'Configuration'">
+        <template top-nav-entry-content>
+          <configuration-page></configuration-page>
+        </template>
+      </top-nav-entry>
+      <top-nav-entry [justify]="'left'" [title]="'Permissions'">
+        <template top-nav-entry-content>
+          <permissions-page></permissions-page>
+        </template>
+      </top-nav-entry>
+      <top-nav-entry [justify]="'left'" [title]="'Logs'">
+        <template top-nav-entry-content>
+          <logs-page></logs-page>
+        </template>
+      </top-nav-entry>
+      <top-nav-entry [justify]="'right'" [title]="'Help'">
+        <template top-nav-entry-content>
+          <help-page></help-page>
+        </template>
+      </top-nav-entry>
+    </top-nav>
+  `
 })
-export class AppComponent { name = 'v1x1'; }
+export class AppComponent {
+  name = 'v1x1';
+
+}
