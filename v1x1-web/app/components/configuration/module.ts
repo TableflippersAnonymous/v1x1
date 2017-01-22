@@ -8,19 +8,19 @@ import {V1x1Module} from "../../model/v1x1_module";
 <p>Description: {{v1x1Module.description}}</p>
 <hr>
 <ngb-tabset>
-  <ngb-tab title="Global" *ngIf="v1x1Module.configurationDefinitionSet.global !== null && v1x1Module.configurationDefinitionSet.global.tenantPermission !== NONE">
+  <ngb-tab [title]="'Global' + (v1x1Module.configurationSet.global.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.global !== null && v1x1Module.configurationDefinitionSet.global.tenantPermission !== NONE">
     <template ngbTabContent>
-      <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.global" [(configuration)]="v1x1ModuleValue.configurationSet.global.configuration" [id]="null" [scope]="'global'"></configuration-scope>
+      <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.global" [originalConfiguration]="v1x1ModuleValue.configurationSet.global.originalConfiguration" [(configuration)]="v1x1ModuleValue.configurationSet.global.configuration" [id]="null" [scope]="'global'"></configuration-scope>
     </template>
   </ngb-tab>
-  <ngb-tab title="Tenant" *ngIf="v1x1Module.configurationDefinitionSet.tenant !== null && v1x1Module.configurationDefinitionSet.tenant.tenantPermission !== NONE">
+  <ngb-tab [title]="'Tenant' + (v1x1Module.configurationSet.tenant.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.tenant !== null && v1x1Module.configurationDefinitionSet.tenant.tenantPermission !== NONE">
     <template ngbTabContent>
-      <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.tenant" [(configuration)]="v1x1ModuleValue.configurationSet.tenant.configuration" [id]="null" [scope]="'tenant'"></configuration-scope>
+      <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.tenant" [originalConfiguration]="v1x1ModuleValue.configurationSet.tenant.originalConfiguration" [(configuration)]="v1x1ModuleValue.configurationSet.tenant.configuration" [id]="null" [scope]="'tenant'"></configuration-scope>
     </template>
   </ngb-tab>
-  <ngb-tab title="Channel" *ngIf="v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== NONE">
+  <ngb-tab [title]="'Channel' + (v1x1Module.configurationSet.channel.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== NONE">
     <template ngbTabContent>
-      <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.channel" [(configuration)]="v1x1ModuleValue.configurationSet.channel.configuration" [id]="null" [scope]="'channel'"></configuration-scope>
+      <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.channel" [originalConfiguration]="v1x1ModuleValue.configurationSet.tenant.originalConfiguration" [(configuration)]="v1x1ModuleValue.configurationSet.channel.configuration" [id]="null" [scope]="'channel'"></configuration-scope>
     </template>
   </ngb-tab>
 </ngb-tabset>

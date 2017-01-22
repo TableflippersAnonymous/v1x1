@@ -15,4 +15,10 @@ export class V1x1Module {
     this.configurationDefinitionSet = configurationDefinitionSet;
     this.configurationSet = new V1x1ConfigurationSet(new V1x1Configuration({}), new V1x1Configuration({}), new V1x1Configuration({}));
   }
+
+  dirty() {
+    return this.configurationSet.global.dirty()
+        || this.configurationSet.tenant.dirty()
+        || this.configurationSet.channel.dirty();
+  }
 }

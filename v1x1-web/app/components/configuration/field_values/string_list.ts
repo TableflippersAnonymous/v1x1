@@ -6,7 +6,7 @@ import {ConfigurableComponent} from "../configurable";
   template: `
     <div *ngFor="let elem of configuration; let i = index" style="border-left: 2px solid rgb(238, 238, 238); margin-bottom: 1rem;">
       <div class="input-group">
-        <configuration-field-value-string [field]="field" [(configuration)]="configuration[i]"></configuration-field-value-string>
+        <configuration-field-value-string [field]="field" [originalConfiguration]="originalConfiguration[i]" [configuration]="configuration[i]" (configurationChange)="configuration[i] = $event; configChanged()"></configuration-field-value-string>
         <span class="input-group-btn">
           <button class="btn btn-danger" (click)="delIdx(i);">&times;</button>
         </span>

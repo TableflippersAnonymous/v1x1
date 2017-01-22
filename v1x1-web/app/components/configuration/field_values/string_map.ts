@@ -8,14 +8,14 @@ import {ConfigurableComponent} from "../configurable";
       <div class="row" *ngFor="let elem of object.keys(configuration || {})" >
         <div class="col-2">
           <div class="input-group">
-            <input type="text" class="form-control" [ngModel]="elem" (ngModelChange)="changeKey(elem, $event);">
+            <input type="text" class="form-control" [ngModel]="elem" (blur)="changeKey(elem, $event.target.value);">
             <span class="input-group-btn">
               <button class="btn btn-danger" (click)="delKey(elem)">&times;</button>
             </span>
           </div>
         </div>
         <div class="col" style="border-left: 2px solid rgb(238, 238, 238); margin-bottom: 1rem;">
-          <configuration-field-value-string [field]="field" [(configuration)]="configuration[elem]"></configuration-field-value-string>
+          <configuration-field-value-string [field]="field" [originalConfiguration]="originalConfiguration[elem]" [configuration]="configuration[elem]" (configurationChange)="setConfigField(elem, $event)"></configuration-field-value-string>
         </div>
       </div>
       <div class="row">
@@ -36,19 +36,19 @@ export class ConfigurationFieldValueStringMapComponent extends ConfigurableCompo
   public nextValue: string;
 
   public addValue(value: string) {
-    if(this.configuration === undefined)
-      this.configuration = {};
-    this.configuration[value] = "";
+    this.setConfigField(value, "");
     this.nextValue = "";
   }
 
   public changeKey(oldKey: string, newKey: string) {
-    this.configuration[newKey] = this.configuration[oldKey];
-    delete this.configuration[oldKey];
+    if(oldKey === newKey)
+      return;
+    this.setConfigField(newKey, this.configuration[oldKey]);
+    this.deleteConfigField(oldKey);
   }
 
   public delKey(key: string) {
-    delete this.configuration[key];
+    this.deleteConfigField(key);
   }
 
   public object = Object;

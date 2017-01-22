@@ -7,7 +7,7 @@ import {ConfigurableComponent} from "./configurable";
     <div class="form-group" *ngIf="field.tenantPermission !== permissions.NONE">
       <label *ngIf="field.configType !== configTypes.MASTER_ENABLE && field.configType !== configTypes.BOOLEAN">{{field.displayName}}</label>
       <div style="border-left: 2px solid rgb(238, 238, 238); padding-left: 10px;">
-        <configuration-field-value [field]="field" [complexFields]="complexFields" [(configuration)]="configuration"></configuration-field-value>
+        <configuration-field-value [field]="field" [complexFields]="complexFields" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration"></configuration-field-value>
         <small class="form-text text-muted">{{field.description}}</small>
       </div>
     </div>

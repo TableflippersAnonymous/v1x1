@@ -7,7 +7,12 @@ import {ConfigurableComponent} from "./configurable";
   template: `
     <div class="container-fluid" style="margin-top: 1rem;">
       <form>
-        <configuration-field *ngFor="let field of configurationDefinition.fields" [field]="field" [complexFields]="configurationDefinition.complexFields" [(configuration)]="configuration[field.jsonField]"></configuration-field>
+        <configuration-field *ngFor="let field of configurationDefinition.fields"
+                             [field]="field" [complexFields]="configurationDefinition.complexFields"
+                             [originalConfiguration]="originalConfiguration[field.jsonField]"
+                             [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
+        <button class="btn btn-primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
+        <button class="btn btn-secondary" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
       </form>
       <div>
         {{json.stringify(configuration)}}
@@ -21,4 +26,9 @@ export class ConfigurationScopeComponent extends ConfigurableComponent {
   @Input() public scope: string;
   @Input() public id: string;
   public json = JSON;
+
+  saveChanges() {
+    this.acceptChanges();
+    this.v1x1Module.configurationSet[this.scope].originalConfiguration = JSON.parse(JSON.stringify(this.v1x1Module.configurationSet[this.scope].configuration));
+  }
 }
