@@ -4,6 +4,7 @@ export class ConfigurableComponent {
   public configurationValue: any;
   @Output() public configurationChange = new EventEmitter();
   @Output() public configDirtyChange = new EventEmitter();
+  originalConfigProvided: boolean = false;
 
   public set configuration(val) {
     //console.log("Setting non-input " + JSON.stringify(val));
@@ -24,13 +25,14 @@ export class ConfigurableComponent {
       this.configurationValue = undefined;
     else {
       this.configurationValue = JSON.parse(JSON.stringify(val));
-      if(this.originalConfigurationValue === undefined)
+      if(this.originalConfigurationValue === undefined && !this.originalConfigProvided)
         this.originalConfigurationValue = JSON.parse(JSON.stringify(val));
     }
   }
 
   @Input('originalConfiguration')
   set originalConfiguration(val: any) {
+    this.originalConfigProvided = true;
     if(val === undefined)
       this.originalConfigurationValue = undefined;
     else
@@ -38,13 +40,21 @@ export class ConfigurableComponent {
   }
 
   get originalConfiguration() {
-    return this.originalConfigurationValue;
+    return this.originalConfigurationValue || {};
   }
 
   setConfigField(field: string, val: any) {
     if(this.configuration === undefined)
       this.configurationValue = {};
     this.configurationValue[field] = val;
+    this.configChanged();
+  }
+
+  renameConfigField(oldField: string, newField: string) {
+    if(this.configuration === undefined)
+      this.configurationValue = {};
+    this.configurationValue[newField] = this.configurationValue[oldField];
+    delete this.configurationValue[oldField];
     this.configChanged();
   }
 
@@ -71,6 +81,15 @@ export class ConfigurableComponent {
   }
 
   configDirty() {
+    //console.log(this.constructor.name + ": " + JSON.stringify(this.configurationValue) + " " + JSON.stringify(this.originalConfigurationValue) + ": " + (JSON.stringify(this.configurationValue) !== JSON.stringify(this.originalConfigurationValue)));
     return JSON.stringify(this.configurationValue) !== JSON.stringify(this.originalConfigurationValue);
+  }
+
+  configFieldDirty(field: string) {
+    return JSON.stringify((this.configurationValue || {})[field]) !== JSON.stringify((this.originalConfigurationValue || {})[field]);
+  }
+
+  configIdxDirty(idx: number) {
+    return JSON.stringify((this.configurationValue || [])[idx]) !== JSON.stringify((this.originalConfigurationValue || [])[idx]);
   }
 }

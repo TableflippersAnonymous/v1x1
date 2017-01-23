@@ -98,3 +98,15 @@
   border-color: #ddd #ddd #ddd transparent !important;
   *border-left-color: #ffffff !important;
 }
+
+.config-group {
+  border-left: 2px solid rgb(238, 238, 238);
+}
+
+.config-group-dirty {
+  border-left: 2px solid rgb(82, 160, 256);
+}
+
+.config-dirty-text {
+  color: rgb(82, 160, 256);
+}
