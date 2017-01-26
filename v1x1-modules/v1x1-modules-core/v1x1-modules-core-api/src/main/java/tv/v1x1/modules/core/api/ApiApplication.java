@@ -1,16 +1,18 @@
 package tv.v1x1.modules.core.api;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.util.ContextInitializer;
 import com.hubspot.dropwizard.guice.GuiceBundle;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.core.api.config.ApiConfiguration;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import java.lang.invoke.MethodHandles;
+import java.util.EnumSet;
 
 /**
  * Created by cobi on 10/24/2016.
@@ -48,5 +50,11 @@ public class ApiApplication extends Application<ApiConfiguration> {
             module.wait();
         }
         LOG.info("Woken by module.");
+
+        final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
+        cors.setInitParameter("allowedOrigins", "*");
+        cors.setInitParameter("allowedHeaders", "X-Requested-With,Content-Type,Accept,Origin,Client-ID,Authorization");
+        cors.setInitParameter("allowedMethods", "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 }
