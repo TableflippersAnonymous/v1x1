@@ -1,0 +1,210 @@
+# This is not yet complete.
+swagger: '2.0'
+info:
+  title: v1x1 API
+  description: This is the v1x1 chat moderation bot's API
+  version: "1.0.0"
+host: v1x1.tv
+schemes:
+  - https
+basePath: /api/v1
+produces:
+  - application/json
+paths:
+  /global-users/{platform}/{id}:
+    get:
+      summary: Get Global User ID
+      description: |
+        This endpoint allows you to get the Global User ID associated with a User
+        account on a given platform.
+      parameters:
+        - name: platform
+          in: path
+          description: Platform
+          required: true
+          enum:
+          - twitch
+          - discord
+          type: string
+        - name: id
+          in: path
+          description: Platform-specific ID
+          required: true
+          type: string
+      tags:
+        - Global Users
+      responses:
+        200:
+          description: Global User ID
+          schema:
+            $ref: '#/definitions/PrimitiveString'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /global-users/{global_user_id}/users:
+    get:
+      summary: Get platforms associated with Global User
+      description: |
+        This endpoing allows you to get a list of platforms associated with a Global User
+      parameters:
+        - name: global_user_id
+          in: path
+          description: Global User ID
+          required: true
+          type: string
+      tags:
+        - Global Users
+      responses:
+        200:
+          description: List of platforms
+          schema:
+            $ref: '#/definitions/StringList'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /global-users/{global_user_id}/users/{platform}:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /global-users/{global_user_id}/users/{platform}/{user_id}:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+    put:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+    delete:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /meta/self:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /meta/login/twitch:
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /meta/state:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /meta/long-term-token:
+    post:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /platform/bots/{platform}:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /platform/bots/{platform}/{botname}:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /platform/config-definitions/channel:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /platform/config-definitions/channel/{name}:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /platform/config-definitions/tenant:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /platform/config-definitions/tenant/{name}:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /platform/config-definitions/global:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+  /platform/config-definitions/global/{name}:
+    get:
+      summary:
+      description:
+      responses:
+        200:
+          description: OK
+definitions:
+  PrimitiveString:
+    type: object
+    properties:
+      value:
+        type: string
+        description: Value
+  StringList:
+    type: object
+    properties:
+      total:
+        type: number
+        format: integer
+      returned:
+        type: number
+        format: integer
+      more:
+        type: boolean
+      continuation_token:
+        type: string
+      entries:
+        type: array
+        items:
+          type: string
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string
