@@ -17,3 +17,13 @@ for MODULE in $MODULES; do
     docker tag ${MODULE}:latest ${REGISTRY}/${MODULE}:${VERSION}
     docker push ${REGISTRY}/${MODULE}:${VERSION}
 done
+
+if [[ $CIRCLE_BRANCH == "master" ]]; then
+    (
+        cd v1x1-web/dist
+        aws s3 cp --content-type text/css *.css s3://v1x1-web/
+        aws s3 cp --content-type application/javascript *.js s3://v1x1-web/
+        aws s3 cp --content-type text/html --cache-control max-age=3600 *.html s3://v1x1-web/
+        aws cloudfront create-invalidation --distribution-id E1ES20CHGVRXZB --paths '/index.html' '/*.html'
+    )
+fi

@@ -1,9 +1,12 @@
 dependencies:
   override:
   - mvn --fail-never dependency:go-offline || true
+  - (cd v1x1-web && npm install)
+  - pip install awscli
 test:
   override:
   - mvn integration-test -Denvironment=prod
+  - (cd v1x1-web && npm run build)
   post:
     - sudo mkdir -p /etc/docker/certs.d/registry.tblflp.zone:5443
     - sudo wget -O /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt http://pki.tblflp.zone/Tableflippers-Anonymous-Root-CA.pem

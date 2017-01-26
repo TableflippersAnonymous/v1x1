@@ -7,7 +7,7 @@
   "license": "All Rights Reserved",
   "scripts": {
     "start": "webpack-dev-server --inline --progress --port 3000",
-    "build-mine": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail",
+    "build": "webpack --config config/webpack.prod.js --progress --profile --bail --optimize-minimize",
     "watch": "webpack --watch",
     "watch:dev": "npm run server & npm run watch",
     "clean:dist": "rimraf dist",
@@ -48,18 +48,22 @@
     "rimraf": "^2.5.4",
     "@types/node": "^6.0.46",
     "@types/jasmine": "^2.5.36",
-    "webpack": "^1.13.2",
+    "webpack": "2.2.0",
     "webpack-dev-server": "^1.16.2",
     "webpack-merge": "^0.14.1",
     "angular2-template-loader": "^0.5.0",
     "awesome-typescript-loader": "^2.2.4",
     "css-loader": "^0.23.1",
-    "extract-text-webpack-plugin": "^1.0.1",
+    "extract-text-webpack-plugin": "2.0.0-rc.0",
     "file-loader": "^0.8.5",
     "html-loader": "^0.4.3",
     "html-webpack-plugin": "^2.22.0",
     "null-loader": "^0.1.1",
     "raw-loader": "^0.5.1",
-    "style-loader": "^0.13.1"
+    "style-loader": "^0.13.1",
+    "sass-loader": "^4.1.1",
+    "node-sass": "^4.0.0",
+    "webpack-subresource-integrity": "0.8.2",
+    "html-webpack-include-assets-plugin": "0.0.2"
   }
 }
