@@ -14,7 +14,10 @@ module.exports = webpackMerge(commonConfig, {
   },
 
   plugins: [
-    new ExtractTextPlugin('[name].css')
+    new ExtractTextPlugin({
+      filename: '[name].css',
+      allChunks: true
+    })
   ],
 
   devServer: {
@@ -22,12 +25,8 @@ module.exports = webpackMerge(commonConfig, {
     stats: 'minimal',
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
-        secure: false
-      },
-      '/bootstrap.min.css': {
-        target: 'http://localhost:3000',
-        secure: false
+        target: 'https://v1x1.tv/api',
+        secure: true
       }
     }
   }
