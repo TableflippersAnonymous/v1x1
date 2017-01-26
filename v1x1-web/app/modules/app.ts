@@ -29,9 +29,10 @@ import {DashboardPageComponent} from "../components/dashboard/page";
 import {HelpPageComponent} from "../components/help/page";
 import {LogsPageComponent} from "../components/logs/page";
 import {PermissionsPageComponent} from "../components/permissions/page";
+import {HttpModule} from "@angular/http";
 
 @NgModule({
-  imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule ],
+  imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule, HttpModule ],
   declarations: [
     AppComponent, ConfigurationPageComponent, ConfigurationModuleComponent,
     ConfigurationScopeComponent, ConfigurationFieldComponent, ConfigurationFieldValueComponent,

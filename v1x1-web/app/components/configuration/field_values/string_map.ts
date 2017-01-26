@@ -1,4 +1,4 @@
-import {Component, Input, Output} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {V1x1ConfigurationDefinitionField} from "../../../model/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "../configurable";
 @Component({
@@ -14,7 +14,7 @@ import {ConfigurableComponent} from "../configurable";
             </span>
           </div>
         </div>
-        <div class="col" style="border-left: 2px solid rgb(238, 238, 238); margin-bottom: 1rem;">
+        <div class="col config-group" style="margin-bottom: 1rem;" [class.config-group-dirty]="configFieldDirty(elem)">
           <configuration-field-value-string [field]="field" [originalConfiguration]="originalConfiguration[elem]" [configuration]="configuration[elem]" (configurationChange)="setConfigField(elem, $event)"></configuration-field-value-string>
         </div>
       </div>
