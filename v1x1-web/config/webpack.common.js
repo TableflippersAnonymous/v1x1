@@ -12,7 +12,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.ts', '.js']
+    extensions: ['.ts', '.js']
   },
 
   module: {
@@ -23,13 +23,13 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        loader: 'html'
+        loader: 'html-loader'
       },
       {
         test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
-        loader: 'file?name=assets/[name].[hash].[ext]'
+        loader: 'file-loader?name=assets/[name].[hash].[ext]'
       },
-      {
+      /*{
         test: /\.css$/,
         exclude: helpers.root('app'),
         loader: ExtractTextPlugin.extract('style', 'css?sourceMap')
@@ -38,17 +38,30 @@ module.exports = {
         test: /\.css$/,
         include: helpers.root('app'),
         loader: 'raw'
+      },*/
+      {
+        test: /\.scss$/,
+        loader: ExtractTextPlugin.extract({
+          fallbackLoader: "style-loader",
+          loader: ["css-loader?sourceMap", "sass-loader?sourceMap"]
+        })
       }
     ]
   },
 
   plugins: [
+    new webpack.ContextReplacementPlugin(
+      // The (\\|\/) piece accounts for path separators in *nix and Windows
+      /angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/,
+      helpers.root('app'), // location of your src
+      { }
+    ),
     new webpack.optimize.CommonsChunkPlugin({
       name: ['app', 'vendor', 'polyfills']
     }),
     new HtmlWebpackPlugin({
       template: 'index.html'
     })
-  ],
+  ]
 
 };
