@@ -6,15 +6,12 @@
   "repository": "https://github.com/LegionServers/v1x1",
   "license": "All Rights Reserved",
   "scripts": {
-    "start": "tsc && concurrently \"tsc -w\" \"lite-server\" ",
-    "e2e": "tsc && concurrently \"http-server -s\" \"protractor protractor.config.js\" --kill-others --success first",
-    "lint": "tslint ./app/**/*.ts -t verbose",
-    "lite": "lite-server",
-    "pree2e": "webdriver-manager update",
-    "test": "tsc && concurrently \"tsc -w\" \"karma start karma.conf.js\"",
-    "test-once": "tsc && karma start karma.conf.js --single-run",
-    "tsc": "tsc",
-    "tsc:w": "tsc -w"
+    "start": "webpack-dev-server --inline --progress --port 3000",
+    "build-mine": "rimraf dist && webpack --config config/webpack.prod.js --progress --profile --bail",
+    "watch": "webpack --watch",
+    "watch:dev": "npm run server & npm run watch",
+    "clean:dist": "rimraf dist",
+    "prebuild": "npm run clean:dist"
   },
   "dependencies": {
     "@angular/common": "~2.4.0",
@@ -29,9 +26,9 @@
     "angular-in-memory-web-api": "~0.2.4",
     "core-js": "^2.4.1",
     "rxjs": "5.0.1",
-    "systemjs": "0.19.40",
     "zone.js": "^0.7.4",
-    "reflect-metadata": "^0.1.0"
+    "reflect-metadata": "^0.1.0",
+    "json2typescript": "0.9.5"
   },
   "devDependencies": {
     "concurrently": "^3.1.0",
@@ -50,6 +47,19 @@
     "protractor": "~4.0.14",
     "rimraf": "^2.5.4",
     "@types/node": "^6.0.46",
-    "@types/jasmine": "^2.5.36"
+    "@types/jasmine": "^2.5.36",
+    "webpack": "^1.13.2",
+    "webpack-dev-server": "^1.16.2",
+    "webpack-merge": "^0.14.1",
+    "angular2-template-loader": "^0.5.0",
+    "awesome-typescript-loader": "^2.2.4",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.3",
+    "html-webpack-plugin": "^2.22.0",
+    "null-loader": "^0.1.1",
+    "raw-loader": "^0.5.1",
+    "style-loader": "^0.13.1"
   }
 }
