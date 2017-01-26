@@ -3,9 +3,32 @@ import {Injectable} from "@angular/core";
 import {V1x1ConfigurationDefinitionSet} from "../model/v1x1_configuration_definition_set";
 import {V1x1ConfigurationDefinition} from "../model/v1x1_configuration_definition";
 import {Permission, V1x1ConfigurationDefinitionField, ConfigType} from "../model/v1x1_configuration_definition_field";
+import {Http} from "@angular/http";
+import {Observable} from "rxjs";
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import {V1x1List} from "../model/v1x1_list";
+import {JsonConvert} from "json2typescript";
 
 @Injectable()
 export class V1x1Api {
+  private v1x1ApiBase = 'https://v1x1.tv/api/v1';
+
+  constructor(private http: Http) {}
+
+  getConfigurationDefinitionList(type: string): Observable<string[]> {
+    return this.http.get(this.v1x1ApiBase + '/platform/config-definitions/' + type).map((r) => r.json().data || {}).map((l: V1x1List<string>) => l.entries);
+  }
+
+  getConfigurationDefinition(type: string, moduleName: string): Observable<V1x1ConfigurationDefinition> {
+    //return this.http.get(this.v1x1ApiBase + '/platform/config-definitions/' + type + '/' + moduleName).map((r) => JsonConvert.deserializeObject(r.json().data, V1x1ConfigurationDefinition) || {});
+    return null;
+  }
+
+  getModule(): Observable<V1x1Module> {
+    return null;
+  }
+
   getModules() {
     return [
       new V1x1Module("echo", "Echo", "This is a module used for testing.  It announces many events in the channel.", new V1x1ConfigurationDefinitionSet(
@@ -270,4 +293,5 @@ export class V1x1Api {
       )),
     ];
   }
+
 }
