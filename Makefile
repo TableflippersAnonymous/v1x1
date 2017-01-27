@@ -29,8 +29,8 @@ cert-setup:
 	cat /etc/ssl/certs/ca-certificates.crt | sudo tee -a /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt
 
 docker-login: cert-setup
-	docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS registry.tblflp.zone:5443
+	docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS} registry.tblflp.zone:5443
 	echo '#!/bin/bash' > codedeploy/v1x1-login.sh
-	echo "docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS registry.tblflp.zone:5443" >> codedeploy/v1x1-login.sh
+	echo "docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS} registry.tblflp.zone:5443" >> codedeploy/v1x1-login.sh
 	chmod +x codedeploy/v1x1-login.sh
 
