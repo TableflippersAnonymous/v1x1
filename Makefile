@@ -13,12 +13,12 @@ pip-dep:
 docker-dep:
 	docker pull openjdk:8-jre-alpine
 
-test: mvn-test npm-build cert-setup docker-login
+test: mvn-test npm-build docker-login
 	./upload.sh
 	codedeploy/prepare.sh
 
 mvn-test:
-	mvn -T8 integration-test -Denvironment=prod
+	mvn -T16 integration-test -Denvironment=prod
 
 npm-build:
 	(cd v1x1-web && npm run build)
@@ -28,7 +28,7 @@ cert-setup:
 	sudo wget -O /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt http://pki.tblflp.zone/Tableflippers-Anonymous-Root-CA.pem
 	cat /etc/ssl/certs/ca-certificates.crt | sudo tee -a /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt
 
-docker-login:
+docker-login: cert-setup
 	docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS registry.tblflp.zone:5443
 	echo '#!/bin/bash' > codedeploy/v1x1-login.sh
 	echo "docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS registry.tblflp.zone:5443" >> codedeploy/v1x1-login.sh
