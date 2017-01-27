@@ -21,9 +21,15 @@ done
 if [[ $CIRCLE_BRANCH == "master" ]]; then
     (
         cd v1x1-web/dist
-        aws s3 cp --content-type text/css *.css s3://v1x1-web/
-        aws s3 cp --content-type application/javascript *.js s3://v1x1-web/
-        aws s3 cp --content-type text/html --cache-control max-age=3600 *.html s3://v1x1-web/
+        for file in *.css ; do
+            aws s3 cp --content-type text/css "${file}" s3://v1x1-web/
+        done
+        for file in *.js ; do
+            aws s3 cp --content-type application/javascript "${file}" s3://v1x1-web/
+        done
+        for file in *.html ; do
+            aws s3 cp --content-type text/html --cache-control max-age=3600 "${file}" s3://v1x1-web/
+        done
         aws cloudfront create-invalidation --distribution-id E1ES20CHGVRXZB --paths '/index.html' '/*.html'
     )
 fi

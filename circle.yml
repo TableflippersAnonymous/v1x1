@@ -3,6 +3,7 @@ dependencies:
   - mvn --fail-never dependency:go-offline || true
   - (cd v1x1-web && npm install)
   - pip install awscli
+  - aws configure set preview.cloudfront true
 test:
   override:
   - mvn integration-test -Denvironment=prod
