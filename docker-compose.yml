@@ -93,3 +93,9 @@ services:
       - redis
       - zoo1
       - cass1
+  uptime:
+    image: v1x1-uptime:latest
+    depends_on:
+      - redis
+      - zoo1
+      - cass1
