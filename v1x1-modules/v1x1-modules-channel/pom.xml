@@ -22,6 +22,7 @@
       <module>v1x1-modules-channel-quotes</module>
       <module>v1x1-modules-channel-caster</module>
       <module>v1x1-modules-channel-factoids</module>
+      <module>v1x1-modules-channel-uptime</module>
   </modules>
 
   <dependencies>
