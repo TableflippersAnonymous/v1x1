@@ -1,9 +1,9 @@
 dependencies:
   override:
-  - make -j dependencies
+  - make -e -j dependencies
 test:
   override:
-  - make -j test
+  - make -e -j test
 machine:
   services:
   - docker
