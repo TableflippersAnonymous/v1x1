@@ -4,6 +4,8 @@ import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.InverseGlobalUser;
@@ -17,12 +19,14 @@ import java.util.UUID;
 /**
  * Created by cobi on 10/16/2016.
  */
+@Singleton
 public class DAOGlobalUser {
     private final Deduplicator createDeduplicator;
     private final Session session;
     private final Mapper<GlobalUser> globalUserMapper;
     private final Mapper<InverseGlobalUser> inverseGlobalUserMapper;
 
+    @Inject
     public DAOGlobalUser(final RedissonClient redissonClient, final MappingManager mappingManager) {
         session = mappingManager.getSession();
         globalUserMapper = mappingManager.mapper(GlobalUser.class);

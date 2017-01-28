@@ -1,6 +1,8 @@
 package tv.v1x1.common.services.persistence;
 
 import com.datastax.driver.mapping.MappingManager;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
 import tv.v1x1.common.dao.*;
 
@@ -8,6 +10,7 @@ import tv.v1x1.common.dao.*;
  *
  * @author Cobi
  */
+@Singleton
 public class DAOManager {
     private final DAOTenant daoTenant;
     private final DAOGlobalUser daoGlobalUser;
@@ -22,6 +25,7 @@ public class DAOManager {
     private final DAOTwitchOauthToken daoTwitchOauthToken;
     private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
 
+    @Inject
     public DAOManager(final RedissonClient redissonClient, final MappingManager mappingManager) {
         daoTenant = new DAOTenant(redissonClient, mappingManager);
         daoGlobalUser = new DAOGlobalUser(redissonClient, mappingManager);

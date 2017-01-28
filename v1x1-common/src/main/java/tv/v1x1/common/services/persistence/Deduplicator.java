@@ -1,5 +1,7 @@
 package tv.v1x1.common.services.persistence;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.redisson.api.RSetCache;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.ByteArrayCodec;
@@ -11,9 +13,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by cobi on 10/16/2016.
  */
+@Singleton
 public class Deduplicator {
     private final RSetCache<byte[]> setCache;
 
+    @Inject
     public Deduplicator(final RedissonClient client, final Module module) {
         this(client, "Module|" + module.getName());
     }

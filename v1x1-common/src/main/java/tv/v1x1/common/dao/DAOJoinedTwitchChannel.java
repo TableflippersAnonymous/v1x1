@@ -5,11 +5,14 @@ import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import tv.v1x1.common.dto.db.JoinedTwitchChannel;
 
 /**
  * Created by jcarter on 11/27/16.
  */
+@Singleton
 public class DAOJoinedTwitchChannel {
     private final Mapper<JoinedTwitchChannel> mapper;
     private final JoinedTwitchChannelAccessor accessor;
@@ -20,6 +23,7 @@ public class DAOJoinedTwitchChannel {
         Result<JoinedTwitchChannel> all();
     }
 
+    @Inject
     public DAOJoinedTwitchChannel(final MappingManager mappingManager) {
         this.mapper = mappingManager.mapper(JoinedTwitchChannel.class);
         this.accessor = mappingManager.createAccessor(JoinedTwitchChannelAccessor.class);

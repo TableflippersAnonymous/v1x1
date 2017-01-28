@@ -1,5 +1,7 @@
 package tv.v1x1.common.i18n;
 
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.db.PersistentLanguage;
 import tv.v1x1.common.services.persistence.DAOManager;
@@ -9,6 +11,7 @@ import java.util.UUID;
 /**
  * @author Josh
  */
+@Singleton
 public class I18n {
     public static final Language DEFAULT_LANGUAGE = new StaticLanguage();
     public static void registerDefault(final Module module, final String key, final String message) {
@@ -16,6 +19,7 @@ public class I18n {
     }
     private final DAOManager daoManager;
 
+    @Inject
     public I18n(final DAOManager daoManager) {
         this.daoManager = daoManager;
     }
