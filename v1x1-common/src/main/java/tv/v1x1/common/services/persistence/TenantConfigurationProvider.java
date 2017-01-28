@@ -7,6 +7,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import tv.v1x1.common.dao.DAOTenantConfiguration;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
@@ -25,13 +28,15 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by cobi on 10/17/2016.
  */
+@Singleton
 public class TenantConfigurationProvider<T extends TenantConfiguration> {
     private final CodecCache<Tenant, T> sharedCache;
     private final DAOTenantConfiguration daoTenantConfiguration;
     private final ObjectMapper mapper;
     private final Module module;
 
-    public TenantConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, final Class<T> clazz) {
+    @Inject
+    public TenantConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, @Named("tenantConfigurationClass") final Class clazz) {
         daoTenantConfiguration = daoManager.getDaoTenantConfiguration();
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
@@ -44,7 +49,7 @@ public class TenantConfigurationProvider<T extends TenantConfiguration> {
                     return "{}".getBytes();
                 return tenantConfiguration.getJson().getBytes();
             }
-        }), Tenant.KEY_CODEC, new JsonCodec<>(clazz));
+        }), Tenant.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
     }
 
     public T getTenantConfiguration(final Tenant tenant) {

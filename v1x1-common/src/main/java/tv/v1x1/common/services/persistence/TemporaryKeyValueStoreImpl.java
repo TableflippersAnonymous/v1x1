@@ -1,9 +1,14 @@
 package tv.v1x1.common.services.persistence;
 
+import com.google.inject.Inject;
 import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.ByteArrayCodec;
 import tv.v1x1.common.dto.core.Module;
+import tv.v1x1.common.guice.PersistentGlobal;
+import tv.v1x1.common.guice.PersistentModule;
+import tv.v1x1.common.guice.TemporaryGlobal;
+import tv.v1x1.common.guice.TemporaryModule;
 import tv.v1x1.common.util.data.FixedRMapCache;
 
 import java.util.concurrent.TimeUnit;
@@ -14,10 +19,12 @@ import java.util.concurrent.TimeUnit;
 public class TemporaryKeyValueStoreImpl implements KeyValueStore {
     private final RMapCache<byte[], byte[]> mapCache;
 
+    @Inject
     public TemporaryKeyValueStoreImpl(final RedissonClient client, final Module module) {
         mapCache = new FixedRMapCache(client.getMapCache("TemporaryKeyValueStore|" + module.getName(), ByteArrayCodec.INSTANCE));
     }
 
+    @Inject
     public TemporaryKeyValueStoreImpl(final RedissonClient client) {
         mapCache = new FixedRMapCache(client.getMapCache("TemporaryKeyValueStore", ByteArrayCodec.INSTANCE));
     }
