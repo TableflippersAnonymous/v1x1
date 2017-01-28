@@ -1,6 +1,8 @@
 package tv.v1x1.common.services.coordination;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.x.discovery.ServiceCache;
 import org.apache.curator.x.discovery.ServiceDiscovery;
@@ -22,9 +24,11 @@ import java.util.stream.Collectors;
 /**
  * Created by naomi on 10/7/2016.
  */
+@Singleton
 public class ModuleRegistry {
     private final ServiceDiscovery<ModuleInstance> serviceDiscovery;
 
+    @Inject
     public ModuleRegistry(final CuratorFramework framework, final ModuleInstance moduleInstance) {
         try {
             serviceDiscovery = ServiceDiscoveryBuilder.builder(ModuleInstance.class)

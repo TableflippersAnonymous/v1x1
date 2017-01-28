@@ -5,6 +5,8 @@ import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import tv.v1x1.common.dto.db.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
@@ -12,6 +14,7 @@ import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
 /**
  * Created by naomi on 10/24/2016.
  */
+@Singleton
 public class DAOConfigurationDefinition {
     private final Mapper<GlobalConfigurationDefinition> globalMapper;
     private final Mapper<TenantConfigurationDefinition> tenantMapper;
@@ -30,6 +33,7 @@ public class DAOConfigurationDefinition {
         Result<ChannelConfigurationDefinition> allChannel();
     }
 
+    @Inject
     public DAOConfigurationDefinition(final MappingManager mappingManager) {
         globalMapper = mappingManager.mapper(GlobalConfigurationDefinition.class);
         tenantMapper = mappingManager.mapper(TenantConfigurationDefinition.class);

@@ -24,6 +24,9 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.google.inject.Key;
 import io.dropwizard.util.Generics;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -62,6 +65,11 @@ import tv.v1x1.common.dto.messages.Request;
 import tv.v1x1.common.dto.messages.Response;
 import tv.v1x1.common.dto.messages.requests.ModuleShutdownRequest;
 import tv.v1x1.common.dto.messages.responses.ModuleShutdownResponse;
+import tv.v1x1.common.guice.GuiceModule;
+import tv.v1x1.common.guice.PersistentGlobal;
+import tv.v1x1.common.guice.PersistentModule;
+import tv.v1x1.common.guice.TemporaryGlobal;
+import tv.v1x1.common.guice.TemporaryModule;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.rpc.client.ServiceClient;
 import tv.v1x1.common.services.cache.CacheManager;
@@ -106,40 +114,14 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* Config */
     private T settings;
-    private ConfigurationProvider<U> globalConfigProvider;
-    private TenantConfigurationProvider<V> tenantConfigProvider;
-    private ChannelConfigurationProvider<W> channelConfigProvider;
     private final UUID instanceId = UUID.randomUUID();
     private String configFile;
 
-    /* Queues */
-    private MessageQueueManager messageQueueManager;
-
-    /* Persistence */
-    private RedissonClient redisson;
-    private KeyValueStore temporaryKeyValueStore;
-    private KeyValueStore temporaryGlobalKeyValueStore;
-    private KeyValueStore persistentKeyValueStore;
-    private KeyValueStore persistentGlobalKeyValueStore;
-    private Cluster cassandraCluster;
-    private Session cassandraSession;
-    private MappingManager mappingManager;
-    private DAOManager daoManager;
-    private Deduplicator deduplicator;
-
     /* Services */
-    private ModuleRegistry moduleRegistry;
     private final Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
     private final Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
-    private StatsCollector statsCollector;
-    private I18n i18n;
-    private StateManager stateManager;
     private TwitchApi twitchApi;
-    private LockManager lockManager;
-    private CacheManager cacheManager;
-
-    /* Third-Party Clients */
-    private CuratorFramework curatorFramework;
+    private Injector injector;
 
     /* Designed to be overridden */
     public abstract String getName();
@@ -183,76 +165,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     private void initializeInternal() {
-        final Config redissonConfig = settings.getRedissonConfig();
-        redisson = Redisson.create(redissonConfig);
-        messageQueueManager = new MessageQueueManagerImpl(redisson);
+        injector = Guice.createInjector(new GuiceModule<>(settings, this));
 
-        temporaryKeyValueStore = new TemporaryKeyValueStoreImpl(redisson, toDto());
-        temporaryGlobalKeyValueStore = new TemporaryKeyValueStoreImpl(redisson);
-        deduplicator = new Deduplicator(redisson, toDto());
-
-        curatorFramework = CuratorFrameworkFactory.newClient(settings.getZookeeperConnectionString(), new BoundedExponentialBackoffRetry(50, 1000, 29));
-        curatorFramework.start();
-        moduleRegistry = new ModuleRegistry(curatorFramework, toModuleInstance());
-        statsCollector = new NoopStatsCollector();
-        lockManager = new LockManager(curatorFramework);
-
-        cacheManager = new CacheManager(lockManager, redisson);
-
-        final CassandraConfig cassandraConfig = settings.getCassandraConfig();
-        cassandraCluster = Cluster.builder() /* Yay, options! */
-                .withClusterName(cassandraConfig.getClusterName())
-                .addContactPoints(cassandraConfig.getContactPoints().toArray(new String[] {}))
-                .withPort(cassandraConfig.getPort())
-                .withAuthProvider(cassandraConfig.isAuthenticated() ? new PlainTextAuthProvider(cassandraConfig.getUsername(), cassandraConfig.getPassword()) : AuthProvider.NONE)
-                .withLoadBalancingPolicy(new TokenAwarePolicy(
-                    LatencyAwarePolicy.builder(
-                            DCAwareRoundRobinPolicy.builder()
-                                .build()
-                    )
-                    .withExclusionThreshold(cassandraConfig.getExclusionThreshold())
-                    .withScale(cassandraConfig.getScaleMs(), TimeUnit.MILLISECONDS)
-                    .withRetryPeriod(cassandraConfig.getRetryMs(), TimeUnit.MILLISECONDS)
-                    .withUpdateRate(cassandraConfig.getUpdateMs(), TimeUnit.MILLISECONDS)
-                    .withMininumMeasurements(cassandraConfig.getMinimumMeasurements())
-                    .build()
-                ))
-                .withQueryOptions(new QueryOptions()
-                        .setConsistencyLevel(ConsistencyLevel.valueOf(cassandraConfig.getConsistencyLevel()))
-                        .setSerialConsistencyLevel(ConsistencyLevel.valueOf(cassandraConfig.getSerialConsistencyLevel()))
-                        .setFetchSize(cassandraConfig.getFetchSize())
-                )
-                .withReconnectionPolicy(new ExponentialReconnectionPolicy(cassandraConfig.getReconnectBaseDelayMs(), cassandraConfig.getReconnectMaxDelayMs()))
-                .withRetryPolicy(new LoggingRetryPolicy(DowngradingConsistencyRetryPolicy.INSTANCE))
-                .withSocketOptions(new SocketOptions()
-                        .setConnectTimeoutMillis(cassandraConfig.getConnectTimeoutMs())
-                        .setKeepAlive(cassandraConfig.isTcpKeepAlive())
-                )
-                .withSpeculativeExecutionPolicy(new PercentileSpeculativeExecutionPolicy(
-                        PerHostPercentileTracker.builder(cassandraConfig.getHighestTrackableLatencyMs()).build(),
-                        cassandraConfig.getSpeculativeRetryPercentile(),
-                        cassandraConfig.getSpeculativeMaxRetries()
-                ))
-                .withCodecRegistry(new CodecRegistry()
-                        .register(new EnumOrdinalCodec<>(Platform.class))
-                        .register(new EnumOrdinalCodec<>(Permission.class))
-                        .register(new EnumOrdinalCodec<>(ConfigType.class))
-                )
-                .build();
-        cassandraSession = cassandraCluster.connect();
-        cassandraSession.execute(new SimpleStatement("USE " + cassandraConfig.getKeyspace()));
-        mappingManager = new MappingManager(cassandraSession);
-        daoManager = new DAOManager(redisson, mappingManager);
-
-        persistentGlobalKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry());
-        persistentKeyValueStore = new PersistentKeyValueStoreImpl(daoManager.getDaoKeyValueEntry(), toDto());
-
-        globalConfigProvider = new ConfigurationProvider<>(toDto(), cacheManager, daoManager, getGlobalConfigurationClass());
-        tenantConfigProvider = new TenantConfigurationProvider<>(toDto(), cacheManager, daoManager, getTenantConfigurationClass());
-        channelConfigProvider = new ChannelConfigurationProvider<>(toDto(), cacheManager, daoManager, getChannelConfigurationClass());
-        i18n = new I18n(daoManager);
         registerGlobalMessages();
-        stateManager = new StateManager();
 
         twitchApi = new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), new String(requireCredential("Common|Twitch|OAuthToken")), new String(requireCredential("Common|Twitch|ClientSecret")), new String(requireCredential("Common|Twitch|RedirectUri")));
 
@@ -284,7 +199,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         for(;;) {
             try {
                 final Message message = mq.get();
-                if(deduplicator.seenAndAdd(message.getMessageId()))
+                if(getDeduplicator().seenAndAdd(message.getMessageId()))
                     continue;
                 if(message instanceof ModuleShutdownRequest) {
                     final ModuleShutdownRequest msr = (ModuleShutdownRequest) message;
@@ -304,8 +219,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* ******************************* TEAR-DOWN ******************************* */
     private void cleanup() {
-        cassandraSession.close();
-        cassandraCluster.close();
+        getCassandraSession().close();
+        getCassandraCluster().close();
         for(final Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
             try {
                 entry.getValue().shutdown();
@@ -315,16 +230,16 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         for(final Map.Entry<Class<? extends ServiceClient>, ServiceClient> entry : serviceClientMap.entrySet())
             entry.getValue().shutdown();
         try {
-            moduleRegistry.shutdown();
+            getModuleRegistry().shutdown();
         } catch (final IOException e) {
             e.printStackTrace();
         }
-        curatorFramework.close();
+        getCuratorFramework().close();
     }
 
     /* ******************************* SIMPLE GETTERS ******************************* */
     public MessageQueueManager getMessageQueueManager() {
-        return messageQueueManager;
+        return injector.getInstance(MessageQueueManager.class);
     }
 
     protected T getSettings() {
@@ -332,39 +247,39 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     public ConfigurationProvider<U> getGlobalConfigProvider() {
-        return globalConfigProvider;
+        return injector.getInstance(ConfigurationProvider.class);
     }
 
     public TenantConfigurationProvider<V> getTenantConfigProvider() {
-        return tenantConfigProvider;
+        return injector.getInstance(TenantConfigurationProvider.class);
     }
 
     public ChannelConfigurationProvider<W> getChannelConfigProvider() {
-        return channelConfigProvider;
+        return injector.getInstance(ChannelConfigurationProvider.class);
     }
 
     protected KeyValueStore getTemporaryKeyValueStore() {
-        return temporaryKeyValueStore;
+        return injector.getInstance(Key.get(KeyValueStore.class, TemporaryModule.class));
     }
 
     public KeyValueStore getTemporaryGlobalKeyValueStore() {
-        return temporaryGlobalKeyValueStore;
+        return injector.getInstance(Key.get(KeyValueStore.class, TemporaryGlobal.class));
     }
 
     protected KeyValueStore getPersistentKeyValueStore() {
-        return persistentKeyValueStore;
+        return injector.getInstance(Key.get(KeyValueStore.class, PersistentModule.class));
     }
 
     protected KeyValueStore getPersistentGlobalKeyValueStore() {
-        return persistentGlobalKeyValueStore;
+        return injector.getInstance(Key.get(KeyValueStore.class, PersistentGlobal.class));
     }
 
     protected StatsCollector getStatsCollector() {
-        return statsCollector;
+        return injector.getInstance(StatsCollector.class);
     }
 
     public ModuleRegistry getModuleRegistry() {
-        return moduleRegistry;
+        return injector.getInstance(ModuleRegistry.class);
     }
 
     protected UUID getInstanceId() {
@@ -372,35 +287,39 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     protected Session getCassandraSession() {
-        return cassandraSession;
+        return injector.getInstance(Session.class);
+    }
+
+    protected Cluster getCassandraCluster() {
+        return injector.getInstance(Cluster.class);
     }
 
     public MappingManager getMappingManager() {
-        return mappingManager;
+        return injector.getInstance(MappingManager.class);
     }
 
     public DAOManager getDaoManager() {
-        return daoManager;
+        return injector.getInstance(DAOManager.class);
     }
 
     protected Deduplicator getDeduplicator() {
-        return deduplicator;
+        return injector.getInstance(Deduplicator.class);
     }
 
     public CuratorFramework getCuratorFramework() {
-        return curatorFramework;
+        return injector.getInstance(CuratorFramework.class);
     }
 
     protected I18n getI18n() {
-        return i18n;
+        return injector.getInstance(I18n.class);
     }
 
     public RedissonClient getRedisson() {
-        return redisson;
+        return injector.getInstance(RedissonClient.class);
     }
 
     public StateManager getStateManager() {
-        return stateManager;
+        return injector.getInstance(StateManager.class);
     }
 
     protected String getConfigFile() {
@@ -412,28 +331,28 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     public LockManager getLockManager() {
-        return lockManager;
+        return injector.getInstance(LockManager.class);
     }
 
     public CacheManager getCacheManager() {
-        return cacheManager;
+        return injector.getInstance(CacheManager.class);
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */
     protected KeyValueStore getTemporaryTenantKeyValueStore(final Tenant tenant) {
-        return new TenantKeyValueStoreImpl(tenant, temporaryKeyValueStore);
+        return new TenantKeyValueStoreImpl(tenant, getTemporaryKeyValueStore());
     }
 
     protected KeyValueStore getTemporaryGlobalTenantKeyValueStore(final Tenant tenant) {
-        return new TenantKeyValueStoreImpl(tenant, temporaryGlobalKeyValueStore);
+        return new TenantKeyValueStoreImpl(tenant, getTemporaryGlobalKeyValueStore());
     }
 
     protected KeyValueStore getPersistentTenantKeyValueStore(final Tenant tenant) {
-        return new TenantKeyValueStoreImpl(tenant, persistentKeyValueStore);
+        return new TenantKeyValueStoreImpl(tenant, getPersistentKeyValueStore());
     }
 
     protected KeyValueStore getPersistentGlobalTenantKeyValueStore(final Tenant tenant) {
-        return new TenantKeyValueStoreImpl(tenant, persistentGlobalKeyValueStore);
+        return new TenantKeyValueStoreImpl(tenant, getPersistentGlobalKeyValueStore());
     }
 
     @SuppressWarnings("unchecked")
@@ -450,7 +369,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     protected LoadBalancingDistributor getLoadBalancingDistributor(final String path, final int redundancy) {
         if(!loadBalancingDistributorMap.containsKey(path)) {
-            final LoadBalancingDistributor loadBalancingDistributor = new LoadBalancingDistributorImpl(curatorFramework, path, redundancy);
+            final LoadBalancingDistributor loadBalancingDistributor = new LoadBalancingDistributorImpl(getCuratorFramework(), path, redundancy);
             try {
                 loadBalancingDistributor.start();
             } catch (final Exception e) {
@@ -503,7 +422,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     protected byte[] getCredential(final String key) {
-        final ThirdPartyCredential thirdPartyCredential = daoManager.getDaoThirdPartyCredential().get(key);
+        final ThirdPartyCredential thirdPartyCredential = getDaoManager().getDaoThirdPartyCredential().get(key);
         if(thirdPartyCredential == null)
             return null;
         return thirdPartyCredential.credentialAsByteArray();
@@ -524,7 +443,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     protected String getTwitchOAuthToken(final String userId) {
-        return getTwitchOAuthToken(daoManager.getDaoGlobalUser().getByUser(Platform.TWITCH, userId).toCore(), userId);
+        return getTwitchOAuthToken(getDaoManager().getDaoGlobalUser().getByUser(Platform.TWITCH, userId).toCore(), userId);
     }
 
     protected String requireTwitchOAuthToken(final GlobalUser globalUser, final String userId) {
@@ -537,7 +456,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     protected String getTwitchOAuthToken(final GlobalUser globalUser, final String userId) {
         if(globalUser == null)
             return null;
-        final TwitchOauthToken twitchOauthToken = daoManager.getDaoTwitchOauthToken().get(globalUser.getId().getValue(), userId);
+        final TwitchOauthToken twitchOauthToken = getDaoManager().getDaoTwitchOauthToken().get(globalUser.getId().getValue(), userId);
         if(twitchOauthToken == null)
             return null;
         return twitchOauthToken.getOauthToken();
@@ -548,20 +467,20 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return Generics.getTypeParameter(getClass(), ModuleSettings.class);
     }
 
-    private Class<U> getGlobalConfigurationClass() {
+    public Class<U> getGlobalConfigurationClass() {
         return Generics.getTypeParameter(getClass(), GlobalConfiguration.class);
     }
 
-    private Class<V> getTenantConfigurationClass() {
+    public Class<V> getTenantConfigurationClass() {
         return Generics.getTypeParameter(getClass(), TenantConfiguration.class);
     }
 
-    private Class<W> getChannelConfigurationClass() {
+    public Class<W> getChannelConfigurationClass() {
         return Generics.getTypeParameter(getClass(), ChannelConfiguration.class);
     }
 
     private void updateConfigurationDefinitions() {
-        final DAOConfigurationDefinition daoConfigurationDefinition = daoManager.getDaoConfigurationDefinition();
+        final DAOConfigurationDefinition daoConfigurationDefinition = getDaoManager().getDaoConfigurationDefinition();
         final GlobalConfigurationDefinition globalConfigurationDefinition = ConfigScanner.scanGlobal(getGlobalConfigurationClass());
         if(globalConfigurationDefinition != null)
             daoConfigurationDefinition.put(globalConfigurationDefinition.toDB());

@@ -2,6 +2,8 @@ package tv.v1x1.common.dao;
 
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.db.ChannelConfiguration;
@@ -9,9 +11,11 @@ import tv.v1x1.common.dto.db.ChannelConfiguration;
 /**
  * Created by naomi on 11/5/2016.
  */
+@Singleton
 public class DAOChannelConfiguration {
     private final Mapper<ChannelConfiguration> mapper;
 
+    @Inject
     public DAOChannelConfiguration(final MappingManager mappingManager) {
         mapper = mappingManager.mapper(ChannelConfiguration.class);
     }

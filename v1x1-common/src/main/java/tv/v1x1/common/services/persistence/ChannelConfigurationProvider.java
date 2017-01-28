@@ -7,6 +7,9 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import tv.v1x1.common.dao.DAOChannelConfiguration;
 import tv.v1x1.common.dao.DAOTenantConfiguration;
 import tv.v1x1.common.dto.core.Channel;
@@ -27,13 +30,15 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by naomi on 11/5/2016.
  */
+@Singleton
 public class ChannelConfigurationProvider<T extends ChannelConfiguration> {
     private final CodecCache<Channel, T> sharedCache;
     private final DAOChannelConfiguration daoChannelConfiguration;
     private final ObjectMapper mapper;
     private final Module module;
 
-    public ChannelConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, final Class<T> clazz) {
+    @Inject
+    public ChannelConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, @Named("channelConfigurationClass") final Class clazz) {
         daoChannelConfiguration = daoManager.getDaoChannelConfiguration();
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
@@ -46,7 +51,7 @@ public class ChannelConfigurationProvider<T extends ChannelConfiguration> {
                     return "{}".getBytes();
                 return channelConfiguration.getJson().getBytes();
             }
-        }), Channel.KEY_CODEC, new JsonCodec<>(clazz));
+        }), Channel.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
     }
 
     public T getChannelConfiguration(final Channel channel) {

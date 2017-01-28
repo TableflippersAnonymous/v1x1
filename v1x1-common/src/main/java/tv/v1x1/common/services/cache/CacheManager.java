@@ -2,6 +2,8 @@ package tv.v1x1.common.services.cache;
 
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
 import tv.v1x1.common.services.coordination.LockManager;
 
@@ -11,10 +13,12 @@ import java.util.function.Function;
 /**
  * Created by naomi on 1/21/2017.
  */
+@Singleton
 public class CacheManager {
     private final RedissonClient redissonClient;
     private final LockManager lockManager;
 
+    @Inject
     public CacheManager(final LockManager lockManager, final RedissonClient redissonClient) {
         this.redissonClient = redissonClient;
         this.lockManager = lockManager;

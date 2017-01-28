@@ -10,6 +10,8 @@ import com.datastax.driver.mapping.annotations.Query;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import tv.v1x1.common.dto.core.GlobalUser;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.db.ChannelPlatformMapping;
@@ -28,6 +30,7 @@ import java.util.stream.Collectors;
 /**
  * Created by naomi on 10/16/2016.
  */
+@Singleton
 public class DAOTenantGroup {
     public static final Tenant GLOBAL_TENANT = new Tenant(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes("__GLOBAL_TENANT__".getBytes())), ImmutableList.of());
 
@@ -50,6 +53,7 @@ public class DAOTenantGroup {
         Result<TenantGroupsByUser> getTenantsByUser(UUID userId);
     }
 
+    @Inject
     public DAOTenantGroup(final MappingManager mappingManager) {
         session = mappingManager.getSession();
         tenantGroupMapper = mappingManager.mapper(TenantGroup.class);

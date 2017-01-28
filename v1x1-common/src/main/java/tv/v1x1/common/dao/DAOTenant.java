@@ -7,6 +7,8 @@ import com.datastax.driver.mapping.MappingManager;
 import com.datastax.driver.mapping.Result;
 import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
 import tv.v1x1.common.dto.db.Channel;
 import tv.v1x1.common.dto.db.DiscordChannel;
@@ -24,6 +26,7 @@ import java.util.UUID;
  * Sends/Retrieves Tenants to/from the database
  * @author Naomi
  */
+@Singleton
 public class DAOTenant {
     private final Deduplicator createDeduplicator;
     private final Session session;
@@ -31,6 +34,7 @@ public class DAOTenant {
     private final Mapper<DiscordChannel> discordChannelMapper;
     private final Mapper<TwitchChannel> twitchChannelMapper;
 
+    @Inject
     public DAOTenant(final RedissonClient redissonClient, final MappingManager mappingManager) {
         this.session = mappingManager.getSession();
         this.tenantMapper = mappingManager.mapper(Tenant.class);

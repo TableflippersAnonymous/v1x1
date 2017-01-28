@@ -6,6 +6,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.google.inject.Inject;
+import com.google.inject.Singleton;
+import com.google.inject.name.Named;
 import tv.v1x1.common.dao.DAOGlobalConfiguration;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.modules.GlobalConfiguration;
@@ -20,13 +23,15 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by naomi on 10/17/2016.
  */
+@Singleton
 public class ConfigurationProvider<T extends GlobalConfiguration> {
     private final CodecCache<Module, T> sharedCache;
     private final DAOGlobalConfiguration daoGlobalConfiguration;
     private final ObjectMapper mapper;
     private final Module module;
 
-    public ConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, final Class<T> clazz) {
+    @Inject
+    public ConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, @Named("globalConfigurationClass") final Class clazz) {
         daoGlobalConfiguration = daoManager.getDaoGlobalConfiguration();
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
@@ -39,7 +44,7 @@ public class ConfigurationProvider<T extends GlobalConfiguration> {
                     return "{}".getBytes();
                 return globalConfiguration.getJson().getBytes();
             }
-        }), Module.KEY_CODEC, new JsonCodec<>(clazz));
+        }), Module.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
     }
 
     public T getConfiguration() {

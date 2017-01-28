@@ -1,8 +1,11 @@
 package tv.v1x1.common.services.stats;
 
+import com.google.inject.Singleton;
+
 /**
  * Created by naomi on 10/12/2016.
  */
+@Singleton
 public class NoopStatsCollector implements StatsCollector {
 
     @Override
