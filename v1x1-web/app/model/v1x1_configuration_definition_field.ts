@@ -28,23 +28,24 @@ export class V1x1ConfigurationDefinitionField {
   @JsonProperty("default_value")
   defaultValue: string = undefined;
   @JsonProperty("config_type")
-  configType: ConfigType = undefined;
+  configTypeString: string = undefined;
   requires: string[] = undefined;
   @JsonProperty("tenant_permission")
-  tenantPermission: Permission = undefined;
+  tenantPermissionString: string = undefined;
   @JsonProperty("json_field")
   jsonField: string = undefined;
   @JsonProperty("complex_type")
   complexType: string = undefined;
 
-  constructor(displayName: string, description: string, defaultValue: string, configType: ConfigType, requires: string[], tenantPermission: Permission, jsonField: string, complexType: string) {
-    this.displayName = displayName;
-    this.description = description;
-    this.defaultValue = defaultValue;
-    this.configType = configType;
-    this.requires = requires;
-    this.tenantPermission = tenantPermission;
-    this.jsonField = jsonField;
-    this.complexType = complexType;
+  set configType(configType: ConfigType) {
+    this.configTypeString = ConfigType[configType];
+  }
+
+  get configType(): ConfigType {
+    return ConfigType[this.configTypeString];
+  }
+
+  get tenantPermission(): Permission {
+    return Permission[this.tenantPermissionString];
   }
 }
