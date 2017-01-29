@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {V1x1Module} from "../../model/v1x1_module";
 import {Permission} from "../../model/v1x1_configuration_definition_field";
-import {V1x1Api} from "../../services/api";
+import {V1x1ApiCache} from "../../services/api_cache";
 
 @Component({
   selector: 'configuration-page',
@@ -24,12 +24,12 @@ import {V1x1Api} from "../../services/api";
 })
 export class ConfigurationPageComponent {
   /* This will eventually be pulled from the API. */
-  public v1x1Modules: V1x1Module[];
+  public v1x1Modules: V1x1Module[] = [];
   public permissions = Permission;
   public json = JSON;
 
-  constructor(v1x1Api: V1x1Api) {
-    this.v1x1Modules = v1x1Api.getModules();
+  constructor(v1x1Api: V1x1ApiCache) {
+    v1x1Api.getModules().subscribe(modules => this.v1x1Modules = modules);
   }
 
   public mapper = function(m: V1x1Module, _idx: number, _ary: V1x1Module[]) { return [m.name, m.configurationSet] };
