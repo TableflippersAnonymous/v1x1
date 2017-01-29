@@ -30,6 +30,7 @@ import {HelpPageComponent} from "../components/help/page";
 import {LogsPageComponent} from "../components/logs/page";
 import {PermissionsPageComponent} from "../components/permissions/page";
 import {HttpModule} from "@angular/http";
+import {V1x1ApiCache} from "../services/api_cache";
 
 @NgModule({
   imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule, HttpModule ],
@@ -43,7 +44,7 @@ import {HttpModule} from "@angular/http";
     TopNavComponent, TopNavEntryComponent, TopNavEntryContentComponent, DashboardPageComponent, HelpPageComponent, LogsPageComponent,
     PermissionsPageComponent
   ],
-  providers:    [ V1x1Api ],
+  providers:    [ V1x1Api, V1x1ApiCache ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
