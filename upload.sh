@@ -24,18 +24,18 @@ done
 
 if [[ $CIRCLE_BRANCH == "master" ]]; then
     for file in v1x1-web/dist/*.css ; do
-        MAKEFILE_TARGETS="${MAKEFILE_TARGETS} ${file}"
-        echo "${file}:" >> Makefile.upload
+        MAKEFILE_TARGETS="${MAKEFILE_TARGETS} upload-${file}"
+        echo "upload-${file}:" >> Makefile.upload
         echo -e "\taws s3 cp --content-type text/css ${file} s3://v1x1-web/" >> Makefile.upload
     done
     for file in v1x1-web/dist/*.js ; do
-        MAKEFILE_TARGETS="${MAKEFILE_TARGETS} ${file}"
-        echo "${file}:" >> Makefile.upload
+        MAKEFILE_TARGETS="${MAKEFILE_TARGETS} upload-${file}"
+        echo "upload-${file}:" >> Makefile.upload
         echo -e "\taws s3 cp --content-type application/javascript ${file} s3://v1x1-web/" >> Makefile.upload
     done
     for file in v1x1-web/dist/*.html ; do
-        MAKEFILE_TARGETS="${MAKEFILE_TARGETS} ${file}"
-        echo "${file}:" >> Makefile.upload
+        MAKEFILE_TARGETS="${MAKEFILE_TARGETS} upload-${file}"
+        echo "upload-${file}:" >> Makefile.upload
         echo -e "\taws s3 cp --content-type text/html --cache-control max-age=3600 ${file} s3://v1x1-web/" >> Makefile.upload
     done
 fi
