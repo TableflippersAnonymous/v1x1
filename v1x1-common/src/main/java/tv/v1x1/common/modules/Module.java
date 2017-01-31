@@ -176,20 +176,29 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* ******************************* CALL THIS FROM main() ******************************* */
     protected void entryPoint(final String[] args) throws Exception {
-        parseArgs(args);
-        if(settings.getWaitStartMs() > 0) {
-            LOG.info("Waiting {}ms before starting up...", settings.getWaitStartMs());
-            Thread.sleep(settings.getWaitStartMs());
-        }
-        preinit();
-        initializeInternal();
-        initialize();
         try {
-            run();
+            parseArgs(args);
+            if (settings.getWaitStartMs() > 0) {
+                LOG.info("Waiting {}ms before starting up...", settings.getWaitStartMs());
+                Thread.sleep(settings.getWaitStartMs());
+            }
+            preinit();
+            initializeInternal();
+            initialize();
+            try {
+                run();
+            } finally {
+                shutdown();
+            }
+        } catch(final Exception e) {
+            LOG.error("Uncaught exception during main loop:", e);
         } finally {
-            shutdown();
+            try {
+                cleanup();
+            } finally {
+                System.exit(0);
+            }
         }
-        cleanup();
     }
 
     /* ******************************* MAIN LOOP ******************************* */
