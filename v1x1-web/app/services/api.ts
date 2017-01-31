@@ -2,17 +2,21 @@ import {V1x1Module} from "../model/v1x1_module";
 import {Injectable} from "@angular/core";
 import {V1x1ConfigurationDefinitionSet} from "../model/v1x1_configuration_definition_set";
 import {V1x1ConfigurationDefinition} from "../model/v1x1_configuration_definition";
-import {Permission, V1x1ConfigurationDefinitionField, ConfigType} from "../model/v1x1_configuration_definition_field";
-import {Http} from "@angular/http";
+import {Headers, Http, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs";
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import {V1x1List} from "../model/v1x1_list";
 import {JsonConvert} from "json2typescript";
+import {V1x1State} from "../model/v1x1_state";
+import {V1x1AuthToken} from "../model/v1x1_auth_token";
+import {V1x1TwitchOauthCode} from "../model/v1x1_twitch_oauth_code";
 
 @Injectable()
 export class V1x1Api {
-  private v1x1ApiBase = '/api/v1';
+  private v1x1ApiBase: string = '/api/v1';
+  private clientId: string = 'cdzt2rwhcwzrf1col1eqaktuntugdct';
+  private authorization: string = undefined;
 
   constructor(private http: Http) {}
 
@@ -55,4 +59,33 @@ export class V1x1Api {
         ))
     ).mergeAll();
   }
+
+  getState(): Observable<V1x1State> {
+    return this.http.get(this.v1x1ApiBase + '/meta/state').map((r) => JsonConvert.deserializeObject(r.json(), V1x1State));
+  }
+
+  getClientId(): string {
+    return this.clientId;
+  }
+
+  loginTwitch(twitchOauthCode: V1x1TwitchOauthCode): Observable<V1x1AuthToken> {
+    return this.http.post(
+      this.v1x1ApiBase + '/meta/login/twitch',
+      JsonConvert.serializeObject({
+        'oauth_code': twitchOauthCode.oauthCode,
+        'oauth_state': twitchOauthCode.oauthState
+      }),
+      new RequestOptions({
+        headers: new Headers({
+          'Content-Type': 'application/json'
+        })
+      })
+    ).map((r) => JsonConvert.deserializeObject(r.json(), V1x1AuthToken));
+  }
+
+  setAuthorization(authorization: string) {
+    this.authorization = authorization;
+  }
+
+
 }
