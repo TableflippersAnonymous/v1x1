@@ -4,7 +4,7 @@ import {TopNavEntryContentComponent} from "./top_nav_entry_content";
   selector: 'top-nav-entry'
 })
 export class TopNavEntryComponent {
-  @Input() public justify: 'left' | 'right';
+  @Input() public justify: 'left' | 'right' | 'brand';
   @Input() public title: string;
   @ContentChild(TopNavEntryContentComponent) public content: TopNavEntryContentComponent;
 }

@@ -31,6 +31,7 @@ import {LogsPageComponent} from "../components/logs/page";
 import {PermissionsPageComponent} from "../components/permissions/page";
 import {HttpModule} from "@angular/http";
 import {V1x1ApiCache} from "../services/api_cache";
+import {WelcomePageComponent} from "../components/welcome/page";
 
 @NgModule({
   imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule, HttpModule ],
@@ -42,7 +43,7 @@ import {V1x1ApiCache} from "../services/api_cache";
     ConfigurationFieldValueIntegerComponent, ConfigurationFieldValueMasterEnableComponent, ConfigurationFieldValueStringComponent,
     ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
     TopNavComponent, TopNavEntryComponent, TopNavEntryContentComponent, DashboardPageComponent, HelpPageComponent, LogsPageComponent,
-    PermissionsPageComponent
+    PermissionsPageComponent, WelcomePageComponent
   ],
   providers:    [ V1x1Api, V1x1ApiCache ],
   bootstrap:    [ AppComponent ]
