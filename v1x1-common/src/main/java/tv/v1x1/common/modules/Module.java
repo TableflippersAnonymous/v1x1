@@ -167,6 +167,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     private void initializeInternal() {
         injector = Guice.createInjector(new GuiceModule<>(settings, this));
 
+        getModuleRegistry();
+
         registerGlobalMessages();
 
         twitchApi = new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), new String(requireCredential("Common|Twitch|OAuthToken")), new String(requireCredential("Common|Twitch|ClientSecret")), new String(requireCredential("Common|Twitch|RedirectUri")));
