@@ -6,10 +6,9 @@ import {V1x1State} from "../../model/v1x1_state";
   template: `
     <div class="jumbotron" style="margin: 1rem;">
       <h1 class="display-3">Welcome!</h1>
-      <p class="lead">Hey there!  I'm v1x1.  I make your chat better.</p>
+      <p class="lead">I'm v1x1. I make your chat better.</p>
       <hr class="my-4">
-      <p>Hi!  So my name is v1x1, and just in case you didn't know, I pronounce that "Vixie".  I'm a chat robot that can
-      help you manage your Twitch chat.</p>
+      <p>Hi! My name is v1x1 ("Vixie"), a chat robot that can help you manage your Twitch chat!</p>
       <p><b>What's your name?</b></p>
       <p><button class="btn btn-twitch" (click)="twitchLogin()"><i class="fa fa-twitch"></i> My name is ...</button></p>
     </div>
