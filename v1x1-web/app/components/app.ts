@@ -2,6 +2,7 @@ import {Component} from '@angular/core';
 import {V1x1ApiCache} from "../services/api_cache";
 import {V1x1TwitchOauthCode} from "../model/v1x1_twitch_oauth_code";
 import {V1x1Api} from "../services/api";
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'v1x1-app',
@@ -64,7 +65,10 @@ export class AppComponent {
     this.loggingIn = true;
     this.api.loginTwitch(oauthCode).catch((err, caught) => {
       this.loggingIn = false;
+      return Observable.of(null);
     }).subscribe(authToken => {
+      if(authToken === null)
+        return;
       this.api.setAuthorization(authToken.authorization);
       this.loggedIn = true;
       this.loggingIn = false;
