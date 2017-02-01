@@ -12,7 +12,7 @@ import {V1x1Api} from "../services/api";
           <welcome-page></welcome-page>
         </template>
       </top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Dashboard'" *ngIf="loggedIn">
+      <top-nav-entry [justify]="'left'" [title]="'Dashboard'" *ngIf="loggedIn && false">
         <template top-nav-entry-content>
           <dashboard-page></dashboard-page>
         </template>
@@ -22,12 +22,12 @@ import {V1x1Api} from "../services/api";
           <configuration-page></configuration-page>
         </template>
       </top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Permissions'" *ngIf="loggedIn">
+      <top-nav-entry [justify]="'left'" [title]="'Permissions'" *ngIf="loggedIn && false">
         <template top-nav-entry-content>
           <permissions-page></permissions-page>
         </template>
       </top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Logs'" *ngIf="loggedIn">
+      <top-nav-entry [justify]="'left'" [title]="'Logs'" *ngIf="loggedIn && false">
         <template top-nav-entry-content>
           <logs-page></logs-page>
         </template>
@@ -44,6 +44,7 @@ export class AppComponent {
   name = 'v1x1';
   queryString: {[key: string]: string} = {};
   loggedIn: boolean = false;
+  loggingIn: boolean = false;
 
   constructor(private apiCache: V1x1ApiCache, private api: V1x1Api) {
     this.apiCache.preload();
@@ -60,9 +61,13 @@ export class AppComponent {
   }
 
   handleLogin(oauthCode: V1x1TwitchOauthCode) {
-    this.api.loginTwitch(oauthCode).subscribe(authToken => {
+    this.loggingIn = true;
+    this.api.loginTwitch(oauthCode).catch((err, caught) => {
+      this.loggingIn = false;
+    }).subscribe(authToken => {
       this.api.setAuthorization(authToken.authorization);
       this.loggedIn = true;
-    });
+      this.loggingIn = false;
+    })
   }
 }
