@@ -67,7 +67,10 @@ public class DAOTenantGroup {
     }
 
     public TenantGroupsByUser getGroupsByUser(final UUID tenantId, final UUID userId) {
-        return tenantGroupsByUserMapper.get(userId, tenantId);
+        final TenantGroupsByUser tenantGroupsByUser = tenantGroupsByUserMapper.get(userId, tenantId);
+        if(tenantGroupsByUser == null)
+            return new TenantGroupsByUser(userId, tenantId, new ArrayList<>());
+        return tenantGroupsByUser;
     }
 
     public TenantGroupsByUser getGroupsByUser(final Tenant tenant, final GlobalUser globalUser) {
