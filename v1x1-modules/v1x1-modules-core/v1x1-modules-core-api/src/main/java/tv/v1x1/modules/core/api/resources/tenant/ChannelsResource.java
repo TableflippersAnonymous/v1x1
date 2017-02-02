@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.modules.core.api.ApiModule;
 import tv.v1x1.modules.core.api.api.ApiList;
 import tv.v1x1.modules.core.api.api.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.Channel;
@@ -47,11 +48,13 @@ import java.util.stream.Collectors;
 public class ChannelsResource {
     private final DAOTenant daoTenant;
     private final Authorizer authorizer;
+    private final ApiModule module;
 
     @Inject
-    public ChannelsResource(final DAOManager daoManager, final Authorizer authorizer) {
+    public ChannelsResource(final DAOManager daoManager, final Authorizer authorizer, final ApiModule module) {
         this.daoTenant = daoManager.getDaoTenant();
         this.authorizer = authorizer;
+        this.module = module;
     }
 
     @GET
@@ -133,9 +136,8 @@ public class ChannelsResource {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.message");
         final Platform platform = getDtoPlatform(platformStr);
-        final Channel apiChannel = getDtoChannel(tenant, platform, channelId);
-        final tv.v1x1.common.dto.core.Channel coreChannel = getCoreChannel(apiChannel, platform);
-        Chat.message(null, coreChannel, message.getValue());
+        final tv.v1x1.common.dto.core.Channel coreChannel = getCoreChannel(tenant, platform, channelId);
+        Chat.message(module, coreChannel, message.getValue());
         return Response.ok().build();
     }
 
@@ -164,10 +166,13 @@ public class ChannelsResource {
         final Tenant.Entry channelEntry = tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
                 .filter(entry -> entry.getChannelId().equals(channelId)).findFirst()
                 .orElseThrow(() -> new NotFoundException("Channel not found"));
-       return new Channel(tenant.getId(), channelEntry.getPlatform(), channelEntry.getDisplayName(), channelEntry.getChannelId());
+        return new Channel(tenant.getId(), channelEntry.getPlatform(), channelEntry.getDisplayName(), channelEntry.getChannelId());
     }
 
-    private tv.v1x1.common.dto.core.Channel getCoreChannel(final Channel apiChannel, final Platform platform) {
-        return null; // TODO: Programmatically return the correct type of t.v.c.d.core.Channel
+    private tv.v1x1.common.dto.core.Channel getCoreChannel(final Tenant tenant, final Platform platform, final String channelId) {
+        final Tenant.Entry channelEntry = tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
+                .filter(entry -> entry.getChannelId().equals(channelId)).findFirst()
+                .orElseThrow(() -> new NotFoundException("Channel not found"));
+        return channelEntry.toCore(tenant.toCore());
     }
 }
