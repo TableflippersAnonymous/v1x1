@@ -7,6 +7,7 @@ import tv.v1x1.common.config.Description;
 import tv.v1x1.common.config.DisplayName;
 import tv.v1x1.common.config.ModuleConfig;
 import tv.v1x1.common.config.Type;
+import tv.v1x1.common.config.Version;
 import tv.v1x1.common.modules.BasicTenantConfiguration;
 import tv.v1x1.modules.channel.timed_messages.Timer;
 
@@ -19,6 +20,7 @@ import java.util.Map;
 @ModuleConfig("timed_messages")
 @DisplayName("Timers")
 @Description("This module controls repeating messages to a channel -- timers, if you will")
+@Version(0)
 public class TimedMessagesTenantConfiguration extends BasicTenantConfiguration {
     @DisplayName("Timers")
     @Description("List of rotations you have configured")
