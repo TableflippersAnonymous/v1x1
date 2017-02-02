@@ -5,6 +5,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ public class TenantGroupsByUser {
     @ClusteringColumn
     @Column(name = "tenant_id")
     private UUID tenantId;
-    private List<UUID> groups;
+    private List<UUID> groups = new ArrayList<>();
 
     public TenantGroupsByUser() {
     }
@@ -39,6 +40,6 @@ public class TenantGroupsByUser {
     }
 
     public List<UUID> getGroups() {
-        return groups;
+        return groups == null ? new ArrayList<>() : groups;
     }
 }
