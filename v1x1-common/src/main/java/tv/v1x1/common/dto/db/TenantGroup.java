@@ -5,6 +5,7 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,7 +21,7 @@ public class TenantGroup {
     @Column(name = "group_id")
     private UUID groupId;
     private String name;
-    private List<Permission> permissions;
+    private List<Permission> permissions = new ArrayList<>();
 
     public TenantGroup() {
     }
@@ -45,6 +46,6 @@ public class TenantGroup {
     }
 
     public List<Permission> getPermissions() {
-        return permissions;
+        return permissions == null ? new ArrayList<>() : permissions;
     }
 }
