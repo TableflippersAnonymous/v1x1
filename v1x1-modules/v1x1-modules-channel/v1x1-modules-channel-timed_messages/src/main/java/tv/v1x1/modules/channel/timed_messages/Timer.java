@@ -32,10 +32,12 @@ public class Timer {
     @JsonProperty("interval")
     @DisplayName("Interval")
     @Description("Time (in milliseconds) between messages")
+    @Type(ConfigType.INTEGER)
     private long interval;
     @JsonProperty("enabled")
     @DisplayName("Enabled?")
     @Description("Whether or not this rotation will run")
+    @Type(ConfigType.BOOLEAN)
     private boolean enabled;
     @DisplayName("Always On")
     @Type(ConfigType.BOOLEAN)

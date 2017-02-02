@@ -5,7 +5,9 @@ import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Description;
 import tv.v1x1.common.config.DisplayName;
 import tv.v1x1.common.config.ModuleConfig;
+import tv.v1x1.common.config.Permission;
 import tv.v1x1.common.config.Requires;
+import tv.v1x1.common.config.TenantPermission;
 import tv.v1x1.common.config.Type;
 import tv.v1x1.common.config.Version;
 import tv.v1x1.common.modules.TenantConfiguration;
@@ -22,12 +24,14 @@ public class TmiTenantConfiguration implements TenantConfiguration {
     @Description("This allows you to enter your own bot credentials to use.")
     @Type(ConfigType.BOOLEAN)
     @JsonProperty("custom_bot")
+    @TenantPermission(Permission.READ_WRITE)
     private boolean customBot = false;
 
     @DisplayName("Bot name:")
     @Description("This allows you to enter a bot name other than v1x1.")
     @Type(ConfigType.BOT_NAME)
     @JsonProperty("bot_name")
+    @TenantPermission(Permission.READ_WRITE)
     private String botName;
 
     @DisplayName("OAuth Token:")
@@ -35,6 +39,7 @@ public class TmiTenantConfiguration implements TenantConfiguration {
     @Type(ConfigType.TWITCH_OAUTH)
     @Requires("custom_bot")
     @JsonProperty("oauth_token")
+    @TenantPermission(Permission.WRITE_ONLY)
     private String oauthToken;
 
 
