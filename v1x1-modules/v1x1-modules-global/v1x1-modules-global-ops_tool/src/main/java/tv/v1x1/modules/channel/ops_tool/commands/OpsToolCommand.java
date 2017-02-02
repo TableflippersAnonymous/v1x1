@@ -60,9 +60,8 @@ public class OpsToolCommand extends Command {
 
     @Override
     public void handleNoPermissions(final ChatMessage chatMessage, final String command, final List<String> args) {
-        if(opsTool.getTenantConfiguration(chatMessage.getChannel().getTenant()).isEnabled())
-            Chat.i18nMessage(opsTool, chatMessage.getChannel(), "generic.noperms",
-                    "commander", chatMessage.getSender().getDisplayName());
+        Chat.i18nMessage(opsTool, chatMessage.getChannel(), "generic.noperms",
+                "commander", chatMessage.getSender().getDisplayName());
     }
 
     @Override
