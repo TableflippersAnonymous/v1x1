@@ -51,6 +51,9 @@ public class DAOTenantGroup {
 
         @Query("SELECT * FROM tenant_groups_by_user WHERE user_id = ?")
         Result<TenantGroupsByUser> getTenantsByUser(UUID userId);
+
+        @Query("SELECT * FROM channel_platform_mapping WHERE platform = ? AND channel_id = ?")
+        Result<ChannelPlatformMapping> getChannelPlatformMappings(Platform platform, String channelId);
     }
 
     @Inject
@@ -77,6 +80,10 @@ public class DAOTenantGroup {
 
     public ChannelPlatformMapping getChannelPlatformMapping(final Platform platform, final String channelId, final String platformGroup) {
         return channelPlatformMappingMapper.get(platform, channelId, platformGroup);
+    }
+
+    public Iterable<ChannelPlatformMapping> getChannelPlatformMappings(final Platform platform, final String channelId) {
+        return accessor.getChannelPlatformMappings(platform, channelId);
     }
 
     public Set<UUID> getGroupsByPlatformGroups(final Platform platform, final String channelId, final Set<String> platformGroups) {
