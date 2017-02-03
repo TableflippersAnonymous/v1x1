@@ -13,6 +13,7 @@ import {V1x1AuthToken} from "../model/v1x1_auth_token";
 import {V1x1TwitchOauthCode} from "../model/v1x1_twitch_oauth_code";
 import {V1x1GlobalUser} from "../model/v1x1_global_user";
 import {V1x1User} from "../model/v1x1_user";
+import {V1x1ApiString} from "../model/v1x1_api_string";
 
 @Injectable()
 export class V1x1Api {
@@ -23,12 +24,14 @@ export class V1x1Api {
   constructor(private http: Http) {}
 
   getConfigurationDefinitionList(type: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + '/platform/config-definitions/' + type).map((r) => JsonConvert.deserializeObject(r.json(), V1x1List)).map((l: V1x1List<string>) => l.entries);
+    return this.http.get(this.v1x1ApiBase + '/platform/config-definitions/' + type)
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries);
   }
 
   getModuleList(): Observable<string[]> {
     return Observable.forkJoin([
-      this.getConfigurationDefinitionList("global"),
+      //this.getConfigurationDefinitionList("global"),
       this.getConfigurationDefinitionList("tenant"),
       this.getConfigurationDefinitionList("channel")
     ]).map(r => [].concat.apply([], r).filter((v, idx, self) => self.indexOf(v) === idx));
@@ -41,10 +44,10 @@ export class V1x1Api {
 
   getConfigurationDefinitionSet(moduleName: string): Observable<V1x1ConfigurationDefinitionSet> {
     return Observable.zip(
-      this.getConfigurationDefinition("global", moduleName),
+      //this.getConfigurationDefinition("global", moduleName),
       this.getConfigurationDefinition("tenant", moduleName),
       this.getConfigurationDefinition("channel", moduleName),
-      (global: V1x1ConfigurationDefinition, tenant: V1x1ConfigurationDefinition, channel: V1x1ConfigurationDefinition) => new V1x1ConfigurationDefinitionSet(global, tenant, channel)
+      (/*global: V1x1ConfigurationDefinition,*/ tenant: V1x1ConfigurationDefinition, channel: V1x1ConfigurationDefinition) => new V1x1ConfigurationDefinitionSet(/*global*/null, tenant, channel)
     );
   }
 
@@ -124,11 +127,11 @@ export class V1x1Api {
   }
 
   getUsers(globalUserId: string): Observable<V1x1User[]> {
-    return this.getUserPlatforms(this.v1x1ApiBase + "/global-users/" + globalUserId)
+    return this.getUserPlatforms(globalUserId)
       .map(platforms => platforms.map(platform => this.getUsersByPlatform(globalUserId, platform)))
       .map(observableUsers => Observable.forkJoin(observableUsers))
+      .mergeAll()
       .map(users => [].concat.apply([], users))
-      .mergeAll();
   }
 
   getGlobalUser(globalUserId: string): Observable<V1x1GlobalUser> {
@@ -143,26 +146,8 @@ export class V1x1Api {
   }
 
   getSelfId(): Observable<string> {
-    return this.http.get(
-      this.v1x1ApiBase + '/meta/self',
-      this.getAuthorization()
-    ).catch((err, caught) => {
-      if(err instanceof Response) {
-        if(err.status === 307) {
-          return Observable.of(err.headers.get("Location"))
-        }
-        return Observable.of(null);
-      }
-    }).map(r => {
-      let url;
-      if (r instanceof Response)
-        if (r.status == 307)
-          url = r.headers.get("Location");
-        else
-          throw new Error("No URL from self");
-      else
-        throw new Error("No URL from self");
-      return url.split("/").reverse()[0];
-    });
+    return this.http.get(this.v1x1ApiBase + '/meta/self', this.getAuthorization())
+      .map(r => JsonConvert.deserializeObject(r.json(), V1x1ApiString))
+      .map(r => r.value);
   }
 }
