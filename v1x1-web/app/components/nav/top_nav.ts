@@ -29,7 +29,7 @@ import {TopNavEntryComponent} from "./top_nav_entry";
               <a class="dropdown-item" href="#">+ Create new</a>
             </div>
           </li>
-          
+          <user-dropdown-nav-component *ngIf="loggedIn"></user-dropdown-nav-component>
         </ul>
       </div>
     </nav>

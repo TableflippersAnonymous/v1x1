@@ -59,6 +59,22 @@ export class AppComponent {
 
     if(this.queryString['code'] && this.queryString['state'])
       this.handleLogin(new V1x1TwitchOauthCode(this.queryString['code'], this.queryString['state']));
+
+    if(localStorage.getItem("authorization") && localStorage.getItem("auth_expiry")) {
+      let expiry = parseInt(localStorage.getItem("auth_expiry"), 10);
+      if (expiry <= new Date().getTime()) {
+        localStorage.removeItem("authorization");
+        localStorage.removeItem("auth_expiry");
+      } else {
+        this.api.setAuthorization(localStorage.getItem("authorization"));
+        this.loggedIn = true;
+        setTimeout(() => {
+          this.loggedIn = false;
+          localStorage.removeItem("authorization");
+          localStorage.removeItem("auth_expiry");
+        }, expiry - new Date().getTime() - 5000);
+      }
+    }
   }
 
   handleLogin(oauthCode: V1x1TwitchOauthCode) {
@@ -69,9 +85,9 @@ export class AppComponent {
     }).subscribe(authToken => {
       if(authToken === null)
         return;
-      this.api.setAuthorization(authToken.authorization);
-      this.loggedIn = true;
-      this.loggingIn = false;
+      localStorage.setItem("authorization", authToken.authorization);
+      localStorage.setItem("auth_expiry", authToken.expires);
+      window.location.href = '/';
     })
   }
 }
