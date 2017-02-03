@@ -32,6 +32,7 @@ import {PermissionsPageComponent} from "../components/permissions/page";
 import {HttpModule} from "@angular/http";
 import {V1x1ApiCache} from "../services/api_cache";
 import {WelcomePageComponent} from "../components/welcome/page";
+import {UserDropdownNavComponent} from "../components/nav/user_dropdown";
 
 @NgModule({
   imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule, HttpModule ],
@@ -42,7 +43,7 @@ import {WelcomePageComponent} from "../components/welcome/page";
     ConfigurationFieldValueComplexListComponent, ConfigurationFieldValueComplexStringMapComponent, ConfigurationFieldValueCredentialComponent,
     ConfigurationFieldValueIntegerComponent, ConfigurationFieldValueMasterEnableComponent, ConfigurationFieldValueStringComponent,
     ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
-    TopNavComponent, TopNavEntryComponent, TopNavEntryContentComponent, DashboardPageComponent, HelpPageComponent, LogsPageComponent,
+    TopNavComponent, TopNavEntryComponent, TopNavEntryContentComponent, UserDropdownNavComponent, DashboardPageComponent, HelpPageComponent, LogsPageComponent,
     PermissionsPageComponent, WelcomePageComponent
   ],
   providers:    [ V1x1Api, V1x1ApiCache ],
