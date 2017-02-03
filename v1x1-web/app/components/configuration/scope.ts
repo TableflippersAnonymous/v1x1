@@ -2,6 +2,7 @@ import {Component, Input} from "@angular/core";
 import {V1x1Module} from "../../model/v1x1_module";
 import {V1x1ConfigurationDefinition} from "../../model/v1x1_configuration_definition";
 import {ConfigurableComponent} from "./configurable";
+import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
 @Component({
   selector: 'configuration-scope',
   template: `
@@ -25,10 +26,11 @@ export class ConfigurationScopeComponent extends ConfigurableComponent {
   @Input() public configurationDefinition: V1x1ConfigurationDefinition;
   @Input() public scope: string;
   @Input() public id: string;
+  @Input() public configurationSet: V1x1ConfigurationSet;
   public json = JSON;
 
   saveChanges() {
     this.acceptChanges();
-    this.v1x1Module.configurationSet[this.scope].originalConfiguration = JSON.parse(JSON.stringify(this.v1x1Module.configurationSet[this.scope].configuration));
+    this.configurationSet[this.scope].originalConfiguration = JSON.parse(JSON.stringify(this.configurationSet[this.scope].configuration));
   }
 }
