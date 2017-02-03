@@ -23,6 +23,7 @@ import tv.v1x1.common.services.persistence.KeyValueStore;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.auth.TokenResponse;
 import tv.v1x1.common.services.twitch.dto.users.PrivateUser;
+import tv.v1x1.modules.core.api.api.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.AuthTokenResponse;
 import tv.v1x1.modules.core.api.api.LongTermTokenRequest;
 import tv.v1x1.modules.core.api.api.StateResponse;
@@ -55,7 +56,7 @@ import java.util.stream.StreamSupport;
  */
 /*
   /meta
-    /self - GET: redirect to /global-users/{userid} for currently logged in user
+    /self - GET: global user ID for currently logged in user
  */
 @Path("/api/v1/meta")
 @Produces(MediaType.APPLICATION_JSON)
@@ -84,13 +85,8 @@ public class MetaResource {
 
     @Path("/self")
     @GET
-    public Response getSelf(@HeaderParam("Authorization") final String authorization) {
-        try {
-            return Response.temporaryRedirect(new URI(null, null, "/api/v1/global-users/" + authorizer.forAuthorization(authorization).getGlobalUser().getId(), null)).build();
-        } catch (URISyntaxException e) {
-            LOG.warn("Invalid URI:", e);
-            return Response.serverError().build();
-        }
+    public ApiPrimitive<String> getSelf(@HeaderParam("Authorization") final String authorization) {
+        return new ApiPrimitive<>(authorizer.forAuthorization(authorization).getGlobalUser().getId().toString());
     }
 
     @Path("/login/twitch")
