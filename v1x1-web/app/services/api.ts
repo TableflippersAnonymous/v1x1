@@ -14,6 +14,9 @@ import {V1x1TwitchOauthCode} from "../model/v1x1_twitch_oauth_code";
 import {V1x1GlobalUser} from "../model/v1x1_global_user";
 import {V1x1User} from "../model/v1x1_user";
 import {V1x1ApiString} from "../model/v1x1_api_string";
+import {V1x1Tenant} from "../model/v1x1_tenant";
+import {V1x1Channel} from "../model/v1x1_channel";
+import {V1x1Configuration} from "../model/v1x1_configuration";
 
 @Injectable()
 export class V1x1Api {
@@ -54,7 +57,7 @@ export class V1x1Api {
   getModule(moduleName: string): Observable<V1x1Module> {
     return Observable.zip(
       this.getConfigurationDefinitionSet(moduleName),
-      (configDefinitionSet: V1x1ConfigurationDefinitionSet) => new V1x1Module(moduleName, configDefinitionSet.tenant.display_name, configDefinitionSet.tenant.description, configDefinitionSet)
+      (configDefinitionSet: V1x1ConfigurationDefinitionSet) => new V1x1Module(moduleName, configDefinitionSet)
     );
   }
 
@@ -131,7 +134,7 @@ export class V1x1Api {
       .map(platforms => platforms.map(platform => this.getUsersByPlatform(globalUserId, platform)))
       .map(observableUsers => Observable.forkJoin(observableUsers))
       .mergeAll()
-      .map(users => [].concat.apply([], users))
+      .map(users => [].concat.apply([], users));
   }
 
   getGlobalUser(globalUserId: string): Observable<V1x1GlobalUser> {
@@ -149,5 +152,64 @@ export class V1x1Api {
     return this.http.get(this.v1x1ApiBase + '/meta/self', this.getAuthorization())
       .map(r => JsonConvert.deserializeObject(r.json(), V1x1ApiString))
       .map(r => r.value);
+  }
+
+  getTenantIds(): Observable<string[]> {
+    return this.http.get(this.v1x1ApiBase + '/tenants', this.getAuthorization())
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries)
+      .map(tenantIds => tenantIds.filter(tenantId => tenantId !== '493073c3-8a6f-38fa-8e38-16af0b436482'));
+  }
+
+  getTenantPlatforms(tenantId: string): Observable<string[]> {
+    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/channels', this.getAuthorization())
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries)
+      .catch((err, caught) => Observable.of([]));
+  }
+
+  getChannelIdsByPlatform(tenantId: string, platform: string): Observable<string[]> {
+    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/channels/' + platform, this.getAuthorization())
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries);
+  }
+
+  getChannel(tenantId: string, platform: string, channelId: string): Observable<V1x1Channel> {
+    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/channels/' + platform + '/' + encodeURIComponent(channelId), this.getAuthorization())
+      .map(r => JsonConvert.deserializeObject(r.json(), V1x1Channel));
+  }
+
+  getChannelsByPlatform(tenantId: string, platform: string): Observable<V1x1Channel[]> {
+    return this.getChannelIdsByPlatform(tenantId, platform)
+      .map(channelIds => channelIds.map(channelId => this.getChannel(tenantId, platform, channelId)))
+      .map(observableChannels => Observable.forkJoin(observableChannels))
+      .mergeAll();
+  }
+
+  getChannels(tenantId: string): Observable<V1x1Channel[]> {
+    return this.getTenantPlatforms(tenantId)
+      .map(platforms => platforms.map(platform => this.getChannelsByPlatform(tenantId, platform)))
+      .map(observableChannels => Observable.forkJoin(observableChannels))
+      .mergeAll()
+      .map(channels => [].concat.apply([], channels));
+  }
+
+  getTenant(tenantId: string): Observable<V1x1Tenant> {
+    return this.getChannels(tenantId)
+      .map(channels => channels.length === 0 ? null : new V1x1Tenant(tenantId, channels));
+  }
+
+  getTenants(): Observable<V1x1Tenant[]> {
+    return this.getTenantIds()
+      .map(tenantIds => tenantIds.map(tenantId => this.getTenant(tenantId)))
+      .map(observableTenants => Observable.forkJoin(observableTenants))
+      .mergeAll()
+      .map(tenants => tenants.filter(tenant => tenant !== null));
+  }
+
+  getTenantConfiguration(tenantId: string, module: string): Observable<V1x1Configuration> {
+    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/config/' + module, this.getAuthorization())
+      .map(r => r.json())
+      .map(r => new V1x1Configuration(JSON.parse(r.config_json)));
   }
 }

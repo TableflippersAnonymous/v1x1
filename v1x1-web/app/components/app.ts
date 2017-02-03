@@ -3,11 +3,12 @@ import {V1x1ApiCache} from "../services/api_cache";
 import {V1x1TwitchOauthCode} from "../model/v1x1_twitch_oauth_code";
 import {V1x1Api} from "../services/api";
 import {Observable} from "rxjs";
+import {V1x1Tenant} from "../model/v1x1_tenant";
 
 @Component({
   selector: 'v1x1-app',
   template: `
-    <top-nav [loggedIn]="loggedIn">
+    <top-nav [loggedIn]="loggedIn" (activeTenantChange)="setActiveTenant($event)">
       <top-nav-entry [justify]="'brand'" [title]="">
         <template top-nav-entry-content>
           <welcome-page></welcome-page>
@@ -20,7 +21,7 @@ import {Observable} from "rxjs";
       </top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Configuration'" *ngIf="loggedIn">
         <template top-nav-entry-content>
-          <configuration-page></configuration-page>
+          <configuration-page [activeTenant]="activeTenant"></configuration-page>
         </template>
       </top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Permissions'" *ngIf="loggedIn && false">
@@ -46,6 +47,7 @@ export class AppComponent {
   queryString: {[key: string]: string} = {};
   loggedIn: boolean = false;
   loggingIn: boolean = false;
+  activeTenant: V1x1Tenant = null;
 
   constructor(private apiCache: V1x1ApiCache, private api: V1x1Api) {
     this.apiCache.preload();
@@ -89,5 +91,9 @@ export class AppComponent {
       localStorage.setItem("auth_expiry", authToken.expires);
       window.location.href = '/';
     })
+  }
+
+  setActiveTenant(tenant: V1x1Tenant) {
+    this.activeTenant = tenant;
   }
 }
