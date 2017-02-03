@@ -1,7 +1,12 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {V1x1Module} from "../../model/v1x1_module";
 import {Permission} from "../../model/v1x1_configuration_definition_field";
 import {V1x1ApiCache} from "../../services/api_cache";
+import {V1x1Tenant} from "../../model/v1x1_tenant";
+import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
+import {V1x1Api} from "../../services/api";
+import {Observable} from "rxjs";
+import {V1x1Configuration} from "../../model/v1x1_configuration";
 
 @Component({
   selector: 'configuration-page',
@@ -10,15 +15,18 @@ import {V1x1ApiCache} from "../../services/api_cache";
       <ngb-tab *ngIf="(v1x1Module.configurationDefinitionSet.global !== null && v1x1Module.configurationDefinitionSet.global.tenantPermission !== permissions.NONE)
                    || (v1x1Module.configurationDefinitionSet.tenant !== null && v1x1Module.configurationDefinitionSet.tenant.tenantPermission !== permissions.NONE)
                    || (v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== permissions.NONE)"
-               [title]="v1x1Module.displayName + (v1x1Module.dirty() ? '*' : '')">
+               [title]="v1x1Module.displayName + (v1x1Module.dirty(configurationSets[i]) ? '*' : '')">
         <template ngbTabContent>
-          <configuration-module [(v1x1Module)]="v1x1Modules[i]"></configuration-module>
+          <configuration-module [(v1x1Module)]="v1x1Modules[i]" [(configurationSet)]="configurationSets[i]" *ngIf="configurationSets[i]"></configuration-module>
         </template>
       </ngb-tab>
     </div>
   </ngb-tabset>
   <div>
-    {{json.stringify(v1x1Modules.map(mapper))}}
+    {{json.stringify(configurationSets)}}
+  </div>
+  <div>
+    {{debugConfig()}}
   </div>
 `
 })
@@ -27,10 +35,32 @@ export class ConfigurationPageComponent {
   public v1x1Modules: V1x1Module[] = [];
   public permissions = Permission;
   public json = JSON;
+  public activeTenantValue: V1x1Tenant = null;
+  public configurationSets: V1x1ConfigurationSet[] = [];
 
-  constructor(v1x1Api: V1x1ApiCache) {
-    v1x1Api.getModules().subscribe(modules => this.v1x1Modules = modules);
+  constructor(private cachedApi: V1x1ApiCache, private api: V1x1Api) {
+    this.cachedApi.getModules().subscribe(modules => {
+      this.v1x1Modules = modules;
+      this.recalculateTenantConfiguration();
+    });
   }
 
-  public mapper = function(m: V1x1Module, _idx: number, _ary: V1x1Module[]) { return [m.name, m.configurationSet] };
+  @Input()
+  set activeTenant(activeTenant: V1x1Tenant) {
+    this.activeTenantValue = activeTenant;
+    this.recalculateTenantConfiguration();
+  }
+
+  recalculateTenantConfiguration() {
+    if(this.v1x1Modules === [] || this.activeTenantValue === null)
+      return;
+    Observable.forkJoin(this.v1x1Modules.map(
+      v1x1Module => this.api.getTenantConfiguration(this.activeTenantValue.id, v1x1Module.name)
+    )).map(configs => configs.map(config => new V1x1ConfigurationSet(new V1x1Configuration({}), config, new V1x1Configuration({}))))
+      .subscribe(configs => this.configurationSets = configs);
+  }
+
+  debugConfig() {
+    return JSON.stringify(this.v1x1Modules.map((m, idx) => [m.name, this.configurationSets && this.configurationSets[idx]]));
+  }
 }
