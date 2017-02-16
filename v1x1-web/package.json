@@ -47,7 +47,7 @@
     "protractor": "~4.0.14",
     "rimraf": "^2.5.4",
     "@types/node": "^6.0.46",
-    "@types/jasmine": "^2.5.36",
+    "@types/jasmine": "2.5.41",
     "webpack": "2.2.0",
     "webpack-dev-server": "^1.16.2",
     "webpack-merge": "^0.14.1",
