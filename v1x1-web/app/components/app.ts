@@ -81,7 +81,7 @@ export class AppComponent {
 
   handleLogin(oauthCode: V1x1TwitchOauthCode) {
     this.loggingIn = true;
-    this.api.loginTwitch(oauthCode).catch((err, caught) => {
+    this.api.loginTwitch(oauthCode).catch((_err, _caught) => {
       this.loggingIn = false;
       return Observable.of(null);
     }).subscribe(authToken => {
