@@ -109,10 +109,10 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      * TODO: This should be taking in timer args instead of a Timer
      */
     public boolean createTimer(final Tenant tenant, final String name, final Timer timer) {
-        TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
         if(timer.getInterval() < 1000)
             throw new IllegalArgumentException("Refusing to create a timer with sub-second interval");
-        boolean success = config.addTimer(name, timer);
+        final boolean success = config.addTimer(name, timer);
         if(success) {
             getTenantConfigProvider().save(tenant, config);
             unpauseTimer(tenant, name);
@@ -148,7 +148,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      */
     public boolean rescheduleTimer(final Tenant tenant, final String timerName, final long interval) {
         final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
-        final Timer timer = getTenantConfiguration(tenant).getTimer(timerName);
+        final Timer timer = config.getTimer(timerName);
         if(timer == null) return false;
         if(interval < 1000)
             throw new IllegalArgumentException("Refusing to create a timer with sub-second interval");
@@ -192,9 +192,9 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      */
     public boolean destroyTimer(final Tenant tenant, final String timerName) {
         final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
-        final Timer t = getTenantConfiguration(tenant).getTimer(timerName);
+        final Timer t = config.getTimer(timerName);
         if(t == null) return false;
-        boolean success = getTenantConfiguration(tenant).delTimer(timerName);
+        final boolean success = config.delTimer(timerName);
         if(success) {
             final UUID activeTimer = t.getDtoActiveTimer();
             if(activeTimer.getValue() != null)
@@ -208,7 +208,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
         final Timer t = config.getTimer(timerName);
         if(t == null) return false;
-        boolean success = t.getEntries().add(new TimerEntry(message));
+        final boolean success = t.getEntries().add(new TimerEntry(message));
         if(success)
             getTenantConfigProvider().save(tenant, config);
         return success;
@@ -220,9 +220,9 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         if(t == null) return -1;
         int found = 0;
         int entryIdx = 0;
-        List<TimerEntry> entries = t.getEntries();
+        final List<TimerEntry> entries = t.getEntries();
         for(; entryIdx < entries.size(); ++entryIdx) {
-            TimerEntry entry = entries.get(entryIdx);
+            final TimerEntry entry = entries.get(entryIdx);
             if(entry.getMessage().startsWith(message))
                 ++found;
         }
@@ -235,16 +235,16 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         if(t == null) return null;
         boolean found = false;
         int entryIdx = 0;
-        List<TimerEntry> entries = t.getEntries();
+        final List<TimerEntry> entries = t.getEntries();
         for(; entryIdx < entries.size(); ++entryIdx) {
-            TimerEntry entry = entries.get(entryIdx);
+            final TimerEntry entry = entries.get(entryIdx);
             if(entry.getMessage().startsWith(message)) {
                 found = true;
                 break;
             }
         }
         if(found) {
-            TimerEntry entry = entries.remove(entryIdx);
+            final TimerEntry entry = entries.remove(entryIdx);
             getTenantConfigProvider().save(tenant, config);
             return entry;
         }
