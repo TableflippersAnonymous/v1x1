@@ -30,6 +30,7 @@ public abstract class Event extends Message {
             case TWITCH_USER: return TwitchUserEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchUserEvent.data));
             case TWITCH_USER_MOD_CHANGE: return TwitchUserModChangeEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchUserModChangeEvent.data));
             case SCHEDULER_NOTIFY: return SchedulerNotifyEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.SchedulerNotifyEvent.data));
+            case CONFIG_CHANGE: return ConfigChangeEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ConfigChangeEvent.data));
             default: throw new IllegalStateException("Unknown event type " + event.getType().name());
         }
     }
