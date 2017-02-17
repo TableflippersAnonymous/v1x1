@@ -264,12 +264,14 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
             LOG.warn("Asked to kick off a non-existing timer.");
             return;
         }
-        final UUID uuid = new UUID(java.util.UUID.randomUUID());
-        t.setActiveTimer(uuid.getValue());
+        final UUID uuid = new UUID(java.util.UUID.nameUUIDFromBytes(CompositeKey.makeKey("timed_messages", tenant.toString(), timerName)));
         cursors.fastPut(uuid.toProto().toByteArray(), Ints.toByteArray(0)); // , t.getInterval() + (t.getInterval() / 2), TimeUnit.MILLISECONDS
         final byte[] payload = CompositeKey.makeKey(new byte[][]{timerName.getBytes(), "tenant".getBytes(), tenant.toProto().toByteArray()});
         ssc.scheduleRepeating(t.getInterval(), uuid, payload);
-        getTenantConfigProvider().save(tenant, config);
+        if(!uuid.getValue().equals(t.getActiveTimer())) {
+            t.setActiveTimer(uuid.getValue());
+            getTenantConfigProvider().save(tenant, config);
+        }
     }
 
     /**
@@ -301,6 +303,5 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         if(!channel.getPlatform().equals(Platform.TWITCH))
             throw new IllegalArgumentException("Requested platform doesn't support streaming: " + channel.getPlatform().name());
         return (getTwitchApi().getStreams().getStream(channel.getId().substring(1, channel.getId().length())).getStream() != null);
-
     }
 }
