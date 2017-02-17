@@ -3,29 +3,20 @@ package tv.v1x1.common.services.persistence;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import tv.v1x1.common.dao.DAOChannelConfiguration;
-import tv.v1x1.common.dao.DAOTenantConfiguration;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Module;
-import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.dto.core.UUID;
-import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
-import tv.v1x1.common.dto.proto.core.UUIDOuterClass;
+import tv.v1x1.common.dto.messages.events.ChannelConfigChangeEvent;
 import tv.v1x1.common.modules.ChannelConfiguration;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.cache.CodecCache;
 import tv.v1x1.common.services.cache.JsonCodec;
-import tv.v1x1.common.services.cache.RedisCache;
+import tv.v1x1.common.services.queue.MessageQueueManager;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by cobi on 11/5/2016.
@@ -36,22 +27,17 @@ public class ChannelConfigurationProvider<T extends ChannelConfiguration> {
     private final DAOChannelConfiguration daoChannelConfiguration;
     private final ObjectMapper mapper;
     private final Module module;
+    private final MessageQueueManager messageQueueManager;
 
     @Inject
-    public ChannelConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, @Named("channelConfigurationClass") final Class clazz) {
+    public ChannelConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager,
+                                        @Named("channelConfigurationClass") final Class clazz, final MessageQueueManager messageQueueManager,
+                                        final ConfigurationCacheManager configurationCacheManager) {
         daoChannelConfiguration = daoManager.getDaoChannelConfiguration();
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
-
-        sharedCache = cacheManager.codec(cacheManager.redisCache("ChannelConfigurationProvider|" + module.getName(), 10, TimeUnit.MINUTES, new CacheLoader<byte[], byte[]>() {
-            @Override
-            public byte[] load(final byte[] channelData) throws Exception {
-                final tv.v1x1.common.dto.db.ChannelConfiguration channelConfiguration = daoChannelConfiguration.get(module, Channel.KEY_CODEC.decode(channelData));
-                if(channelConfiguration == null)
-                    return "{}".getBytes();
-                return channelConfiguration.getJson().getBytes();
-            }
-        }), Channel.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
+        this.messageQueueManager = messageQueueManager;
+        sharedCache = cacheManager.codec(configurationCacheManager.getChannelCache(module), Channel.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
     }
 
     public T getChannelConfiguration(final Channel channel) {
@@ -68,6 +54,7 @@ public class ChannelConfigurationProvider<T extends ChannelConfiguration> {
                     channel.getPlatform(), channel.getId(), mapper.writeValueAsString(configuration));
             daoChannelConfiguration.put(dbConfiguration);
             sharedCache.put(channel, configuration);
+            messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new ChannelConfigChangeEvent(module, module, channel));
         } catch (final JsonProcessingException e) {
             throw new RuntimeException(e);
         }
