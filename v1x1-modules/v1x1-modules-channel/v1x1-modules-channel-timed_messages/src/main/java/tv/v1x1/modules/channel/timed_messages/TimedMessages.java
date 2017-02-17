@@ -170,7 +170,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      */
     public boolean enableTimer(final Tenant tenant, final String timerName, final boolean enabled) {
         final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
-        final Timer timer = getTenantConfiguration(tenant).getTimer(timerName);
+        final Timer timer = config.getTimer(timerName);
         if(timer == null) return false;
         if(timer.isEnabled() == enabled) return false;
         timer.setEnabled(enabled);
