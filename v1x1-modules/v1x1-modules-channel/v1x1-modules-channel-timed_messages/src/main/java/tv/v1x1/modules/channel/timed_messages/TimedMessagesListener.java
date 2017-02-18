@@ -10,22 +10,25 @@ import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
+import tv.v1x1.common.dto.messages.events.TenantConfigChangeEvent;
 import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.data.CompositeKey;
+import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesTenantConfiguration;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Map;
 
 /**
  * @author Josh
  */
 public class TimedMessagesListener implements EventListener {
-    public static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private TimedMessages module;
 
-    TimedMessagesListener(TimedMessages module) {
+    TimedMessagesListener(final TimedMessages module) {
         this.module = module;
     }
 
@@ -43,7 +46,7 @@ public class TimedMessagesListener implements EventListener {
             final Tenant tenant;
             try {
                 tenant = Tenant.fromProto(ChannelOuterClass.Tenant.parseFrom(keys[2]));
-            } catch(InvalidProtocolBufferException e) {
+            } catch(final InvalidProtocolBufferException e) {
                 LOG.warn("Failed to deserialize tenant from scheduler payload; cancelling schedule", e);
                 module.pauseTimer(uuid);
                 return;
@@ -56,7 +59,7 @@ public class TimedMessagesListener implements EventListener {
                 MDC.remove("tenant");
                 return;
             }
-            Timer t = module.getTenantConfiguration(tenant).getTimer(timerName);
+            final Timer t = module.getTenantConfiguration(tenant).getTimer(timerName);
             if(t == null) {
                 LOG.warn("Got a timer payload for a non-existent timer id {}; pausing it...", uuid.getValue().toString());
                 module.pauseTimer(uuid);
@@ -64,6 +67,12 @@ public class TimedMessagesListener implements EventListener {
                 return;
             }
             LOG.trace("saved UUID is {}", t.getActiveTimer());
+            if(!t.getActiveTimer().equals(uuid.getValue())) {
+                LOG.info("Got a timer {} which is no longer the active timer UUID {}; pausing it.", uuid.getValue().toString(), t.getActiveTimer().toString());
+                module.pauseTimer(uuid);
+                MDC.remove("tenant");
+                return;
+            }
             int cursor = module.getCursor(uuid);
             LOG.trace("Just got cursor. Cursor is {}", cursor);
             if(cursor == -1) {
@@ -82,7 +91,7 @@ public class TimedMessagesListener implements EventListener {
             }
             final String message = nextEntry.getMessage();
             module.saveCursor(uuid, cursor);
-            for(Channel channel : tenant.getChannels()) {
+            for(final Channel channel : tenant.getChannels()) {
                 if(channel.getPlatform().equals(Platform.TWITCH)) {
                     if(t.isAlwaysOn() && !module.isStreaming(channel)) {
                         LOG.trace("Skipping non-streaming channel {}", channel.getDisplayName());
@@ -100,5 +109,18 @@ public class TimedMessagesListener implements EventListener {
     public void onChatMessage(ChatMessageEvent ev) {
         if(module.isEnabled(ev.getChatMessage().getChannel()))
             module.delegator.handleChatMessage(ev);
+    }
+
+    @EventHandler
+    public void onTenantConfigChange(TenantConfigChangeEvent ev) {
+        final TimedMessagesTenantConfiguration config = module.getTenantConfiguration(ev.getTenant());
+        if(config.getTimers() != null)
+            for(final Map.Entry<String, Timer> entry : config.getTimers().entrySet())
+                if(config.isEnabled() && entry.getValue().isEnabled()) {
+                    module.unpauseTimer(ev.getTenant(), entry.getKey());
+                } else {
+                    if (entry.getValue().getActiveTimer() != null)
+                        module.pauseTimer(new UUID(entry.getValue().getActiveTimer()));
+                }
     }
 }
