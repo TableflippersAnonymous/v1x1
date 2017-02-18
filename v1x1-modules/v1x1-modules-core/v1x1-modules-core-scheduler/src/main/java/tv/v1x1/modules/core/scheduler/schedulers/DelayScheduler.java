@@ -43,17 +43,23 @@ public class DelayScheduler implements Runnable {
         set.add(timestamp, CompositeKey.makeKey(new byte[][] { module.toProto().toByteArray(), id.toProto().toByteArray(), payload, Longs.toByteArray(timestamp) }));
     }
 
-    public void cancel(final UUID id) {
+    public long cancel(final UUID id) {
+        long ret = -1;
         for(final byte[] schedule : set) {
             try {
                 final byte[][] scheduleParts = CompositeKey.getKeys(schedule);
                 final UUID scheduleId = UUID.fromProto(UUIDOuterClass.UUID.parseFrom(scheduleParts[1]));
-                if(id.equals(scheduleId))
+                if(id.equals(scheduleId)) {
                     set.remove(schedule);
-            } catch(Exception e) {
+                    final long timestamp = Longs.fromByteArray(scheduleParts[3]);
+                    if(ret == -1 || timestamp < ret)
+                        ret = timestamp;
+                }
+            } catch(final Exception e) {
                 LOG.warn("Exception caught while attempting to decode delay scheduler entry: {}", schedule, e);
             }
         }
+        return ret;
     }
 
     public void start() {
