@@ -139,4 +139,24 @@ public abstract class DefaultModule<T extends ModuleSettings, U extends GlobalCo
     protected void processSchedulerNotifyEvent(final SchedulerNotifyEvent event) {
         /* No action */
     }
+
+    @Override
+    protected void processConfigChangeEvent(final ConfigChangeEvent event) {
+        /* No action */
+    }
+
+    @Override
+    protected void processGlobalConfigChangeEvent(final GlobalConfigChangeEvent event) {
+        /* No action */
+    }
+
+    @Override
+    protected void processTenantConfigChangeEvent(final TenantConfigChangeEvent event) {
+        /* No action */
+    }
+
+    @Override
+    protected void processChannelConfigChangeEvent(final ChannelConfigChangeEvent event) {
+        /* No action */
+    }
 }
