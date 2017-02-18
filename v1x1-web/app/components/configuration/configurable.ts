@@ -4,6 +4,7 @@ export class ConfigurableComponent {
   public configurationValue: any;
   @Output() public configurationChange = new EventEmitter();
   @Output() public configDirtyChange = new EventEmitter();
+  @Output() public originalConfigurationChange = new EventEmitter();
   originalConfigProvided: boolean = false;
 
   public set configuration(val) {
