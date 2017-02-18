@@ -19,7 +19,7 @@ for MODULE in $MODULES; do
     MAKEFILE_TARGETS="${MAKEFILE_TARGETS} ${MODULE}"
     echo "${MODULE}:" >> Makefile.upload
     echo -e "\tdocker tag ${MODULE}:latest ${REGISTRY}/${MODULE}:${VERSION}" >> Makefile.upload
-    echo -e "\tdocker push ${REGISTRY}/${MODULE}:${VERSION}" >> Makefile.upload
+    echo -e "\twhile true; do docker push ${REGISTRY}/${MODULE}:${VERSION} && break; sleep 3; done" >> Makefile.upload
 done
 
 if [[ $CIRCLE_BRANCH == "master" ]]; then
