@@ -2,6 +2,7 @@ package tv.v1x1.modules.core.api;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
 import tv.v1x1.common.services.persistence.ConfigurationCacheManager;
 import tv.v1x1.common.services.persistence.DAOManager;
@@ -63,5 +64,10 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public ConfigurationCacheManager provideConfigurationCacheManager() {
         return apiModule.getInjector().getInstance(ConfigurationCacheManager.class);
+    }
+
+    @Provides
+    public CacheManager provideCacheManager() {
+        return apiModule.getInjector().getInstance(CacheManager.class);
     }
 }
