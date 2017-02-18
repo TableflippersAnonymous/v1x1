@@ -1,7 +1,9 @@
 package tv.v1x1.modules.core.api.resources.tenant;
 
 import com.google.inject.Inject;
+import tv.v1x1.common.dao.DAOJoinedTwitchChannel;
 import tv.v1x1.common.dao.DAOTenant;
+import tv.v1x1.common.dto.db.JoinedTwitchChannel;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.chat.Chat;
@@ -12,6 +14,7 @@ import tv.v1x1.modules.core.api.api.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.Channel;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
+import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -47,12 +50,14 @@ import java.util.stream.Collectors;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ChannelsResource {
     private final DAOTenant daoTenant;
+    private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
     private final Authorizer authorizer;
     private final ApiModule module;
 
     @Inject
     public ChannelsResource(final DAOManager daoManager, final Authorizer authorizer, final ApiModule module) {
         this.daoTenant = daoManager.getDaoTenant();
+        this.daoJoinedTwitchChannel = daoManager.getDaoJoinedTwitchChannel();
         this.authorizer = authorizer;
         this.module = module;
     }
@@ -111,19 +116,47 @@ public class ChannelsResource {
 
     @Path("/{platform}/{channel_id}/state")
     @GET
-    public ApiPrimitive<String> getState(@PathParam("tenant_id") final String tenantId,
-                                         @PathParam("platform") final String platform,
+    public ApiPrimitive<String> getState(@HeaderParam("Authorization") final String authorization,
+                                         @PathParam("tenant_id") final String tenantId,
+                                         @PathParam("platform") final String platformStr,
                                          @PathParam("channel_id") final String channelId) {
-        return null; //TODO
+        final Tenant tenant = getDtoTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
+        final Platform platform = getDtoPlatform(platformStr);
+        final Channel channel = getDtoChannel(tenant, platform, channelId);
+        if(platform != Platform.TWITCH)
+            throw new NotFoundException();
+        final JoinedTwitchChannel joinedTwitchChannel = daoJoinedTwitchChannel.get(channel.getChannelId());
+        if(joinedTwitchChannel == null)
+            return new ApiPrimitive<>("PARTED");
+        else
+            return new ApiPrimitive<>("JOINED");
     }
 
     @Path("/{platform}/{channel_id}/state")
     @PUT
-    public ApiPrimitive<String> putState(@PathParam("tenant_id") final String tenantId,
-                                         @PathParam("platform") final String platform,
+    public ApiPrimitive<String> putState(@HeaderParam("Authorization") final String authorization,
+                                         @PathParam("tenant_id") final String tenantId,
+                                         @PathParam("platform") final String platformStr,
                                          @PathParam("channel_id") final String channelId,
                                          final ApiPrimitive<String> newState) {
-        return null; //TODO
+        final Tenant tenant = getDtoTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.write");
+        final Platform platform = getDtoPlatform(platformStr);
+        final Channel channel = getDtoChannel(tenant, platform, channelId);
+        if(platform != Platform.TWITCH)
+            throw new NotFoundException();
+        if(newState.getValue().equals("JOINED"))
+            daoJoinedTwitchChannel.join(channel.getChannelId());
+        else if(newState.getValue().equals("PARTED"))
+            daoJoinedTwitchChannel.delete(channel.getChannelId());
+        else
+            throw new ClientErrorException(Response.status(422).build());
+        final JoinedTwitchChannel joinedTwitchChannel = daoJoinedTwitchChannel.get(channel.getChannelId());
+        if(joinedTwitchChannel == null)
+            return new ApiPrimitive<>("PARTED");
+        else
+            return new ApiPrimitive<>("JOINED");
     }
 
     @Path("/{platform}/{channel_id}/message")
