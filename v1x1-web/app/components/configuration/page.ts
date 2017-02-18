@@ -17,17 +17,11 @@ import {V1x1Configuration} from "../../model/v1x1_configuration";
                    || (v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== permissions.NONE)"
                [title]="v1x1Module.displayName + (v1x1Module.dirty(configurationSets[i]) ? '*' : '')">
         <template ngbTabContent>
-          <configuration-module [(v1x1Module)]="v1x1Modules[i]" [(configurationSet)]="configurationSets[i]" *ngIf="configurationSets[i]"></configuration-module>
+          <configuration-module [(v1x1Module)]="v1x1Modules[i]" [(configurationSet)]="configurationSets[i]" [activeTenant]="activeTenantValue" *ngIf="configurationSets[i]"></configuration-module>
         </template>
       </ngb-tab>
     </div>
   </ngb-tabset>
-  <div>
-    {{json.stringify(configurationSets)}}
-  </div>
-  <div>
-    {{debugConfig()}}
-  </div>
 `
 })
 export class ConfigurationPageComponent {
