@@ -1,6 +1,7 @@
 import {Component, Input, Output, EventEmitter} from '@angular/core';
 import {V1x1Module} from "../../model/v1x1_module";
 import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
+import {V1x1Tenant} from "../../model/v1x1_tenant";
 
 @Component({
   selector: 'configuration-module',
@@ -14,17 +15,17 @@ import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
     <ngb-tabset>
       <ngb-tab [title]="'Global' + (configurationSet.global.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.global !== null && v1x1Module.configurationDefinitionSet.global.tenantPermission !== NONE">
         <template ngbTabContent>
-          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.global" [originalConfiguration]="configurationSet.global.originalConfiguration" [(configuration)]="configurationSet.global.configuration" [id]="null" [scope]="'global'"></configuration-scope>
+          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.global" [(originalConfiguration)]="configurationSet.global.originalConfiguration" [(configuration)]="configurationSet.global.configuration" [activeTenant]="activeTenant" [scope]="'global'"></configuration-scope>
         </template>
       </ngb-tab>
       <ngb-tab [title]="'Tenant' + (configurationSet.tenant.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.tenant !== null && v1x1Module.configurationDefinitionSet.tenant.tenantPermission !== NONE">
         <template ngbTabContent>
-          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.tenant" [originalConfiguration]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.tenant.configuration" [id]="null" [scope]="'tenant'"></configuration-scope>
+          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.tenant" [(originalConfiguration)]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.tenant.configuration" [activeTenant]="activeTenant" [scope]="'tenant'"></configuration-scope>
         </template>
       </ngb-tab>
       <ngb-tab [title]="'Channel' + (configurationSet.channel.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== NONE">
         <template ngbTabContent>
-          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.channel" [originalConfiguration]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.channel.configuration" [id]="null" [scope]="'channel'"></configuration-scope>
+          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.channel" [(originalConfiguration)]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.channel.configuration" [activeTenant]="activeTenant" [scope]="'channel'"></configuration-scope>
         </template>
       </ngb-tab>
     </ngb-tabset>
@@ -33,6 +34,7 @@ import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
 export class ConfigurationModuleComponent {
   public v1x1ModuleValue: V1x1Module;
   @Input() public configurationSet: V1x1ConfigurationSet;
+  @Input() public activeTenant: V1x1Tenant;
   @Output() public v1x1ModuleChange = new EventEmitter();
   get v1x1Module() {
     return this.v1x1ModuleValue;
