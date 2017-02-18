@@ -2,7 +2,7 @@ import {V1x1Module} from "../model/v1x1_module";
 import {Injectable} from "@angular/core";
 import {V1x1ConfigurationDefinitionSet} from "../model/v1x1_configuration_definition_set";
 import {V1x1ConfigurationDefinition} from "../model/v1x1_configuration_definition";
-import {Headers, Http, RequestOptions, Response} from "@angular/http";
+import {Headers, Http, RequestOptions} from "@angular/http";
 import {Observable} from "rxjs";
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
@@ -211,5 +211,21 @@ export class V1x1Api {
     return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/config/' + module, this.getAuthorization())
       .map(r => r.json())
       .map(r => new V1x1Configuration(JSON.parse(r.config_json)));
+  }
+
+  putTenantConfiguration(tenantId: string, module: string, config: V1x1Configuration): Observable<V1x1Configuration> {
+    return this.http.put(
+      this.v1x1ApiBase + '/tenants/' + tenantId + '/config/' + module,
+      JsonConvert.serializeObject({
+        'config_json': JSON.stringify(config.configuration)
+      }),
+      new RequestOptions({
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: this.authorization
+        })
+      }))
+        .map(r => r.json())
+        .map(r => new V1x1Configuration(JSON.parse(r.config_json)));
   }
 }
