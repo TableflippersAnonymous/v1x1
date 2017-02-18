@@ -1,6 +1,7 @@
 package tv.v1x1.modules.core.api.resources.platform;
 
 import com.google.inject.Inject;
+import io.dropwizard.jersey.caching.CacheControl;
 import tv.v1x1.common.dto.db.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
@@ -17,6 +18,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by cobi on 10/24/2016.
@@ -42,6 +44,7 @@ public class ConfigDefinitionResource {
 
     @Path("/channel")
     @GET
+    @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
     public ApiList<String> listChannelConfigDefinitions() {
         final List<String> ret = new ArrayList<>();
         for(final ChannelConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllChannel()) {
@@ -52,6 +55,7 @@ public class ConfigDefinitionResource {
 
     @Path("/channel/{name}")
     @GET
+    @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
     public ConfigurationDefinition getChannelConfigurationDefinition(@PathParam("name") final String name) {
         final ChannelConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getChannel(name);
         if(definition == null)
@@ -61,6 +65,7 @@ public class ConfigDefinitionResource {
 
     @Path("/tenant")
     @GET
+    @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
     public ApiList<String> listTenantConfigDefinitions() {
         final List<String> ret = new ArrayList<>();
         for(final TenantConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllTenant()) {
@@ -71,6 +76,7 @@ public class ConfigDefinitionResource {
 
     @Path("/tenant/{name}")
     @GET
+    @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
     public ConfigurationDefinition getTenantConfigurationDefinition(@PathParam("name") final String name) {
         final TenantConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getTenant(name);
         if(definition == null)
@@ -80,6 +86,7 @@ public class ConfigDefinitionResource {
 
     @Path("/global")
     @GET
+    @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
     public ApiList<String> listGlobalConfigDefinitions() {
         final List<String> ret = new ArrayList<>();
         for(final GlobalConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllGlobal()) {
@@ -90,6 +97,7 @@ public class ConfigDefinitionResource {
 
     @Path("/global/{name}")
     @GET
+    @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
     public ConfigurationDefinition getGlobalConfigurationDefinition(@PathParam("name") final String name) {
         final GlobalConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getGlobal(name);
         if(definition == null)
