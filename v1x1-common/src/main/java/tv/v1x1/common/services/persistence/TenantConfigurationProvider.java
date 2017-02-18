@@ -3,27 +3,20 @@ package tv.v1x1.common.services.persistence;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import tv.v1x1.common.dao.DAOTenantConfiguration;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.dto.core.UUID;
-import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
-import tv.v1x1.common.dto.proto.core.UUIDOuterClass;
+import tv.v1x1.common.dto.messages.events.TenantConfigChangeEvent;
 import tv.v1x1.common.modules.TenantConfiguration;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.cache.CodecCache;
 import tv.v1x1.common.services.cache.JsonCodec;
-import tv.v1x1.common.services.cache.RedisCache;
+import tv.v1x1.common.services.queue.MessageQueueManager;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by naomi on 10/17/2016.
@@ -34,22 +27,18 @@ public class TenantConfigurationProvider<T extends TenantConfiguration> {
     private final DAOTenantConfiguration daoTenantConfiguration;
     private final ObjectMapper mapper;
     private final Module module;
+    private final MessageQueueManager messageQueueManager;
 
     @Inject
-    public TenantConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, @Named("tenantConfigurationClass") final Class clazz) {
+    public TenantConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager,
+                                       @Named("tenantConfigurationClass") final Class clazz, final MessageQueueManager messageQueueManager,
+                                       final ConfigurationCacheManager configurationCacheManager) {
         daoTenantConfiguration = daoManager.getDaoTenantConfiguration();
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
+        this.messageQueueManager = messageQueueManager;
 
-        sharedCache = cacheManager.codec(cacheManager.redisCache("TenantConfigurationProvider|" + module.getName(), 10, TimeUnit.MINUTES, new CacheLoader<byte[], byte[]>() {
-            @Override
-            public byte[] load(final byte[] tenantData) throws Exception {
-                final tv.v1x1.common.dto.db.TenantConfiguration tenantConfiguration = daoTenantConfiguration.get(module, Tenant.KEY_CODEC.decode(tenantData));
-                if(tenantConfiguration == null)
-                    return "{}".getBytes();
-                return tenantConfiguration.getJson().getBytes();
-            }
-        }), Tenant.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
+        sharedCache = cacheManager.codec(configurationCacheManager.getTenantCache(module), Tenant.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
     }
 
     public T getTenantConfiguration(final Tenant tenant) {
@@ -65,6 +54,7 @@ public class TenantConfigurationProvider<T extends TenantConfiguration> {
             final tv.v1x1.common.dto.db.TenantConfiguration dbConfiguration = new tv.v1x1.common.dto.db.TenantConfiguration(module.getName(), tenant.getId().getValue(), mapper.writeValueAsString(configuration));
             daoTenantConfiguration.put(dbConfiguration);
             sharedCache.put(tenant, configuration);
+            messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new TenantConfigChangeEvent(module, module, tenant));
         } catch (final JsonProcessingException e) {
             throw new RuntimeException(e);
         }

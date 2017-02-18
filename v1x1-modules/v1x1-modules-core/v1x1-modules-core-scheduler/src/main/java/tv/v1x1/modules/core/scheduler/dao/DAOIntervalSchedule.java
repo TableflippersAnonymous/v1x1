@@ -7,6 +7,8 @@ import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
 import tv.v1x1.modules.core.scheduler.dto.IntervalSchedule;
 
+import java.util.UUID;
+
 /**
  * Created by naomi on 10/23/2016.
  */
@@ -23,6 +25,10 @@ public class DAOIntervalSchedule {
     public DAOIntervalSchedule(final MappingManager mappingManager) {
         mapper = mappingManager.mapper(IntervalSchedule.class);
         accessor = mappingManager.createAccessor(IntervalScheduleAccessor.class);
+    }
+
+    public IntervalSchedule get(final UUID id) {
+        return mapper.get(id);
     }
 
     public Iterable<IntervalSchedule> all() {

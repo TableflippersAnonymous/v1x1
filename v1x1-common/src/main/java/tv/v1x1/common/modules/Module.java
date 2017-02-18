@@ -349,6 +349,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return injector.getInstance(CacheManager.class);
     }
 
+    public Injector getInjector() {
+        return injector;
+    }
+
     /* ******************************* COMPLEX GETTERS ******************************* */
     protected KeyValueStore getTemporaryTenantKeyValueStore(final Tenant tenant) {
         return new TenantKeyValueStoreImpl(tenant, getTemporaryKeyValueStore());

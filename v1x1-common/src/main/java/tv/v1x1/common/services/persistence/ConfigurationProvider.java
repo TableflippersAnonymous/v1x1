@@ -3,22 +3,19 @@ package tv.v1x1.common.services.persistence;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.google.inject.name.Named;
 import tv.v1x1.common.dao.DAOGlobalConfiguration;
 import tv.v1x1.common.dto.core.Module;
+import tv.v1x1.common.dto.messages.events.GlobalConfigChangeEvent;
 import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.cache.CodecCache;
 import tv.v1x1.common.services.cache.JsonCodec;
-import tv.v1x1.common.services.cache.RedisCache;
+import tv.v1x1.common.services.queue.MessageQueueManager;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by naomi on 10/17/2016.
@@ -29,22 +26,18 @@ public class ConfigurationProvider<T extends GlobalConfiguration> {
     private final DAOGlobalConfiguration daoGlobalConfiguration;
     private final ObjectMapper mapper;
     private final Module module;
+    private final MessageQueueManager messageQueueManager;
 
     @Inject
-    public ConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager, @Named("globalConfigurationClass") final Class clazz) {
+    public ConfigurationProvider(final Module module, final CacheManager cacheManager, final DAOManager daoManager,
+                                 @Named("globalConfigurationClass") final Class clazz, final MessageQueueManager messageQueueManager,
+                                 final ConfigurationCacheManager configurationCacheManager) {
         daoGlobalConfiguration = daoManager.getDaoGlobalConfiguration();
         mapper = new ObjectMapper(new JsonFactory());
         this.module = module;
+        this.messageQueueManager = messageQueueManager;
 
-        sharedCache = cacheManager.codec(cacheManager.redisCache("ConfigurationProvider|" + module.getName(), 10, TimeUnit.MINUTES, new CacheLoader<byte[], byte[]>() {
-            @Override
-            public byte[] load(final byte[] module) throws Exception {
-                final tv.v1x1.common.dto.db.GlobalConfiguration globalConfiguration = daoGlobalConfiguration.get(Module.KEY_CODEC.decode(module));
-                if(globalConfiguration == null)
-                    return "{}".getBytes();
-                return globalConfiguration.getJson().getBytes();
-            }
-        }), Module.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
+        sharedCache = cacheManager.codec(configurationCacheManager.getGlobalCache(module), Module.KEY_CODEC, new JsonCodec<T>((Class<T>) clazz));
     }
 
     public T getConfiguration() {
@@ -60,6 +53,7 @@ public class ConfigurationProvider<T extends GlobalConfiguration> {
             final tv.v1x1.common.dto.db.GlobalConfiguration dbConfiguration = new tv.v1x1.common.dto.db.GlobalConfiguration(module.getName(), mapper.writeValueAsString(configuration));
             daoGlobalConfiguration.put(dbConfiguration);
             sharedCache.put(module, configuration);
+            messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new GlobalConfigChangeEvent(module, module));
         } catch (final JsonProcessingException e) {
             throw new RuntimeException(e);
         }

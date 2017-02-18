@@ -69,8 +69,16 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
             processSchedulerNotifyEvent((SchedulerNotifyEvent) event);
         else if(event instanceof PrivateMessageEvent) {
             processPrivateMessageEvent((PrivateMessageEvent) event);
-            if(event instanceof TwitchPrivateMessageEvent)
+            if (event instanceof TwitchPrivateMessageEvent)
                 processTwitchPrivateMessageEvent((TwitchPrivateMessageEvent) event);
+        } else if(event instanceof ConfigChangeEvent) {
+            processConfigChangeEvent((ConfigChangeEvent) event);
+            if (event instanceof GlobalConfigChangeEvent)
+                processGlobalConfigChangeEvent((GlobalConfigChangeEvent) event);
+            else if (event instanceof TenantConfigChangeEvent)
+                processTenantConfigChangeEvent((TenantConfigChangeEvent) event);
+            else if (event instanceof ChannelConfigChangeEvent)
+                processChannelConfigChangeEvent((ChannelConfigChangeEvent) event);
         } else
             throw new IllegalStateException("Unknown event type " + event.getClass().getCanonicalName());
     }
@@ -118,6 +126,14 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
     protected abstract void processChatJoinEvent(ChatJoinEvent event);
 
     protected abstract void processChatMessageEvent(ChatMessageEvent chatMessageEvent);
+
+    protected abstract void processConfigChangeEvent(ConfigChangeEvent event);
+
+    protected abstract void processGlobalConfigChangeEvent(GlobalConfigChangeEvent event);
+
+    protected abstract void processTenantConfigChangeEvent(TenantConfigChangeEvent event);
+
+    protected abstract void processChannelConfigChangeEvent(ChannelConfigChangeEvent event);
 
     protected void processRequest(final Request request) {
         if(request instanceof SendMessageRequest) /* ModuleShutdownRequest is handled elsewhere */

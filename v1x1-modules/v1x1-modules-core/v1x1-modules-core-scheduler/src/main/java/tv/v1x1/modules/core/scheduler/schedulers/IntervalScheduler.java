@@ -46,6 +46,13 @@ public class IntervalScheduler implements Runnable {
             delayScheduler.cancel(id);
         } else {
             try {
+                /* If we already have a schedule by this ID, cancel the existing ones, and update lastRun */
+                final IntervalSchedule oldIntervalSchedule = daoIntervalSchedule.get(id.getValue());
+                final long oldNextRun = delayScheduler.cancel(id);
+                if(oldNextRun != -1 && oldIntervalSchedule != null) {
+                    final long lastRun = oldNextRun - oldIntervalSchedule.getInterval();
+                    updateLastRun(id.getValue(), lastRun);
+                }
                 processTask(intervalSchedule);
             } catch (InvalidProtocolBufferException e) {
                 LOG.warn("Exception caught while processing schedule {}", intervalSchedule.getId(), e);
@@ -82,9 +89,9 @@ public class IntervalScheduler implements Runnable {
         final long originalLastRunTime = getLastRun(intervalSchedule.getId());
         if(originalLastRunTime == -1) {
             final long lastRunTime = updateLastRun(intervalSchedule.getId(), now);
-            if(lastRunTime == -1) {
+            /* if(lastRunTime == -1) {
                 scheduleTask(intervalSchedule, now);
-            }
+            } */
         }
 
         long lastRunTime = getLastRun(intervalSchedule.getId());

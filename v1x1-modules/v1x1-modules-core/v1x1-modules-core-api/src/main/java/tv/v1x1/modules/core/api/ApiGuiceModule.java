@@ -3,8 +3,10 @@ package tv.v1x1.modules.core.api;
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
+import tv.v1x1.common.services.persistence.ConfigurationCacheManager;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
+import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
@@ -51,5 +53,15 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public ModuleRegistry provideModuleRegistry() {
         return apiModule.getModuleRegistry();
+    }
+
+    @Provides
+    public MessageQueueManager provideMessageQueueManager() {
+        return apiModule.getMessageQueueManager();
+    }
+
+    @Provides
+    public ConfigurationCacheManager provideConfigurationCacheManager() {
+        return apiModule.getInjector().getInstance(ConfigurationCacheManager.class);
     }
 }

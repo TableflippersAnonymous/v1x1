@@ -33,6 +33,7 @@ message Event {
         TWITCH_USER_MOD_CHANGE = 16;
         SCHEDULER_NOTIFY = 17;
         PRIVATE_MESSAGE = 18;
+        CONFIG_CHANGE = 19;
     };
 
     extensions 100 to max; /* Convention is to use the same 100 + your EventType ID */
@@ -256,4 +257,22 @@ message TwitchPrivateMessageEvent {
     }
 
     required core.IrcStanza whisper_command = 1;
+}
+
+message ConfigChangeEvent {
+    enum ConfigType {
+        UNKNOWN = 0;
+        GLOBAL = 1;
+        TENANT = 2;
+        CHANNEL = 3;
+    };
+
+    extend Event {
+        optional ConfigChangeEvent data = 119;
+    }
+
+    required core.Module module = 1;
+    required ConfigType config_type = 2;
+    optional core.Tenant tenant = 3;
+    optional core.Channel channel = 4;
 }
