@@ -44,7 +44,7 @@ import java.util.stream.StreamSupport;
         /permissions - GET: List permissions in group; POST: grant permission to group
           /{permission} - DELETE: revoke permission from group
  */
-@Path("/api/1/tenants/{tenant}/groups")
+@Path("/api/v1/tenants/{tenant}/groups")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class GroupsResource {
