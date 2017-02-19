@@ -37,8 +37,9 @@ import {TopNavEntryComponent} from "./top_nav_entry";
 export class TopNavComponent {
   @Input() loggedIn: boolean;
   @ContentChildren(TopNavEntryComponent) entries: QueryList<TopNavEntryComponent>;
-  activeIdx = 0;
+  @Input() activeIdx: number = 0;
   @Output() public activeTenantChange = new EventEmitter();
+  @Output() public activeIdxChange = new EventEmitter();
 
   entriesOn(side: string) {
     return this.entries.filter((x, i, a) => x.justify === side);
@@ -46,5 +47,6 @@ export class TopNavComponent {
 
   setActive(idx: number) {
     this.activeIdx = idx;
+    this.activeIdxChange.emit(this.activeIdx);
   }
 }

@@ -8,10 +8,10 @@ import {V1x1Tenant} from "../model/v1x1_tenant";
 @Component({
   selector: 'v1x1-app',
   template: `
-    <top-nav [loggedIn]="loggedIn" (activeTenantChange)="setActiveTenant($event)">
+    <top-nav [loggedIn]="loggedIn" (activeTenantChange)="setActiveTenant($event)" [(activeIdx)]="activeIdx">
       <top-nav-entry [justify]="'brand'" [title]="">
         <template top-nav-entry-content>
-          <welcome-page></welcome-page>
+          <welcome-page [loggedIn]="loggedIn"></welcome-page>
         </template>
       </top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Dashboard'" *ngIf="loggedIn && false">
@@ -24,9 +24,9 @@ import {V1x1Tenant} from "../model/v1x1_tenant";
           <configuration-page [activeTenant]="activeTenant"></configuration-page>
         </template>
       </top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Permissions'" *ngIf="loggedIn && false">
+      <top-nav-entry [justify]="'left'" [title]="'Permissions'" *ngIf="loggedIn">
         <template top-nav-entry-content>
-          <permissions-page></permissions-page>
+          <permissions-page [activeTenant]="activeTenant"></permissions-page>
         </template>
       </top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Logs'" *ngIf="loggedIn && false">
@@ -48,6 +48,7 @@ export class AppComponent {
   loggedIn: boolean = false;
   loggingIn: boolean = false;
   activeTenant: V1x1Tenant = null;
+  activeIdx: number = 0;
 
   constructor(private apiCache: V1x1ApiCache, private api: V1x1Api) {
     this.apiCache.preload();
@@ -72,6 +73,7 @@ export class AppComponent {
         this.loggedIn = true;
         setTimeout(() => {
           this.loggedIn = false;
+          this.activeIdx = 0;
           localStorage.removeItem("authorization");
           localStorage.removeItem("auth_expiry");
         }, expiry - new Date().getTime() - 5000);

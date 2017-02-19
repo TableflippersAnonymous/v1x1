@@ -17,6 +17,8 @@ import {V1x1ApiString} from "../model/v1x1_api_string";
 import {V1x1Tenant} from "../model/v1x1_tenant";
 import {V1x1Channel} from "../model/v1x1_channel";
 import {V1x1Configuration} from "../model/v1x1_configuration";
+import {V1x1Group} from "../model/v1x1_group";
+import {V1x1GroupMembership} from "../model/v1x1_group_membership";
 
 @Injectable()
 export class V1x1Api {
@@ -227,5 +229,46 @@ export class V1x1Api {
       }))
         .map(r => r.json())
         .map(r => new V1x1Configuration(JSON.parse(r.config_json)));
+  }
+
+  getTenantGroupWithMemberships(tenantId: string): Observable<V1x1GroupMembership[]> {
+    return this.getGroupIds(tenantId)
+      .map(groupIds => groupIds.map(groupId => this.getGroupMembership(tenantId, groupId)))
+      .map(observableGroups => Observable.forkJoin(observableGroups))
+      .mergeAll();
+  }
+
+  getGroupIds(tenantId: string): Observable<string[]> {
+    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups', this.getAuthorization())
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries)
+      .catch((err, caught) => Observable.of([]));
+  }
+
+  getGroupMembership(tenantId: string, groupId: string): Observable<V1x1GroupMembership> {
+    return Observable.zip(
+      this.getGroup(tenantId, groupId),
+      this.getGroupUsers(tenantId, groupId),
+      (group, users) => new V1x1GroupMembership(group, users)
+    );
+  }
+
+  getGroup(tenantId: string, groupId: string): Observable<V1x1Group> {
+    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId, this.getAuthorization())
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1Group));
+  }
+
+  getGroupUsers(tenantId: string, groupId: string): Observable<V1x1GlobalUser[]> {
+    return this.getGroupUserIds(tenantId, groupId)
+      .map(userIds => userIds.map(userId => this.getGlobalUser(userId)))
+      .map(observableUsers => observableUsers.length === 0 ? Observable.of([]) : Observable.forkJoin(observableUsers))
+      .mergeAll();
+  }
+
+  getGroupUserIds(tenantId: string, groupId: string): Observable<string[]> {
+    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users', this.getAuthorization())
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries)
+      .catch((err, caught) => Observable.of([]));
   }
 }

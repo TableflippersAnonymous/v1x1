@@ -34,6 +34,8 @@ import {V1x1ApiCache} from "../services/api_cache";
 import {WelcomePageComponent} from "../components/welcome/page";
 import {UserDropdownNavComponent} from "../components/nav/user_dropdown";
 import {TenantDropdownNavComponent} from "../components/nav/tenant_dropdown";
+import {PermissionsGroupsComponent} from "../components/permissions/groups";
+import {PermissionsGroupComponent} from "../components/permissions/group";
 
 @NgModule({
   imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule, HttpModule ],
@@ -46,7 +48,8 @@ import {TenantDropdownNavComponent} from "../components/nav/tenant_dropdown";
     ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
     TopNavComponent, TopNavEntryComponent, TopNavEntryContentComponent, UserDropdownNavComponent, TenantDropdownNavComponent,
     DashboardPageComponent, HelpPageComponent, LogsPageComponent,
-    PermissionsPageComponent, WelcomePageComponent
+    PermissionsPageComponent, PermissionsGroupsComponent, PermissionsGroupComponent,
+    WelcomePageComponent
   ],
   providers:    [ V1x1Api, V1x1ApiCache ],
   bootstrap:    [ AppComponent ]

@@ -4,7 +4,7 @@ import {ConfigurableComponent} from "../configurable";
 @Component({
   selector: 'configuration-field-value-string-list',
   template: `
-    <div *ngFor="let elem of configuration; let i = index" style="margin-bottom: 1rem;" class="config-group" [class.config-group-dirty]="configIdxDirty(i)">
+    <div *ngFor="let elem of configuration; let i = index" style="padding-left: 10px; margin-bottom: 1rem;" class="config-group" [class.config-group-dirty]="configIdxDirty(i)">
       <div class="input-group">
         <configuration-field-value-string [field]="field" [originalConfiguration]="originalConfiguration[i]" [configuration]="configuration[i]" (configurationChange)="configuration[i] = $event; configChanged()"></configuration-field-value-string>
         <span class="input-group-btn">
@@ -21,7 +21,7 @@ export class ConfigurationFieldValueStringListComponent extends ConfigurableComp
   public addList() {
     if(!(this.configuration instanceof Array))
       this.configuration = [];
-    this.configuration.push({});
+    this.configuration.push("");
   }
 
   public delIdx(index: number) {
