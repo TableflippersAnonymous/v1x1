@@ -46,6 +46,8 @@ public class TenantGroup {
     }
 
     public List<Permission> getPermissions() {
-        return permissions == null ? new ArrayList<>() : permissions;
+        if(permissions == null)
+            permissions = new ArrayList<>();
+        return permissions;
     }
 }
