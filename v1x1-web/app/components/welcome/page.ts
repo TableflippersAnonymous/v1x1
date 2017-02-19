@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {V1x1Api} from "../../services/api";
 import {V1x1State} from "../../model/v1x1_state";
 @Component({
@@ -9,14 +9,17 @@ import {V1x1State} from "../../model/v1x1_state";
       <p class="lead">I'm v1x1. I make your chat better.</p>
       <hr class="my-4">
       <p>Hi! My name is v1x1 ("Vixie"), a chat robot that can help you manage your Twitch chat!</p>
-      <p><b>What's your name?</b></p>
-      <p><button class="btn btn-twitch" (click)="twitchLogin()"><i class="fa fa-twitch"></i> My name is ...</button></p>
+      <div *ngIf="!loggedIn">
+        <p><b>What's your name?</b></p>
+        <p><button class="btn btn-twitch" (click)="twitchLogin()"><i class="fa fa-twitch"></i> My name is ...</button></p>
+      </div>
     </div>
   `
 })
 export class WelcomePageComponent {
   state: V1x1State = undefined;
   expires: number = 0;
+  @Input() loggedIn: boolean;
 
   constructor(private api: V1x1Api) {
     this.renewState();
