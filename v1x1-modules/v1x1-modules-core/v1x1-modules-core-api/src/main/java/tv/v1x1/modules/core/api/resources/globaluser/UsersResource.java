@@ -62,7 +62,7 @@ public class UsersResource {
     @GET
     public ApiList<String> listPlatforms(@HeaderParam("Authorization") final String authorization,
                                          @PathParam("global_user_id") final String globalUserId) {
-        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read").ensurePrincipal(globalUserId);
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read");
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
@@ -74,7 +74,7 @@ public class UsersResource {
     public ApiList<String> listUsers(@HeaderParam("Authorization") final String authorization,
                                      @PathParam("global_user_id") final String globalUserId,
                                      @PathParam("platform") final String platformString) {
-        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read").ensurePrincipal(globalUserId);
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read");
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
@@ -88,7 +88,7 @@ public class UsersResource {
                         @PathParam("global_user_id") final String globalUserId,
                         @PathParam("platform") final String platform,
                         @PathParam("user_id") final String userId) {
-        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read").ensurePrincipal(globalUserId);
+        authorizer.forAuthorization(authorization).ensurePermission("api.global_users.read");
         final GlobalUser globalUser = daoGlobalUser.getById(UUID.fromString(globalUserId));
         if(globalUser == null)
             throw new NotFoundException();
