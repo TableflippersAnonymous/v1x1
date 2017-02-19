@@ -32,4 +32,6 @@ export class V1x1ConfigurationDefinition {
     );
     this.complexFieldsObj = obj;
   }
+
+
 }

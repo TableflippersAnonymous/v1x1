@@ -6,7 +6,7 @@ import {V1x1GlobalUser} from "../../model/v1x1_global_user";
   template: `
     <li class="nav-item" ngbDropdown *ngIf="globalUser !== null">
       <a class="nav-link" href="#" id="navbarUserDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
-        User
+        Logged in as: {{displayName()}}
       </a>
       <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarUserDropdownMenuLink">
         <span class="dropdown-item" *ngFor="let user of globalUser.users"><span class="fa" [class.fa-twitch]="user.platform === 'TWITCH'">/</span>{{user.displayName}}</span>
@@ -22,5 +22,9 @@ export class UserDropdownNavComponent {
 
   constructor(private api: V1x1Api) {
     this.api.getSelf().subscribe(r => this.globalUser = r);
+  }
+
+  displayName(): string {
+    return this.globalUser.users[0].displayName;
   }
 }
