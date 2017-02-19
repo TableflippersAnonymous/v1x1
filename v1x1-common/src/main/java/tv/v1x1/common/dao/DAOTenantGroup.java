@@ -23,6 +23,7 @@ import tv.v1x1.common.dto.db.TenantGroupsByUser;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -189,6 +190,9 @@ public class DAOTenantGroup {
 
     public TenantGroup addPermissionsToGroup(final TenantGroup tenantGroup, final Set<Permission> permissions) {
         tenantGroup.getPermissions().addAll(permissions);
+        final Set<Permission> set = new LinkedHashSet<>(tenantGroup.getPermissions());
+        tenantGroup.getPermissions().clear();
+        tenantGroup.getPermissions().addAll(set);
         tenantGroupMapper.save(tenantGroup);
         return tenantGroup;
     }
