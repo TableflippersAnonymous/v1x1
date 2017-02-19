@@ -13,11 +13,11 @@ pip-dep:
 docker-dep:
 	docker pull openjdk:8-jre-alpine
 
-test: mvn-test npm-build docker-login
+test: mvn-test npm-build
 	./upload.sh
 	codedeploy/prepare.sh
 
-mvn-test:
+mvn-test: docker-login
 	mvn -T16 integration-test -Denvironment=prod
 
 npm-build:
@@ -29,7 +29,7 @@ cert-setup:
 	cat /etc/ssl/certs/ca-certificates.crt | sudo tee -a /etc/docker/certs.d/registry.tblflp.zone:5443/ca.crt
 
 docker-login: cert-setup
-	docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS} registry.tblflp.zone:5443
+	while true; do docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS} registry.tblflp.zone:5443; sleep 3; done
 	echo '#!/bin/bash' > codedeploy/v1x1-login.sh
 	echo "docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS} registry.tblflp.zone:5443" >> codedeploy/v1x1-login.sh
 	chmod +x codedeploy/v1x1-login.sh
