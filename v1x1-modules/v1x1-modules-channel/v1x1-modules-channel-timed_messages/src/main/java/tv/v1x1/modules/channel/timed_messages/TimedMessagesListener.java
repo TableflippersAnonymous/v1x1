@@ -67,6 +67,13 @@ public class TimedMessagesListener implements EventListener {
                 return;
             }
             LOG.trace("saved UUID is {}", t.getActiveTimer());
+            if(t.getActiveTimer() == null) {
+                LOG.warn("Got a timer with a null active timer, but is enabled.  Re-scheduling.");
+                module.pauseTimer(uuid);
+                module.unpauseTimer(tenant, timerName);
+                MDC.remove("tenant");
+                return;
+            }
             if(!t.getActiveTimer().equals(uuid.getValue())) {
                 LOG.info("Got a timer {} which is no longer the active timer UUID {}; pausing it.", uuid.getValue().toString(), t.getActiveTimer().toString());
                 module.pauseTimer(uuid);
