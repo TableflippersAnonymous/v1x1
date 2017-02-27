@@ -11,11 +11,9 @@ public class EmoticonImage {
     @JsonProperty("emoticon_set")
     private Integer emoticonSet;
     @JsonProperty
-    private int height;
+    private String code;
     @JsonProperty
-    private int width;
-    @JsonProperty
-    private String url;
+    private long id;
 
     public EmoticonImage() {
     }
@@ -28,27 +26,19 @@ public class EmoticonImage {
         this.emoticonSet = emoticonSet;
     }
 
-    public int getHeight() {
-        return height;
+    public String getCode() {
+        return code;
     }
 
-    public void setHeight(final int height) {
-        this.height = height;
+    public void setCode(final String code) {
+        this.code = code;
     }
 
-    public int getWidth() {
-        return width;
+    public long getId() {
+        return id;
     }
 
-    public void setWidth(final int width) {
-        this.width = width;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(final String url) {
-        this.url = url;
+    public void setId(final long id) {
+        this.id = id;
     }
 }

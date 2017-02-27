@@ -20,6 +20,7 @@
     <module>v1x1-modules-core-event_router</module>
     <module>v1x1-modules-core-scheduler</module>
     <module>v1x1-modules-core-api</module>
+    <module>v1x1-modules-core-cli</module>
   </modules>
 
   <dependencies>

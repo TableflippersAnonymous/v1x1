@@ -8,12 +8,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ShortChannel {
+    @JsonProperty("_id")
+    private long id;
     @JsonProperty("display_name")
     private String displayName;
     @JsonProperty
     private String name;
 
     public ShortChannel() {
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(final long id) {
+        this.id = id;
     }
 
     public String getDisplayName() {

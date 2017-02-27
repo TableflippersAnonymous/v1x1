@@ -10,15 +10,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PostRequest {
     @JsonProperty
     private String content;
-    @JsonProperty
-    private boolean share;
 
     public PostRequest() {
     }
 
-    public PostRequest(final String content, final boolean share) {
+    public PostRequest(final String content) {
         this.content = content;
-        this.share = share;
     }
 
     public String getContent() {
@@ -27,13 +24,5 @@ public class PostRequest {
 
     public void setContent(final String content) {
         this.content = content;
-    }
-
-    public boolean isShare() {
-        return share;
-    }
-
-    public void setShare(final boolean share) {
-        this.share = share;
     }
 }

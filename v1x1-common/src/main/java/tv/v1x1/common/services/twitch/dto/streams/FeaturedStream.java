@@ -11,15 +11,17 @@ public class FeaturedStream {
     @JsonProperty
     private String image;
     @JsonProperty
-    private String text;
-    @JsonProperty
-    private String title;
-    @JsonProperty
-    private boolean sponsored;
+    private long priority;
     @JsonProperty
     private boolean scheduled;
     @JsonProperty
+    private boolean sponsored;
+    @JsonProperty
     private Stream stream;
+    @JsonProperty
+    private String text;
+    @JsonProperty
+    private String title;
 
     public FeaturedStream() {
     }
@@ -70,5 +72,13 @@ public class FeaturedStream {
 
     public void setStream(final Stream stream) {
         this.stream = stream;
+    }
+
+    public long getPriority() {
+        return priority;
+    }
+
+    public void setPriority(final long priority) {
+        this.priority = priority;
     }
 }

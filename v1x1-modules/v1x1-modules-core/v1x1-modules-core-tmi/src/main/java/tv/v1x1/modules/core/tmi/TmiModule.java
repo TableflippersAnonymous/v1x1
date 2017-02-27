@@ -19,7 +19,8 @@ import tv.v1x1.common.modules.ServiceModule;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.queue.MessageQueue;
-import tv.v1x1.common.util.data.Pair;
+import tv.v1x1.common.services.state.TwitchDisplayNameService;
+import tv.v1x1.common.services.twitch.dto.channels.Channel;
 import tv.v1x1.common.util.network.IPProvider;
 import tv.v1x1.common.util.ratelimiter.GlobalRateLimiter;
 import tv.v1x1.common.util.ratelimiter.LocalRateLimiter;
@@ -46,6 +47,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
     private ScheduledExecutorService scheduledExecutorService;
     private RateLimiter joinLimiter;
     private MessageQueue eventRouter;
+    private TwitchDisplayNameService twitchDisplayNameService;
 
     private static class PermissionCacheKey {
         private final Tenant tenant;
@@ -108,7 +110,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     public Tenant load(final String s) throws Exception {
                         try {
                             LOG.debug("Loading tenant for {}", s);
-                            return getDaoManager().getDaoTenant().getOrCreate(Platform.TWITCH, s, s).toCore();
+                            return getDaoManager().getDaoTenant().getOrCreate(Platform.TWITCH, s, null).toCore();
                         } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
@@ -122,7 +124,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     public GlobalUser load(final String s) throws Exception {
                         try {
                             LOG.debug("Loading global user for {}", s);
-                            return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.TWITCH, s, s).toCore();
+                            return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.TWITCH, s, null).toCore();
                         } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
@@ -166,6 +168,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }
+        twitchDisplayNameService = getInjector().getInstance(TwitchDisplayNameService.class);
         scheduledExecutorService = Executors.newScheduledThreadPool(getSettings().getMaxConnections());
         joinLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi/" + myIp, 48, 15);
         eventRouter = getMessageQueueManager().forName(getMainQueueForModule(new Module("event_router")));
@@ -272,20 +275,21 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         }
     }
 
-    private void setChannels(final Collection<String> channels) throws IOException, InterruptedException {
-        LOG.info("Channels: {}", Joiner.on(", ").join(channels));
+    private void setChannels(final Collection<String> channelIds) throws IOException, InterruptedException {
+        LOG.info("Channels: {}", Joiner.on(", ").join(channelIds));
         LOG.info("this.channels: {}", Joiner.on(", ").join(bots.keySet()));
-        bots.keySet().stream().filter(channel -> !channels.contains(channel)).forEach(this::part);
-        channels.stream().filter(channel -> !bots.keySet().contains(channel)).forEach(this::join);
+        bots.keySet().stream().filter(channelId -> !channelIds.contains(channelId)).forEach(this::part);
+        channelIds.stream().filter(channelId -> !bots.keySet().contains(channelId)).forEach(this::join);
     }
 
-    private void join(final String channel) {
+    private void join(final String channelId) {
         try {
-            LOG.info("Joining {}", channel);
-            if (bots.containsKey(channel))
+            final Channel channel = twitchDisplayNameService.getChannelByChannelId(channelId);
+            LOG.info("Joining {}", channel.getDisplayName());
+            if (bots.containsKey(channelId))
                 return;
-            final Tenant tenant = getTenant(channel);
-            LOG.debug("Getting tenant configuration for {}", channel);
+            final Tenant tenant = getTenant(channelId);
+            LOG.debug("Getting tenant configuration for {}", channel.getDisplayName());
             final TmiTenantConfiguration tenantConfiguration = getTenantConfiguration(tenant);
             final String oauthToken;
             String username = tenantConfiguration.getBotName();
@@ -296,11 +300,11 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     username = getGlobalConfiguration().getDefaultUsername();
                 oauthToken = getGlobalConfiguration().getGlobalBots().get(username);
             }
-            LOG.debug("Connecting to {} with username={} password={}", channel, username, oauthToken);
+            LOG.debug("Connecting to {} with username={} password={}", channel.getDisplayName(), username, oauthToken);
             final RateLimiter messageLimiter = new LocalRateLimiter(scheduledExecutorService, 18, 30);
-            final TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel);
+            final TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel, twitchDisplayNameService);
             scheduledExecutorService.submit(tmiBot);
-            final TmiBot oldTmiBot = bots.put(channel, tmiBot);
+            final TmiBot oldTmiBot = bots.put(channelId, tmiBot);
             try {
                 if (oldTmiBot != null)
                     oldTmiBot.shutdown();
@@ -313,10 +317,10 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         }
     }
 
-    private void part(final String channel) {
+    private void part(final String channelId) {
         try {
-            LOG.info("Leaving {}", channel);
-            final TmiBot oldTmiBot = bots.remove(channel);
+            LOG.info("Leaving {}", channelId);
+            final TmiBot oldTmiBot = bots.remove(channelId);
             try {
                 if (oldTmiBot != null)
                     oldTmiBot.shutdown();

@@ -96,7 +96,7 @@ public class MetaResource {
         if(tokenResponse == null)
             throw new BadRequestException();
         final PrivateUser privateUser = twitchApi.withToken(tokenResponse.getAccessToken()).getUsers().getUser();
-        final GlobalUser globalUser = daoGlobalUser.getOrCreate(Platform.TWITCH, privateUser.getName(), privateUser.getDisplayName());
+        final GlobalUser globalUser = daoGlobalUser.getOrCreate(Platform.TWITCH, String.valueOf(privateUser.getId()), privateUser.getDisplayName());
         daoTwitchOauthToken.put(new TwitchOauthToken(globalUser.getId(), privateUser.getName(), tokenResponse.getAccessToken(), tokenResponse.getScope()));
         final Channel channel = daoTenant.getChannel(Platform.TWITCH, "#" + privateUser.getName());
         final Tenant tenant = daoTenant.getOrCreate(Platform.TWITCH, "#" + privateUser.getName(), "#" + privateUser.getName());

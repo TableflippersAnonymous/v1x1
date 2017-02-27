@@ -19,6 +19,8 @@ public class Game {
     private long id;
     @JsonProperty("giantbomb_id")
     private long giantBombId;
+    @JsonProperty
+    private long popularity;
 
     public Game() {
     }
@@ -61,5 +63,13 @@ public class Game {
 
     public void setGiantBombId(final long giantBombId) {
         this.giantBombId = giantBombId;
+    }
+
+    public long getPopularity() {
+        return popularity;
+    }
+
+    public void setPopularity(final long popularity) {
+        this.popularity = popularity;
     }
 }
