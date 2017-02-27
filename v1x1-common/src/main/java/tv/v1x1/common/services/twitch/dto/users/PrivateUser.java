@@ -10,10 +10,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class PrivateUser extends User {
     @JsonProperty
     private String email;
-    @JsonProperty
-    private boolean partnered;
+    @JsonProperty("email_verified")
+    private boolean emailVerified;
     @JsonProperty
     private NotificationSettings notifications;
+    @JsonProperty
+    private boolean partnered;
+    @JsonProperty("twitter_connected")
+    private boolean twitterConnected;
 
     public PrivateUser() {
     }
@@ -40,5 +44,21 @@ public class PrivateUser extends User {
 
     public void setNotifications(final NotificationSettings notifications) {
         this.notifications = notifications;
+    }
+
+    public boolean isEmailVerified() {
+        return emailVerified;
+    }
+
+    public void setEmailVerified(final boolean emailVerified) {
+        this.emailVerified = emailVerified;
+    }
+
+    public boolean isTwitterConnected() {
+        return twitterConnected;
+    }
+
+    public void setTwitterConnected(final boolean twitterConnected) {
+        this.twitterConnected = twitterConnected;
     }
 }

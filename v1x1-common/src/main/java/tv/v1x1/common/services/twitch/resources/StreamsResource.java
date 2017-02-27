@@ -21,14 +21,43 @@ public class StreamsResource {
         this.streams = streams;
     }
 
-    public StreamResponse getStream(final String channel) {
-        return streams.path(channel).request(TwitchApi.ACCEPT).get().readEntity(StreamResponse.class);
+    /**
+     * Gets stream information (the stream object) for a specified user.
+     * @param channelId ID of channel
+     */
+    public StreamResponse getStream(final String channelId) {
+        return streams.path(channelId).request(TwitchApi.ACCEPT).get().readEntity(StreamResponse.class);
     }
 
-    public StreamList listStreams(final String game, final List<String> channels, final Integer limit, final Integer offset, final StreamType streamType, final String language) {
+    /**
+     * Gets stream information (the stream object) for a specified user.
+     * @param channelId ID of channel
+     * @param streamType Constrains the type of streams returned. Valid values: live, playlist, all. Playlists are
+     *                   offline streams of VODs (Video on Demand) that appear live. Default: live.
+     */
+    public StreamResponse getStream(final String channelId, final String streamType) {
+        return streams.path(channelId)
+                .queryParam("stream_type", streamType)
+                .request(TwitchApi.ACCEPT)
+                .get()
+                .readEntity(StreamResponse.class);
+    }
+
+    /**
+     * Gets a list of live streams.
+     * @param game Constrains the game of the streams returned.
+     * @param channelIds Constrains the channel(s) of the streams returned.
+     * @param limit Maximum number of objects to return, sorted by number of viewers. Default: 25. Maximum: 100.
+     * @param offset Object offset for pagination of results. Default: 0.
+     * @param streamType Constrains the type of streams returned. Valid values: live, playlist, all. Playlists are
+     *                   offline streams of VODs (Video on Demand) that appear live. Default: live.
+     * @param language Constrains the language of the streams returned. Valid value: a locale ID string; for example,
+     *                 en, fi, es-mx. Only one language can be specified. Default: all languages.
+     */
+    public StreamList listStreams(final String game, final List<String> channelIds, final Integer limit, final Integer offset, final StreamType streamType, final String language) {
         return streams
                 .queryParam("game", game)
-                .queryParam("channels", channels == null ? null : Joiner.on(",").join(channels))
+                .queryParam("channels", channelIds == null ? null : Joiner.on(",").join(channelIds))
                 .queryParam("limit", limit)
                 .queryParam("offset", offset)
                 .queryParam("stream_type", streamType == null ? null : streamType.name().toLowerCase())
@@ -38,6 +67,23 @@ public class StreamsResource {
                 .readEntity(StreamList.class);
     }
 
+    /**
+     * Gets a summary of live streams.
+     * @param game Constrains the game of the streams returned.
+     */
+    public StreamSummary getSummary(final String game) {
+        return streams.path("summary")
+                .queryParam("game", game)
+                .request(TwitchApi.ACCEPT)
+                .get()
+                .readEntity(StreamSummary.class);
+    }
+
+    /**
+     * Gets a list of all featured live streams.
+     * @param limit Maximum number of objects to return, sorted by priority. Default: 25. Maximum: 100.
+     * @param offset Object offset for pagination of results. Default: 0.
+     */
     public FeaturedStreamList getFeatured(final Integer limit, final Integer offset) {
         return streams.path("featured")
                 .queryParam("limit", limit).queryParam("offset", offset)
@@ -46,11 +92,19 @@ public class StreamsResource {
                 .readEntity(FeaturedStreamList.class);
     }
 
-    public StreamSummary getSummary(final String game) {
-        return streams.path("summary")
-                .queryParam("game", game)
+    /**
+     * Gets a list of online streams a user is following, based on a specified OAuth token.
+     * @param limit Maximum number of objects to return. Default: 25. Maximum: 100.
+     * @param offset Object offset for pagination of results. Default: 0.
+     * @param streamType Constrains the type of streams returned. Valid values: live, playlist, all. Playlists are
+     *                   offline streams of VODs (Video on Demand) that appear live. Default: live.
+     */
+    public StreamList getFollowedStreams(final Integer limit, final Integer offset, final StreamType streamType) {
+        return streams.path("followed")
+                .queryParam("limit", limit).queryParam("offset", offset)
+                .queryParam("stream_type", streamType == null ? null : streamType.name().toLowerCase())
                 .request(TwitchApi.ACCEPT)
                 .get()
-                .readEntity(StreamSummary.class);
+                .readEntity(StreamList.class);
     }
 }

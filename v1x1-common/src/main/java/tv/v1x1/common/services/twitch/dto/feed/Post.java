@@ -26,6 +26,10 @@ public class Post {
     private String body;
     @JsonProperty
     private User user;
+    @JsonProperty
+    private CommentList comments;
+    @JsonProperty
+    private Permissions permissions;
 
     public Post() {
     }
@@ -84,5 +88,21 @@ public class Post {
 
     public void setUser(final User user) {
         this.user = user;
+    }
+
+    public CommentList getComments() {
+        return comments;
+    }
+
+    public void setComments(final CommentList comments) {
+        this.comments = comments;
+    }
+
+    public Permissions getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(final Permissions permissions) {
+        this.permissions = permissions;
     }
 }

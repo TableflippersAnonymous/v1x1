@@ -11,16 +11,16 @@ import java.util.List;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TeamList {
     @JsonProperty
-    private List<Team> teams;
+    private List<ShortTeam> teams;
 
     public TeamList() {
     }
 
-    public List<Team> getTeams() {
+    public List<ShortTeam> getTeams() {
         return teams;
     }
 
-    public void setTeams(final List<Team> teams) {
+    public void setTeams(final List<ShortTeam> teams) {
         this.teams = teams;
     }
 }

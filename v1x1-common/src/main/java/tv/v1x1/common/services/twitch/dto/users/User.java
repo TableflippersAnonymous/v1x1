@@ -7,23 +7,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Created by naomi on 10/29/2016.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class User {
-    @JsonProperty("updated_at")
-    private String updatedAt;
-    @JsonProperty("display_name")
-    private String displayName;
-    @JsonProperty
-    private String type;
+public class User extends ShortUser {
     @JsonProperty
     private String bio;
-    @JsonProperty
-    private String name;
-    @JsonProperty("_id")
-    private long id;
-    @JsonProperty
-    private String logo;
     @JsonProperty("created_at")
     private String createdAt;
+    @JsonProperty
+    private String logo;
+    @JsonProperty
+    private String type;
+    @JsonProperty("updated_at")
+    private String updatedAt;
 
     public User() {
     }
@@ -34,14 +28,6 @@ public class User {
 
     public void setUpdatedAt(final String updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(final String displayName) {
-        this.displayName = displayName;
     }
 
     public String getType() {
@@ -58,22 +44,6 @@ public class User {
 
     public void setBio(final String bio) {
         this.bio = bio;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(final long id) {
-        this.id = id;
     }
 
     public String getLogo() {

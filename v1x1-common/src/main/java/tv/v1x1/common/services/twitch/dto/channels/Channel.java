@@ -8,44 +8,36 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Channel extends ShortChannel {
-    @JsonProperty
-    private boolean mature;
-    @JsonProperty
-    private String status;
     @JsonProperty("broadcaster_language")
     private String broadcasterLanguage;
+    @JsonProperty("created_at")
+    private String createdAt;
+    @JsonProperty
+    private long followers;
     @JsonProperty
     private String game;
     @JsonProperty
-    private int delay;
-    @JsonProperty
     private String language;
-    @JsonProperty("_id")
-    private long id;
-    @JsonProperty("created_at")
-    private String createdAt;
-    @JsonProperty("updated_at")
-    private String updatedAt;
     @JsonProperty
     private String logo;
     @JsonProperty
-    private String banner;
-    @JsonProperty("video_banner")
-    private String videoBanner;
+    private boolean mature;
     @JsonProperty
-    private String background;
+    private boolean partner;
     @JsonProperty("profile_banner")
     private String profileBanner;
     @JsonProperty("profile_banner_background_color")
     private String profileBannerBackgroundColor;
     @JsonProperty
-    private boolean partner;
+    private String status;
+    @JsonProperty("updated_at")
+    private String updatedAt;
     @JsonProperty
     private String url;
+    @JsonProperty("video_banner")
+    private String videoBanner;
     @JsonProperty
     private long views;
-    @JsonProperty
-    private long followers;
 
     public Channel() {
     }
@@ -82,28 +74,12 @@ public class Channel extends ShortChannel {
         this.game = game;
     }
 
-    public int getDelay() {
-        return delay;
-    }
-
-    public void setDelay(final int delay) {
-        this.delay = delay;
-    }
-
     public String getLanguage() {
         return language;
     }
 
     public void setLanguage(final String language) {
         this.language = language;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(final long id) {
-        this.id = id;
     }
 
     public String getCreatedAt() {
@@ -130,28 +106,12 @@ public class Channel extends ShortChannel {
         this.logo = logo;
     }
 
-    public String getBanner() {
-        return banner;
-    }
-
-    public void setBanner(final String banner) {
-        this.banner = banner;
-    }
-
     public String getVideoBanner() {
         return videoBanner;
     }
 
     public void setVideoBanner(final String videoBanner) {
         this.videoBanner = videoBanner;
-    }
-
-    public String getBackground() {
-        return background;
-    }
-
-    public void setBackground(final String background) {
-        this.background = background;
     }
 
     public String getProfileBanner() {

@@ -137,7 +137,7 @@ public class QuotesModule extends RegisteredThreadedModule<QuotesSettings, Quote
     }
 
     public String getGame(final Channel channel) {
-        final String targetId = channel.getId().toLowerCase().substring(1);
+        final String targetId = channel.getId().toLowerCase();
         final tv.v1x1.common.services.twitch.dto.channels.Channel videoChannel;
         try {
             videoChannel = getTwitchApi().getChannels().getChannel(targetId);

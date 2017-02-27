@@ -13,7 +13,7 @@ public class Emoticon {
     @JsonProperty
     private String regex;
     @JsonProperty
-    private List<EmoticonImage> images;
+    private List<EmoticonImageEntry> images;
 
     public Emoticon() {
     }
@@ -26,11 +26,11 @@ public class Emoticon {
         this.regex = regex;
     }
 
-    public List<EmoticonImage> getImages() {
+    public List<EmoticonImageEntry> getImages() {
         return images;
     }
 
-    public void setImages(final List<EmoticonImage> images) {
+    public void setImages(final List<EmoticonImageEntry> images) {
         this.images = images;
     }
 }

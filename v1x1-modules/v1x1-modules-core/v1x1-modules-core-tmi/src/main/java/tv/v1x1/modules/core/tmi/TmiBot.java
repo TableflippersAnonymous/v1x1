@@ -49,15 +49,15 @@ import tv.v1x1.common.dto.messages.events.TwitchUserEvent;
 import tv.v1x1.common.dto.messages.events.TwitchUserModChangeEvent;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.queue.MessageQueue;
+import tv.v1x1.common.services.state.TwitchDisplayNameService;
+import tv.v1x1.common.services.twitch.dto.channels.Channel;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
-import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.invoke.MethodHandles;
 import java.net.Socket;
@@ -86,13 +86,15 @@ public class TmiBot implements Runnable {
     private final Deduplicator deduplicator;
     private TmiService service;
     private final TmiModule tmiModule;
-    private final String channel;
+    private final Channel channel;
     private final UUID id = UUID.randomUUID();
     private Thread thread;
+    private final TwitchDisplayNameService twitchDisplayNameService;
 
     public TmiBot(final String username, final String oauthToken, final MessageQueue queue,
                   final Module module, final RateLimiter joinLimiter, final RateLimiter messageLimiter,
-                  final Deduplicator deduplicator, final TmiModule tmiModule, final String channel) {
+                  final Deduplicator deduplicator, final TmiModule tmiModule, final Channel channel,
+                  final TwitchDisplayNameService twitchDisplayNameService) {
         this.oauthToken = oauthToken;
         this.username = username;
         this.module = module;
@@ -103,6 +105,7 @@ public class TmiBot implements Runnable {
         this.tmiModule = tmiModule;
         this.channel = channel;
         this.bot = new TwitchBot(username);
+        this.twitchDisplayNameService = twitchDisplayNameService;
         log("Init: Constructed!");
     }
 
@@ -179,7 +182,7 @@ public class TmiBot implements Runnable {
         final IrcUser user = (IrcUser) stanza.getSource();
         if(!user.getNickname().equals(username))
             return;
-        if(!stanza.getChannel().equals(channel))
+        if(!stanza.getChannel().equals("#" + channel.getName()))
             return;
         registerService();
     }
@@ -190,7 +193,7 @@ public class TmiBot implements Runnable {
         final IrcUser user = (IrcUser) stanza.getSource();
         if(!user.getNickname().equals(username))
             return;
-        if(!stanza.getChannel().equals(channel))
+        if(!stanza.getChannel().equals("#" + channel.getName()))
             return;
         unregisterService();
     }
@@ -238,7 +241,7 @@ public class TmiBot implements Runnable {
     }
 
     private void event(final ClearChatCommand clearChatCommand) {
-        event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand.getChannel()), getUser(clearChatCommand.getNickname()), clearChatCommand));
+        event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand), getUserByUsername(clearChatCommand.getNickname()), clearChatCommand));
     }
 
     private void event(final GlobalUserStateCommand globalUserStateCommand) {
@@ -246,24 +249,24 @@ public class TmiBot implements Runnable {
     }
 
     private void event(final HostTargetCommand hostTargetCommand) {
-        event(new TwitchHostEvent(module, getChannel(hostTargetCommand.getChannel()), getChannel("#" + hostTargetCommand.getTargetChannel()), hostTargetCommand));
+        event(new TwitchHostEvent(module, getChannel(hostTargetCommand), getChannelByName(hostTargetCommand.getTargetChannel()), hostTargetCommand));
     }
 
     private void event(final JoinCommand joinCommand) {
-        event(new TwitchChatJoinEvent(module, getUser(joinCommand), getChannel(joinCommand.getChannel()), joinCommand));
+        event(new TwitchChatJoinEvent(module, getUser(joinCommand), getChannel(joinCommand), joinCommand));
     }
 
     private void event(final ModeCommand modeCommand) {
         for(final String username : modeCommand.getNicknames())
-            event(new TwitchUserModChangeEvent(module, getChannel(modeCommand.getChannel()), getUser(username), modeCommand.getModeString().startsWith("+"), modeCommand));
+            event(new TwitchUserModChangeEvent(module, getChannel(modeCommand), getUserByUsername(username), modeCommand.getModeString().startsWith("+"), modeCommand));
     }
 
     private void event(final NoticeCommand noticeCommand) {
-        event(new TwitchChannelEvent(module, getChannel(noticeCommand.getChannel()), noticeCommand.getMessage(), noticeCommand));
+        event(new TwitchChannelEvent(module, getChannel(noticeCommand), noticeCommand.getMessage(), noticeCommand));
     }
 
     private void event(final PartCommand partCommand) {
-        event(new TwitchChatPartEvent(module, getUser(partCommand), getChannel(partCommand.getChannel()), partCommand));
+        event(new TwitchChatPartEvent(module, getUser(partCommand), getChannel(partCommand), partCommand));
     }
 
     private void event(final PingCommand pingCommand) {
@@ -271,7 +274,7 @@ public class TmiBot implements Runnable {
     }
 
     private void event(final PrivmsgCommand privmsgCommand) {
-        final TwitchChannel channel = getChannel(privmsgCommand.getChannel());
+        final TwitchChannel channel = getChannel(privmsgCommand);
         final TwitchUser user = getUser(privmsgCommand);
         if(user.getId().equals(username))
             return;
@@ -287,7 +290,7 @@ public class TmiBot implements Runnable {
     }
 
     private void event(final RoomStateCommand roomStateCommand) {
-        event(new TwitchRoomStateEvent(module, getChannel(roomStateCommand.getChannel()), roomStateCommand));
+        event(new TwitchRoomStateEvent(module, getChannel(roomStateCommand), roomStateCommand));
     }
 
     private void event(final RplEndOfMotdCommand rplEndOfMotdCommand) {
@@ -295,15 +298,15 @@ public class TmiBot implements Runnable {
     }
 
     private void event(final RplNameReplyCommand rplNameReplyCommand) {
-        event(new TwitchChannelUsersEvent(module, getChannel(rplNameReplyCommand.getChannel()), rplNameReplyCommand.getMembers().stream().map(member -> getUser(member.getNickname())).collect(Collectors.toList()), rplNameReplyCommand));
+        event(new TwitchChannelUsersEvent(module, getChannel(rplNameReplyCommand), rplNameReplyCommand.getMembers().stream().map(member -> getUserByUsername(member.getNickname())).collect(Collectors.toList()), rplNameReplyCommand));
     }
 
     private void event(final UserNoticeCommand userNoticeCommand) {
-        event(new TwitchUserEvent(module, getChannel(userNoticeCommand.getChannel()), getUser(userNoticeCommand.getLogin()), userNoticeCommand.getMessage(), userNoticeCommand));
+        event(new TwitchUserEvent(module, getChannel(userNoticeCommand), getUserByUsername(userNoticeCommand.getLogin()), userNoticeCommand.getMessage(), userNoticeCommand));
     }
 
     private void event(final UserStateCommand userStateCommand) {
-        event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand.getChannel()), bot, userStateCommand));
+        event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand), bot, userStateCommand));
     }
 
     private void event(final WhisperCommand whisperCommand) {
@@ -312,23 +315,63 @@ public class TmiBot implements Runnable {
 
     private TwitchUser getUser(final IrcStanza stanza) {
         final IrcSource source = stanza.getSource();
+
+        final String displayName = stanza.getTags().get("display-name");
+
+        // If we have a user-id, use that.
+        if(stanza.getTags().containsKey("user-id"))
+            return getUser(stanza.getTags().get("user-id"), displayName);
+
+        // Otherwise, we need to extract a username and look it up in the TwitchDisplayNameService
         if(source instanceof IrcUser)
-            return getUser(((IrcUser) source).getNickname(), stanza.getTags().get("display-name"));
+            return getUser(twitchDisplayNameService.getUserIdFromUsername(((IrcUser) source).getNickname()), displayName);
         else if(stanza.getTags().containsKey("login"))
-            return getUser(stanza.getTags().get("login"), stanza.getTags().get("display-name"));
+            return getUser(twitchDisplayNameService.getUserIdFromUsername(stanza.getTags().get("login")), displayName);
         throw new IllegalArgumentException("Not able to find a TwitchUser in stanza: " + stanza.getRawLine());
     }
 
-    private TwitchUser getUser(final String id) {
-        return getUser(id, null);
+    private TwitchUser getUserByUsername(final String username) {
+        return getUser(twitchDisplayNameService.getUserIdFromUsername(username), null);
     }
 
     private TwitchUser getUser(final String id, final String displayName) {
-        return new TwitchUser(id, tmiModule.getGlobalUser(id), displayName == null ? id : displayName);
+        return new TwitchUser(id, tmiModule.getGlobalUser(id), displayName == null ? twitchDisplayNameService.getDisplayNameFromUserId(id) : displayName);
+    }
+
+    private TwitchChannel getChannel(final IrcStanza stanza) {
+        // If we have a room-id, use that.
+        if(stanza.getTags().containsKey("room-id"))
+            return getChannel(stanza.getTags().get("room-id"));
+
+        switch(stanza.getCommand()) {
+            case JOIN: return getChannelByName(((JoinCommand) stanza).getChannel());
+            case PART: return getChannelByName(((PartCommand) stanza).getChannel());
+            case PRIVMSG: return getChannelByName(((PrivmsgCommand) stanza).getChannel());
+            case RPL_NAMREPLY: return getChannelByName(((RplNameReplyCommand) stanza).getChannel());
+            case MODE: return getChannelByName(((ModeCommand) stanza).getChannel());
+            case NOTICE: return getChannelByName(((NoticeCommand) stanza).getChannel());
+            case HOSTTARGET: return getChannelByName(((HostTargetCommand) stanza).getChannel());
+            case CLEARCHAT: return getChannelByName(((ClearChatCommand) stanza).getChannel());
+            case USERSTATE: return getChannelByName(((UserStateCommand) stanza).getChannel());
+            case ROOMSTATE: return getChannelByName(((RoomStateCommand) stanza).getChannel());
+            case USERNOTICE: return getChannelByName(((UserNoticeCommand) stanza).getChannel());
+            default: throw new IllegalArgumentException("Not able to find a TwitchChannel in stanza: " + stanza.getRawLine());
+        }
+    }
+
+    private TwitchChannel getChannelByName(String channelName) {
+        if(channelName.startsWith("#"))
+            channelName = channelName.substring(1);
+        return getChannel(twitchDisplayNameService.getChannelIdByChannelName(channelName));
     }
 
     private TwitchChannel getChannel(final String id) {
-        return new TwitchChannel(id, tmiModule.getTenant(id), id);
+        final String displayName = twitchDisplayNameService.getDisplayNameFromChannelId(id);
+        return getChannel(id, displayName);
+    }
+
+    private TwitchChannel getChannel(final String id, final String displayName) {
+        return new TwitchChannel(id, tmiModule.getTenant(id), displayName);
     }
 
     private void connect() throws IOException {
@@ -356,7 +399,7 @@ public class TmiBot implements Runnable {
     }
 
     private void joinChannels() throws Exception {
-        join(channel);
+        join("#" + channel.getName());
     }
 
     private void join(final String channel) throws IOException, InterruptedException {
@@ -388,10 +431,10 @@ public class TmiBot implements Runnable {
             thread.interrupt();
     }
 
-    public void sendMessage(final String channel, final String text) throws IOException, InterruptedException {
+    public void sendMessage(final String channelId, final String text) throws IOException, InterruptedException {
         messageLimiter.submitAndWait(() -> {
             try {
-                sendLine("PRIVMSG " + channel + " :" + text);
+                sendLine("PRIVMSG #" + twitchDisplayNameService.getChannelNameFromChannelId(channelId) + " :" + text);
             } catch (final IOException e) {
                 throw new RuntimeException(e);
             }
@@ -399,7 +442,7 @@ public class TmiBot implements Runnable {
     }
 
     private void registerService() {
-        service = new TmiService(tmiModule, channel, this);
+        service = new TmiService(tmiModule, String.valueOf(channel.getId()), this);
         service.start();
     }
 
@@ -409,6 +452,6 @@ public class TmiBot implements Runnable {
     }
 
     private void log(final String m) {
-        LOG.info("[{}:{}] [{}] {}", username, id, channel, m.replace(oauthToken, "<oauth token removed>"));
+        LOG.info("[{}:{}] [{}] {}", username, id, channel.getDisplayName(), m.replace(oauthToken, "<oauth token removed>"));
     }
 }

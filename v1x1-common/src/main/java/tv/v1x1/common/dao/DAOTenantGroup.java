@@ -178,7 +178,7 @@ public class DAOTenantGroup {
         final TenantGroupsByUser tenantGroupsByUser = getGroupsByUser(tenantGroup.getTenantId(), userId);
         tenantGroupsByUser.getGroups().remove(tenantGroup.getGroupId());
         final BatchStatement b = new BatchStatement();
-        b.add(tenantGroupMembershipMapper.deleteQuery(tenantGroupMembership));
+        b.add(tenantGroupMembershipMapper.deleteQuery(tenantGroupMembership.getTenantId(), tenantGroupMembership.getGroupId(), tenantGroupMembership.getUserId()));
         b.add(tenantGroupsByUserMapper.saveQuery(tenantGroupsByUser));
         session.execute(b);
         return tenantGroup;

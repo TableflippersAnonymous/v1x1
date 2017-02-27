@@ -15,6 +15,11 @@ public class GamesResource {
         this.games = games;
     }
 
+    /**
+     * Gets games sorted by number of current viewers on Twitch, most popular first.
+     * @param limit Maximum number of objects to return. Default: 10. Maximum: 100.
+     * @param offset Object offset for pagination of results. Default: 0.
+     */
     public TopGameList getTop(final Integer limit, final Integer offset) {
         return games.path("top")
                 .queryParam("limit", limit).queryParam("offset", offset)

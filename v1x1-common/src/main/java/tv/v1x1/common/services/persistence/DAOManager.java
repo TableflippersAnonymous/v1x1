@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
 import tv.v1x1.common.dao.*;
+import tv.v1x1.common.services.state.DisplayNameService;
 
 /**
  *
@@ -26,9 +27,9 @@ public class DAOManager {
     private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
 
     @Inject
-    public DAOManager(final RedissonClient redissonClient, final MappingManager mappingManager) {
-        daoTenant = new DAOTenant(redissonClient, mappingManager);
-        daoGlobalUser = new DAOGlobalUser(redissonClient, mappingManager);
+    public DAOManager(final RedissonClient redissonClient, final MappingManager mappingManager, final DisplayNameService displayNameService) {
+        daoTenant = new DAOTenant(redissonClient, mappingManager, displayNameService);
+        daoGlobalUser = new DAOGlobalUser(redissonClient, mappingManager, displayNameService);
         daoTenantGroup = new DAOTenantGroup(mappingManager);
         daoKeyValueEntry = new DAOKeyValueEntry(mappingManager);
         daoTenantConfiguration = new DAOTenantConfiguration(mappingManager);

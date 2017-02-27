@@ -15,6 +15,11 @@ public class IngestsResource {
         this.ingests = ingests;
     }
 
+    /**
+     * Gets a list of Twitch ingest servers. The Twitch ingesting system is the first stop for a broadcast stream. An
+     * ingest server receives your stream, and the ingesting system authorizes and registers streams, then prepares
+     * them for viewers.
+     */
     public IngestList getIngests() {
         return ingests.request(TwitchApi.ACCEPT).get().readEntity(IngestList.class);
     }

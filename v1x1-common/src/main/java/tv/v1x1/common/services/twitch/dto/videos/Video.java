@@ -9,34 +9,50 @@ import tv.v1x1.common.services.twitch.dto.channels.ShortChannel;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Video {
-    @JsonProperty
-    private String title;
-    @JsonProperty
-    private String description;
-    @JsonProperty("broadcast_id")
-    private long broadcastId;
-    @JsonProperty
-    private String status;
     @JsonProperty("_id")
     private String id;
-    @JsonProperty("tag_list")
-    private String tagList;
-    @JsonProperty("recorded_at")
-    private String recordedAt;
-    @JsonProperty
-    private String game;
-    @JsonProperty
-    private int length;
-    @JsonProperty
-    private String preview;
-    @JsonProperty
-    private String url;
-    @JsonProperty
-    private long views;
+    @JsonProperty("broadcast_id")
+    private long broadcastId;
     @JsonProperty("broadcast_type")
     private String broadcastType;
     @JsonProperty
     private ShortChannel channel;
+    @JsonProperty("created_at")
+    private String createdAt;
+    @JsonProperty
+    private String description;
+    @JsonProperty("description_html")
+    private String descriptionHtml;
+    @JsonProperty
+    private VideoFps fps;
+    @JsonProperty
+    private String game;
+    @JsonProperty
+    private String language;
+    @JsonProperty
+    private int length;
+    @JsonProperty
+    private VideoPreview preview;
+    @JsonProperty("published_at")
+    private String publishedAt;
+    @JsonProperty
+    private VideoResolutions resolutions;
+    @JsonProperty
+    private String status;
+    @JsonProperty("tag_list")
+    private String tagList;
+    @JsonProperty
+    private VideoThumbnails thumbnails;
+    @JsonProperty
+    private String title;
+    @JsonProperty
+    private String url;
+    @JsonProperty
+    private String viewable;
+    @JsonProperty
+    private String viewableAt;
+    @JsonProperty
+    private long views;
 
     public Video() {
     }
@@ -89,14 +105,6 @@ public class Video {
         this.tagList = tagList;
     }
 
-    public String getRecordedAt() {
-        return recordedAt;
-    }
-
-    public void setRecordedAt(final String recordedAt) {
-        this.recordedAt = recordedAt;
-    }
-
     public String getGame() {
         return game;
     }
@@ -111,14 +119,6 @@ public class Video {
 
     public void setLength(final int length) {
         this.length = length;
-    }
-
-    public String getPreview() {
-        return preview;
-    }
-
-    public void setPreview(final String preview) {
-        this.preview = preview;
     }
 
     public String getUrl() {
@@ -151,5 +151,85 @@ public class Video {
 
     public void setChannel(final ShortChannel channel) {
         this.channel = channel;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(final String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getDescriptionHtml() {
+        return descriptionHtml;
+    }
+
+    public void setDescriptionHtml(final String descriptionHtml) {
+        this.descriptionHtml = descriptionHtml;
+    }
+
+    public VideoFps getFps() {
+        return fps;
+    }
+
+    public void setFps(final VideoFps fps) {
+        this.fps = fps;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(final String language) {
+        this.language = language;
+    }
+
+    public VideoPreview getPreview() {
+        return preview;
+    }
+
+    public void setPreview(final VideoPreview preview) {
+        this.preview = preview;
+    }
+
+    public String getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(final String publishedAt) {
+        this.publishedAt = publishedAt;
+    }
+
+    public VideoResolutions getResolutions() {
+        return resolutions;
+    }
+
+    public void setResolutions(final VideoResolutions resolutions) {
+        this.resolutions = resolutions;
+    }
+
+    public VideoThumbnails getThumbnails() {
+        return thumbnails;
+    }
+
+    public void setThumbnails(final VideoThumbnails thumbnails) {
+        this.thumbnails = thumbnails;
+    }
+
+    public String getViewable() {
+        return viewable;
+    }
+
+    public void setViewable(final String viewable) {
+        this.viewable = viewable;
+    }
+
+    public String getViewableAt() {
+        return viewableAt;
+    }
+
+    public void setViewableAt(final String viewableAt) {
+        this.viewableAt = viewableAt;
     }
 }

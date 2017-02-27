@@ -23,6 +23,11 @@ public class OAuth2Resource {
         this.redirectUri = redirectUri;
     }
 
+    /**
+     * Get an OAuth2 token from an OAuth2 code.
+     * @param code OAuth2 code from Twitch's OAuth2 flow
+     * @param state State data used to generate the code
+     */
     public TokenResponse getToken(final String code, final String state) {
         return oauth2
                 .path("token")

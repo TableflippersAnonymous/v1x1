@@ -17,6 +17,7 @@ import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TwitchChannel;
 import tv.v1x1.common.services.persistence.Deduplicator;
+import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.ArrayList;
@@ -33,14 +34,16 @@ public class DAOTenant {
     private final Mapper<Tenant> tenantMapper;
     private final Mapper<DiscordChannel> discordChannelMapper;
     private final Mapper<TwitchChannel> twitchChannelMapper;
+    private final DisplayNameService displayNameService;
 
     @Inject
-    public DAOTenant(final RedissonClient redissonClient, final MappingManager mappingManager) {
+    public DAOTenant(final RedissonClient redissonClient, final MappingManager mappingManager, final DisplayNameService displayNameService) {
         this.session = mappingManager.getSession();
         this.tenantMapper = mappingManager.mapper(Tenant.class);
         this.discordChannelMapper = mappingManager.mapper(DiscordChannel.class);
         this.twitchChannelMapper = mappingManager.mapper(TwitchChannel.class);
         this.createDeduplicator = new Deduplicator(redissonClient, "Common|DAOTenant");
+        this.displayNameService = displayNameService;
     }
 
     public Tenant getById(final UUID id) {
@@ -75,7 +78,7 @@ public class DAOTenant {
         return tenant;
     }
 
-    public Tenant createTenant(final Platform platform, final String channelId, final String displayName) {
+    public Tenant createTenant(final Platform platform, final String channelId, String displayName) {
         if(createDeduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(platform.name(), channelId))))) {
             try {
                 Thread.sleep(100);
@@ -85,7 +88,12 @@ public class DAOTenant {
             return getOrCreate(platform, channelId, displayName);
         }
         final Tenant tenant = new Tenant(UUID.randomUUID(), new ArrayList<>());
-        tenant.getEntries().add(new Tenant.Entry(platform, displayName, channelId));
+        if(displayName == null && platform == Platform.TWITCH)
+            displayName = displayNameService.getDisplayNameFromId(new tv.v1x1.common.dto.core.TwitchChannel(null, null, null), channelId);
+        tenant.getEntries().add(new Tenant.Entry(
+                platform,
+                displayName,
+                channelId));
         final BatchStatement b = new BatchStatement();
         b.add(tenantMapper.saveQuery(tenant));
         switch(platform) {
@@ -128,10 +136,10 @@ public class DAOTenant {
         if(channel != null)
             switch(platform) {
                 case DISCORD:
-                    b.add(discordChannelMapper.deleteQuery(channel));
+                    b.add(discordChannelMapper.deleteQuery(channel.getId()));
                     break;
                 case TWITCH:
-                    b.add(twitchChannelMapper.deleteQuery(channel));
+                    b.add(twitchChannelMapper.deleteQuery(channel.getId()));
                     break;
                 default:
                     throw new IllegalStateException("Unknown channel platform: " + platform);
@@ -143,7 +151,7 @@ public class DAOTenant {
 
     public void delete(final Tenant tenant) {
         final BatchStatement b = new BatchStatement();
-        b.add(tenantMapper.deleteQuery(tenant));
+        b.add(tenantMapper.deleteQuery(tenant.getId()));
         for(final Tenant.Entry entry : tenant.getEntries()) {
             final Channel channel = getChannel(entry.getPlatform(), entry.getChannelId());
             if(channel != null)

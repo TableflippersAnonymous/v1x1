@@ -10,26 +10,26 @@ import tv.v1x1.common.services.twitch.dto.channels.Channel;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Stream {
-    @JsonProperty
-    private String game;
-    @JsonProperty
-    private long viewers;
+    @JsonProperty("_id")
+    private long id;
     @JsonProperty("average_fps")
     private double averageFps;
     @JsonProperty
-    private int delay;
-    @JsonProperty("video_height")
-    private int videoHeight;
-    @JsonProperty("is_playlist")
-    private boolean isPlaylist;
+    private Channel channel;
     @JsonProperty("created_at")
     private String createdAt;
-    @JsonProperty("_id")
-    private long id;
     @JsonProperty
-    private Channel channel;
+    private int delay;
+    @JsonProperty
+    private String game;
+    @JsonProperty("is_playlist")
+    private boolean isPlaylist;
     @JsonProperty
     private Image preview;
+    @JsonProperty("video_height")
+    private int videoHeight;
+    @JsonProperty
+    private long viewers;
 
     public Stream() {
     }
