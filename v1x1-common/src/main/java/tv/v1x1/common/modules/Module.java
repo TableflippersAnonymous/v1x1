@@ -50,6 +50,7 @@ import tv.v1x1.common.config.ConfigScanner;
 import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Permission;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
+import tv.v1x1.common.dao.DAOThirdPartyCredential;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
@@ -120,7 +121,6 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     /* Services */
     private final Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
     private final Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
-    private TwitchApi twitchApi;
     private Injector injector;
 
     /* Designed to be overridden */
@@ -170,8 +170,6 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         getModuleRegistry();
 
         registerGlobalMessages();
-
-        twitchApi = new TwitchApi(new String(requireCredential("Common|Twitch|ClientId")), new String(requireCredential("Common|Twitch|OAuthToken")), new String(requireCredential("Common|Twitch|ClientSecret")), new String(requireCredential("Common|Twitch|RedirectUri")));
 
         updateConfigurationDefinitions();
     }
@@ -338,7 +336,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     public TwitchApi getTwitchApi() {
-        return twitchApi;
+        return injector.getInstance(TwitchApi.class);
     }
 
     public LockManager getLockManager() {
@@ -437,13 +435,13 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     protected byte[] getCredential(final String key) {
-        final ThirdPartyCredential thirdPartyCredential = getDaoManager().getDaoThirdPartyCredential().get(key);
+        final ThirdPartyCredential thirdPartyCredential = getInjector().getInstance(DAOThirdPartyCredential.class).get(key);
         if(thirdPartyCredential == null)
             return null;
         return thirdPartyCredential.credentialAsByteArray();
     }
 
-    protected byte[] requireCredential(final String key) {
+    public byte[] requireCredential(final String key) {
         final byte[] ret = getCredential(key);
         if(ret == null)
             throw new IllegalStateException("No such key: " + key);

@@ -12,10 +12,10 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Target({METHOD}) @Retention(RUNTIME)
 public @interface Command {
     String[] value();
-    String[] permissions();
-    String usage();
-    String description();
-    String help();
+    String[] permissions() default {};
+    String usage() default "";
+    String description() default "";
+    String help() default "";
     int minArgs() default 0;
     int maxArgs() default -1;
 }

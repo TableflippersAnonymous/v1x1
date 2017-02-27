@@ -65,7 +65,7 @@ public class UptimeCommand extends Command {
             Chat.i18nMessage(module, channel, "invalid.platform",
                     "commander", commander);
         }
-        final String target = channel.getId().substring(1);
+        final String target = channel.getId();
         final Instant uptime;
         try {
             uptime = module.getUptime(target);

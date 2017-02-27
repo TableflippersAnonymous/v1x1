@@ -71,6 +71,7 @@ import tv.v1x1.common.services.state.MembershipService;
 import tv.v1x1.common.services.state.StateManager;
 import tv.v1x1.common.services.stats.NoopStatsCollector;
 import tv.v1x1.common.services.stats.StatsCollector;
+import tv.v1x1.common.services.twitch.TwitchApi;
 
 import java.util.concurrent.TimeUnit;
 
@@ -251,5 +252,12 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
         return module.getChannelConfigurationClass();
     }
 
-
+    @Provides @Singleton
+    public TwitchApi getTwitchApi(final Module module) {
+        return new TwitchApi(
+                new String(module.requireCredential("Common|Twitch|ClientId")),
+                new String(module.requireCredential("Common|Twitch|OAuthToken")),
+                new String(module.requireCredential("Common|Twitch|ClientSecret")),
+                new String(module.requireCredential("Common|Twitch|RedirectUri")));
+    }
 }

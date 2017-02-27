@@ -302,6 +302,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
     public boolean isStreaming(final Channel channel) {
         if(!channel.getPlatform().equals(Platform.TWITCH))
             throw new IllegalArgumentException("Requested platform doesn't support streaming: " + channel.getPlatform().name());
-        return (getTwitchApi().getStreams().getStream(channel.getId().substring(1, channel.getId().length())).getStream() != null);
+        return (getTwitchApi().getStreams().getStream(channel.getId()).getStream() != null);
+
     }
 }

@@ -7,10 +7,12 @@ import com.datastax.driver.mapping.MappingManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
+import tv.v1x1.common.dto.core.TwitchChannel;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.InverseGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.persistence.Deduplicator;
+import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.ArrayList;
@@ -25,13 +27,15 @@ public class DAOGlobalUser {
     private final Session session;
     private final Mapper<GlobalUser> globalUserMapper;
     private final Mapper<InverseGlobalUser> inverseGlobalUserMapper;
+    private final DisplayNameService displayNameService;
 
     @Inject
-    public DAOGlobalUser(final RedissonClient redissonClient, final MappingManager mappingManager) {
+    public DAOGlobalUser(final RedissonClient redissonClient, final MappingManager mappingManager, final DisplayNameService displayNameService) {
         session = mappingManager.getSession();
         globalUserMapper = mappingManager.mapper(GlobalUser.class);
         inverseGlobalUserMapper = mappingManager.mapper(InverseGlobalUser.class);
         createDeduplicator = new Deduplicator(redissonClient, "Common|DAOGlobalUser");
+        this.displayNameService = displayNameService;
     }
 
     public GlobalUser getById(final UUID id) {
@@ -72,7 +76,12 @@ public class DAOGlobalUser {
             return getOrCreate(platform, userId, displayName);
         }
         final GlobalUser globalUser = new GlobalUser(UUID.randomUUID(), new ArrayList<>());
-        globalUser.getEntries().add(new GlobalUser.Entry(platform, displayName, userId));
+        globalUser.getEntries().add(new GlobalUser.Entry(
+                platform,
+                (displayName == null && platform == Platform.TWITCH)
+                        ? displayNameService.getDisplayNameFromId(new TwitchChannel(null, null, null), userId)
+                        : displayName,
+                userId));
         final InverseGlobalUser inverseGlobalUser = new InverseGlobalUser(platform, userId, globalUser.getId());
         final BatchStatement b = new BatchStatement();
         b.add(globalUserMapper.saveQuery(globalUser));
@@ -97,7 +106,7 @@ public class DAOGlobalUser {
             b.add(globalUserMapper.saveQuery(globalUser));
         final InverseGlobalUser inverseGlobalUser = getUser(platform, userId);
         if (inverseGlobalUser != null)
-            b.add(inverseGlobalUserMapper.deleteQuery(inverseGlobalUser));
+            b.add(inverseGlobalUserMapper.deleteQuery(inverseGlobalUser.getPlatform(), inverseGlobalUser.getUserId()));
         if (b.size() > 0)
             session.execute(b);
         return globalUser;
@@ -105,11 +114,11 @@ public class DAOGlobalUser {
 
     public void delete(final GlobalUser globalUser) {
         final BatchStatement b = new BatchStatement();
-        b.add(globalUserMapper.deleteQuery(globalUser));
+        b.add(globalUserMapper.deleteQuery(globalUser.getId()));
         for (final GlobalUser.Entry entry : globalUser.getEntries()) {
             final InverseGlobalUser inverseGlobalUser = getUser(entry.getPlatform(), entry.getUserId());
             if (inverseGlobalUser != null)
-                b.add(inverseGlobalUserMapper.deleteQuery(inverseGlobalUser));
+                b.add(inverseGlobalUserMapper.deleteQuery(inverseGlobalUser.getPlatform(), inverseGlobalUser.getUserId()));
         }
         session.execute(b);
     }

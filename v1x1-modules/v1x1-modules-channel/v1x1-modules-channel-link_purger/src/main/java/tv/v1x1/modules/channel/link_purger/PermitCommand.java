@@ -63,7 +63,7 @@ public class PermitCommand extends Command {
             );
         }
         if(module.permitUser(channel, targetId)) {
-            // TODO: final String targetName = module.getStateManager().getDisplayNameService().getDisplayNameFromId(channel, targetId);
+            // TODO: final String targetName = module.getStateManager().getDisplayNameService().getDisplayNameFromUserId(channel, targetId);
             Chat.i18nMessage(module, channel, "permit",
                     "target", targetId
             );

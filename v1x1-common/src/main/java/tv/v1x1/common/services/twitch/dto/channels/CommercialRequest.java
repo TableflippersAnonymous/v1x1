@@ -9,20 +9,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CommercialRequest {
     @JsonProperty
-    private int length;
+    private int duration;
 
     public CommercialRequest() {
     }
 
-    public CommercialRequest(final int length) {
-        this.length = length;
+    public CommercialRequest(final int duration) {
+        this.duration = duration;
     }
 
-    public int getLength() {
-        return length;
+    public int getDuration() {
+        return duration;
     }
 
-    public void setLength(final int length) {
-        this.length = length;
+    public void setDuration(final int duration) {
+        this.duration = duration;
     }
 }
