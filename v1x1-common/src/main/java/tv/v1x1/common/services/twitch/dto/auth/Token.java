@@ -10,6 +10,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Token {
     @JsonProperty
     private Authorization authorization;
+    @JsonProperty("client_id")
+    private String clientId;
+    @JsonProperty("user_id")
+    private String userId;
     @JsonProperty("user_name")
     private String userName;
     @JsonProperty
@@ -40,5 +44,21 @@ public class Token {
 
     public void setValid(final boolean valid) {
         this.valid = valid;
+    }
+
+    public String getClientId() {
+        return clientId;
+    }
+
+    public void setClientId(final String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(final String userId) {
+        this.userId = userId;
     }
 }

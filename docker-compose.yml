@@ -3,7 +3,7 @@ services:
   redis:
     image: redis:alpine
   zoo1:
-    image: zookeeper:latest
+    image: zookeeper@sha256:50cfe2c77fe203ab528ffb808f1a8b505db73b1f85aedbc52e4fdde69e2ebfe8
     environment:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zoo1:2888:3888
@@ -11,7 +11,7 @@ services:
       - ./docker-data/zoo1/data:/data
       - ./docker-data/zoo1/datalog:/datalog
   cass1:
-    image: cassandra:3
+    image: cassandra:3.9
     environment:
       CASSANDRA_CLUSTER_NAME: v1x1_dev
     volumes:

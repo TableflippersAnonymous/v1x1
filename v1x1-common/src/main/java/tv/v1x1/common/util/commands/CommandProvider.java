@@ -11,5 +11,5 @@ public interface CommandProvider {
      * @param command
      * @return a Command this CommandProvider knows about, or null if it doesn't know what it is
      */
-    public Command provide(final String command, final ChatMessage chatMessage);
+    Command provide(final String command, final ChatMessage chatMessage);
 }

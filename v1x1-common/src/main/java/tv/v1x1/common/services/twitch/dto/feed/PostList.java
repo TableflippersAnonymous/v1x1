@@ -10,24 +10,19 @@ import java.util.List;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PostList {
-    @JsonProperty("_total")
-    private long total;
-
     @JsonProperty("_cursor")
     private String cursor;
+
+    @JsonProperty("_topic")
+    private String topic;
+
+    @JsonProperty("_disabled")
+    private boolean disabled;
 
     @JsonProperty
     private List<Post> posts;
 
     public PostList() {
-    }
-
-    public long getTotal() {
-        return total;
-    }
-
-    public void setTotal(final long total) {
-        this.total = total;
     }
 
     public String getCursor() {
@@ -36,6 +31,22 @@ public class PostList {
 
     public void setCursor(final String cursor) {
         this.cursor = cursor;
+    }
+
+    public String getTopic() {
+        return topic;
+    }
+
+    public void setTopic(final String topic) {
+        this.topic = topic;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(final boolean disabled) {
+        this.disabled = disabled;
     }
 
     public List<Post> getPosts() {
