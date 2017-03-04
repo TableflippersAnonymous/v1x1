@@ -98,12 +98,12 @@ public class MetaResource {
         final PrivateUser privateUser = twitchApi.withToken(tokenResponse.getAccessToken()).getUsers().getUser();
         final GlobalUser globalUser = daoGlobalUser.getOrCreate(Platform.TWITCH, String.valueOf(privateUser.getId()), privateUser.getDisplayName());
         daoTwitchOauthToken.put(new TwitchOauthToken(globalUser.getId(), privateUser.getName(), tokenResponse.getAccessToken(), tokenResponse.getScope()));
-        final Channel channel = daoTenant.getChannel(Platform.TWITCH, "#" + privateUser.getName());
-        final Tenant tenant = daoTenant.getOrCreate(Platform.TWITCH, "#" + privateUser.getName(), "#" + privateUser.getName());
+        final Channel channel = daoTenant.getChannel(Platform.TWITCH, String.valueOf(privateUser.getId()));
+        final Tenant tenant = daoTenant.getOrCreate(Platform.TWITCH, String.valueOf(privateUser.getId()), privateUser.getDisplayName());
         final boolean firstSetup = !daoTenantGroup.getAllGroupsByTenant(tenant.toCore()).iterator().hasNext() || channel == null;
         grantOwner(tenant, globalUser);
         if(firstSetup)
-            createStartingGroups(tenant, "#" + privateUser.getName());
+            createStartingGroups(tenant, String.valueOf(privateUser.getId()));
         return authorizer.getAuthorizationFromPrincipal(new Authorizer.Principal(globalUser.toCore(), null));
     }
 
