@@ -300,7 +300,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     username = getGlobalConfiguration().getDefaultUsername();
                 oauthToken = getGlobalConfiguration().getGlobalBots().get(username);
             }
-            LOG.debug("Connecting to {} with username={} password=<removed>", channel.getDisplayName(), username, oauthToken);
+            LOG.debug("Connecting to {} with username={} password=<removed>", channel.getDisplayName(), username);
             final RateLimiter messageLimiter = new LocalRateLimiter(scheduledExecutorService, 18, 30);
             final TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel, twitchDisplayNameService);
             scheduledExecutorService.submit(tmiBot);
