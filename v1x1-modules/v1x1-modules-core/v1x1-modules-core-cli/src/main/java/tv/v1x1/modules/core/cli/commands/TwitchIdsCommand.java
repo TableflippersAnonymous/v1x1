@@ -16,6 +16,7 @@ import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TwitchOauthToken;
 import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.util.commands.annotations.Command;
 import tv.v1x1.common.util.commands.annotations.CommandSet;
@@ -100,14 +101,15 @@ public class TwitchIdsCommand {
             LOG.info("Migrating ChannelConfiguration {}/{}/{} ...", channelConfiguration.getModule(), channelConfiguration.getPlatform(), channelConfiguration.getChannelId());
             if(channelConfiguration.getPlatform() != Platform.TWITCH)
                 continue;
-            final ChannelConfiguration newChannelConfiguration = new ChannelConfiguration(
-                    channelConfiguration.getModule(),
-                    channelConfiguration.getTenantId(),
-                    channelConfiguration.getPlatform(),
-                    twitchDisplayNameService.getChannelIdByChannelName(channelConfiguration.getChannelId()),
-                    channelConfiguration.getJson()
-            );
+            final ChannelConfiguration newChannelConfiguration;
             try {
+                newChannelConfiguration = new ChannelConfiguration(
+                        channelConfiguration.getModule(),
+                        channelConfiguration.getTenantId(),
+                        channelConfiguration.getPlatform(),
+                        twitchDisplayNameService.getChannelIdByChannelName(channelConfiguration.getChannelId()),
+                        channelConfiguration.getJson()
+                );
                 LOG.info("Saving new ChannelConfiguration: {}/{}/{} ...", newChannelConfiguration.getModule(), newChannelConfiguration.getPlatform(), newChannelConfiguration.getChannelId());
                 daoManager.getDaoChannelConfiguration().put(newChannelConfiguration);
                 LOG.info("Deleting old ChannelConfiguration: {}/{}/{} ...", channelConfiguration.getModule(), channelConfiguration.getPlatform(), channelConfiguration.getChannelId());
