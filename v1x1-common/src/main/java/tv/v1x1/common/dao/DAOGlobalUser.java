@@ -13,6 +13,7 @@ import tv.v1x1.common.dto.db.InverseGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.state.DisplayNameService;
+import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.ArrayList;
@@ -76,12 +77,16 @@ public class DAOGlobalUser {
             return getOrCreate(platform, userId, displayName);
         }
         final GlobalUser globalUser = new GlobalUser(UUID.randomUUID(), new ArrayList<>());
-        globalUser.getEntries().add(new GlobalUser.Entry(
-                platform,
-                (displayName == null && platform == Platform.TWITCH)
-                        ? displayNameService.getDisplayNameFromId(new TwitchChannel(null, null, null), userId)
-                        : displayName,
-                userId));
+        try {
+            globalUser.getEntries().add(new GlobalUser.Entry(
+                    platform,
+                    (displayName == null && platform == Platform.TWITCH)
+                            ? displayNameService.getDisplayNameFromId(new TwitchChannel(null, null, null), userId)
+                            : displayName,
+                    userId));
+        } catch (NoSuchUserException e) {
+            throw new RuntimeException(e);
+        }
         final InverseGlobalUser inverseGlobalUser = new InverseGlobalUser(platform, userId, globalUser.getId());
         final BatchStatement b = new BatchStatement();
         b.add(globalUserMapper.saveQuery(globalUser));

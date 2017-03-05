@@ -11,6 +11,8 @@ import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.channels.Channel;
 import tv.v1x1.common.services.twitch.dto.users.User;
 
+import javax.ws.rs.NotFoundException;
+import javax.ws.rs.WebApplicationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -155,174 +157,200 @@ public class TwitchDisplayNameService {
         this.twitchApi = twitchApi;
     }
 
-    public String getDisplayNameFromUserId(final String userId) {
+    public String getDisplayNameFromUserId(final String userId) throws NoSuchUserException {
         try {
             return displayNameByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getUsernameFromUserId(final String userId) {
+    public String getUsernameFromUserId(final String userId) throws NoSuchUserException {
         try {
             return usernameByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getDisplayNameFromUsername(final String username) {
+    public String getDisplayNameFromUsername(final String username) throws NoSuchUserException {
         try {
             return displayNameByUsernameCache.get(username);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getUsernameFromDisplayName(final String displayName) {
+    public String getUsernameFromDisplayName(final String displayName) throws NoSuchUserException {
         try {
             return usernameByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getUserIdFromUsername(final String username) {
+    public String getUserIdFromUsername(final String username) throws NoSuchUserException {
         try {
             return userIdByUsernameCache.get(username);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getUserIdFromDisplayName(final String displayName) {
+    public String getUserIdFromDisplayName(final String displayName) throws NoSuchUserException {
         try {
             return userIdByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public User getUserByUsername(final String username) {
+    public User getUserByUsername(final String username) throws NoSuchUserException {
         try {
             return userByUsernameCache.get(username);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public User getUserByDisplayName(final String displayName) {
+    public User getUserByDisplayName(final String displayName) throws NoSuchUserException {
         try {
             return userByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public User getUserByUserId(final String userId) {
+    public User getUserByUserId(final String userId) throws NoSuchUserException {
         try {
             return userByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getDisplayNameFromChannelId(final String channelId) {
+    public String getDisplayNameFromChannelId(final String channelId) throws NoSuchUserException {
         try {
             return displayNameByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getChannelNameFromChannelId(final String channelId) {
+    public String getChannelNameFromChannelId(final String channelId) throws NoSuchUserException {
         try {
             return channelNameByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getDisplayNameFromChannelName(final String channelName) {
+    public String getDisplayNameFromChannelName(final String channelName) throws NoSuchUserException {
         try {
             return displayNameByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getChannelNameByDisplayName(final String displayName) {
+    public String getChannelNameByDisplayName(final String displayName) throws NoSuchUserException {
         try {
             return channelNameByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getChannelIdByChannelName(final String channelName) {
+    public String getChannelIdByChannelName(final String channelName) throws NoSuchUserException {
         try {
             return channelIdByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public String getChannelIdFromDisplayName(final String displayName) {
+    public String getChannelIdFromDisplayName(final String displayName) throws NoSuchUserException {
         try {
             return channelIdByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public Channel getChannelByChannelName(final String channelName) {
+    public Channel getChannelByChannelName(final String channelName) throws NoSuchUserException {
         try {
             return channelByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public Channel getChannelByDisplayName(final String displayName) {
+    public Channel getChannelByDisplayName(final String displayName) throws NoSuchUserException {
         try {
             return channelByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    public Channel getChannelByChannelId(final String channelId) {
+    public Channel getChannelByChannelId(final String channelId) throws NoSuchUserException {
         try {
             return channelByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
-            throw new RuntimeException(e);
+            throw rethrowUnwrapped(e);
         }
     }
 
-    private User fetchUserByUserId(final String userId) {
-        return twitchApi.getUsers().getUser(userId);
+    private User fetchUserByUserId(final String userId) throws NoSuchUserException {
+        try {
+            return twitchApi.getUsers().getUser(userId);
+        } catch(final NotFoundException e) {
+            throw new NoSuchUserException();
+        }
     }
 
-    private User fetchUserByUsername(final String username) {
-        return twitchApi.getUsers().getUserByUsername(username);
+    private User fetchUserByUsername(final String username) throws NoSuchUserException {
+        final User user = twitchApi.getUsers().getUserByUsername(username);
+        if(user == null)
+            throw new NoSuchUserException();
+        return user;
     }
 
-    private User fetchUserByDisplayName(final String displayName) {
+    private User fetchUserByDisplayName(final String displayName) throws NoSuchUserException {
         return fetchUserByUsername(displayName.toLowerCase());
     }
 
-    private Channel fetchChannelByChannelId(final String channelId) {
-        return twitchApi.getChannels().getChannel(channelId);
+    private Channel fetchChannelByChannelId(final String channelId) throws NoSuchUserException {
+        try {
+            return twitchApi.getChannels().getChannel(channelId);
+        } catch(final NotFoundException e) {
+            throw new NoSuchUserException();
+        }
     }
 
-    private Channel fetchChannelByChannelName(String channelName) {
+    private Channel fetchChannelByChannelName(String channelName) throws NoSuchUserException {
         // Twitch does not have a getChannelByChannelName, but we can get the user ID with the same name, and use that
         if(channelName.startsWith("#"))
             channelName = channelName.substring(1);
         return fetchChannelByChannelId(getUserIdFromUsername(channelName));
     }
 
-    private Channel fetchChannelByDisplayName(final String displayName) {
+    private Channel fetchChannelByDisplayName(final String displayName) throws NoSuchUserException {
         return fetchChannelByChannelName(displayName.toLowerCase());
+    }
+
+    private Throwable unwrapException(final ExecutionException ee) {
+        if(ee.getCause() == null)
+            return ee;
+        return ee.getCause();
+    }
+
+    private RuntimeException rethrowUnwrapped(final ExecutionException ee) throws NoSuchUserException {
+        final Throwable throwable = unwrapException(ee);
+        if(throwable instanceof NoSuchUserException)
+            throw (NoSuchUserException) throwable;
+        if(throwable instanceof RuntimeException)
+            throw (RuntimeException) throwable;
+        throw new RuntimeException(throwable);
     }
 }
