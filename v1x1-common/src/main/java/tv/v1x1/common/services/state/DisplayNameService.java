@@ -17,13 +17,13 @@ public class DisplayNameService {
         this.twitchDisplayNameService = twitchDisplayNameService;
     }
 
-    public String getIdFromDisplayName(Channel context, String displayName) {
+    public String getIdFromDisplayName(Channel context, String displayName) throws NoSuchUserException {
         if(context instanceof TwitchChannel)
             return twitchDisplayNameService.getUserIdFromDisplayName(displayName);
         throw new IllegalArgumentException("Don't know how to deal with a " + context.getClass().getCanonicalName());
     }
 
-    public String getDisplayNameFromId(Channel context, String id) {
+    public String getDisplayNameFromId(Channel context, String id) throws NoSuchUserException {
         if(context instanceof TwitchChannel)
             return twitchDisplayNameService.getDisplayNameFromUserId(id);
         throw new IllegalArgumentException("Don't know how to deal with a " + context.getClass().getCanonicalName());

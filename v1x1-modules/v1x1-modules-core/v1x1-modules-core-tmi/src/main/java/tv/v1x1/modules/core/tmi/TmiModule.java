@@ -313,7 +313,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
             }
         } catch (final Exception e) {
             e.printStackTrace();
-            throw e;
+            throw new RuntimeException(e);
         }
     }
 
