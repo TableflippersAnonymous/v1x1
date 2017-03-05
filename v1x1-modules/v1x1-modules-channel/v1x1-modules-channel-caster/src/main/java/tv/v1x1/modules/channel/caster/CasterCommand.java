@@ -5,6 +5,8 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
+import tv.v1x1.common.services.state.DisplayNameService;
+import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.services.twitch.dto.videos.TotalledVideoList;
 import tv.v1x1.common.services.twitch.dto.videos.Video;
 import tv.v1x1.common.util.commands.Command;
@@ -56,44 +58,46 @@ class CasterCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final String targetId = args.get(0).toLowerCase();
+        final DisplayNameService displayNameService = caster.getInjector().getInstance(DisplayNameService.class);
         final Channel channel = chatMessage.getChannel();
-        if(!TwitchValidator.isValidUsername(targetId)) {
+        try {
+            final String targetId = displayNameService.getIdFromDisplayName(channel, args.get(0));
+            final String targetDisplayName = displayNameService.getDisplayNameFromId(channel, targetId);
+            final tv.v1x1.common.services.twitch.dto.channels.Channel videoChannel;
+            try {
+                videoChannel = caster.getTwitchApi().getChannels().getChannel(targetId);
+            } catch (NotFoundException ex) {
+                Chat.i18nMessage(caster, channel, "notfound",
+                        "commander", chatMessage.getSender().getDisplayName(),
+                        "target", targetDisplayName);
+                return;
+            } catch (WebApplicationException ex) {
+                Chat.i18nMessage(caster, channel, "nogame",
+                        "target", targetId,
+                        "targetId", targetDisplayName);
+                throw ex;
+            }
+            final String targetCaster = videoChannel.getDisplayName();
+            final String lastGame = videoChannel.getGame();
+            if (lastGame == null) {
+                Chat.i18nMessage(caster, channel, "nogame",
+                        "target", targetCaster,
+                        "targetId", targetDisplayName);
+                return;
+            }
+            final String verb;
+            if (lastGame.equals("Creative"))
+                verb = GameVerb.getCreativeVerb(videoChannel.getStatus());
+            else
+                verb = GameVerb.getVerb(lastGame);
+            Chat.i18nMessage(caster, channel, "response",
+                    "target", targetCaster,
+                    "targetId", targetDisplayName,
+                    "summary", verb);
+        } catch (final NoSuchUserException e) {
             Chat.i18nMessage(caster, channel, "generic.invalid.user",
                     "commander", chatMessage.getSender().getDisplayName(),
                     "input", args.get(0));
-            return;
         }
-        final tv.v1x1.common.services.twitch.dto.channels.Channel videoChannel;
-        try {
-            videoChannel = caster.getTwitchApi().getChannels().getChannel(targetId);
-        } catch(NotFoundException ex) {
-            Chat.i18nMessage(caster, channel, "notfound",
-                    "commander", chatMessage.getSender().getDisplayName(),
-                    "target", targetId);
-            return;
-        } catch(WebApplicationException ex) {
-            Chat.i18nMessage(caster, channel, "nogame",
-                    "target", targetId,
-                    "targetId", targetId);
-            throw ex;
-        }
-        final String targetCaster = videoChannel.getDisplayName();
-        final String lastGame = videoChannel.getGame();
-        if(lastGame == null) {
-            Chat.i18nMessage(caster, channel, "nogame",
-                    "target", targetCaster,
-                    "targetId", targetId);
-            return;
-        }
-        final String verb;
-        if(lastGame.equals("Creative"))
-            verb = GameVerb.getCreativeVerb(videoChannel.getStatus());
-        else
-            verb = GameVerb.getVerb(lastGame);
-        Chat.i18nMessage(caster, channel, "response",
-                "target", targetCaster,
-                "targetId", targetId,
-                "summary", verb);
     }
 }
