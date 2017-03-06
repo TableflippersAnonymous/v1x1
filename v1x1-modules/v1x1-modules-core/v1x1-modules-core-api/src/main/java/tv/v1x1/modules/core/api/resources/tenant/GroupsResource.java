@@ -153,7 +153,7 @@ public class GroupsResource {
         final TenantGroup tenantGroup = daoTenantGroup.getTenantGroup(tenant.toCore(), UUID.fromString(groupId));
         if(tenantGroup == null)
             throw new NotFoundException();
-        daoTenantGroup.addUserToGroup(tenantGroup, globalUser.toCore());
+        daoTenantGroup.removeUserFromGroup(tenantGroup, globalUser.toCore());
         return Response.noContent().build();
     }
 
