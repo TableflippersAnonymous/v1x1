@@ -19,6 +19,7 @@ import {V1x1Channel} from "../model/v1x1_channel";
 import {V1x1Configuration} from "../model/v1x1_configuration";
 import {V1x1Group} from "../model/v1x1_group";
 import {V1x1GroupMembership} from "../model/v1x1_group_membership";
+import {V1x1DisplayNameRecord} from "../model/v1x1_display_name_record";
 
 @Injectable()
 export class V1x1Api {
@@ -144,6 +145,17 @@ export class V1x1Api {
       .map(users => new V1x1GlobalUser(globalUserId, users));
   }
 
+  getGlobalUserByPlatformAndUsername(platform: string, username: string): Observable<V1x1GlobalUser> {
+    return this.getDisplayNameRecordByUsername(platform, username)
+      .map(displayNameRecord => this.getGlobalUser(displayNameRecord.globalUserId))
+      .mergeAll();
+  }
+
+  getDisplayNameRecordByUsername(platform: string, username: string): Observable<V1x1DisplayNameRecord> {
+    return this.http.get(this.v1x1ApiBase + "/platform/display-name/" + encodeURIComponent(platform.toLowerCase()) + "/user/by-username/" + encodeURIComponent(username))
+      .map(r => JsonConvert.deserializeObject(r.json(), V1x1DisplayNameRecord));
+  }
+
   getSelf(): Observable<V1x1GlobalUser> {
     return this.getSelfId()
       .map(globalUserId => this.getGlobalUser(globalUserId))
@@ -267,6 +279,70 @@ export class V1x1Api {
 
   getGroupUserIds(tenantId: string, groupId: string): Observable<string[]> {
     return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users', this.getAuthorization())
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries)
+      .catch((err, caught) => Observable.of([]));
+  }
+
+  addUserToGroup(tenantId: string, groupId: string, userId: string): Observable<V1x1GlobalUser[]> {
+    return this.http.post(
+      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users',
+      JsonConvert.serializeObject({
+        'value': userId
+      }),
+      new RequestOptions({
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: this.authorization
+        })
+      })
+    )
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries)
+      .catch((err, caught) => Observable.of([]))
+      .map(userIds => userIds.map(userId => this.getGlobalUser(userId)))
+      .map(observableUsers => observableUsers.length === 0 ? Observable.of([]) : Observable.forkJoin(observableUsers))
+      .mergeAll();
+  }
+
+  removeUserFromGroup(tenantId: string, groupId: string, userId: string): Observable<V1x1GlobalUser[]> {
+    return this.http.delete(
+      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users/' + userId,
+      this.getAuthorization()
+    )
+      .map((r) => this.getGroupUsers(tenantId, groupId))
+      .mergeAll();
+  }
+
+  addPermissionToGroup(tenantId: string, groupId: string, permission: string): Observable<string[]> {
+    return this.http.post(
+      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions',
+      JsonConvert.serializeObject({
+        'value': permission
+      }),
+      new RequestOptions({
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: this.authorization
+        })
+      })
+    )
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+      .map((l: V1x1List<string>) => l.entries)
+      .catch((err, caught) => Observable.of([]));
+  }
+
+  removePermissionFromGroup(tenantId: string, groupId: string, permission: string): Observable<string[]> {
+    return this.http.delete(
+      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions/' + permission,
+      this.getAuthorization()
+    )
+      .map((r) => this.getGroupPermissions(tenantId, groupId))
+      .mergeAll();
+  }
+
+  getGroupPermissions(tenantId: string, groupId: string): Observable<string[]> {
+    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions', this.getAuthorization())
       .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
       .map((l: V1x1List<string>) => l.entries)
       .catch((err, caught) => Observable.of([]));

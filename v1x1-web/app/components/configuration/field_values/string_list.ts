@@ -22,9 +22,11 @@ export class ConfigurationFieldValueStringListComponent extends ConfigurableComp
     if(!(this.configuration instanceof Array))
       this.configuration = [];
     this.configuration.push("");
+    this.configChanged();
   }
 
   public delIdx(index: number) {
     this.configuration.splice(index, 1);
+    this.configChanged();
   }
 }
