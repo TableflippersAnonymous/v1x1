@@ -3,6 +3,7 @@ package tv.v1x1.modules.core.api.resources.platform;
 import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
+import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.dto.users.User;
@@ -27,9 +28,9 @@ public class DisplayNameResource {
     private final DAOGlobalUser daoGlobalUser;
 
     @Inject
-    public DisplayNameResource(final TwitchDisplayNameService twitchDisplayNameService, final DAOGlobalUser daoGlobalUser) {
+    public DisplayNameResource(final TwitchDisplayNameService twitchDisplayNameService, final DAOManager daoManager) {
         this.twitchDisplayNameService = twitchDisplayNameService;
-        this.daoGlobalUser = daoGlobalUser;
+        this.daoGlobalUser = daoManager.getDaoGlobalUser();
     }
 
     @Path("/twitch/user/by-username/{username}")
