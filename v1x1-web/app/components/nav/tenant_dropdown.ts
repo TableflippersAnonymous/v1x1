@@ -10,10 +10,7 @@ import {V1x1Api} from "../../services/api";
       </a>
       <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarTenantDropdownMenuLink">
         <a *ngFor="let tenant of tenants; let idx = index" class="dropdown-item" [class.active]="idx === activeIdx" href="#" (click)="setActive(idx);">
-          <span *ngFor="let channel of tenant.channels; let cidx = index">
-            <span class="fa" [class.fa-twitch]="channel.platform === 'TWITCH'">/</span>{{channel.displayName}}
-            <br *ngIf="cidx !== tenant.channels.length - 1">
-          </span>
+          <tenant-formatter [tenant]="tenant"></tenant-formatter>
         </a>
         <hr>
         <a class="dropdown-item" href="#">+ Create new</a>

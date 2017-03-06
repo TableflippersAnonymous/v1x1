@@ -36,6 +36,9 @@ import {UserDropdownNavComponent} from "../components/nav/user_dropdown";
 import {TenantDropdownNavComponent} from "../components/nav/tenant_dropdown";
 import {PermissionsGroupsComponent} from "../components/permissions/groups";
 import {PermissionsGroupComponent} from "../components/permissions/group";
+import {TenantFormatterComponent} from "../components/util/tenant_formatter";
+import {UserFormatterComponent} from "../components/util/user_formatter";
+import {ConfigurationFieldValueUserListComponent} from "../components/configuration/field_values/user_list";
 
 @NgModule({
   imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule, HttpModule ],
@@ -46,10 +49,12 @@ import {PermissionsGroupComponent} from "../components/permissions/group";
     ConfigurationFieldValueComplexListComponent, ConfigurationFieldValueComplexStringMapComponent, ConfigurationFieldValueCredentialComponent,
     ConfigurationFieldValueIntegerComponent, ConfigurationFieldValueMasterEnableComponent, ConfigurationFieldValueStringComponent,
     ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
+    ConfigurationFieldValueUserListComponent,
     TopNavComponent, TopNavEntryComponent, TopNavEntryContentComponent, UserDropdownNavComponent, TenantDropdownNavComponent,
     DashboardPageComponent, HelpPageComponent, LogsPageComponent,
     PermissionsPageComponent, PermissionsGroupsComponent, PermissionsGroupComponent,
-    WelcomePageComponent
+    WelcomePageComponent,
+    TenantFormatterComponent, UserFormatterComponent
   ],
   providers:    [ V1x1Api, V1x1ApiCache ],
   bootstrap:    [ AppComponent ]
