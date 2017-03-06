@@ -27,7 +27,7 @@ import java.util.UUID;
 /*
   /global-users
     /{platform}
-      /{username} - GET: global user id
+      /{id} - GET: global user id
     /{userid} - GET: list of endpoints
  */
 @Path("/api/v1/global-users")
