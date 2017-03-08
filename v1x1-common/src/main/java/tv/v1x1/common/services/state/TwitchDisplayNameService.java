@@ -301,9 +301,52 @@ public class TwitchDisplayNameService {
         }
     }
 
+    public void cache(final String userId, final String username, final String displayName) {
+        cacheUser(userId, username, displayName);
+        cacheChannel(userId, username, displayName);
+    }
+
+    public void cacheUser(final String userId, final String username, final String displayName) {
+        userIdByDisplayNameCache.put(displayName, userId);
+        userIdByUsernameCache.put(username, userId);
+        displayNameByUserIdCache.put(userId, displayName);
+        displayNameByUsernameCache.put(username, displayName);
+        usernameByDisplayNameCache.put(displayName, username);
+        usernameByUserIdCache.put(userId, username);
+    }
+
+    public void cacheChannel(final String channelId, final String name, final String displayName) {
+        channelIdByDisplayNameCache.put(displayName, channelId);
+        channelIdByChannelNameCache.put(name, channelId);
+        displayNameByChannelIdCache.put(channelId, displayName);
+        displayNameByChannelNameCache.put(name, displayName);
+        channelNameByDisplayNameCache.put(displayName, name);
+        channelNameByChannelIdCache.put(channelId, name);
+    }
+
+    private void cacheUser(final User user) {
+        if(user == null)
+            return;
+        userByDisplayNameCache.put(user.getDisplayName(), user);
+        userByUsernameCache.put(user.getName(), user);
+        userByUserIdCache.put(String.valueOf(user.getId()), user);
+        cache(String.valueOf(user.getId()), user.getName(), user.getDisplayName());
+    }
+
+    private void cacheChannel(final Channel channel) {
+        if(channel == null)
+            return;
+        channelByDisplayNameCache.put(channel.getDisplayName(), channel);
+        channelByChannelNameCache.put(channel.getName(), channel);
+        channelByChannelIdCache.put(String.valueOf(channel.getId()), channel);
+        cache(String.valueOf(channel.getId()), channel.getName(), channel.getDisplayName());
+    }
+
     private User fetchUserByUserId(final String userId) throws NoSuchUserException {
         try {
-            return twitchApi.getUsers().getUser(userId);
+            final User user = twitchApi.getUsers().getUser(userId);
+            cacheUser(user);
+            return user;
         } catch(final NotFoundException e) {
             throw new NoSuchUserException();
         }
@@ -313,16 +356,21 @@ public class TwitchDisplayNameService {
         final User user = twitchApi.getUsers().getUserByUsername(username);
         if(user == null)
             throw new NoSuchUserException();
+        cacheUser(user);
         return user;
     }
 
     private User fetchUserByDisplayName(final String displayName) throws NoSuchUserException {
-        return fetchUserByUsername(displayName.toLowerCase());
+        final User user = fetchUserByUsername(displayName.toLowerCase());
+        cacheUser(user);
+        return user;
     }
 
     private Channel fetchChannelByChannelId(final String channelId) throws NoSuchUserException {
         try {
-            return twitchApi.getChannels().getChannel(channelId);
+            final Channel channel = twitchApi.getChannels().getChannel(channelId);
+            cacheChannel(channel);
+            return channel;
         } catch(final NotFoundException e) {
             throw new NoSuchUserException();
         }
@@ -332,11 +380,15 @@ public class TwitchDisplayNameService {
         // Twitch does not have a getChannelByChannelName, but we can get the user ID with the same name, and use that
         if(channelName.startsWith("#"))
             channelName = channelName.substring(1);
-        return fetchChannelByChannelId(getUserIdFromUsername(channelName));
+        final Channel channel = fetchChannelByChannelId(getUserIdFromUsername(channelName));
+        cacheChannel(channel);
+        return channel;
     }
 
     private Channel fetchChannelByDisplayName(final String displayName) throws NoSuchUserException {
-        return fetchChannelByChannelName(displayName.toLowerCase());
+        final Channel channel = fetchChannelByChannelName(displayName.toLowerCase());
+        cacheChannel(channel);
+        return channel;
     }
 
     private Throwable unwrapException(final ExecutionException ee) {
