@@ -90,6 +90,7 @@ import tv.v1x1.common.services.persistence.TenantKeyValueStoreImpl;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.queue.MessageQueueManagerImpl;
+import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.StateManager;
 import tv.v1x1.common.services.stats.NoopStatsCollector;
 import tv.v1x1.common.services.stats.StatsCollector;
@@ -345,6 +346,10 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public CacheManager getCacheManager() {
         return injector.getInstance(CacheManager.class);
+    }
+
+    public DisplayNameService getDisplayNameService() {
+        return injector.getInstance(DisplayNameService.class);
     }
 
     public Injector getInjector() {
