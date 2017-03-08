@@ -208,6 +208,7 @@ public class TmiBot implements Runnable {
     }
 
     private void event(final IrcStanza stanza) throws NoSuchUserException {
+        cache(stanza);
         event(new TwitchRawMessageEvent(module, bot, stanza));
         if(stanza instanceof ClearChatCommand)
             event((ClearChatCommand) stanza);
@@ -243,6 +244,18 @@ public class TmiBot implements Runnable {
             event((WhisperCommand) stanza);
         else
             throw new IllegalStateException("Unknown IrcStanza: " + stanza.getClass().getCanonicalName());
+    }
+
+    private void cache(final IrcStanza stanza) {
+        if(!(stanza instanceof MessageTaggedIrcStanza))
+            return;
+        final MessageTaggedIrcStanza messageTaggedIrcStanza = (MessageTaggedIrcStanza) stanza;
+        final String userId = String.valueOf(messageTaggedIrcStanza.getUserId());
+        final String displayName = messageTaggedIrcStanza.getDisplayName();
+        if(!(messageTaggedIrcStanza.getSource() instanceof IrcUser))
+            return;
+        final String username = ((IrcUser) messageTaggedIrcStanza.getSource()).getNickname();
+        twitchDisplayNameService.cache(userId, username, displayName);
     }
 
     private void event(final ClearChatCommand clearChatCommand) throws NoSuchUserException {
@@ -281,7 +294,7 @@ public class TmiBot implements Runnable {
     private void event(final PrivmsgCommand privmsgCommand) throws NoSuchUserException {
         final TwitchChannel channel = getChannel(privmsgCommand);
         final TwitchUser user = getUser(privmsgCommand);
-        if(user.getId().equals(username))
+        if((privmsgCommand.getSource() instanceof IrcUser) && ((IrcUser) privmsgCommand.getSource()).getNickname().equals(username))
             return;
         final Set<String> badges = privmsgCommand.getBadges().stream().map(MessageTaggedIrcStanza.Badge::name).collect(Collectors.toSet());
         badges.add("_DEFAULT_");
