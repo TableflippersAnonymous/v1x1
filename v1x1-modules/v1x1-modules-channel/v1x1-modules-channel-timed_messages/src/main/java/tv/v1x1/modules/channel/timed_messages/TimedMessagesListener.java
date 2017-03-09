@@ -83,10 +83,8 @@ public class TimedMessagesListener implements EventListener {
             int cursor = module.getCursor(uuid);
             LOG.trace("Just got cursor. Cursor is {}", cursor);
             if(cursor == -1) {
-                LOG.warn("Got a timer with no cursor; pausing it...");
-                module.pauseTimer(uuid);
-                MDC.remove("tenant");
-                return;
+                LOG.warn("Got a timer with no cursor; resetting it...");
+                cursor = 0;
             }
             if(cursor >= t.getEntries().size())
                 cursor = 0;
