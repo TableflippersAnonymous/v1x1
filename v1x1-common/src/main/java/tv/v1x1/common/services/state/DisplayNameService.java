@@ -28,4 +28,10 @@ public class DisplayNameService {
             return twitchDisplayNameService.getDisplayNameFromUserId(id);
         throw new IllegalArgumentException("Don't know how to deal with a " + context.getClass().getCanonicalName());
     }
+
+    public String getUserFromId(Channel context, String id) throws NoSuchUserException {
+        if(context instanceof TwitchChannel)
+            return twitchDisplayNameService.getUsernameFromUserId(id);
+        throw new IllegalArgumentException("Don't know how to deal with a " + context.getClass().getCanonicalName());
+    }
 }
