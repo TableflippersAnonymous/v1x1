@@ -1,5 +1,7 @@
 package tv.v1x1.common.services.chat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.DiscordChannel;
 import tv.v1x1.common.dto.core.TwitchChannel;
@@ -8,8 +10,11 @@ import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.i18n.Language;
 import tv.v1x1.common.modules.Module;
 import tv.v1x1.common.rpc.client.ChatRouterServiceClient;
+import tv.v1x1.common.services.state.DisplayNameService;
+import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.util.text.Splitter;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +22,7 @@ import java.util.Map;
  * @author Josh
  */
 public class Chat {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     /**
      * Convenience method to hide the semantics behind sending messages to channels
      * @author Josh
@@ -28,9 +34,12 @@ public class Chat {
         int maxLength = 2000;
         boolean escapeCommand = false;
         if(channel instanceof TwitchChannel) {
-            if(text.startsWith(".") || text.startsWith("/"))
+            if(text.startsWith(".") || text.startsWith("/")) {
                 escapeCommand = true;
-            maxLength = 500;
+                maxLength = 498;
+            } else {
+                maxLength = 500;
+            }
         }
         else if(channel instanceof DiscordChannel)
             throw new IllegalArgumentException("Discord messages not yet supported");
@@ -70,12 +79,21 @@ public class Chat {
      * @param reason reason for punishment, if supported
      */
     public static void purge(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final int amount, final String reason) {
-        if(channel instanceof TwitchChannel)
-            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s 1 %s", user.getId(), reason));
-        else if(channel instanceof DiscordChannel)
+        if(channel instanceof TwitchChannel) {
+            final DisplayNameService dns = module.getDisplayNameService();
+            String username;
+            try {
+                username = dns.getUserFromId(channel, user.getId());
+            } catch(NoSuchUserException e) {
+                LOG.error("Error resolving Twitch ID to username", e);
+                username = user.getDisplayName(); // Try anyway, since most of the time this will work
+            }
+            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s 1 %s", username, reason));
+        } else if(channel instanceof DiscordChannel) {
             throw new IllegalArgumentException("DiscordChannel purges not supported yet");
-        else
+        }  else {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
+        }
     }
 
     /**
@@ -89,12 +107,21 @@ public class Chat {
      * @throws ChatException
      */
     public static void timeout(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) throws ChatException {
-        if(channel instanceof TwitchChannel)
-            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s %d %s", user.getId(), length, reason));
-        else if(channel instanceof DiscordChannel)
+        if(channel instanceof TwitchChannel) {
+            final DisplayNameService dns = module.getDisplayNameService();
+            String username;
+            try {
+                username = dns.getUserFromId(channel, user.getId());
+            } catch(NoSuchUserException e) {
+                LOG.error("Error resolving Twitch ID to username", e);
+                username = user.getDisplayName(); // Try anyway, since most of the time this will work
+            }
+            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s %d %s", username, length, reason));
+        } else if(channel instanceof DiscordChannel) {
             throw new ChatException("DiscordChannel doesn't support timeout()");
-        else
+        }  else {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
+        }
     }
 
     /**
@@ -106,12 +133,21 @@ public class Chat {
      * @throws ChatException
      */
     public static void untimeout(final Module<?, ?, ?, ?> module, final Channel channel, final User user) throws ChatException {
-        if(channel instanceof TwitchChannel)
-            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/untimeout %s", user.getId()));
-        else if(channel instanceof DiscordChannel)
+        if(channel instanceof TwitchChannel) {
+            final DisplayNameService dns = module.getDisplayNameService();
+            String username;
+            try {
+                username = dns.getUserFromId(channel, user.getId());
+            } catch(NoSuchUserException e) {
+                LOG.error("Error resolving Twitch ID to username", e);
+                username = user.getDisplayName(); // Try anyway, since most of the time this will work
+            }
+            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/untimeout %s", username));
+        } else if(channel instanceof DiscordChannel) {
             throw new ChatException("DiscordChannel doesn't support timeout()");
-        else
+        } else {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
+        }
     }
 
     /**
@@ -124,12 +160,13 @@ public class Chat {
      * @throws ChatException
      */
     public static void kick(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final String reason) throws ChatException {
-        if(channel instanceof TwitchChannel)
+        if(channel instanceof TwitchChannel) {
             throw new ChatException("TwitchChannel doesn't support kick()");
-        else if(channel instanceof DiscordChannel)
+        } else if(channel instanceof DiscordChannel) {
             throw new IllegalArgumentException("DiscordChannel kicks not supported yet");
-        else
+        } else {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
+        }
     }
 
     /**
@@ -142,12 +179,21 @@ public class Chat {
      * @param reason reason for punishment, if supported
      */
     public static void ban(final Module<?, ?, ?, ?> module, final Channel channel, final User user, final Integer length, final String reason) {
-        if(channel instanceof TwitchChannel)
-            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/ban %s %s", user.getId(), reason));
-        else if(channel instanceof DiscordChannel)
+        if(channel instanceof TwitchChannel) {
+            final DisplayNameService dns = module.getDisplayNameService();
+            String username;
+            try {
+                username = dns.getUserFromId(channel, user.getId());
+            } catch(NoSuchUserException e) {
+                LOG.error("Error resolving Twitch ID to username", e);
+                username = user.getDisplayName(); // Try anyway, since most of the time this will work
+            }
+            module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/ban %s %s", username, reason));
+        } else if(channel instanceof DiscordChannel) {
             throw new IllegalArgumentException("DiscordChannel bans not supported yet");
-        else
+        } else {
             throw new IllegalArgumentException("Unknown Channel type: " + channel.getClass());
+        }
     }
 
     /**
