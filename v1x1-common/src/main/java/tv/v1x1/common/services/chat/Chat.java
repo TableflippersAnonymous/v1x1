@@ -1,5 +1,7 @@
 package tv.v1x1.common.services.chat;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.DiscordChannel;
 import tv.v1x1.common.dto.core.TwitchChannel;
@@ -12,6 +14,7 @@ import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.util.text.Splitter;
 
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,6 +22,7 @@ import java.util.Map;
  * @author Josh
  */
 public class Chat {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     /**
      * Convenience method to hide the semantics behind sending messages to channels
      * @author Josh
@@ -81,7 +85,7 @@ public class Chat {
             try {
                 username = dns.getUserFromId(channel, user.getId());
             } catch(NoSuchUserException e) {
-                e.printStackTrace();
+                LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
             }
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s 1 %s", username, reason));
@@ -109,7 +113,7 @@ public class Chat {
             try {
                 username = dns.getUserFromId(channel, user.getId());
             } catch(NoSuchUserException e) {
-                e.printStackTrace();
+                LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
             }
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/timeout %s %d %s", username, length, reason));
@@ -135,7 +139,7 @@ public class Chat {
             try {
                 username = dns.getUserFromId(channel, user.getId());
             } catch(NoSuchUserException e) {
-                e.printStackTrace();
+                LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
             }
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/untimeout %s", username));
@@ -181,7 +185,7 @@ public class Chat {
             try {
                 username = dns.getUserFromId(channel, user.getId());
             } catch(NoSuchUserException e) {
-                e.printStackTrace();
+                LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
             }
             module.getServiceClient(ChatRouterServiceClient.class).sendMessage(channel, String.format("/ban %s %s", username, reason));
