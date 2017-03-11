@@ -136,7 +136,7 @@ public class GroupsResource {
         if(tenantGroup == null)
             throw new NotFoundException();
         daoTenantGroup.addUserToGroup(tenantGroup, globalUser.toCore());
-        return new ApiList<>(daoTenantGroup.getGroupsByUser(tenant.toCore(), globalUser.toCore()).getGroups().stream().map(UUID::toString).collect(Collectors.toList()));
+        return new ApiList<>(Lists.newArrayList(Iterables.transform(daoTenantGroup.getUsersByGroup(tenantGroup), UUID::toString)));
     }
 
     @Path("/{group}/users/{user}")
