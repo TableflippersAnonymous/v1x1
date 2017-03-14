@@ -24,7 +24,6 @@ import {FormsModule} from "@angular/forms";
 import {V1x1Api} from "../services/api";
 import {TopNavComponent} from "../components/nav/top_nav";
 import {TopNavEntryComponent} from "../components/nav/top_nav_entry";
-import {TopNavEntryContentComponent} from "../components/nav/top_nav_entry_content";
 import {DashboardPageComponent} from "../components/dashboard/page";
 import {HelpPageComponent} from "../components/help/page";
 import {LogsPageComponent} from "../components/logs/page";
@@ -39,9 +38,70 @@ import {PermissionsGroupComponent} from "../components/permissions/group";
 import {TenantFormatterComponent} from "../components/util/tenant_formatter";
 import {UserFormatterComponent} from "../components/util/user_formatter";
 import {ConfigurationFieldValueUserListComponent} from "../components/configuration/field_values/user_list";
+import {RouterModule, Routes} from "@angular/router";
+import {V1x1GlobalState} from "../services/global_state";
+import {NavRouterComponent} from "../components/nav/nav_router";
+import {UrlId} from "../services/url_id";
+
+/**
+ * <welcome-page [loggedIn]="loggedIn"></welcome-page>
+ <dashboard-page></dashboard-page>
+ <configuration-page [activeTenant]="activeTenant"></configuration-page>
+ <permissions-page [activeTenant]="activeTenant"></permissions-page>
+ <logs-page></logs-page>
+ <help-page></help-page>
+ * @type {[{path: string}]}
+ */
+/*
+ * / -> /welcome
+ * /welcome -> WelcomePageComponent
+ */
+const routes: Routes = [
+  {
+    path: ':tenant_id',
+    component: NavRouterComponent,
+    children: [
+      { path: 'welcome', component: WelcomePageComponent },
+      { path: 'dashboard', component: DashboardPageComponent },
+      {
+        path: 'config',
+        component: ConfigurationPageComponent,
+        children: [
+          {
+            path: ':module_name/:scope',
+            component: ConfigurationPageComponent
+          }
+        ]
+      },
+      {
+        path: 'permissions',
+        component: PermissionsPageComponent,
+        children: [
+          {
+            path: 'groups',
+            component: PermissionsGroupsComponent
+          }
+        ]
+      },
+      { path: 'logs', component: LogsPageComponent },
+      { path: 'help', component: HelpPageComponent }
+    ]
+  },
+  {
+    path: '',
+    redirectTo: '/' + UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl() + '/welcome',
+    pathMatch: 'full'
+  }
+];
 
 @NgModule({
-  imports:      [ NgbModule.forRoot(), BrowserModule, FormsModule, HttpModule ],
+  imports:      [
+    NgbModule.forRoot(),
+    BrowserModule,
+    FormsModule,
+    HttpModule,
+    RouterModule.forRoot(routes, { useHash: true })
+  ],
   declarations: [
     AppComponent, ConfigurationPageComponent, ConfigurationModuleComponent,
     ConfigurationScopeComponent, ConfigurationFieldComponent, ConfigurationFieldValueComponent,
@@ -50,13 +110,13 @@ import {ConfigurationFieldValueUserListComponent} from "../components/configurat
     ConfigurationFieldValueIntegerComponent, ConfigurationFieldValueMasterEnableComponent, ConfigurationFieldValueStringComponent,
     ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
     ConfigurationFieldValueUserListComponent,
-    TopNavComponent, TopNavEntryComponent, TopNavEntryContentComponent, UserDropdownNavComponent, TenantDropdownNavComponent,
+    TopNavComponent, TopNavEntryComponent, UserDropdownNavComponent, TenantDropdownNavComponent, NavRouterComponent,
     DashboardPageComponent, HelpPageComponent, LogsPageComponent,
     PermissionsPageComponent, PermissionsGroupsComponent, PermissionsGroupComponent,
     WelcomePageComponent,
     TenantFormatterComponent, UserFormatterComponent
   ],
-  providers:    [ V1x1Api, V1x1ApiCache ],
+  providers:    [ V1x1Api, V1x1ApiCache, V1x1GlobalState ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }

@@ -5,7 +5,7 @@ import {V1x1GlobalUser} from "../../model/v1x1_global_user";
   selector: 'user-dropdown-nav-component',
   template: `
     <li class="nav-item" ngbDropdown *ngIf="globalUser !== null">
-      <a class="nav-link" href="#" id="navbarUserDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
+      <a href="#" class="nav-link" id="navbarUserDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
         Logged in as: {{displayName()}}
       </a>
       <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarUserDropdownMenuLink">
@@ -13,8 +13,8 @@ import {V1x1GlobalUser} from "../../model/v1x1_global_user";
           <user-formatter [globalUser]="globalUser"></user-formatter>
         </div>
         <hr>
-        <a class="dropdown-item" href="#">Link/Unlink Users</a>
-        <a class="dropdown-item" href="#">Switch Users</a>
+        <a class="dropdown-item">Link/Unlink Users</a>
+        <a class="dropdown-item">Switch Users</a>
       </div>
     </li>
   `
