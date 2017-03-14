@@ -7,6 +7,7 @@ import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
 import {V1x1Api} from "../../services/api";
 import {Observable} from "rxjs";
 import {V1x1Configuration} from "../../model/v1x1_configuration";
+import {V1x1GlobalState} from "../../services/global_state";
 
 @Component({
   selector: 'configuration-page',
@@ -32,17 +33,15 @@ export class ConfigurationPageComponent {
   public activeTenantValue: V1x1Tenant = null;
   public configurationSets: V1x1ConfigurationSet[] = [];
 
-  constructor(private cachedApi: V1x1ApiCache, private api: V1x1Api) {
+  constructor(private cachedApi: V1x1ApiCache, private api: V1x1Api, private globalState: V1x1GlobalState) {
     this.cachedApi.getModules().subscribe(modules => {
       this.v1x1Modules = modules;
       this.recalculateTenantConfiguration();
     });
-  }
-
-  @Input()
-  set activeTenant(activeTenant: V1x1Tenant) {
-    this.activeTenantValue = activeTenant;
-    this.recalculateTenantConfiguration();
+    this.globalState.activeTenant.get().subscribe(tenant => {
+      this.activeTenantValue = tenant;
+      this.recalculateTenantConfiguration();
+    });
   }
 
   recalculateTenantConfiguration() {

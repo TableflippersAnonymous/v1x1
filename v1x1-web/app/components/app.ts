@@ -4,53 +4,24 @@ import {V1x1TwitchOauthCode} from "../model/v1x1_twitch_oauth_code";
 import {V1x1Api} from "../services/api";
 import {Observable} from "rxjs";
 import {V1x1Tenant} from "../model/v1x1_tenant";
+import {V1x1GlobalState} from "../services/global_state";
+import {Router} from "@angular/router";
+import {UrlId} from "../services/url_id";
 
 @Component({
   selector: 'v1x1-app',
   template: `
-    <top-nav [loggedIn]="loggedIn" (activeTenantChange)="setActiveTenant($event)" [(activeIdx)]="activeIdx">
-      <top-nav-entry [justify]="'brand'" [title]="">
-        <template top-nav-entry-content>
-          <welcome-page [loggedIn]="loggedIn"></welcome-page>
-        </template>
-      </top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Dashboard'" *ngIf="loggedIn && false">
-        <template top-nav-entry-content>
-          <dashboard-page></dashboard-page>
-        </template>
-      </top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Configuration'" *ngIf="loggedIn">
-        <template top-nav-entry-content>
-          <configuration-page [activeTenant]="activeTenant"></configuration-page>
-        </template>
-      </top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Permissions'" *ngIf="loggedIn">
-        <template top-nav-entry-content>
-          <permissions-page [activeTenant]="activeTenant"></permissions-page>
-        </template>
-      </top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Logs'" *ngIf="loggedIn && false">
-        <template top-nav-entry-content>
-          <logs-page></logs-page>
-        </template>
-      </top-nav-entry>
-      <top-nav-entry [justify]="'right'" [title]="'Help'">
-        <template top-nav-entry-content>
-          <help-page></help-page>
-        </template>
-      </top-nav-entry>
-    </top-nav>
+    <router-outlet></router-outlet>
   `
 })
 export class AppComponent {
   name = 'v1x1';
   queryString: {[key: string]: string} = {};
-  loggedIn: boolean = false;
   loggingIn: boolean = false;
   activeTenant: V1x1Tenant = null;
-  activeIdx: number = 0;
+  activeTenantId: string = "";
 
-  constructor(private apiCache: V1x1ApiCache, private api: V1x1Api) {
+  constructor(private apiCache: V1x1ApiCache, private api: V1x1Api, private globalState: V1x1GlobalState, private router: Router) {
     this.apiCache.preload();
 
     if(window.location.search) {
@@ -70,14 +41,20 @@ export class AppComponent {
         localStorage.removeItem("auth_expiry");
       } else {
         this.api.setAuthorization(localStorage.getItem("authorization"));
-        this.loggedIn = true;
+        this.globalState.loggedIn.set(true);
         setTimeout(() => {
-          this.loggedIn = false;
-          this.activeIdx = 0;
+          this.globalState.loggedIn.set(false);
+          this.router.navigate(['/', UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl(), 'welcome']);
           localStorage.removeItem("authorization");
           localStorage.removeItem("auth_expiry");
         }, expiry - new Date().getTime() - 5000);
       }
+    }
+
+    if(this.globalState.loggedIn.getCurrent()) {
+      this.api.getTenants().subscribe(r => {
+        this.globalState.tenants.set(r);
+      });
     }
   }
 
@@ -91,11 +68,15 @@ export class AppComponent {
         return;
       localStorage.setItem("authorization", authToken.authorization);
       localStorage.setItem("auth_expiry", authToken.expires);
-      window.location.href = '/';
+      if(history && history.pushState)
+        history.pushState(null, null, '/');
+      this.router.navigate(['/', UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl(), 'welcome']);
     })
   }
 
   setActiveTenant(tenant: V1x1Tenant) {
     this.activeTenant = tenant;
+    this.activeTenantId = tenant.id;
+    this.globalState.activeTenant.set(tenant);
   }
 }

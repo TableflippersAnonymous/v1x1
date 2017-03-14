@@ -1,44 +1,40 @@
-import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
+import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {V1x1Api} from "../../services/api";
+import {Router} from "@angular/router";
+import {V1x1GlobalState} from "../../services/global_state";
+import {V1x1Tenant} from "../../model/v1x1_tenant";
+import {Observable} from "rxjs";
 @Component({
   selector: 'tenant-dropdown-nav-component',
   template: `
-    <li class="nav-item" ngbDropdown *ngIf="tenants !== null">
-      <a class="nav-link" href="#" id="navbarTenantDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>
-        Managing: {{displayName()}}
+    <li class="nav-item" ngbDropdown *ngIf="globalState.activeTenant.getCurrent() !== undefined">
+      <a href="#" class="nav-link" id="navbarTenantDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
+        Managing: {{displayName() | async}}
       </a>
       <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarTenantDropdownMenuLink">
-        <a *ngFor="let tenant of tenants; let idx = index" class="dropdown-item" [class.active]="idx === activeIdx" href="#" (click)="setActive(idx);">
+        <a href="#" *ngFor="let tenant of globalState.tenants.get() | async" class="dropdown-item" [class.active]="tenant.id === globalState.activeTenant.getCurrent()?.id" (click)="setActive(tenant);">
           <tenant-formatter [tenant]="tenant"></tenant-formatter>
         </a>
         <hr>
-        <a class="dropdown-item" href="#">+ Create new</a>
+        <a class="dropdown-item">+ Create new</a>
       </div>
     </li>
   `
 })
 export class TenantDropdownNavComponent {
-  tenants: V1x1Tenant[] = null;
-  @Input() public activeIdx: number = 0;
-  @Output() public activeIdxChange = new EventEmitter();
   @Output() public activeTenantChange = new EventEmitter();
 
+  constructor(private api: V1x1Api,
+              private globalState: V1x1GlobalState,
+              private router: Router) { }
 
-  constructor(private api: V1x1Api) {
-    this.api.getTenants().subscribe(r => {
-      this.tenants = r;
-      this.activeTenantChange.emit(this.tenants[this.activeIdx]);
-    });
+  setActive(tenant: V1x1Tenant) {
+    this.activeTenantChange.emit(tenant);
+    //this.router.navigate(['./', { tenant_id: this.tenants[idx].id }], { relativeTo: this.route });
+    return false;
   }
 
-  setActive(idx: number) {
-    this.activeIdx = idx;
-    this.activeIdxChange.emit(this.activeIdx);
-    this.activeTenantChange.emit(this.tenants[this.activeIdx]);
-  }
-
-  displayName(): string {
-    return this.tenants[this.activeIdx].channels[0].displayName;
+  displayName(): Observable<string> {
+    return this.globalState.activeTenant.get().map(tenant => tenant.channels[0].displayName);
   }
 }
