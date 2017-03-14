@@ -33,23 +33,8 @@ export class AppComponent {
 
     if(this.queryString['code'] && this.queryString['state'])
       this.handleLogin(new V1x1TwitchOauthCode(this.queryString['code'], this.queryString['state']));
-
-    if(localStorage.getItem("authorization") && localStorage.getItem("auth_expiry")) {
-      let expiry = parseInt(localStorage.getItem("auth_expiry"), 10);
-      if (expiry <= new Date().getTime()) {
-        localStorage.removeItem("authorization");
-        localStorage.removeItem("auth_expiry");
-      } else {
-        this.api.setAuthorization(localStorage.getItem("authorization"));
-        this.globalState.loggedIn.set(true);
-        setTimeout(() => {
-          this.globalState.loggedIn.set(false);
-          this.router.navigate(['/', UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl(), 'welcome']);
-          localStorage.removeItem("authorization");
-          localStorage.removeItem("auth_expiry");
-        }, expiry - new Date().getTime() - 5000);
-      }
-    }
+    else
+      this.loginFromLocalStorage();
 
     if(this.globalState.loggedIn.getCurrent()) {
       this.api.getTenants().subscribe(r => {
@@ -68,6 +53,7 @@ export class AppComponent {
         return;
       localStorage.setItem("authorization", authToken.authorization);
       localStorage.setItem("auth_expiry", authToken.expires);
+      this.loginFromLocalStorage();
       if(history && history.pushState)
         history.pushState(null, null, '/');
       this.router.navigate(['/', UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl(), 'welcome']);
@@ -78,5 +64,24 @@ export class AppComponent {
     this.activeTenant = tenant;
     this.activeTenantId = tenant.id;
     this.globalState.activeTenant.set(tenant);
+  }
+
+  loginFromLocalStorage() {
+    if(localStorage.getItem("authorization") && localStorage.getItem("auth_expiry")) {
+      let expiry = parseInt(localStorage.getItem("auth_expiry"), 10);
+      if (expiry <= new Date().getTime()) {
+        localStorage.removeItem("authorization");
+        localStorage.removeItem("auth_expiry");
+      } else {
+        this.api.setAuthorization(localStorage.getItem("authorization"));
+        this.globalState.loggedIn.set(true);
+        setTimeout(() => {
+          this.globalState.loggedIn.set(false);
+          this.router.navigate(['/', UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl(), 'welcome']);
+          localStorage.removeItem("authorization");
+          localStorage.removeItem("auth_expiry");
+        }, expiry - new Date().getTime() - 5000);
+      }
+    }
   }
 }
