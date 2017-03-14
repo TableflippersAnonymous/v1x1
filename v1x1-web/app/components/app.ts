@@ -35,12 +35,6 @@ export class AppComponent {
       this.handleLogin(new V1x1TwitchOauthCode(this.queryString['code'], this.queryString['state']));
     else
       this.loginFromLocalStorage();
-
-    if(this.globalState.loggedIn.getCurrent()) {
-      this.api.getTenants().subscribe(r => {
-        this.globalState.tenants.set(r);
-      });
-    }
   }
 
   handleLogin(oauthCode: V1x1TwitchOauthCode) {
@@ -82,6 +76,12 @@ export class AppComponent {
           localStorage.removeItem("auth_expiry");
         }, expiry - new Date().getTime() - 5000);
       }
+    }
+
+    if(this.globalState.loggedIn.getCurrent()) {
+      this.api.getTenants().subscribe(r => {
+        this.globalState.tenants.set(r);
+      });
     }
   }
 }
