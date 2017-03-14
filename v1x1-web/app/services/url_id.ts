@@ -15,11 +15,11 @@ export class UrlId {
   }
 
   static fromUrl(id: string): UrlId {
-    return new UrlId(ByteBuffer.fromBase64(id));
+    return new UrlId(ByteBuffer.fromBase64(id.replace(/-/g, '+').replace(/_/, '/')));
   }
 
   toUrl(): string {
-    return this.id.toBase64().replace(/=/g, '');
+    return this.id.toBase64().replace(/=/g, '').replace(/\+/g, '-').replace(/\//, '_');
   }
 
   toHex(): string {
