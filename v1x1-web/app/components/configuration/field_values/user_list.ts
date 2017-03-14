@@ -47,4 +47,33 @@ export class ConfigurationFieldValueUserListComponent extends ConfigurableCompon
     this.configuration.splice(index, 1);
     this.configChanged();
   }
+
+  configDirty(): boolean {
+    let idsToAdd = {};
+    let idsToRemove = {};
+    for(let idx in this.configuration) {
+      idsToAdd[this.configuration[idx].id] = true;
+    }
+    for(let idx in this.originalConfiguration) {
+      idsToRemove[this.originalConfiguration[idx].id] = true;
+      delete idsToAdd[this.originalConfiguration[idx].id];
+    }
+    for(let idx in this.configuration) {
+      delete idsToRemove[this.configuration[idx].id];
+    }
+    for(let id in idsToAdd) {
+      return true;
+    }
+    for(let id in idsToRemove) {
+      return true;
+    }
+    return false;
+  }
+
+  configIdxDirty(idx: number): boolean {
+    for(let idx2 in this.originalConfiguration)
+      if(this.originalConfiguration[idx2].id === this.configuration[idx].id)
+        return false;
+    return true;
+  }
 }
