@@ -1,5 +1,5 @@
-import {Component, Input} from "@angular/core";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
+import {Component} from "@angular/core";
+import {ActivatedRoute, Router} from "@angular/router";
 @Component({
   selector: 'permissions-page',
   template: `
@@ -9,8 +9,8 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
       </button>
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
-          <li class="nav-item" [class.active]="activeIdx === 0">
-            <a class="nav-link" href="#" (click)="setActive(0);">Groups</a>
+          <li class="nav-item" [class.active]="router.isActive(router.createUrlTree(['./groups'], {relativeTo: route}), false)">
+            <a class="nav-link" [routerLink]="['./groups']">Groups</a>
           </li>
           <li class="nav-item" [class.active]="activeIdx === 1" *ngIf="false">
             <a class="nav-link" href="#" (click)="setActive(1);">Mapping</a>
@@ -21,12 +21,13 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
         </ul>
       </div>
     </nav>
-    <permissions-groups-page [activeTenant]="activeTenant" *ngIf="activeIdx === 0"></permissions-groups-page>
+    <router-outlet></router-outlet>
   `
 })
 export class PermissionsPageComponent {
-  @Input() activeTenant: V1x1Tenant;
   activeIdx: number = 0;
+
+  constructor(private route: ActivatedRoute, private router: Router) {}
 
   setActive(idx: number) {
     this.activeIdx = idx;
