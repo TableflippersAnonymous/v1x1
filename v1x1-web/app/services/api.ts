@@ -347,4 +347,28 @@ export class V1x1Api {
       .map((l: V1x1List<string>) => l.entries)
       .catch((err, caught) => Observable.of([]));
   }
+
+  createGroup(tenantId: string, groupName: string): Observable<V1x1Group> {
+    return this.http.post(
+      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups',
+      JsonConvert.serializeObject({
+        'value': groupName
+      }),
+      new RequestOptions({
+        headers: new Headers({
+          'Content-Type': 'application/json',
+          Authorization: this.authorization
+        })
+      })
+    )
+      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1Group))
+  }
+
+  deleteGroup(tenantId: string, groupId: string): Observable<boolean> {
+    return this.http.delete(
+      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId,
+      this.getAuthorization()
+    )
+      .map(r => true);
+  }
 }
