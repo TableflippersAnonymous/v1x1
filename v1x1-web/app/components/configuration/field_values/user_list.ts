@@ -39,7 +39,11 @@ export class ConfigurationFieldValueUserListComponent extends ConfigurableCompon
     if(!(this.configuration instanceof Array))
       this.configuration = [];
     this.api.getGlobalUserByPlatformAndUsername(this.newPlatform, this.newUsername).subscribe(
-      globalUser => { this.configuration.push(globalUser); this.configChanged(); }
+      globalUser => {
+        this.newUsername = "";
+        this.configuration.push(globalUser);
+        this.configChanged();
+      }
     );
   }
 
