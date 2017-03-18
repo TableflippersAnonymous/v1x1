@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {V1x1Tenant} from "../../model/v1x1_tenant";
 import {V1x1ConfigurationDefinition} from "../../model/v1x1_configuration_definition";
 import {JsonConvert} from "json2typescript";
@@ -21,12 +21,14 @@ import {V1x1ApiCache} from "../../services/api_cache";
                            [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
       <button class="btn btn-primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
       <button class="btn btn-secondary" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
+      <button class="btn btn-danger" (click)="deleteGroup()">Delete Group</button>
     </form>
   `
 })
 export class PermissionsGroupComponent {
   @Input() activeTenant: V1x1Tenant;
   @Input() groupValue: V1x1GroupMembership;
+  @Output() update: EventEmitter<boolean> = new EventEmitter<boolean>();
   originalConfiguration: Object = {};
   configuration: Object = {};
   configSet: boolean = false;
@@ -163,5 +165,11 @@ export class PermissionsGroupComponent {
         }
       );
     }
+  }
+
+  deleteGroup() {
+    this.api.deleteGroup(this.group.group.tenantId, this.group.group.groupId).subscribe(s => {
+      this.update.emit(true);
+    });
   }
 }

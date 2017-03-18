@@ -50,7 +50,7 @@ export class AppComponent {
       this.loginFromLocalStorage();
       if(history && history.pushState)
         history.pushState(null, null, '/');
-      this.router.navigate(['/', UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl(), 'welcome']);
+      this.postLogin();
     })
   }
 
@@ -64,16 +64,12 @@ export class AppComponent {
     if(localStorage.getItem("authorization") && localStorage.getItem("auth_expiry")) {
       let expiry = parseInt(localStorage.getItem("auth_expiry"), 10);
       if (expiry <= new Date().getTime()) {
-        localStorage.removeItem("authorization");
-        localStorage.removeItem("auth_expiry");
+        this.relogin();
       } else {
         this.api.setAuthorization(localStorage.getItem("authorization"));
         this.globalState.loggedIn.set(true);
         setTimeout(() => {
-          this.globalState.loggedIn.set(false);
-          this.router.navigate(['/', UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl(), 'welcome']);
-          localStorage.removeItem("authorization");
-          localStorage.removeItem("auth_expiry");
+          this.relogin();
         }, expiry - new Date().getTime() - 5000);
       }
     }
@@ -83,5 +79,45 @@ export class AppComponent {
         this.globalState.tenants.set(r);
       });
     }
+  }
+
+  relogin() {
+    this.globalState.loggedIn.set(false);
+    localStorage.removeItem("authorization");
+    localStorage.removeItem("auth_expiry");
+    localStorage.setItem("auth_redirect", window.location.hash);
+    localStorage.setItem("auth_redirect_expiry", (new Date().getTime() + 3600).toString(10));
+    this.api.getState().subscribe(
+      state => {
+        window.location.href = 'https://api.twitch.tv/kraken/oauth2/authorize' +
+          '?response_type=code' +
+          '&client_id=' + this.api.getClientId() +
+          '&redirect_uri=https://v1x1.tv/' +
+          '&scope=' +
+          'user_read+channel_editor+' +
+          'channel_commercial+channel_subscriptions+' +
+          'channel_feed_read+channel_feed_edit' +
+          '&state=' + state.state;
+      }
+    );
+  }
+
+  postLogin() {
+    if(localStorage.getItem("auth_redirect") && localStorage.getItem("auth_redirect_expiry")) {
+      let expiry = parseInt(localStorage.getItem("auth_redirect_expiry"), 10);
+      if (expiry <= new Date().getTime()) {
+        window.location.hash = localStorage.getItem("auth_redirect");
+      } else {
+        this.navigateDefault();
+      }
+      localStorage.removeItem("auth_redirect");
+      localStorage.removeItem("auth_redirect_expiry");
+    } else {
+      this.navigateDefault()
+    }
+  }
+
+  navigateDefault() {
+    this.router.navigate(['/', UrlId.fromApi('00000000-0000-0000-0000-000000000000').toUrl(), 'welcome']);
   }
 }
