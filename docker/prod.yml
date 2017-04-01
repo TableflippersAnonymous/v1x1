@@ -20,9 +20,10 @@ cassandra:
   cluster_name: "Tableflippers Cluster"
   keyspace: "v1x1"
   contact_points:
-  - 198.50.235.199
-  - 192.99.39.57
-  - 192.95.50.35
+  - k8s-w01.tblflp.zone
+  - k8s-w02.tblflp.zone
+  - k8s-w03.tblflp.zone
+  - k8s-w04.tblflp.zone
   authenticated: true
   username: v1x1
   password: {{ENV:CASSANDRA_PASSWORD}}
