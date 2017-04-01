@@ -49,5 +49,5 @@ rm -f Makefile.upload
 
 if [[ $CIRCLE_BRANCH == "master" ]]; then
     echo "Invalidating Cloudfront..."
-    aws cloudfront create-invalidation --distribution-id E1ES20CHGVRXZB --paths '/index.html' '/*.html'
+    aws cloudfront create-invalidation --distribution-id E1ES20CHGVRXZB --paths '/index.html' '/*.html' '/'
 fi
