@@ -2,15 +2,15 @@
 redisson:
   clusterServersConfig:
     nodeAddresses:
-    - "redis://redis1-1:6379"
-    - "redis://redis1-2:6379"
-    - "redis://redis1-3:6379"
-    - "redis://redis2-1:6379"
-    - "redis://redis2-2:6379"
-    - "redis://redis2-3:6379"
-    - "redis://redis3-1:6379"
-    - "redis://redis3-2:6379"
-    - "redis://redis3-3:6379"
+    - "redis://redis-0.redis-main.v1x1.svc.cluster.local:6379"
+    - "redis://redis-1.redis-main.v1x1.svc.cluster.local:6379"
+    - "redis://redis-2.redis-main.v1x1.svc.cluster.local:6379"
+    - "redis://redis-3.redis-main.v1x1.svc.cluster.local:6379"
+    - "redis://redis-4.redis-main.v1x1.svc.cluster.local:6379"
+    - "redis://redis-5.redis-main.v1x1.svc.cluster.local:6379"
+    - "redis://redis-6.redis-main.v1x1.svc.cluster.local:6379"
+    - "redis://redis-7.redis-main.v1x1.svc.cluster.local:6379"
+    - "redis://redis-8.redis-main.v1x1.svc.cluster.local:6379"
     clientName: "v1x1-{{module_name}}"
     readMode: MASTER
     masterConnectionPoolSize: 1024
@@ -27,15 +27,11 @@ cassandra:
   authenticated: true
   username: v1x1
   password: klx1tOCEL8otSFWNP56DNKXZ283HKB2f5borTYTcXLzO
-zookeeper_connection_string: zk1:2181,zk2:2181,zk3:2181
+zookeeper_connection_string: zk-0.zk-headless.v1x1.svc.cluster.local:2181,zk-1.zk-headless.v1x1.svc.cluster.local:2181,zk-2.zk-headless.v1x1.svc.cluster.local:2181
 server:
   applicationConnectors:
-    - type: https
-      port: 8443
-      keyStorePath: /tmp/keystore.jks
-      keyStorePassword: notsecure
-      validateCerts: false
-      validatePeers: false
+    - type: http
+      port: 8080
   adminConnectors:
     - type: http
       port: 8081
