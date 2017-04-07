@@ -10,7 +10,7 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>WARN</level>
         </filter>
-        <dsn>https://0bf488fe9a7c4438b5bc10ad1da72a6b:469c949b9207482897836d672ef35472@sentry.io/121392?options</dsn>
+        <dsn>https://cc959d2b551348f38f70bdf9736edd5b:55df5560877f4a7fbf4922146307026a@sentry.tblflp.zone/2?options</dsn>
         <!-- Optional, allows to select the ravenFactory -->
         <!--<ravenFactory>com.getsentry.raven.DefaultRavenFactory</ravenFactory>-->
     </appender>
