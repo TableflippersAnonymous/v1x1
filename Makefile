@@ -43,6 +43,7 @@ docker-login: cert-setup
 	while true; do docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS} registry.tblflp.zone:5443 && break; sleep 3; done
 
 deploy: upload
+	chmod +x update_kube.sh
 	./update_kube.sh
 
 upload:
