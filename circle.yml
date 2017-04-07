@@ -1,6 +1,9 @@
 dependencies:
   override:
   - make -e -j dependencies
+  cache_directories:
+  - "v1x1-web/node_modules"
+  - "~/bin"
 test:
   override:
   - make -e -j test
@@ -10,7 +13,9 @@ machine:
 deployment:
   prod:
     branch: master
-    codedeploy:
-      v1x1:
-        deployment_group: prod
-        deployment_config: CodeDeployDefault.AllAtOnce
+    commands:
+    - make -e -j deploy
+  other:
+    branch: /.*/
+    commands:
+    - make -e -j upload
