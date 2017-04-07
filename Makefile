@@ -41,9 +41,6 @@ cert-setup:
 
 docker-login: cert-setup
 	while true; do docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS} registry.tblflp.zone:5443 && break; sleep 3; done
-	echo '#!/bin/bash' > codedeploy/v1x1-login.sh
-	echo "docker login -e ${DOCKER_EMAIL} -u ${DOCKER_USER} -p ${DOCKER_PASS} registry.tblflp.zone:5443" >> codedeploy/v1x1-login.sh
-	chmod +x codedeploy/v1x1-login.sh
 
 deploy: upload
 	./update_kube.sh
