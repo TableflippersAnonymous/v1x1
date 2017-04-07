@@ -15,12 +15,12 @@ pip-dep:
 docker-dep:
 	docker pull openjdk:8-jre-alpine
 
-kube-dep:
+kube-dep: cert-setup
 	mkdir -p ~/bin
 	wget -O ~/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/amd64/kubectl
 	chmod +x ~/bin/kubectl
 	wget -O ~/kube-ca.crt http://pki.tblflp.zone/Tableflippers-Anonymous-Infrastructure-CA.crt
-	~/bin/kubectl config set-cluster tblflp --server=https://k8s-master.tblflp.zone --certificate-authority=/home/ubuntu/kube-ca.crt
+	~/bin/kubectl config set-cluster tblflp --server=https://k8s-master.tblflp.zone --insecure-skip-tls-verify=true
 	~/bin/kubectl config set-credentials tblflp "--username=${KUBE_USERNAME}" "--password=${KUBE_PASSWORD}"
 	~/bin/kubectl config set-context tblflp --cluster=tblflp --user=tblflp
 	~/bin/kubectl config use-context tblflp
