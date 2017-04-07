@@ -16,15 +16,15 @@ docker-dep:
 	docker pull openjdk:8-jre-alpine
 
 kube-dep:
-    mkdir -p ~/bin
-    wget -O ~/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/amd64/kubectl
-    chmod +x ~/bin/kubectl
-    wget -O ~/kube-ca.crt http://pki.tblflp.zone/Tableflippers-Anonymous-Infrastructure-CA.crt
-    ~/bin/kubectl config set-cluster tblflp --server=https://k8s-master.tblflp.zone --certificate-authority=~/kube-ca.crt
-    ~/bin/kubectl config set-credentials tblflp "--username=$KUBE_USERNAME" "--password=$KUBE_PASSWORD"
-    ~/bin/kubectl config set-context tblflp --cluster=tblflp --user=tblflp
-    ~/bin/kubectl config use-context tblflp
-    ~/bin/kubectl cluster-info
+	mkdir -p ~/bin
+	wget -O ~/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v1.6.0/bin/linux/amd64/kubectl
+	chmod +x ~/bin/kubectl
+	wget -O ~/kube-ca.crt http://pki.tblflp.zone/Tableflippers-Anonymous-Infrastructure-CA.crt
+	~/bin/kubectl config set-cluster tblflp --server=https://k8s-master.tblflp.zone --certificate-authority=~/kube-ca.crt
+	~/bin/kubectl config set-credentials tblflp "--username=$KUBE_USERNAME" "--password=$KUBE_PASSWORD"
+	~/bin/kubectl config set-context tblflp --cluster=tblflp --user=tblflp
+	~/bin/kubectl config use-context tblflp
+	~/bin/kubectl cluster-info
 
 test: mvn-test npm-build
 
@@ -49,4 +49,4 @@ deploy: upload
 	./update_kube.sh
 
 upload:
-    ./upload.sh
+	./upload.sh
