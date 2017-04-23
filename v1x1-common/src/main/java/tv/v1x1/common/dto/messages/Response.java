@@ -13,13 +13,13 @@ import tv.v1x1.common.dto.proto.messages.RequestOuterClass;
  * Created by cobi on 10/4/16.
  */
 public abstract class Response<T extends Request> extends Message {
-    public static Response<? extends Request> fromProto(final Module module, final UUID uuid, final long timestamp, final RequestOuterClass.Response response) {
+    public static Response<? extends Request> fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final RequestOuterClass.Response response) {
         final UUID requestMessageId = UUID.fromProto(response.getRequestMessageId());
         switch(response.getType()) {
-            case MODULE_SHUTDOWN: return ModuleShutdownResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ModuleShutdownResponse.data));
-            case SEND_MESSAGE: return SendMessageResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.SendMessageResponse.data));
-            case SCHEDULE: return ScheduleResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ScheduleResponse.data));
-            case EXCEPTION: return ExceptionResponse.fromProto(module, uuid, timestamp, requestMessageId, response.getExtension(RequestOuterClass.ExceptionResponse.data));
+            case MODULE_SHUTDOWN: return ModuleShutdownResponse.fromProto(module, uuid, timestamp, context, requestMessageId, response.getExtension(RequestOuterClass.ModuleShutdownResponse.data));
+            case SEND_MESSAGE: return SendMessageResponse.fromProto(module, uuid, timestamp, context, requestMessageId, response.getExtension(RequestOuterClass.SendMessageResponse.data));
+            case SCHEDULE: return ScheduleResponse.fromProto(module, uuid, timestamp, context, requestMessageId, response.getExtension(RequestOuterClass.ScheduleResponse.data));
+            case EXCEPTION: return ExceptionResponse.fromProto(module, uuid, timestamp, context, requestMessageId, response.getExtension(RequestOuterClass.ExceptionResponse.data));
             default: throw new IllegalStateException("Unknown request type " + response.getType().name());
         }
     }
@@ -31,8 +31,8 @@ public abstract class Response<T extends Request> extends Message {
         this.requestMessageId = requestMessageId;
     }
 
-    public Response(final Module from, final UUID messageId, final long timestamp, final UUID requestMessageId) {
-        super(from, messageId, timestamp);
+    public Response(final Module from, final UUID messageId, final long timestamp, final Context context, final UUID requestMessageId) {
+        super(from, messageId, timestamp, context);
         this.requestMessageId = requestMessageId;
     }
 

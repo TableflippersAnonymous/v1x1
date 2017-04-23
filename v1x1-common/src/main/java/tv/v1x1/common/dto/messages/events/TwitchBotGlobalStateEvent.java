@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.core.TwitchBot;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.GlobalUserStateCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -15,10 +16,10 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#globaluserstate">Twitch-API documentation</a>
  */
 public class TwitchBotGlobalStateEvent extends Event {
-    public static TwitchBotGlobalStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotGlobalStateEvent twitchBotGlobalStateEvent) {
+    public static TwitchBotGlobalStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchBotGlobalStateEvent twitchBotGlobalStateEvent) {
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotGlobalStateEvent.getBot());
         final GlobalUserStateCommand globalUserStateCommand = (GlobalUserStateCommand) IrcStanza.fromProto(twitchBotGlobalStateEvent.getGlobalUserStateCommand());
-        return new TwitchBotGlobalStateEvent(module, uuid, timestamp, bot, globalUserStateCommand);
+        return new TwitchBotGlobalStateEvent(module, uuid, timestamp, context, bot, globalUserStateCommand);
     }
 
     private final TwitchBot bot;
@@ -31,8 +32,8 @@ public class TwitchBotGlobalStateEvent extends Event {
         this.globalUserStateCommand = globalUserStateCommand;
     }
 
-    public TwitchBotGlobalStateEvent(final Module from, final UUID messageId, final long timestamp, final TwitchBot bot, final GlobalUserStateCommand globalUserStateCommand) {
-        super(from, messageId, timestamp);
+    public TwitchBotGlobalStateEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchBot bot, final GlobalUserStateCommand globalUserStateCommand) {
+        super(from, messageId, timestamp, context);
         this.bot = bot;
         this.globalUserStateCommand = globalUserStateCommand;
     }

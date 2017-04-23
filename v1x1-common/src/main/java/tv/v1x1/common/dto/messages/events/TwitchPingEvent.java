@@ -4,6 +4,7 @@ import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.PingCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -12,10 +13,10 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchPingEvent extends Event {
-    public static TwitchPingEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchPingEvent twitchPingEvent) {
+    public static TwitchPingEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchPingEvent twitchPingEvent) {
         final String token = twitchPingEvent.getToken();
         final PingCommand pingCommand = (PingCommand) IrcStanza.fromProto(twitchPingEvent.getPingCommand());
-        return new TwitchPingEvent(module, uuid, timestamp, token, pingCommand);
+        return new TwitchPingEvent(module, uuid, timestamp, context, token, pingCommand);
     }
 
     private final String token;
@@ -28,8 +29,8 @@ public class TwitchPingEvent extends Event {
         this.pingCommand = pingCommand;
     }
 
-    public TwitchPingEvent(final Module from, final UUID messageId, final long timestamp, final String token, final PingCommand pingCommand) {
-        super(from, messageId, timestamp);
+    public TwitchPingEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final String token, final PingCommand pingCommand) {
+        super(from, messageId, timestamp, context);
         this.token = token;
         this.pingCommand = pingCommand;
     }

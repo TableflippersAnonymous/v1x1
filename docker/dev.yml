@@ -11,3 +11,6 @@ cassandra:
   - "cass1"
   authenticated: false
 zookeeper_connection_string: zoo1:2181
+zipkin_config:
+  enabled: false
+  uri: ""

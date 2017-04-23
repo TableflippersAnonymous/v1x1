@@ -62,6 +62,19 @@ public final class MessageOuterClass {
      * <code>required int64 timestamp = 4;</code>
      */
     long getTimestamp();
+
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+     */
+    boolean hasContext();
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+     */
+    tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context getContext();
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+     */
+    tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.ContextOrBuilder getContextOrBuilder();
   }
   /**
    * Protobuf type {@code tv.v1x1.common.dto.proto.messages.Message}
@@ -148,6 +161,19 @@ public final class MessageOuterClass {
             case 32: {
               bitField0_ |= 0x00000008;
               timestamp_ = input.readInt64();
+              break;
+            }
+            case 42: {
+              tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                subBuilder = context_.toBuilder();
+              }
+              context_ = input.readMessage(tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(context_);
+                context_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000010;
               break;
             }
           }
@@ -282,6 +308,1072 @@ public final class MessageOuterClass {
       // @@protoc_insertion_point(enum_scope:tv.v1x1.common.dto.proto.messages.Message.MessageType)
     }
 
+    public interface ContextOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.messages.Message.Context)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+       */
+      boolean hasContextId();
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+       */
+      tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID getContextId();
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+       */
+      tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getContextIdOrBuilder();
+
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+       */
+      boolean hasTraceId();
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+       */
+      tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID getTraceId();
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+       */
+      tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getTraceIdOrBuilder();
+
+      /**
+       * <code>optional int64 parent_span_id = 3;</code>
+       */
+      boolean hasParentSpanId();
+      /**
+       * <code>optional int64 parent_span_id = 3;</code>
+       */
+      long getParentSpanId();
+
+      /**
+       * <code>optional int64 span_id = 4;</code>
+       */
+      boolean hasSpanId();
+      /**
+       * <code>optional int64 span_id = 4;</code>
+       */
+      long getSpanId();
+
+      /**
+       * <code>optional bool sampled = 5;</code>
+       */
+      boolean hasSampled();
+      /**
+       * <code>optional bool sampled = 5;</code>
+       */
+      boolean getSampled();
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.messages.Message.Context}
+     */
+    public  static final class Context extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.messages.Message.Context)
+        ContextOrBuilder {
+      // Use Context.newBuilder() to construct.
+      private Context(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private Context() {
+        parentSpanId_ = 0L;
+        spanId_ = 0L;
+        sampled_ = false;
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private Context(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                  subBuilder = contextId_.toBuilder();
+                }
+                contextId_ = input.readMessage(tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(contextId_);
+                  contextId_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000001;
+                break;
+              }
+              case 18: {
+                tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder subBuilder = null;
+                if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                  subBuilder = traceId_.toBuilder();
+                }
+                traceId_ = input.readMessage(tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.PARSER, extensionRegistry);
+                if (subBuilder != null) {
+                  subBuilder.mergeFrom(traceId_);
+                  traceId_ = subBuilder.buildPartial();
+                }
+                bitField0_ |= 0x00000002;
+                break;
+              }
+              case 24: {
+                bitField0_ |= 0x00000004;
+                parentSpanId_ = input.readInt64();
+                break;
+              }
+              case 32: {
+                bitField0_ |= 0x00000008;
+                spanId_ = input.readInt64();
+                break;
+              }
+              case 40: {
+                bitField0_ |= 0x00000010;
+                sampled_ = input.readBool();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.messages.MessageOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.messages.MessageOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.class, tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.Builder.class);
+      }
+
+      private int bitField0_;
+      public static final int CONTEXT_ID_FIELD_NUMBER = 1;
+      private tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID contextId_;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+       */
+      public boolean hasContextId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID getContextId() {
+        return contextId_ == null ? tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : contextId_;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getContextIdOrBuilder() {
+        return contextId_ == null ? tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : contextId_;
+      }
+
+      public static final int TRACE_ID_FIELD_NUMBER = 2;
+      private tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID traceId_;
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+       */
+      public boolean hasTraceId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID getTraceId() {
+        return traceId_ == null ? tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : traceId_;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getTraceIdOrBuilder() {
+        return traceId_ == null ? tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : traceId_;
+      }
+
+      public static final int PARENT_SPAN_ID_FIELD_NUMBER = 3;
+      private long parentSpanId_;
+      /**
+       * <code>optional int64 parent_span_id = 3;</code>
+       */
+      public boolean hasParentSpanId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional int64 parent_span_id = 3;</code>
+       */
+      public long getParentSpanId() {
+        return parentSpanId_;
+      }
+
+      public static final int SPAN_ID_FIELD_NUMBER = 4;
+      private long spanId_;
+      /**
+       * <code>optional int64 span_id = 4;</code>
+       */
+      public boolean hasSpanId() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional int64 span_id = 4;</code>
+       */
+      public long getSpanId() {
+        return spanId_;
+      }
+
+      public static final int SAMPLED_FIELD_NUMBER = 5;
+      private boolean sampled_;
+      /**
+       * <code>optional bool sampled = 5;</code>
+       */
+      public boolean hasSampled() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional bool sampled = 5;</code>
+       */
+      public boolean getSampled() {
+        return sampled_;
+      }
+
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        if (!hasContextId()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!getContextId().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (hasTraceId()) {
+          if (!getTraceId().isInitialized()) {
+            memoizedIsInitialized = 0;
+            return false;
+          }
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeMessage(1, getContextId());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeMessage(2, getTraceId());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeInt64(3, parentSpanId_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeInt64(4, spanId_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          output.writeBool(5, sampled_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(1, getContextId());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(2, getTraceId());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt64Size(3, parentSpanId_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt64Size(4, spanId_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(5, sampled_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context)) {
+          return super.equals(obj);
+        }
+        tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context other = (tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context) obj;
+
+        boolean result = true;
+        result = result && (hasContextId() == other.hasContextId());
+        if (hasContextId()) {
+          result = result && getContextId()
+              .equals(other.getContextId());
+        }
+        result = result && (hasTraceId() == other.hasTraceId());
+        if (hasTraceId()) {
+          result = result && getTraceId()
+              .equals(other.getTraceId());
+        }
+        result = result && (hasParentSpanId() == other.hasParentSpanId());
+        if (hasParentSpanId()) {
+          result = result && (getParentSpanId()
+              == other.getParentSpanId());
+        }
+        result = result && (hasSpanId() == other.hasSpanId());
+        if (hasSpanId()) {
+          result = result && (getSpanId()
+              == other.getSpanId());
+        }
+        result = result && (hasSampled() == other.hasSampled());
+        if (hasSampled()) {
+          result = result && (getSampled()
+              == other.getSampled());
+        }
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptorForType().hashCode();
+        if (hasContextId()) {
+          hash = (37 * hash) + CONTEXT_ID_FIELD_NUMBER;
+          hash = (53 * hash) + getContextId().hashCode();
+        }
+        if (hasTraceId()) {
+          hash = (37 * hash) + TRACE_ID_FIELD_NUMBER;
+          hash = (53 * hash) + getTraceId().hashCode();
+        }
+        if (hasParentSpanId()) {
+          hash = (37 * hash) + PARENT_SPAN_ID_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+              getParentSpanId());
+        }
+        if (hasSpanId()) {
+          hash = (37 * hash) + SPAN_ID_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
+              getSpanId());
+        }
+        if (hasSampled()) {
+          hash = (37 * hash) + SAMPLED_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getSampled());
+        }
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code tv.v1x1.common.dto.proto.messages.Message.Context}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.messages.Message.Context)
+          tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.ContextOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return tv.v1x1.common.dto.proto.messages.MessageOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return tv.v1x1.common.dto.proto.messages.MessageOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.class, tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.Builder.class);
+        }
+
+        // Construct using tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+            getContextIdFieldBuilder();
+            getTraceIdFieldBuilder();
+          }
+        }
+        public Builder clear() {
+          super.clear();
+          if (contextIdBuilder_ == null) {
+            contextId_ = null;
+          } else {
+            contextIdBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000001);
+          if (traceIdBuilder_ == null) {
+            traceId_ = null;
+          } else {
+            traceIdBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000002);
+          parentSpanId_ = 0L;
+          bitField0_ = (bitField0_ & ~0x00000004);
+          spanId_ = 0L;
+          bitField0_ = (bitField0_ & ~0x00000008);
+          sampled_ = false;
+          bitField0_ = (bitField0_ & ~0x00000010);
+          return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return tv.v1x1.common.dto.proto.messages.MessageOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_descriptor;
+        }
+
+        public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context getDefaultInstanceForType() {
+          return tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.getDefaultInstance();
+        }
+
+        public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context build() {
+          tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context buildPartial() {
+          tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context result = new tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          if (contextIdBuilder_ == null) {
+            result.contextId_ = contextId_;
+          } else {
+            result.contextId_ = contextIdBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          if (traceIdBuilder_ == null) {
+            result.traceId_ = traceId_;
+          } else {
+            result.traceId_ = traceIdBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          result.parentSpanId_ = parentSpanId_;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.spanId_ = spanId_;
+          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+            to_bitField0_ |= 0x00000010;
+          }
+          result.sampled_ = sampled_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context) {
+            return mergeFrom((tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context other) {
+          if (other == tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.getDefaultInstance()) return this;
+          if (other.hasContextId()) {
+            mergeContextId(other.getContextId());
+          }
+          if (other.hasTraceId()) {
+            mergeTraceId(other.getTraceId());
+          }
+          if (other.hasParentSpanId()) {
+            setParentSpanId(other.getParentSpanId());
+          }
+          if (other.hasSpanId()) {
+            setSpanId(other.getSpanId());
+          }
+          if (other.hasSampled()) {
+            setSampled(other.getSampled());
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasContextId()) {
+            return false;
+          }
+          if (!getContextId().isInitialized()) {
+            return false;
+          }
+          if (hasTraceId()) {
+            if (!getTraceId().isInitialized()) {
+              return false;
+            }
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID contextId_ = null;
+        private com.google.protobuf.SingleFieldBuilderV3<
+            tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> contextIdBuilder_;
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        public boolean hasContextId() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID getContextId() {
+          if (contextIdBuilder_ == null) {
+            return contextId_ == null ? tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : contextId_;
+          } else {
+            return contextIdBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        public Builder setContextId(tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID value) {
+          if (contextIdBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            contextId_ = value;
+            onChanged();
+          } else {
+            contextIdBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000001;
+          return this;
+        }
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        public Builder setContextId(
+            tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder builderForValue) {
+          if (contextIdBuilder_ == null) {
+            contextId_ = builderForValue.build();
+            onChanged();
+          } else {
+            contextIdBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000001;
+          return this;
+        }
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        public Builder mergeContextId(tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID value) {
+          if (contextIdBuilder_ == null) {
+            if (((bitField0_ & 0x00000001) == 0x00000001) &&
+                contextId_ != null &&
+                contextId_ != tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance()) {
+              contextId_ =
+                tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.newBuilder(contextId_).mergeFrom(value).buildPartial();
+            } else {
+              contextId_ = value;
+            }
+            onChanged();
+          } else {
+            contextIdBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000001;
+          return this;
+        }
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        public Builder clearContextId() {
+          if (contextIdBuilder_ == null) {
+            contextId_ = null;
+            onChanged();
+          } else {
+            contextIdBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000001);
+          return this;
+        }
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder getContextIdBuilder() {
+          bitField0_ |= 0x00000001;
+          onChanged();
+          return getContextIdFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getContextIdOrBuilder() {
+          if (contextIdBuilder_ != null) {
+            return contextIdBuilder_.getMessageOrBuilder();
+          } else {
+            return contextId_ == null ?
+                tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : contextId_;
+          }
+        }
+        /**
+         * <code>required .tv.v1x1.common.dto.proto.core.UUID context_id = 1;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> 
+            getContextIdFieldBuilder() {
+          if (contextIdBuilder_ == null) {
+            contextIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder>(
+                    getContextId(),
+                    getParentForChildren(),
+                    isClean());
+            contextId_ = null;
+          }
+          return contextIdBuilder_;
+        }
+
+        private tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID traceId_ = null;
+        private com.google.protobuf.SingleFieldBuilderV3<
+            tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> traceIdBuilder_;
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        public boolean hasTraceId() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID getTraceId() {
+          if (traceIdBuilder_ == null) {
+            return traceId_ == null ? tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : traceId_;
+          } else {
+            return traceIdBuilder_.getMessage();
+          }
+        }
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        public Builder setTraceId(tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID value) {
+          if (traceIdBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            traceId_ = value;
+            onChanged();
+          } else {
+            traceIdBuilder_.setMessage(value);
+          }
+          bitField0_ |= 0x00000002;
+          return this;
+        }
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        public Builder setTraceId(
+            tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder builderForValue) {
+          if (traceIdBuilder_ == null) {
+            traceId_ = builderForValue.build();
+            onChanged();
+          } else {
+            traceIdBuilder_.setMessage(builderForValue.build());
+          }
+          bitField0_ |= 0x00000002;
+          return this;
+        }
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        public Builder mergeTraceId(tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID value) {
+          if (traceIdBuilder_ == null) {
+            if (((bitField0_ & 0x00000002) == 0x00000002) &&
+                traceId_ != null &&
+                traceId_ != tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance()) {
+              traceId_ =
+                tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.newBuilder(traceId_).mergeFrom(value).buildPartial();
+            } else {
+              traceId_ = value;
+            }
+            onChanged();
+          } else {
+            traceIdBuilder_.mergeFrom(value);
+          }
+          bitField0_ |= 0x00000002;
+          return this;
+        }
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        public Builder clearTraceId() {
+          if (traceIdBuilder_ == null) {
+            traceId_ = null;
+            onChanged();
+          } else {
+            traceIdBuilder_.clear();
+          }
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder getTraceIdBuilder() {
+          bitField0_ |= 0x00000002;
+          onChanged();
+          return getTraceIdFieldBuilder().getBuilder();
+        }
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        public tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder getTraceIdOrBuilder() {
+          if (traceIdBuilder_ != null) {
+            return traceIdBuilder_.getMessageOrBuilder();
+          } else {
+            return traceId_ == null ?
+                tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.getDefaultInstance() : traceId_;
+          }
+        }
+        /**
+         * <code>optional .tv.v1x1.common.dto.proto.core.UUID trace_id = 2;</code>
+         */
+        private com.google.protobuf.SingleFieldBuilderV3<
+            tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder> 
+            getTraceIdFieldBuilder() {
+          if (traceIdBuilder_ == null) {
+            traceIdBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+                tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUID.Builder, tv.v1x1.common.dto.proto.core.UUIDOuterClass.UUIDOrBuilder>(
+                    getTraceId(),
+                    getParentForChildren(),
+                    isClean());
+            traceId_ = null;
+          }
+          return traceIdBuilder_;
+        }
+
+        private long parentSpanId_ ;
+        /**
+         * <code>optional int64 parent_span_id = 3;</code>
+         */
+        public boolean hasParentSpanId() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>optional int64 parent_span_id = 3;</code>
+         */
+        public long getParentSpanId() {
+          return parentSpanId_;
+        }
+        /**
+         * <code>optional int64 parent_span_id = 3;</code>
+         */
+        public Builder setParentSpanId(long value) {
+          bitField0_ |= 0x00000004;
+          parentSpanId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional int64 parent_span_id = 3;</code>
+         */
+        public Builder clearParentSpanId() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          parentSpanId_ = 0L;
+          onChanged();
+          return this;
+        }
+
+        private long spanId_ ;
+        /**
+         * <code>optional int64 span_id = 4;</code>
+         */
+        public boolean hasSpanId() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        /**
+         * <code>optional int64 span_id = 4;</code>
+         */
+        public long getSpanId() {
+          return spanId_;
+        }
+        /**
+         * <code>optional int64 span_id = 4;</code>
+         */
+        public Builder setSpanId(long value) {
+          bitField0_ |= 0x00000008;
+          spanId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional int64 span_id = 4;</code>
+         */
+        public Builder clearSpanId() {
+          bitField0_ = (bitField0_ & ~0x00000008);
+          spanId_ = 0L;
+          onChanged();
+          return this;
+        }
+
+        private boolean sampled_ ;
+        /**
+         * <code>optional bool sampled = 5;</code>
+         */
+        public boolean hasSampled() {
+          return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+        /**
+         * <code>optional bool sampled = 5;</code>
+         */
+        public boolean getSampled() {
+          return sampled_;
+        }
+        /**
+         * <code>optional bool sampled = 5;</code>
+         */
+        public Builder setSampled(boolean value) {
+          bitField0_ |= 0x00000010;
+          sampled_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional bool sampled = 5;</code>
+         */
+        public Builder clearSampled() {
+          bitField0_ = (bitField0_ & ~0x00000010);
+          sampled_ = false;
+          onChanged();
+          return this;
+        }
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.messages.Message.Context)
+      }
+
+      // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.messages.Message.Context)
+      private static final tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context();
+      }
+
+      public static tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      @java.lang.Deprecated public static final com.google.protobuf.Parser<Context>
+          PARSER = new com.google.protobuf.AbstractParser<Context>() {
+        public Context parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+            return new Context(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<Context> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Context> getParserForType() {
+        return PARSER;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
     private int bitField0_;
     public static final int TYPE_FIELD_NUMBER = 1;
     private int type_;
@@ -356,6 +1448,27 @@ public final class MessageOuterClass {
       return timestamp_;
     }
 
+    public static final int CONTEXT_FIELD_NUMBER = 5;
+    private tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context context_;
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+     */
+    public boolean hasContext() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+     */
+    public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context getContext() {
+      return context_ == null ? tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.getDefaultInstance() : context_;
+    }
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+     */
+    public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.ContextOrBuilder getContextOrBuilder() {
+      return context_ == null ? tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.getDefaultInstance() : context_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -386,6 +1499,12 @@ public final class MessageOuterClass {
         memoizedIsInitialized = 0;
         return false;
       }
+      if (hasContext()) {
+        if (!getContext().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       if (!extensionsAreInitialized()) {
         memoizedIsInitialized = 0;
         return false;
@@ -411,6 +1530,9 @@ public final class MessageOuterClass {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeInt64(4, timestamp_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeMessage(5, getContext());
+      }
       extensionWriter.writeUntil(536870912, output);
       unknownFields.writeTo(output);
     }
@@ -435,6 +1557,10 @@ public final class MessageOuterClass {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeInt64Size(4, timestamp_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getContext());
       }
       size += extensionsSerializedSize();
       size += unknownFields.getSerializedSize();
@@ -473,6 +1599,11 @@ public final class MessageOuterClass {
         result = result && (getTimestamp()
             == other.getTimestamp());
       }
+      result = result && (hasContext() == other.hasContext());
+      if (hasContext()) {
+        result = result && getContext()
+            .equals(other.getContext());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       result = result &&
           getExtensionFields().equals(other.getExtensionFields());
@@ -502,6 +1633,10 @@ public final class MessageOuterClass {
         hash = (37 * hash) + TIMESTAMP_FIELD_NUMBER;
         hash = (53 * hash) + com.google.protobuf.Internal.hashLong(
             getTimestamp());
+      }
+      if (hasContext()) {
+        hash = (37 * hash) + CONTEXT_FIELD_NUMBER;
+        hash = (53 * hash) + getContext().hashCode();
       }
       hash = hashFields(hash, getExtensionFields());
       hash = (29 * hash) + unknownFields.hashCode();
@@ -621,6 +1756,7 @@ public final class MessageOuterClass {
                 .alwaysUseFieldBuilders) {
           getFromFieldBuilder();
           getMessageIdFieldBuilder();
+          getContextFieldBuilder();
         }
       }
       public Builder clear() {
@@ -641,6 +1777,12 @@ public final class MessageOuterClass {
         bitField0_ = (bitField0_ & ~0x00000004);
         timestamp_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000008);
+        if (contextBuilder_ == null) {
+          context_ = null;
+        } else {
+          contextBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -689,6 +1831,14 @@ public final class MessageOuterClass {
           to_bitField0_ |= 0x00000008;
         }
         result.timestamp_ = timestamp_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        if (contextBuilder_ == null) {
+          result.context_ = context_;
+        } else {
+          result.context_ = contextBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -766,6 +1916,9 @@ public final class MessageOuterClass {
         if (other.hasTimestamp()) {
           setTimestamp(other.getTimestamp());
         }
+        if (other.hasContext()) {
+          mergeContext(other.getContext());
+        }
         this.mergeExtensionFields(other);
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -790,6 +1943,11 @@ public final class MessageOuterClass {
         }
         if (!getMessageId().isInitialized()) {
           return false;
+        }
+        if (hasContext()) {
+          if (!getContext().isInitialized()) {
+            return false;
+          }
         }
         if (!extensionsAreInitialized()) {
           return false;
@@ -1119,6 +2277,124 @@ public final class MessageOuterClass {
         onChanged();
         return this;
       }
+
+      private tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context context_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context, tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.Builder, tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.ContextOrBuilder> contextBuilder_;
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      public boolean hasContext() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context getContext() {
+        if (contextBuilder_ == null) {
+          return context_ == null ? tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.getDefaultInstance() : context_;
+        } else {
+          return contextBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      public Builder setContext(tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context value) {
+        if (contextBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          context_ = value;
+          onChanged();
+        } else {
+          contextBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      public Builder setContext(
+          tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.Builder builderForValue) {
+        if (contextBuilder_ == null) {
+          context_ = builderForValue.build();
+          onChanged();
+        } else {
+          contextBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      public Builder mergeContext(tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context value) {
+        if (contextBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              context_ != null &&
+              context_ != tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.getDefaultInstance()) {
+            context_ =
+              tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.newBuilder(context_).mergeFrom(value).buildPartial();
+          } else {
+            context_ = value;
+          }
+          onChanged();
+        } else {
+          contextBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      public Builder clearContext() {
+        if (contextBuilder_ == null) {
+          context_ = null;
+          onChanged();
+        } else {
+          contextBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.Builder getContextBuilder() {
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return getContextFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.ContextOrBuilder getContextOrBuilder() {
+        if (contextBuilder_ != null) {
+          return contextBuilder_.getMessageOrBuilder();
+        } else {
+          return context_ == null ?
+              tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.getDefaultInstance() : context_;
+        }
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.Message.Context context = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context, tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.Builder, tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.ContextOrBuilder> 
+          getContextFieldBuilder() {
+        if (contextBuilder_ == null) {
+          contextBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context, tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.Context.Builder, tv.v1x1.common.dto.proto.messages.MessageOuterClass.Message.ContextOrBuilder>(
+                  getContext(),
+                  getParentForChildren(),
+                  isClean());
+          context_ = null;
+        }
+        return contextBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -1173,6 +2449,11 @@ public final class MessageOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_v1x1_common_dto_proto_messages_Message_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -1183,15 +2464,21 @@ public final class MessageOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\rMessage.proto\022!tv.v1x1.common.dto.prot" +
-      "o.messages\032\014Module.proto\032\nUUID.proto\"\234\002\n" +
+      "o.messages\032\014Module.proto\032\nUUID.proto\"\227\004\n" +
       "\007Message\022D\n\004type\030\001 \002(\01626.tv.v1x1.common." +
       "dto.proto.messages.Message.MessageType\0223" +
       "\n\004from\030\002 \002(\0132%.tv.v1x1.common.dto.proto." +
       "core.Module\0227\n\nmessage_id\030\003 \002(\0132#.tv.v1x" +
       "1.common.dto.proto.core.UUID\022\021\n\ttimestam" +
-      "p\030\004 \002(\003\"@\n\013MessageType\022\013\n\007UNKNOWN\020\000\022\t\n\005E" +
-      "VENT\020\001\022\013\n\007REQUEST\020\002\022\014\n\010RESPONSE\020\003*\010\010d\020\200\200" +
-      "\200\200\002"
+      "p\030\004 \002(\003\022C\n\007context\030\005 \001(\01322.tv.v1x1.commo" +
+      "n.dto.proto.messages.Message.Context\032\263\001\n" +
+      "\007Context\0227\n\ncontext_id\030\001 \002(\0132#.tv.v1x1.c",
+      "ommon.dto.proto.core.UUID\0225\n\010trace_id\030\002 " +
+      "\001(\0132#.tv.v1x1.common.dto.proto.core.UUID" +
+      "\022\026\n\016parent_span_id\030\003 \001(\003\022\017\n\007span_id\030\004 \001(" +
+      "\003\022\017\n\007sampled\030\005 \001(\010\"@\n\013MessageType\022\013\n\007UNK" +
+      "NOWN\020\000\022\t\n\005EVENT\020\001\022\013\n\007REQUEST\020\002\022\014\n\010RESPON" +
+      "SE\020\003*\010\010d\020\200\200\200\200\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -1212,7 +2499,13 @@ public final class MessageOuterClass {
     internal_static_tv_v1x1_common_dto_proto_messages_Message_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_messages_Message_descriptor,
-        new java.lang.String[] { "Type", "From", "MessageId", "Timestamp", });
+        new java.lang.String[] { "Type", "From", "MessageId", "Timestamp", "Context", });
+    internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_descriptor =
+      internal_static_tv_v1x1_common_dto_proto_messages_Message_descriptor.getNestedTypes().get(0);
+    internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_messages_Message_Context_descriptor,
+        new java.lang.String[] { "ContextId", "TraceId", "ParentSpanId", "SpanId", "Sampled", });
     tv.v1x1.common.dto.proto.core.ModuleOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.UUIDOuterClass.getDescriptor();
   }

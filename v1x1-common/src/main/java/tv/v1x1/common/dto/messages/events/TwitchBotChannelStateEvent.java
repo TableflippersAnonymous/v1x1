@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.UserStateCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -12,11 +13,11 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#userstate-1">Twitch-API documentation</a>
  */
 public class TwitchBotChannelStateEvent extends Event {
-    public static TwitchBotChannelStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchBotChannelStateEvent twitchBotChannelStateEvent) {
+    public static TwitchBotChannelStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchBotChannelStateEvent twitchBotChannelStateEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchBotChannelStateEvent.getChannel());
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotChannelStateEvent.getBot());
         final UserStateCommand userStateCommand = (UserStateCommand) IrcStanza.fromProto(twitchBotChannelStateEvent.getUserStateCommand());
-        return new TwitchBotChannelStateEvent(module, uuid, timestamp, channel, bot, userStateCommand);
+        return new TwitchBotChannelStateEvent(module, uuid, timestamp, context, channel, bot, userStateCommand);
     }
 
     private final TwitchChannel channel;
@@ -31,8 +32,8 @@ public class TwitchBotChannelStateEvent extends Event {
         this.userStateCommand = userStateCommand;
     }
 
-    public TwitchBotChannelStateEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final TwitchBot bot, final UserStateCommand userStateCommand) {
-        super(from, messageId, timestamp);
+    public TwitchBotChannelStateEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchChannel channel, final TwitchBot bot, final UserStateCommand userStateCommand) {
+        super(from, messageId, timestamp, context);
         this.channel = channel;
         this.bot = bot;
         this.userStateCommand = userStateCommand;
