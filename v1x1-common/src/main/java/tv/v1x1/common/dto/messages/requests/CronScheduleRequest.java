@@ -2,6 +2,7 @@ package tv.v1x1.common.dto.messages.requests;
 
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.proto.messages.RequestOuterClass;
 
 import java.util.HashSet;
@@ -17,14 +18,14 @@ public class CronScheduleRequest extends ScheduleRequest {
     private final Set<Integer> month;
     private final Set<Integer> dayOfWeek;
 
-    public static CronScheduleRequest fromProto(final Module module, final UUID uuid, final long timestamp, final String responseQueueName, final UUID scheduleId,
-                                            final byte[] payload, final RequestOuterClass.ScheduleRequest proto) {
+    public static CronScheduleRequest fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final String responseQueueName, final UUID scheduleId,
+                                                final byte[] payload, final RequestOuterClass.ScheduleRequest proto) {
         final Set<Integer> minute = new HashSet<>(proto.getCron().getMinuteList());
         final Set<Integer> hour = new HashSet<>(proto.getCron().getHourList());
         final Set<Integer> dayOfMonth = new HashSet<>(proto.getCron().getDayOfMonthList());
         final Set<Integer> month = new HashSet<>(proto.getCron().getMonthList());
         final Set<Integer> dayOfWeek = new HashSet<>(proto.getCron().getDayOfWeekList());
-        return new CronScheduleRequest(module, uuid, timestamp, responseQueueName, scheduleId, payload, minute, hour, dayOfMonth, month, dayOfWeek);
+        return new CronScheduleRequest(module, uuid, timestamp, context, responseQueueName, scheduleId, payload, minute, hour, dayOfMonth, month, dayOfWeek);
     }
 
 
@@ -38,9 +39,9 @@ public class CronScheduleRequest extends ScheduleRequest {
         this.dayOfWeek = dayOfWeek;
     }
 
-    public CronScheduleRequest(final Module from, final UUID messageId, final long timestamp, final String responseQueueName, final UUID scheduleId, final byte[] payload,
+    public CronScheduleRequest(final Module from, final UUID messageId, final long timestamp, final Context context, final String responseQueueName, final UUID scheduleId, final byte[] payload,
                                final Set<Integer> minute, final Set<Integer> hour, final Set<Integer> dayOfMonth, final Set<Integer> month, final Set<Integer> dayOfWeek) {
-        super(from, messageId, timestamp, responseQueueName, scheduleId, payload);
+        super(from, messageId, timestamp, context, responseQueueName, scheduleId, payload);
         this.minute = minute;
         this.hour = hour;
         this.dayOfMonth = dayOfMonth;

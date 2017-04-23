@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.RoomStateCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -12,10 +13,10 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchRoomStateEvent extends Event {
-    public static TwitchRoomStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchRoomStateEvent twitchRoomStateEvent) {
+    public static TwitchRoomStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchRoomStateEvent twitchRoomStateEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchRoomStateEvent.getChannel());
         final RoomStateCommand roomStateCommand = (RoomStateCommand) IrcStanza.fromProto(twitchRoomStateEvent.getRoomStateCommand());
-        return new TwitchRoomStateEvent(module, uuid, timestamp, channel, roomStateCommand);
+        return new TwitchRoomStateEvent(module, uuid, timestamp, context, channel, roomStateCommand);
     }
 
     private final TwitchChannel channel;
@@ -28,8 +29,8 @@ public class TwitchRoomStateEvent extends Event {
         this.roomStateCommand = roomStateCommand;
     }
 
-    public TwitchRoomStateEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final RoomStateCommand roomStateCommand) {
-        super(from, messageId, timestamp);
+    public TwitchRoomStateEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchChannel channel, final RoomStateCommand roomStateCommand) {
+        super(from, messageId, timestamp, context);
         this.channel = channel;
         this.roomStateCommand = roomStateCommand;
     }

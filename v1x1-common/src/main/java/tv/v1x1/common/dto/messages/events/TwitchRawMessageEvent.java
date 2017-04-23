@@ -5,6 +5,7 @@ import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.TwitchBot;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.irc.IrcStanza;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -13,10 +14,10 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public class TwitchRawMessageEvent extends Event {
-    public static TwitchRawMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchRawMessageEvent twitchRawMessageEvent) {
+    public static TwitchRawMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchRawMessageEvent twitchRawMessageEvent) {
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchRawMessageEvent.getBot());
         final IrcStanza ircStanza = IrcStanza.fromProto(twitchRawMessageEvent.getIrcStanza());
-        return new TwitchRawMessageEvent(module, uuid, timestamp, bot, ircStanza);
+        return new TwitchRawMessageEvent(module, uuid, timestamp, context, bot, ircStanza);
     }
 
     private final TwitchBot bot;
@@ -28,8 +29,8 @@ public class TwitchRawMessageEvent extends Event {
         this.ircStanza = ircStanza;
     }
 
-    public TwitchRawMessageEvent(final Module from, final UUID messageId, final long timestamp, final TwitchBot bot, final IrcStanza ircStanza) {
-        super(from, messageId, timestamp);
+    public TwitchRawMessageEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchBot bot, final IrcStanza ircStanza) {
+        super(from, messageId, timestamp, context);
         this.bot = bot;
         this.ircStanza = ircStanza;
     }

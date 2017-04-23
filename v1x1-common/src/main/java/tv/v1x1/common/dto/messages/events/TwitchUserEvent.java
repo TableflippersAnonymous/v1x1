@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.UserNoticeCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -12,12 +13,12 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#usernotice-1">Twitch-API Documentation</a>
  */
 public class TwitchUserEvent extends Event {
-    public static TwitchUserEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchUserEvent twitchUserEvent) {
+    public static TwitchUserEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchUserEvent twitchUserEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchUserEvent.getChannel());
         final TwitchUser user = (TwitchUser) User.fromProto(twitchUserEvent.getUser());
         final String message = twitchUserEvent.getMessage();
         final UserNoticeCommand userNoticeCommand = (UserNoticeCommand) IrcStanza.fromProto(twitchUserEvent.getUserNoticeCommand());
-        return new TwitchUserEvent(module, uuid, timestamp, channel, user, message, userNoticeCommand);
+        return new TwitchUserEvent(module, uuid, timestamp, context, channel, user, message, userNoticeCommand);
     }
 
     private final TwitchChannel channel;
@@ -34,8 +35,8 @@ public class TwitchUserEvent extends Event {
         this.userNoticeCommand = userNoticeCommand;
     }
 
-    public TwitchUserEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final TwitchUser user, final String message, final UserNoticeCommand userNoticeCommand) {
-        super(from, messageId, timestamp);
+    public TwitchUserEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchChannel channel, final TwitchUser user, final String message, final UserNoticeCommand userNoticeCommand) {
+        super(from, messageId, timestamp, context);
         this.channel = channel;
         this.user = user;
         this.message = message;
