@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.PartCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.proto.core.PlatformOuterClass;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -14,9 +15,9 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchChatPartEvent extends ChatPartEvent {
-    public static TwitchChatPartEvent fromProto(final Module module, final UUID uuid, final long timestamp, final User user, final Channel channel, final EventOuterClass.TwitchChatPartEvent twitchChatPartEvent) {
+    public static TwitchChatPartEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final User user, final Channel channel, final EventOuterClass.TwitchChatPartEvent twitchChatPartEvent) {
         final PartCommand partCommand = (PartCommand) IrcStanza.fromProto(twitchChatPartEvent.getPartCommand());
-        return new TwitchChatPartEvent(module, uuid, timestamp, user, channel, partCommand);
+        return new TwitchChatPartEvent(module, uuid, timestamp, context, user, channel, partCommand);
     }
 
     private final PartCommand partCommand;
@@ -26,8 +27,8 @@ public class TwitchChatPartEvent extends ChatPartEvent {
         this.partCommand = partCommand;
     }
 
-    public TwitchChatPartEvent(final Module from, final UUID messageId, final long timestamp, final User user, final Channel channel, final PartCommand partCommand) {
-        super(from, messageId, timestamp, user, channel);
+    public TwitchChatPartEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final User user, final Channel channel, final PartCommand partCommand) {
+        super(from, messageId, timestamp, context, user, channel);
         this.partCommand = partCommand;
     }
 

@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
 /**
@@ -16,8 +17,8 @@ public class TenantConfigChangeEvent extends ConfigChangeEvent {
         this.tenant = tenant;
     }
 
-    public TenantConfigChangeEvent(final Module from, final UUID messageId, final long timestamp, final Module configModule, final Tenant tenant) {
-        super(from, messageId, timestamp, configModule);
+    public TenantConfigChangeEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final Module configModule, final Tenant tenant) {
+        super(from, messageId, timestamp, context, configModule);
         this.tenant = tenant;
     }
 

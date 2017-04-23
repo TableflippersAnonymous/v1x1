@@ -1,5 +1,6 @@
 package tv.v1x1.common.services.queue;
 
+import brave.Tracer;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
@@ -11,14 +12,16 @@ import org.redisson.client.codec.ByteArrayCodec;
 @Singleton
 public class MessageQueueManagerImpl implements MessageQueueManager {
     private final RedissonClient redissonClient;
+    private final Tracer tracer;
 
     @Inject
-    public MessageQueueManagerImpl(final RedissonClient redissonClient) {
+    public MessageQueueManagerImpl(final RedissonClient redissonClient, final Tracer tracer) {
         this.redissonClient = redissonClient;
+        this.tracer = tracer;
     }
 
     @Override
     public MessageQueue forName(final String name) {
-        return new MessageQueueImpl(redissonClient.getBlockingQueue(name, ByteArrayCodec.INSTANCE));
+        return new MessageQueueImpl(redissonClient.getBlockingQueue(name, ByteArrayCodec.INSTANCE), tracer);
     }
 }

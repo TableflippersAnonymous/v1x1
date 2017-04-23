@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -11,10 +12,10 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public abstract class ChatMessageEvent extends Event {
-    public static ChatMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.ChatMessageEvent chatMessageEvent) {
+    public static ChatMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.ChatMessageEvent chatMessageEvent) {
         final ChatMessage chatMessage = ChatMessage.fromProto(chatMessageEvent.getChatMessage());
         switch(chatMessageEvent.getType()) {
-            case TWITCH: return TwitchChatMessageEvent.fromProto(module, uuid, timestamp, chatMessage, chatMessageEvent.getExtension(EventOuterClass.TwitchChatMessageEvent.data));
+            case TWITCH: return TwitchChatMessageEvent.fromProto(module, uuid, timestamp, context, chatMessage, chatMessageEvent.getExtension(EventOuterClass.TwitchChatMessageEvent.data));
             default: throw new IllegalStateException("Unknown ChatMessageEvent type: " + chatMessageEvent.getType());
         }
     }
@@ -26,8 +27,8 @@ public abstract class ChatMessageEvent extends Event {
         this.chatMessage = chatMessage;
     }
 
-    public ChatMessageEvent(final Module from, final UUID messageId, final long timestamp, final ChatMessage chatMessage) {
-        super(from, messageId, timestamp);
+    public ChatMessageEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final ChatMessage chatMessage) {
+        super(from, messageId, timestamp, context);
         this.chatMessage = chatMessage;
     }
 

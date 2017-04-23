@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.core.TwitchBot;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.ReconnectCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -14,10 +15,10 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchReconnectEvent extends Event {
-    public static TwitchReconnectEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchReconnectEvent twitchReconnectEvent) {
+    public static TwitchReconnectEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchReconnectEvent twitchReconnectEvent) {
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchReconnectEvent.getBot());
         final ReconnectCommand reconnectCommand = (ReconnectCommand) IrcStanza.fromProto(twitchReconnectEvent.getReconnectCommand());
-        return new TwitchReconnectEvent(module, uuid, timestamp, bot, reconnectCommand);
+        return new TwitchReconnectEvent(module, uuid, timestamp, context, bot, reconnectCommand);
     }
 
     private final TwitchBot bot;
@@ -30,8 +31,8 @@ public class TwitchReconnectEvent extends Event {
         this.reconnectCommand = reconnectCommand;
     }
 
-    public TwitchReconnectEvent(final Module from, final UUID messageId, final long timestamp, final TwitchBot bot, final ReconnectCommand reconnectCommand) {
-        super(from, messageId, timestamp);
+    public TwitchReconnectEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchBot bot, final ReconnectCommand reconnectCommand) {
+        super(from, messageId, timestamp, context);
         this.bot = bot;
         this.reconnectCommand = reconnectCommand;
     }

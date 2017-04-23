@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.JoinCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.proto.core.PlatformOuterClass;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -14,9 +15,9 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchChatJoinEvent extends ChatJoinEvent {
-    public static TwitchChatJoinEvent fromProto(final Module module, final UUID uuid, final long timestamp, final User user, final Channel channel, final EventOuterClass.TwitchChatJoinEvent twitchChatJoinEvent) {
+    public static TwitchChatJoinEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final User user, final Channel channel, final EventOuterClass.TwitchChatJoinEvent twitchChatJoinEvent) {
         final JoinCommand joinCommand = (JoinCommand) IrcStanza.fromProto(twitchChatJoinEvent.getJoinCommand());
-        return new TwitchChatJoinEvent(module, uuid, timestamp, user, channel, joinCommand);
+        return new TwitchChatJoinEvent(module, uuid, timestamp, context, user, channel, joinCommand);
     }
 
     private final JoinCommand joinCommand;
@@ -26,8 +27,8 @@ public class TwitchChatJoinEvent extends ChatJoinEvent {
         this.joinCommand = joinCommand;
     }
 
-    public TwitchChatJoinEvent(final Module from, final UUID messageId, final long timestamp, final User user, final Channel channel, final JoinCommand joinCommand) {
-        super(from, messageId, timestamp, user, channel);
+    public TwitchChatJoinEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final User user, final Channel channel, final JoinCommand joinCommand) {
+        super(from, messageId, timestamp, context, user, channel);
         this.joinCommand = joinCommand;
     }
 

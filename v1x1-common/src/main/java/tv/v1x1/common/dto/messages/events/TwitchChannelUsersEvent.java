@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.RplNameReplyCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -16,11 +17,11 @@ import java.util.stream.Collectors;
  */
 public class TwitchChannelUsersEvent extends Event {
     @SuppressWarnings("unchecked")
-    public static TwitchChannelUsersEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchChannelUsersEvent twitchChannelUsersEvent) {
+    public static TwitchChannelUsersEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchChannelUsersEvent twitchChannelUsersEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelUsersEvent.getChannel());
         final List<TwitchUser> users = (List<TwitchUser>) (List) twitchChannelUsersEvent.getUsersList().stream().map(User::fromProto).collect(Collectors.toList());
         final RplNameReplyCommand rplNameReplyCommand = (RplNameReplyCommand) IrcStanza.fromProto(twitchChannelUsersEvent.getRplNameReplyCommand());
-        return new TwitchChannelUsersEvent(module, uuid, timestamp, channel, users, rplNameReplyCommand);
+        return new TwitchChannelUsersEvent(module, uuid, timestamp, context, channel, users, rplNameReplyCommand);
     }
 
     private final TwitchChannel channel;
@@ -35,8 +36,8 @@ public class TwitchChannelUsersEvent extends Event {
         this.rplNameReplyCommand = rplNameReplyCommand;
     }
 
-    public TwitchChannelUsersEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final List<TwitchUser> users, final RplNameReplyCommand rplNameReplyCommand) {
-        super(from, messageId, timestamp);
+    public TwitchChannelUsersEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchChannel channel, final List<TwitchUser> users, final RplNameReplyCommand rplNameReplyCommand) {
+        super(from, messageId, timestamp, context);
         this.channel = channel;
         this.users = users;
         this.rplNameReplyCommand = rplNameReplyCommand;

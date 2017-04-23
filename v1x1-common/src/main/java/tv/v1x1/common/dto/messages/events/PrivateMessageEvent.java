@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.PrivateMessage;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -10,10 +11,10 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * Created by naomi on 11/4/2016.
  */
 public abstract class PrivateMessageEvent extends Event {
-    public static PrivateMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.PrivateMessageEvent privateMessageEvent) {
+    public static PrivateMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.PrivateMessageEvent privateMessageEvent) {
         final PrivateMessage privateMessage = PrivateMessage.fromProto(privateMessageEvent.getPrivateMessage());
         switch(privateMessageEvent.getType()) {
-            case TWITCH: return TwitchPrivateMessageEvent.fromProto(module, uuid, timestamp, privateMessage, privateMessageEvent.getExtension(EventOuterClass.TwitchPrivateMessageEvent.data));
+            case TWITCH: return TwitchPrivateMessageEvent.fromProto(module, uuid, timestamp, context, privateMessage, privateMessageEvent.getExtension(EventOuterClass.TwitchPrivateMessageEvent.data));
             default: throw new IllegalStateException("Unknown PrivateMessageEvent type: " + privateMessageEvent.getType());
         }
     }
@@ -25,8 +26,8 @@ public abstract class PrivateMessageEvent extends Event {
         this.privateMessage = privateMessage;
     }
 
-    public PrivateMessageEvent(final Module from, final UUID messageId, final long timestamp, final PrivateMessage privateMessage) {
-        super(from, messageId, timestamp);
+    public PrivateMessageEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final PrivateMessage privateMessage) {
+        super(from, messageId, timestamp, context);
         this.privateMessage = privateMessage;
     }
 

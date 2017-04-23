@@ -10,27 +10,27 @@ import tv.v1x1.common.dto.proto.messages.MessageOuterClass;
  * Created by naomi on 10/4/16.
  */
 public abstract class Event extends Message {
-    public static Event fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.Event event) {
+    public static Event fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.Event event) {
         switch(event.getType()) {
-            case CHAT_JOIN: return ChatJoinEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatJoinEvent.data));
-            case CHAT_MESSAGE: return ChatMessageEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatMessageEvent.data));
-            case PRIVATE_MESSAGE: return PrivateMessageEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.PrivateMessageEvent.data));
-            case CHAT_PART: return ChatPartEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ChatPartEvent.data));
-            case TWITCH_BOT_CHANNEL_STATE: return TwitchBotChannelStateEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchBotChannelStateEvent.data));
-            case TWITCH_BOT_CONNECTED: return TwitchBotConnectedEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchBotConnectedEvent.data));
-            case TWITCH_BOT_GLOBAL_STATE: return TwitchBotGlobalStateEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchBotGlobalStateEvent.data));
-            case TWITCH_CHANNEL_EVENT: return TwitchChannelEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchChannelEvent.data));
-            case TWITCH_CHANNEL_USERS: return TwitchChannelUsersEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchChannelUsersEvent.data));
-            case TWITCH_HOST: return TwitchHostEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchHostEvent.data));
-            case TWITCH_PING: return TwitchPingEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchPingEvent.data));
-            case TWITCH_RAW_MESSAGE: return TwitchRawMessageEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchRawMessageEvent.data));
-            case TWITCH_RECONNECT: return TwitchReconnectEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchReconnectEvent.data));
-            case TWITCH_ROOM_STATE: return TwitchRoomStateEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchRoomStateEvent.data));
-            case TWITCH_TIMEOUT: return TwitchTimeoutEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchTimeoutEvent.data));
-            case TWITCH_USER: return TwitchUserEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchUserEvent.data));
-            case TWITCH_USER_MOD_CHANGE: return TwitchUserModChangeEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.TwitchUserModChangeEvent.data));
-            case SCHEDULER_NOTIFY: return SchedulerNotifyEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.SchedulerNotifyEvent.data));
-            case CONFIG_CHANGE: return ConfigChangeEvent.fromProto(module, uuid, timestamp, event.getExtension(EventOuterClass.ConfigChangeEvent.data));
+            case CHAT_JOIN: return ChatJoinEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.ChatJoinEvent.data));
+            case CHAT_MESSAGE: return ChatMessageEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.ChatMessageEvent.data));
+            case PRIVATE_MESSAGE: return PrivateMessageEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.PrivateMessageEvent.data));
+            case CHAT_PART: return ChatPartEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.ChatPartEvent.data));
+            case TWITCH_BOT_CHANNEL_STATE: return TwitchBotChannelStateEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchBotChannelStateEvent.data));
+            case TWITCH_BOT_CONNECTED: return TwitchBotConnectedEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchBotConnectedEvent.data));
+            case TWITCH_BOT_GLOBAL_STATE: return TwitchBotGlobalStateEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchBotGlobalStateEvent.data));
+            case TWITCH_CHANNEL_EVENT: return TwitchChannelEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchChannelEvent.data));
+            case TWITCH_CHANNEL_USERS: return TwitchChannelUsersEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchChannelUsersEvent.data));
+            case TWITCH_HOST: return TwitchHostEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchHostEvent.data));
+            case TWITCH_PING: return TwitchPingEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchPingEvent.data));
+            case TWITCH_RAW_MESSAGE: return TwitchRawMessageEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchRawMessageEvent.data));
+            case TWITCH_RECONNECT: return TwitchReconnectEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchReconnectEvent.data));
+            case TWITCH_ROOM_STATE: return TwitchRoomStateEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchRoomStateEvent.data));
+            case TWITCH_TIMEOUT: return TwitchTimeoutEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchTimeoutEvent.data));
+            case TWITCH_USER: return TwitchUserEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchUserEvent.data));
+            case TWITCH_USER_MOD_CHANGE: return TwitchUserModChangeEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchUserModChangeEvent.data));
+            case SCHEDULER_NOTIFY: return SchedulerNotifyEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.SchedulerNotifyEvent.data));
+            case CONFIG_CHANGE: return ConfigChangeEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.ConfigChangeEvent.data));
             default: throw new IllegalStateException("Unknown event type " + event.getType().name());
         }
     }
@@ -39,8 +39,8 @@ public abstract class Event extends Message {
         super(from);
     }
 
-    public Event(final Module from, final UUID messageId, final long timestamp) {
-        super(from, messageId, timestamp);
+    public Event(final Module from, final UUID messageId, final long timestamp, final Context context) {
+        super(from, messageId, timestamp, context);
     }
 
     protected EventOuterClass.Event.Builder toProtoEvent() {

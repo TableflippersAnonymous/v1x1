@@ -1,5 +1,6 @@
 package tv.v1x1.common.guice;
 
+import brave.Tracer;
 import com.datastax.driver.core.AuthProvider;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.CodecRegistry;
@@ -53,6 +54,7 @@ import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.Module;
 import tv.v1x1.common.modules.ModuleSettings;
 import tv.v1x1.common.modules.TenantConfiguration;
+import tv.v1x1.common.modules.ZipkinConfig;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.LockManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
@@ -71,7 +73,13 @@ import tv.v1x1.common.services.state.MembershipService;
 import tv.v1x1.common.services.state.StateManager;
 import tv.v1x1.common.services.stats.NoopStatsCollector;
 import tv.v1x1.common.services.stats.StatsCollector;
+import tv.v1x1.common.services.stats.ZipkinStatsCollector;
 import tv.v1x1.common.services.twitch.TwitchApi;
+import zipkin.Span;
+import zipkin.reporter.AsyncReporter;
+import zipkin.reporter.Reporter;
+import zipkin.reporter.Sender;
+import zipkin.reporter.okhttp3.OkHttpSender;
 
 import java.util.concurrent.TimeUnit;
 
@@ -108,7 +116,7 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
         bind(MessageQueueManager.class).to(MessageQueueManagerImpl.class);
         bind(Deduplicator.class);
         bind(ModuleRegistry.class);
-        bind(StatsCollector.class).to(NoopStatsCollector.class);
+        bind(StatsCollector.class).to(ZipkinStatsCollector.class);
         bind(LockManager.class);
         bind(CacheManager.class);
         bind(DAOManager.class);
@@ -138,6 +146,11 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
     @Provides
     public CassandraConfig getCassandraConfig(final ModuleSettings settings) {
         return settings.getCassandraConfig();
+    }
+
+    @Provides
+    public ZipkinConfig getZipkinConfig(final ModuleSettings settings) {
+        return settings.getZipkinConfig();
     }
 
     @Provides
@@ -259,5 +272,28 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
                 new String(module.requireCredential("Common|Twitch|OAuthToken")),
                 new String(module.requireCredential("Common|Twitch|ClientSecret")),
                 new String(module.requireCredential("Common|Twitch|RedirectUri")));
+    }
+
+    @Provides @Singleton
+    public Sender getSender(final ZipkinConfig zipkinConfig) {
+        if(zipkinConfig.isEnabled())
+            return OkHttpSender.create(zipkinConfig.getUri());
+        else
+            return null;
+    }
+
+    @Provides @Singleton
+    public Reporter<Span> getReporter(final Sender sender) {
+        if(sender == null)
+            return Reporter.NOOP;
+        return AsyncReporter.builder(sender).build();
+    }
+
+    @Provides @Singleton
+    public Tracer getTracer(final Reporter<Span> reporter) {
+        return Tracer.newBuilder()
+                .localServiceName("v1x1-" + module.getName())
+                .reporter(reporter)
+                .build();
     }
 }

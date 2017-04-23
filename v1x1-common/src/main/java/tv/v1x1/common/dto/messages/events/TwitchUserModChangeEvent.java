@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.ModeCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -11,12 +12,12 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchUserModChangeEvent extends Event {
-    public static TwitchUserModChangeEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchUserModChangeEvent twitchUserModChangeEvent) {
+    public static TwitchUserModChangeEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchUserModChangeEvent twitchUserModChangeEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchUserModChangeEvent.getChannel());
         final TwitchUser user = (TwitchUser) User.fromProto(twitchUserModChangeEvent.getUser());
         final boolean isNowMod = twitchUserModChangeEvent.getIsNowMod();
         final ModeCommand modeCommand = (ModeCommand) IrcStanza.fromProto(twitchUserModChangeEvent.getModeCommand());
-        return new TwitchUserModChangeEvent(module, uuid, timestamp, channel, user, isNowMod, modeCommand);
+        return new TwitchUserModChangeEvent(module, uuid, timestamp, context, channel, user, isNowMod, modeCommand);
     }
 
     private final TwitchChannel channel;
@@ -33,8 +34,8 @@ public class TwitchUserModChangeEvent extends Event {
         this.modeCommand = modeCommand;
     }
 
-    public TwitchUserModChangeEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final TwitchUser user, final boolean isNowMod, final ModeCommand modeCommand) {
-        super(from, messageId, timestamp);
+    public TwitchUserModChangeEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchChannel channel, final TwitchUser user, final boolean isNowMod, final ModeCommand modeCommand) {
+        super(from, messageId, timestamp, context);
         this.channel = channel;
         this.user = user;
         this.isNowMod = isNowMod;

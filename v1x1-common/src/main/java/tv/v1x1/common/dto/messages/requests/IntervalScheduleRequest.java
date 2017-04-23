@@ -2,6 +2,7 @@ package tv.v1x1.common.dto.messages.requests;
 
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.proto.messages.RequestOuterClass;
 
 /**
@@ -10,9 +11,9 @@ import tv.v1x1.common.dto.proto.messages.RequestOuterClass;
 public class IntervalScheduleRequest extends ScheduleRequest {
     private final long delay;
 
-    public static IntervalScheduleRequest fromProto(final Module module, final UUID uuid, final long timestamp, final String responseQueueName, final UUID scheduleId, final byte[] payload, final RequestOuterClass.ScheduleRequest proto) {
+    public static IntervalScheduleRequest fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final String responseQueueName, final UUID scheduleId, final byte[] payload, final RequestOuterClass.ScheduleRequest proto) {
         final long delay = proto.getDelay();
-        return new IntervalScheduleRequest(module, uuid, timestamp, responseQueueName, scheduleId, payload, delay);
+        return new IntervalScheduleRequest(module, uuid, timestamp, context, responseQueueName, scheduleId, payload, delay);
     }
 
     public IntervalScheduleRequest(final Module from, final String responseQueueName, final UUID scheduleId, final byte[] payload, final long delay) {
@@ -20,8 +21,8 @@ public class IntervalScheduleRequest extends ScheduleRequest {
         this.delay = delay;
     }
 
-    public IntervalScheduleRequest(final Module from, final UUID messageId, final long timestamp, final String responseQueueName, final UUID scheduleId, final byte[] payload, final long delay) {
-        super(from, messageId, timestamp, responseQueueName, scheduleId, payload);
+    public IntervalScheduleRequest(final Module from, final UUID messageId, final long timestamp, final Context context, final String responseQueueName, final UUID scheduleId, final byte[] payload, final long delay) {
+        super(from, messageId, timestamp, context, responseQueueName, scheduleId, payload);
         this.delay = delay;
     }
 

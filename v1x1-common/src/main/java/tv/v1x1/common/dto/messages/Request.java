@@ -12,12 +12,12 @@ import tv.v1x1.common.dto.proto.messages.RequestOuterClass;
  * Created by naomi on 10/4/16.
  */
 public abstract class Request extends Message {
-    public static Request fromProto(final Module module, final UUID uuid, final long timestamp, final RequestOuterClass.Request request) {
+    public static Request fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final RequestOuterClass.Request request) {
         final String responseQueueName = request.getResponseQueueName();
         switch(request.getType()) {
-            case MODULE_SHUTDOWN: return ModuleShutdownRequest.fromProto(module, uuid, timestamp, responseQueueName, request.getExtension(RequestOuterClass.ModuleShutdownRequest.data));
-            case SEND_MESSAGE: return SendMessageRequest.fromProto(module, uuid, timestamp, responseQueueName, request.getExtension(RequestOuterClass.SendMessageRequest.data));
-            case SCHEDULE: return ScheduleRequest.fromProto(module, uuid, timestamp, responseQueueName, request.getExtension(RequestOuterClass.ScheduleRequest.data));
+            case MODULE_SHUTDOWN: return ModuleShutdownRequest.fromProto(module, uuid, timestamp, context, responseQueueName, request.getExtension(RequestOuterClass.ModuleShutdownRequest.data));
+            case SEND_MESSAGE: return SendMessageRequest.fromProto(module, uuid, timestamp, context, responseQueueName, request.getExtension(RequestOuterClass.SendMessageRequest.data));
+            case SCHEDULE: return ScheduleRequest.fromProto(module, uuid, timestamp, context, responseQueueName, request.getExtension(RequestOuterClass.ScheduleRequest.data));
             default: throw new IllegalStateException("Unknown request type " + request.getType().name());
         }
     }
@@ -29,8 +29,8 @@ public abstract class Request extends Message {
         this.responseQueueName = responseQueueName;
     }
 
-    public Request(final Module from, final UUID messageId, final long timestamp, final String responseQueueName) {
-        super(from, messageId, timestamp);
+    public Request(final Module from, final UUID messageId, final long timestamp, final Context context, final String responseQueueName) {
+        super(from, messageId, timestamp, context);
         this.responseQueueName = responseQueueName;
     }
 

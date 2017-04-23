@@ -12,6 +12,7 @@ public class ModuleSettings {
     private Config redissonConfig;
     private String zookeeperConnectionString;
     private CassandraConfig cassandraConfig;
+    private ZipkinConfig zipkinConfig;
     private long waitStartMs = 0;
 
     @JsonProperty("redisson")
@@ -52,5 +53,15 @@ public class ModuleSettings {
     @JsonProperty("wait_start_ms")
     public void setWaitStartMs(final long waitStartMs) {
         this.waitStartMs = waitStartMs;
+    }
+
+    @JsonProperty("zipkin_config")
+    public ZipkinConfig getZipkinConfig() {
+        return zipkinConfig;
+    }
+
+    @JsonProperty("zipkin_config")
+    public void setZipkinConfig(final ZipkinConfig zipkinConfig) {
+        this.zipkinConfig = zipkinConfig;
     }
 }

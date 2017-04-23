@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.core.TwitchChannel;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.HostTargetCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -14,11 +15,11 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchHostEvent extends Event {
-    public static TwitchHostEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchHostEvent twitchHostEvent) {
+    public static TwitchHostEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchHostEvent twitchHostEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchHostEvent.getChannel());
         final TwitchChannel targetChannel = (TwitchChannel) Channel.fromProto(twitchHostEvent.getTargetChannel());
         final HostTargetCommand hostTargetCommand = (HostTargetCommand) IrcStanza.fromProto(twitchHostEvent.getHostTargetCommand());
-        return new TwitchHostEvent(module, uuid, timestamp, channel, targetChannel, hostTargetCommand);
+        return new TwitchHostEvent(module, uuid, timestamp, context, channel, targetChannel, hostTargetCommand);
     }
 
     private final TwitchChannel channel;
@@ -33,8 +34,8 @@ public class TwitchHostEvent extends Event {
         this.hostTargetCommand = hostTargetCommand;
     }
 
-    public TwitchHostEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final TwitchChannel targetChannel, final HostTargetCommand hostTargetCommand) {
-        super(from, messageId, timestamp);
+    public TwitchHostEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchChannel channel, final TwitchChannel targetChannel, final HostTargetCommand hostTargetCommand) {
+        super(from, messageId, timestamp, context);
         this.channel = channel;
         this.targetChannel = targetChannel;
         this.hostTargetCommand = hostTargetCommand;

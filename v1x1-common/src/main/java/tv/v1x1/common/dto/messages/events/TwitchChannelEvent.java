@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.NoticeCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -12,11 +13,11 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#notice">Twitch-API Documentation</a>
  */
 public class TwitchChannelEvent extends Event {
-    public static TwitchChannelEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.TwitchChannelEvent twitchChannelEvent) {
+    public static TwitchChannelEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchChannelEvent twitchChannelEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelEvent.getChannel());
         final String message = twitchChannelEvent.getMessage();
         final NoticeCommand noticeCommand = (NoticeCommand) IrcStanza.fromProto(twitchChannelEvent.getNoticeCommand());
-        return new TwitchChannelEvent(module, uuid, timestamp, channel, message, noticeCommand);
+        return new TwitchChannelEvent(module, uuid, timestamp, context, channel, message, noticeCommand);
     }
 
     private final TwitchChannel channel;
@@ -31,8 +32,8 @@ public class TwitchChannelEvent extends Event {
         this.noticeCommand = noticeCommand;
     }
 
-    public TwitchChannelEvent(final Module from, final UUID messageId, final long timestamp, final TwitchChannel channel, final String message, final NoticeCommand noticeCommand) {
-        super(from, messageId, timestamp);
+    public TwitchChannelEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final TwitchChannel channel, final String message, final NoticeCommand noticeCommand) {
+        super(from, messageId, timestamp, context);
         this.channel = channel;
         this.message = message;
         this.noticeCommand = noticeCommand;
