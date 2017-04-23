@@ -109,10 +109,11 @@ public abstract class Message {
         final Module module = Module.fromProto(message.getFrom());
         final UUID uuid = UUID.fromProto(message.getMessageId());
         final long timestamp = message.getTimestamp();
+        final Context context = message.hasContext() ? Context.fromProto(message.getContext()) : null;
         switch(message.getType()) {
-            case EVENT: return Event.fromProto(module, uuid, timestamp, message.getExtension(EventOuterClass.Event.data));
-            case REQUEST: return Request.fromProto(module, uuid, timestamp, message.getExtension(RequestOuterClass.Request.data));
-            case RESPONSE: return Response.fromProto(module, uuid, timestamp, message.getExtension(RequestOuterClass.Response.data));
+            case EVENT: return Event.fromProto(module, uuid, timestamp, context, message.getExtension(EventOuterClass.Event.data));
+            case REQUEST: return Request.fromProto(module, uuid, timestamp, context, message.getExtension(RequestOuterClass.Request.data));
+            case RESPONSE: return Response.fromProto(module, uuid, timestamp, context, message.getExtension(RequestOuterClass.Response.data));
             default: throw new IllegalStateException("Unknown message type " + message.getType().name());
         }
     }
@@ -120,15 +121,17 @@ public abstract class Message {
     private final Module from;
     private final UUID messageId;
     private final long timestamp;
+    private Context context;
 
     public Message(final Module from) {
-        this(from, new UUID(java.util.UUID.randomUUID()), new Date().getTime());
+        this(from, new UUID(java.util.UUID.randomUUID()), new Date().getTime(), null);
     }
 
-    public Message(final Module from, final UUID messageId, final long timestamp) {
+    public Message(final Module from, final UUID messageId, final long timestamp, final Context context) {
         this.from = from;
         this.messageId = messageId;
         this.timestamp = timestamp;
+        this.context = context;
     }
 
     public Module getFrom() {
@@ -156,13 +159,24 @@ public abstract class Message {
     }
 
     protected MessageOuterClass.Message.Builder toProtoMessage() {
-        return MessageOuterClass.Message.newBuilder()
+        final MessageOuterClass.Message.Builder builder = MessageOuterClass.Message.newBuilder()
                 .setFrom(from.toProto())
                 .setMessageId(messageId.toProto())
                 .setTimestamp(timestamp);
+        if(context != null)
+            builder.setContext(context.toProto());
+        return builder;
     }
 
     public byte[] toBytes() {
         return toProto().toByteArray();
+    }
+
+    public Context getContext() {
+        return context;
+    }
+
+    public void setContext(final Context context) {
+        this.context = context;
     }
 }

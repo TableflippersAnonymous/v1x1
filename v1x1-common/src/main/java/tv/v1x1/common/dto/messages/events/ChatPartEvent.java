@@ -4,6 +4,7 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.core.User;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -12,11 +13,11 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public abstract class ChatPartEvent extends Event {
-    public static ChatPartEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.ChatPartEvent chatPartEvent) {
+    public static ChatPartEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.ChatPartEvent chatPartEvent) {
         final User user = User.fromProto(chatPartEvent.getUser());
         final Channel channel = Channel.fromProto(chatPartEvent.getChannel());
         switch(chatPartEvent.getType()) {
-            case TWITCH: return TwitchChatPartEvent.fromProto(module, uuid, timestamp, user, channel, chatPartEvent.getExtension(EventOuterClass.TwitchChatPartEvent.data));
+            case TWITCH: return TwitchChatPartEvent.fromProto(module, uuid, timestamp, context, user, channel, chatPartEvent.getExtension(EventOuterClass.TwitchChatPartEvent.data));
             default: throw new IllegalStateException("Unknown ChatPartEvent type: " + chatPartEvent.getType());
         }
     }
@@ -30,8 +31,8 @@ public abstract class ChatPartEvent extends Event {
         this.channel = channel;
     }
 
-    public ChatPartEvent(final Module from, final UUID messageId, final long timestamp, final User user, final Channel channel) {
-        super(from, messageId, timestamp);
+    public ChatPartEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final User user, final Channel channel) {
+        super(from, messageId, timestamp, context);
         this.user = user;
         this.channel = channel;
     }

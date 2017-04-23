@@ -1,5 +1,8 @@
 package tv.v1x1.modules.core.tmi;
 
+import brave.Span;
+import brave.Tracer;
+import brave.propagation.TraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.ChatMessage;
@@ -29,6 +32,7 @@ import tv.v1x1.common.dto.irc.commands.RplNameReplyCommand;
 import tv.v1x1.common.dto.irc.commands.UserNoticeCommand;
 import tv.v1x1.common.dto.irc.commands.UserStateCommand;
 import tv.v1x1.common.dto.irc.commands.WhisperCommand;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.messages.events.TwitchBotChannelStateEvent;
 import tv.v1x1.common.dto.messages.events.TwitchBotConnectedEvent;
@@ -91,6 +95,7 @@ public class TmiBot implements Runnable {
     private final UUID id = UUID.randomUUID();
     private Thread thread;
     private final TwitchDisplayNameService twitchDisplayNameService;
+    private final Tracer tracer;
 
     public TmiBot(final String username, final String oauthToken, final MessageQueue queue,
                   final Module module, final RateLimiter joinLimiter, final RateLimiter messageLimiter,
@@ -107,6 +112,7 @@ public class TmiBot implements Runnable {
         this.channel = channel;
         this.bot = new TwitchBot(username);
         this.twitchDisplayNameService = twitchDisplayNameService;
+        this.tracer = tmiModule.getInjector().getInstance(Tracer.class);
         log("Init: Constructed!");
     }
 
@@ -127,9 +133,16 @@ public class TmiBot implements Runnable {
                 joinChannels();
                 for(;;) {
                     final String line = getLine();
-                    if (line == null)
-                        break;
-                    processLine(line);
+                    final Span span = tracer.newTrace()
+                            .name("TMI recv")
+                            .start();
+                    try {
+                        if (line == null)
+                            break;
+                        processLine(line, span);
+                    } finally {
+                        span.finish();
+                    }
                 }
                 log("Init: Attempting disconnect");
                 disconnect();
@@ -158,9 +171,9 @@ public class TmiBot implements Runnable {
         sendLine("CAP REQ :twitch.tv/tags");
     }
 
-    private void processLine(final String line) throws IOException {
+    private void processLine(final String line, final Span rootSpan) throws IOException {
         log("Read: " + line);
-        final IrcStanza stanza = IrcParser.parse(line);
+        final IrcStanza stanza = IrcParser.parse(line, tracer, rootSpan);
         if(stanza == null)
             return;
         if(stanza instanceof PingCommand)
@@ -174,10 +187,13 @@ public class TmiBot implements Runnable {
         if(stanza instanceof WhisperCommand && stanza.getTags().containsKey("thread-id") && stanza.getTags().containsKey("message-id")
                 && deduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(stanza.getTags().get("thread-id"), stanza.getTags().get("message-id"))))))
             return;
+        final Span span = tracer.newChild(rootSpan.context()).name("TMI event stanza").start();
         try {
-            event(stanza);
+            event(stanza, span);
         } catch(final NoSuchUserException e) {
             throw new IllegalStateException(e);
+        } finally {
+            span.finish();
         }
     }
 
@@ -203,95 +219,108 @@ public class TmiBot implements Runnable {
         unregisterService();
     }
 
-    private void event(final Event event) {
+    private void event(final Event event, final Span parentSpan) {
+        final TraceContext ctx = parentSpan.context();
+        event.setContext(new Context(
+                new tv.v1x1.common.dto.core.UUID(UUID.randomUUID()),
+                new tv.v1x1.common.dto.core.UUID(new UUID(ctx.traceIdHigh(), ctx.traceId())),
+                ctx.parentId(),
+                ctx.spanId(),
+                ctx.sampled()
+        ));
         messageQueue.add(event);
     }
 
-    private void event(final IrcStanza stanza) throws NoSuchUserException {
-        cache(stanza);
-        event(new TwitchRawMessageEvent(module, bot, stanza));
+    private void event(final IrcStanza stanza, final Span parentSpan) throws NoSuchUserException {
+        cache(stanza, parentSpan);
+        event(new TwitchRawMessageEvent(module, bot, stanza), parentSpan);
         if(stanza instanceof ClearChatCommand)
-            event((ClearChatCommand) stanza);
+            event((ClearChatCommand) stanza, parentSpan);
         else if(stanza instanceof GlobalUserStateCommand)
-            event((GlobalUserStateCommand) stanza);
+            event((GlobalUserStateCommand) stanza, parentSpan);
         else if(stanza instanceof HostTargetCommand)
-            event((HostTargetCommand) stanza);
+            event((HostTargetCommand) stanza, parentSpan);
         else if(stanza instanceof JoinCommand)
-            event((JoinCommand) stanza);
+            event((JoinCommand) stanza, parentSpan);
         else if(stanza instanceof ModeCommand)
-            event((ModeCommand) stanza);
+            event((ModeCommand) stanza, parentSpan);
         else if(stanza instanceof NoticeCommand)
-            event((NoticeCommand) stanza);
+            event((NoticeCommand) stanza, parentSpan);
         else if(stanza instanceof PartCommand)
-            event((PartCommand) stanza);
+            event((PartCommand) stanza, parentSpan);
         else if(stanza instanceof PingCommand)
-            event((PingCommand) stanza);
+            event((PingCommand) stanza, parentSpan);
         else if(stanza instanceof PrivmsgCommand)
-            event((PrivmsgCommand) stanza);
+            event((PrivmsgCommand) stanza, parentSpan);
         else if(stanza instanceof ReconnectCommand)
-            event((ReconnectCommand) stanza);
+            event((ReconnectCommand) stanza, parentSpan);
         else if(stanza instanceof RoomStateCommand)
-            event((RoomStateCommand) stanza);
+            event((RoomStateCommand) stanza, parentSpan);
         else if(stanza instanceof RplEndOfMotdCommand)
-            event((RplEndOfMotdCommand) stanza);
+            event((RplEndOfMotdCommand) stanza, parentSpan);
         else if(stanza instanceof RplNameReplyCommand)
-            event((RplNameReplyCommand) stanza);
+            event((RplNameReplyCommand) stanza, parentSpan);
         else if(stanza instanceof UserNoticeCommand)
-            event((UserNoticeCommand) stanza);
+            event((UserNoticeCommand) stanza, parentSpan);
         else if(stanza instanceof UserStateCommand)
-            event((UserStateCommand) stanza);
+            event((UserStateCommand) stanza, parentSpan);
         else if(stanza instanceof WhisperCommand)
-            event((WhisperCommand) stanza);
+            event((WhisperCommand) stanza, parentSpan);
         else
             throw new IllegalStateException("Unknown IrcStanza: " + stanza.getClass().getCanonicalName());
     }
 
-    private void cache(final IrcStanza stanza) {
-        if(!(stanza instanceof MessageTaggedIrcStanza))
-            return;
-        final MessageTaggedIrcStanza messageTaggedIrcStanza = (MessageTaggedIrcStanza) stanza;
-        final String userId = String.valueOf(messageTaggedIrcStanza.getUserId());
-        final String displayName = messageTaggedIrcStanza.getDisplayName();
-        if(!(messageTaggedIrcStanza.getSource() instanceof IrcUser))
-            return;
-        final String username = ((IrcUser) messageTaggedIrcStanza.getSource()).getNickname();
-        twitchDisplayNameService.cache(userId, username, displayName);
+    private void cache(final IrcStanza stanza, final Span parentSpan) {
+        final Span span = tracer.newChild(parentSpan.context()).name("TMI populate cache").start();
+        try {
+            if (!(stanza instanceof MessageTaggedIrcStanza))
+                return;
+            final MessageTaggedIrcStanza messageTaggedIrcStanza = (MessageTaggedIrcStanza) stanza;
+            final String userId = String.valueOf(messageTaggedIrcStanza.getUserId());
+            final String displayName = messageTaggedIrcStanza.getDisplayName();
+            if (!(messageTaggedIrcStanza.getSource() instanceof IrcUser))
+                return;
+            final String username = ((IrcUser) messageTaggedIrcStanza.getSource()).getNickname();
+            twitchDisplayNameService.cache(userId, username, displayName);
+        } finally {
+            span.finish();
+        }
     }
 
-    private void event(final ClearChatCommand clearChatCommand) throws NoSuchUserException {
-        event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand), getUserByUsername(clearChatCommand.getNickname()), clearChatCommand));
+    private void event(final ClearChatCommand clearChatCommand, final Span parentSpan) throws NoSuchUserException {
+        event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand), getUserByUsername(clearChatCommand.getNickname()), clearChatCommand), parentSpan);
     }
 
-    private void event(final GlobalUserStateCommand globalUserStateCommand) {
-        event(new TwitchBotGlobalStateEvent(module, bot, globalUserStateCommand));
+    private void event(final GlobalUserStateCommand globalUserStateCommand, final Span parentSpan) {
+        event(new TwitchBotGlobalStateEvent(module, bot, globalUserStateCommand), parentSpan);
     }
 
-    private void event(final HostTargetCommand hostTargetCommand) throws NoSuchUserException {
-        event(new TwitchHostEvent(module, getChannel(hostTargetCommand), getChannelByName(hostTargetCommand.getTargetChannel()), hostTargetCommand));
+    private void event(final HostTargetCommand hostTargetCommand, final Span parentSpan) throws NoSuchUserException {
+        event(new TwitchHostEvent(module, getChannel(hostTargetCommand), getChannelByName(hostTargetCommand.getTargetChannel()), hostTargetCommand), parentSpan);
     }
 
-    private void event(final JoinCommand joinCommand) throws NoSuchUserException {
-        event(new TwitchChatJoinEvent(module, getUser(joinCommand), getChannel(joinCommand), joinCommand));
+    private void event(final JoinCommand joinCommand, final Span parentSpan) throws NoSuchUserException {
+        event(new TwitchChatJoinEvent(module, getUser(joinCommand), getChannel(joinCommand), joinCommand), parentSpan);
     }
 
-    private void event(final ModeCommand modeCommand) throws NoSuchUserException {
+    private void event(final ModeCommand modeCommand, final Span parentSpan) throws NoSuchUserException {
         for (final String username : modeCommand.getNicknames())
-            event(new TwitchUserModChangeEvent(module, getChannel(modeCommand), getUserByUsername(username), modeCommand.getModeString().startsWith("+"), modeCommand));
+            event(new TwitchUserModChangeEvent(module, getChannel(modeCommand), getUserByUsername(username), modeCommand.getModeString().startsWith("+"), modeCommand), parentSpan);
     }
 
-    private void event(final NoticeCommand noticeCommand) throws NoSuchUserException {
-        event(new TwitchChannelEvent(module, getChannel(noticeCommand), noticeCommand.getMessage(), noticeCommand));
+    private void event(final NoticeCommand noticeCommand, final Span parentSpan) throws NoSuchUserException {
+        event(new TwitchChannelEvent(module, getChannel(noticeCommand), noticeCommand.getMessage(), noticeCommand), parentSpan);
     }
 
-    private void event(final PartCommand partCommand) throws NoSuchUserException {
-        event(new TwitchChatPartEvent(module, getUser(partCommand), getChannel(partCommand), partCommand));
+    private void event(final PartCommand partCommand, final Span parentSpan) throws NoSuchUserException {
+        event(new TwitchChatPartEvent(module, getUser(partCommand), getChannel(partCommand), partCommand), parentSpan);
     }
 
-    private void event(final PingCommand pingCommand) {
-        event(new TwitchPingEvent(module, pingCommand.getToken(), pingCommand));
+    private void event(final PingCommand pingCommand, final Span parentSpan) {
+        event(new TwitchPingEvent(module, pingCommand.getToken(), pingCommand), parentSpan);
     }
 
-    private void event(final PrivmsgCommand privmsgCommand) throws NoSuchUserException {
+    private void event(final PrivmsgCommand privmsgCommand, final Span parentSpan) throws NoSuchUserException {
         final TwitchChannel channel = getChannel(privmsgCommand);
         final TwitchUser user = getUser(privmsgCommand);
         if((privmsgCommand.getSource() instanceof IrcUser) && ((IrcUser) privmsgCommand.getSource()).getNickname().equals(username))
@@ -300,45 +329,45 @@ public class TmiBot implements Runnable {
         badges.add("_DEFAULT_");
         final List<Permission> permissions = tmiModule.getPermissions(channel.getTenant(), user.getGlobalUser(), channel.getId(), badges);
         final ChatMessage chatMessage = new ChatMessage(channel, user, privmsgCommand.getMessage(), permissions);
-        event(new TwitchChatMessageEvent(module, chatMessage, privmsgCommand));
+        event(new TwitchChatMessageEvent(module, chatMessage, privmsgCommand), parentSpan);
     }
 
-    private void event(final ReconnectCommand reconnectCommand) {
-        event(new TwitchReconnectEvent(module, bot, reconnectCommand));
+    private void event(final ReconnectCommand reconnectCommand, final Span parentSpan) {
+        event(new TwitchReconnectEvent(module, bot, reconnectCommand), parentSpan);
     }
 
-    private void event(final RoomStateCommand roomStateCommand) throws NoSuchUserException {
-        event(new TwitchRoomStateEvent(module, getChannel(roomStateCommand), roomStateCommand));
+    private void event(final RoomStateCommand roomStateCommand, final Span parentSpan) throws NoSuchUserException {
+        event(new TwitchRoomStateEvent(module, getChannel(roomStateCommand), roomStateCommand), parentSpan);
     }
 
-    private void event(final RplEndOfMotdCommand rplEndOfMotdCommand) {
-        event(new TwitchBotConnectedEvent(module, bot, rplEndOfMotdCommand));
+    private void event(final RplEndOfMotdCommand rplEndOfMotdCommand, final Span parentSpan) {
+        event(new TwitchBotConnectedEvent(module, bot, rplEndOfMotdCommand), parentSpan);
     }
 
-    private void event(final RplNameReplyCommand rplNameReplyCommand) throws NoSuchUserException {
+    private void event(final RplNameReplyCommand rplNameReplyCommand, final Span parentSpan) throws NoSuchUserException {
         event(new TwitchChannelUsersEvent(module, getChannel(rplNameReplyCommand), rplNameReplyCommand.getMembers().stream().map(member -> {
             try {
                 return getUserByUsername(member.getNickname());
             } catch (final NoSuchUserException e) {
                 throw new IllegalStateException(e);
             }
-        }).collect(Collectors.toList()), rplNameReplyCommand));
+        }).collect(Collectors.toList()), rplNameReplyCommand), parentSpan);
     }
 
-    private void event(final UserNoticeCommand userNoticeCommand) {
+    private void event(final UserNoticeCommand userNoticeCommand, final Span parentSpan) {
         try {
-            event(new TwitchUserEvent(module, getChannel(userNoticeCommand), getUserByUsername(userNoticeCommand.getLogin()), userNoticeCommand.getMessage(), userNoticeCommand));
+            event(new TwitchUserEvent(module, getChannel(userNoticeCommand), getUserByUsername(userNoticeCommand.getLogin()), userNoticeCommand.getMessage(), userNoticeCommand), parentSpan);
         } catch (final NoSuchUserException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    private void event(final UserStateCommand userStateCommand) throws NoSuchUserException {
-        event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand), bot, userStateCommand));
+    private void event(final UserStateCommand userStateCommand, final Span parentSpan) throws NoSuchUserException {
+        event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand), bot, userStateCommand), parentSpan);
     }
 
-    private void event(final WhisperCommand whisperCommand) {
-        event(new TwitchPrivateMessageEvent(module, new PrivateMessage(bot, getUser(whisperCommand), whisperCommand.getMessage()), whisperCommand));
+    private void event(final WhisperCommand whisperCommand, final Span parentSpan) {
+        event(new TwitchPrivateMessageEvent(module, new PrivateMessage(bot, getUser(whisperCommand), whisperCommand.getMessage()), whisperCommand), parentSpan);
     }
 
     private TwitchUser getUser(final IrcStanza stanza) {

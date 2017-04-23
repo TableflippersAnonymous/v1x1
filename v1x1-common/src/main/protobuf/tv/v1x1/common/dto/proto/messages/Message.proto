@@ -15,8 +15,17 @@ message Message {
         RESPONSE = 3;
     };
 
+    message Context {
+        required core.UUID context_id = 1;
+        optional core.UUID trace_id = 2;
+        optional int64 parent_span_id = 3;
+        optional int64 span_id = 4;
+        optional bool sampled = 5;
+    }
+
     required MessageType type = 1;
     required core.Module from = 2;
     required core.UUID message_id = 3;
     required int64 timestamp = 4;
+    optional Context context = 5;
 }

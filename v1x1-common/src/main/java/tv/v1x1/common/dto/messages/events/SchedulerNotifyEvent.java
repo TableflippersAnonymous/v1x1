@@ -3,6 +3,7 @@ package tv.v1x1.common.dto.messages.events;
 import com.google.protobuf.ByteString;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -14,11 +15,11 @@ public class SchedulerNotifyEvent extends Event {
     private final UUID id;
     private final byte[] payload;
 
-    public static SchedulerNotifyEvent fromProto(final Module module, final UUID uuid, final long timestamp, final EventOuterClass.SchedulerNotifyEvent proto) {
+    public static SchedulerNotifyEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.SchedulerNotifyEvent proto) {
         final Module requestingModule = Module.fromProto(proto.getModule());
         final UUID timerId = UUID.fromProto(proto.getId());
         final byte[] payload = proto.getPayload().toByteArray();
-        return new SchedulerNotifyEvent(module, uuid, timestamp, requestingModule, timerId, payload);
+        return new SchedulerNotifyEvent(module, uuid, timestamp, context, requestingModule, timerId, payload);
     }
 
     public SchedulerNotifyEvent(final Module from, final Module module, final UUID id, final byte[] payload) {
@@ -28,8 +29,8 @@ public class SchedulerNotifyEvent extends Event {
         this.payload = payload;
     }
 
-    public SchedulerNotifyEvent(final Module from, final UUID messageId, final long timestamp, final Module module, final UUID id, final byte[] payload) {
-        super(from, messageId, timestamp);
+    public SchedulerNotifyEvent(final Module from, final UUID messageId, final long timestamp, final Context context, final Module module, final UUID id, final byte[] payload) {
+        super(from, messageId, timestamp, context);
         this.module = module;
         this.id = id;
         this.payload = payload;
