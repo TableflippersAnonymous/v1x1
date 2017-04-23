@@ -43,6 +43,7 @@ public class MessageQueueImpl implements MessageQueue {
                 tracer.joinSpan(traceContext)
                         .name(blockingQueue.getName() + "-recv")
                         .kind(Span.Kind.SERVER)
+                        .tag("class", message.getClass().getCanonicalName())
                         .start().flush();
             }
             return message;
@@ -80,12 +81,14 @@ public class MessageQueueImpl implements MessageQueue {
                             .sampled(context.isSampled()).build())
                     .name(blockingQueue.getName() + "-send")
                     .kind(Span.Kind.CLIENT)
+                    .tag("class", message.getClass().getCanonicalName())
                     .remoteEndpoint(Endpoint.create(blockingQueue.getName(), 0));
             message.setContext(new Context(context.getContextId(),
                     new tv.v1x1.common.dto.core.UUID(new UUID(span.context().traceIdHigh(), span.context().traceId())),
                     span.context().parentId(),
                     span.context().spanId(),
                     span.context().sampled()));
+            span.start().flush();
         }
         blockingQueue.add(message.toBytes());
     }
