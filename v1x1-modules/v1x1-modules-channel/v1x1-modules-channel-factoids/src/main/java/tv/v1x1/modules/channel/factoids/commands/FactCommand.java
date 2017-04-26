@@ -22,6 +22,8 @@ public class FactCommand extends Command {
         this.module = module;
         delegator = new CommandDelegator();
         delegator.registerCommand(new FactAddCommand(module));
+        delegator.registerCommand(new FactEnableCommand(module));
+        delegator.registerCommand(new FactDisableCommand(module));
         delegator.registerCommand(new FactEditCommand(module));
         delegator.registerCommand(new FactInfoCommand(module));
         delegator.registerCommand(new FactListCommand(module));

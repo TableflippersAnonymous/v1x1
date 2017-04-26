@@ -1,28 +1,31 @@
 package tv.v1x1.modules.channel.factoids;
 
 import tv.v1x1.common.dto.core.ChatMessage;
+import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.common.util.commands.CommandProvider;
-import tv.v1x1.modules.channel.factoids.dao.DAOFactoid;
-import tv.v1x1.modules.channel.factoids.dao.Factoid;
 
 /**
  * @author Josh
  */
 public class FactoidCommandProvider implements CommandProvider {
     final private FactoidsModule module;
-    final private DAOFactoid daoFactoid;
 
-    public FactoidCommandProvider(final FactoidsModule module, final DAOFactoid daoFactoid) {
+    public FactoidCommandProvider(final FactoidsModule module) {
         this.module = module;
-        this.daoFactoid = daoFactoid;
     }
 
     @Override
     public Command provide(final String command, final ChatMessage chatMessage) {
-        final Factoid factoid = daoFactoid.chaseDownById(chatMessage.getChannel().getTenant().getId().getValue(), command);
-        if(factoid != null) {
-            return new CustomCommand(module, factoid.getId(), factoid.getData(), factoid.getPermission());
+        try {
+            final Factoid factoid = module.getTenantConfiguration(chatMessage.getChannel().getTenant()).chaseDownById(command);
+            if(factoid != null && factoid.isEnabled()) {
+                return new CustomCommand(module, command, factoid.getData(), factoid.getPermission());
+            }
+        } catch(RuntimeException ex) {
+            Chat.i18nMessage(module, chatMessage.getChannel(), "toomany.aliases",
+                    "commander", chatMessage.getSender().getDisplayName(),
+                    "alias", command);
         }
         return null;
     }

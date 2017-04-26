@@ -7,7 +7,7 @@ import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.common.util.text.Shorten;
 import tv.v1x1.modules.channel.factoids.FactoidsModule;
-import tv.v1x1.modules.channel.factoids.dao.Factoid;
+import tv.v1x1.modules.channel.factoids.Factoid;
 
 import java.util.List;
 
@@ -30,13 +30,13 @@ public class FactAddCommand extends Command {
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
         final String commander = chatMessage.getSender().getDisplayName();
-        final String factName = args.remove(0);
+        final String factName = args.remove(0).toLowerCase();
         final String factData = String.join(" ", args);
         final Factoid oldFact = module.getFact(channel.getTenant(), factName);
         if(oldFact != null) {
             Chat.i18nMessage(module, channel, "alreadyexists",
                     "commander", commander,
-                    "fact", oldFact.getId());
+                    "fact", factName);
             return;
         }
         final Factoid fact = module.addFact(channel.getTenant(), factName, factData, null);
@@ -47,7 +47,7 @@ public class FactAddCommand extends Command {
         } else {
             Chat.i18nMessage(module, channel, "add.success",
                     "commander", commander,
-                    "id", fact.getId(),
+                    "id", factName,
                     "fact", Shorten.genPreview(fact.getData()));
         }
     }

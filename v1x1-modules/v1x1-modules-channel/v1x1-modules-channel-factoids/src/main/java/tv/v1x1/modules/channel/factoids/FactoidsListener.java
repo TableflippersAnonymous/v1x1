@@ -1,6 +1,7 @@
 package tv.v1x1.modules.channel.factoids;
 
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
+import tv.v1x1.common.dto.messages.events.TenantConfigChangeEvent;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
 
@@ -17,5 +18,10 @@ public class FactoidsListener implements EventListener {
     public void onChatMessage(ChatMessageEvent ev) {
         if(module.isEnabled(ev.getChatMessage().getChannel()))
             module.handleMessage(ev);
+    }
+
+    @EventHandler
+    public void onTenantConfigChange(TenantConfigChangeEvent ev) {
+        module.pruneAliases(ev.getTenant());
     }
 }
