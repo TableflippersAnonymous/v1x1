@@ -5,25 +5,23 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
-import tv.v1x1.common.util.text.Shorten;
 import tv.v1x1.modules.channel.factoids.FactoidsModule;
-import tv.v1x1.modules.channel.factoids.Factoid;
 
 import java.util.List;
 
 /**
  * @author Josh
  */
-public class FactRemoveCommand extends Command {
+public class FactDisableCommand extends Command {
     final private FactoidsModule module;
 
-    public FactRemoveCommand(FactoidsModule module) {
+    public FactDisableCommand(FactoidsModule module) {
         this.module = module;
     }
 
     @Override
     public List<String> getCommands() {
-        return ImmutableList.of("remove", "del", "delete");
+        return ImmutableList.of("disable");
     }
 
     @Override
@@ -31,24 +29,17 @@ public class FactRemoveCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String commander = chatMessage.getSender().getDisplayName();
         final String factName = args.remove(0).toLowerCase();
-        final Factoid fact = module.delFact(channel.getTenant(), factName);
-        if(fact == null) {
+        final boolean result = module.enableFact(channel.getTenant(), factName, false);
+        if(!result) {
             Chat.i18nMessage(module, channel, "noexist",
                     "commander", commander,
                     "id", factName);
-        } else {
-            if(fact.isAlias()) {
-                Chat.i18nMessage(module, channel, "remove.alias.success",
-                        "commander", commander,
-                        "id", factName,
-                        "alias", fact.getData());
-            } else {
-                Chat.i18nMessage(module, channel, "remove.fact.success",
-                        "commander", commander,
-                        "id", factName,
-                        "fact", Shorten.genPreview(fact.getData()));
-            }
+            return;
         }
+        Chat.i18nMessage(module, channel, "toggle.success",
+                "commander", commander,
+                "id", factName,
+                "status", "disabled");
     }
 
     @Override
@@ -58,7 +49,7 @@ public class FactRemoveCommand extends Command {
 
     @Override
     public String getDescription() {
-        return "remove a fact";
+        return "enable a fact";
     }
 
     @Override

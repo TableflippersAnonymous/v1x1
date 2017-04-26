@@ -18,7 +18,7 @@ public class CustomCommand extends Command {
     private final FactoidsModule module;
 
     public CustomCommand(final FactoidsModule module, final String cmd, final String response, final tv.v1x1.common.dto.db.Permission permission) {
-        this.cmd = cmd;
+        this.cmd = cmd.toLowerCase();
         this.response = response;
         if(permission != null)
             this.permission = permission.toCore();

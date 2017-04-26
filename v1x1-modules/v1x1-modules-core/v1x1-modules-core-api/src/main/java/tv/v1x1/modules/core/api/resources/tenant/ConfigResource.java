@@ -312,6 +312,8 @@ public class ConfigResource {
                 return jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString();
             case INTEGER:
                 return jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isNumber();
+            case PERMISSION:
+                return jsonElement.isJsonNull() || jsonElement.isJsonObject() && jsonElement.getAsJsonObject().has("node");
             default:
                 throw new IllegalStateException("Unknown configType: " + configType.name());
         }
