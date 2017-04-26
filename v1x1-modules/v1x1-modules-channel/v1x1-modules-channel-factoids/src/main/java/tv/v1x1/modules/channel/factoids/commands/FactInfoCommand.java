@@ -3,12 +3,11 @@ package tv.v1x1.modules.channel.factoids.commands;
 import com.google.common.collect.ImmutableList;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
-import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.common.util.text.Shorten;
 import tv.v1x1.modules.channel.factoids.FactoidsModule;
-import tv.v1x1.modules.channel.factoids.dao.Factoid;
+import tv.v1x1.modules.channel.factoids.Factoid;
 
 import java.util.List;
 
@@ -41,18 +40,20 @@ public class FactInfoCommand extends Command {
             if(fact.isAlias()) {
                 Chat.i18nMessage(module, channel, "info.alias",
                         "commander", commander,
-                        "id", fact.getId(),
+                        "id", factName,
                         "to", fact.getData());
             } else {
                 if(fact.getPermission() == null) {
                     Chat.i18nMessage(module, channel, "info.noperm",
                             "commander", commander,
-                            "id", fact.getId(),
+                            "id", factName,
+                            "enabled", (fact.isEnabled() ? "enabled" : "disabled"),
                             "fact", Shorten.genPreview(fact.getData(), 100));
                 } else {
                     Chat.i18nMessage(module, channel, "info.standard",
                             "commander", commander,
-                            "id", fact.getId(),
+                            "id", factName,
+                            "enabled", (fact.isEnabled() ? "enabled" : "disabled"),
                             "perm", fact.getPermission().getNode(),
                             "fact", Shorten.genPreview(fact.getData(), 100));
                 }

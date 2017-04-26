@@ -13,10 +13,11 @@ import tv.v1x1.modules.channel.factoids.config.FactoidsChannelConfiguration;
 import tv.v1x1.modules.channel.factoids.config.FactoidsGlobalConfiguration;
 import tv.v1x1.modules.channel.factoids.config.FactoidsModuleSettings;
 import tv.v1x1.modules.channel.factoids.config.FactoidsTenantConfiguration;
-import tv.v1x1.modules.channel.factoids.dao.DAOFactoid;
-import tv.v1x1.modules.channel.factoids.dao.Factoid;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Josh
@@ -30,6 +31,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
         I18n.registerDefault(module, "invalid.subcommand", "%commander%, what do you want to do with a fact? Type !fact help for a list");
         I18n.registerDefault(module, "noexist", "%commander%, fact \"%id%\" doesn't exist");
         I18n.registerDefault(module, "alreadyexists", "%commander%, the fact \"%fact%\" already exists");
+        I18n.registerDefault(module, "toomany.aliases", "%commander%, \"%alias%\" is an alias to an alias to an alias... And so on. Consider aliasing \"%alias%\" to a fact directly.");
         /* success */
         I18n.registerDefault(module, "add.success", "%commander%, \"%id%\" has been added as \"%fact%\"");
         I18n.registerDefault(module, "alias.success", "%commander%, \"%id%\" is now aliased to \"%alias%\"");
@@ -39,9 +41,10 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
         I18n.registerDefault(module, "remove.alias.success", "%commander%, \"%id%\" is no longer aliased to \"%alias%\"");
         I18n.registerDefault(module, "list", "%commander%, here's a list of all the facts: %list%");
         I18n.registerDefault(module, "list.nofacts", "%commander%, there are no facts set up... Add one with !fact add");
-        I18n.registerDefault(module, "info.standard", "%commander%, \"%id%\" has the permission %perm%. It looks like this: %fact%");
-        I18n.registerDefault(module, "info.noperm", "%commander%, \"%id%\" looks like this: %fact%");
+        I18n.registerDefault(module, "info.standard", "%commander%, \"%id%\" is %enabled%. It has the permission %perm%. It looks like this: %fact%");
+        I18n.registerDefault(module, "info.noperm", "%commander%, \"%id%\" is %enabled%. It looks like this: %fact%");
         I18n.registerDefault(module, "info.alias", "%commander%, \"%id%\" is an alias for \"%to%\"");
+        I18n.registerDefault(module, "toggle.success", "%commander%, \"%id%\" is now %status%");
     }
 
     public static final String CUSTOM_PREM_PREFIX = "factoids.use.";
@@ -54,7 +57,6 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
     // Global command provider, for manipulating factoids
     private CommandDelegator delegator;
     private CommandDelegator customDelegators;
-    private DAOFactoid daoFactoid;
 
     public static void main(final String[] args) throws Exception {
         new FactoidsModule().entryPoint(args);
@@ -62,10 +64,9 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
 
     public void initialize() {
         super.initialize();
-        daoFactoid = new DAOFactoid(getMappingManager());
         delegator = new CommandDelegator("!");
         delegator.registerCommand(new FactCommand(this));
-        customDelegators = new CommandDelegator(new FactoidCommandProvider(this, daoFactoid), "!");
+        customDelegators = new CommandDelegator(new FactoidCommandProvider(this), "!");
         registerListener(new FactoidsListener(this));
     }
 
@@ -118,14 +119,25 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
         final tv.v1x1.common.dto.db.Permission dbPermission;
         if(permission == null) dbPermission = null;
         else dbPermission = new tv.v1x1.common.dto.db.Permission(permission.getNode());
-        final Factoid fact = new Factoid(id, tenant, data, dbPermission, isAlias);
-        daoFactoid.add(fact);
+        final Factoid fact = new Factoid(tenant, data, dbPermission, isAlias);
+        return addFact(tenant, id, fact);
+    }
+
+    public Factoid addFact(final Tenant tenant, final String id, final Factoid fact) {
+        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        config.add(id, fact);
+        getTenantConfigProvider().save(tenant, config);
         return fact;
     }
 
-    public Factoid addFact(final Factoid fact) {
-        daoFactoid.add(fact);
-        return fact;
+    public boolean enableFact(final Tenant tenant, final String id, final boolean enabled) {
+        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        final Factoid fact = config.chaseDownById(id);
+        if(fact == null)
+            return false;
+        fact.setEnabled(enabled);
+        getTenantConfigProvider().save(tenant, config);
+        return true;
     }
 
     /**
@@ -135,7 +147,13 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @return
      */
     public Factoid delFact(final Tenant tenant, final String id) {
-        return daoFactoid.del(tenant.getId().getValue(), id);
+        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        Factoid fact = config.del(id);
+        if(fact != null) {
+            getTenantConfigProvider().save(tenant, config);
+            pruneAliases(tenant, id);
+        }
+        return fact;
     }
 
     /**
@@ -145,7 +163,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @return
      */
     public Factoid getFact(final Tenant tenant, final String id) {
-        return daoFactoid.chaseDownById(tenant.getId().getValue(), id);
+        return getTenantConfiguration(tenant).chaseDownById(id);
     }
 
     /**
@@ -155,7 +173,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @return
      */
     public Factoid getFactDirectly(final Tenant tenant, final String id) {
-        return daoFactoid.getById(tenant.getId().getValue(), id);
+        return getTenantConfiguration(tenant).getById(id);
     }
 
     /**
@@ -163,8 +181,8 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @param tenant
      * @return all facts
      */
-    public List<Factoid> getFacts(final Tenant tenant) {
-        return daoFactoid.all(tenant.getId().getValue());
+    public Set<Map.Entry<String,Factoid>> getFacts(final Tenant tenant) {
+        return getTenantConfiguration(tenant).all();
     }
 
     /**
@@ -173,9 +191,24 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @param id
      */
     public void pruneAliases(final Tenant tenant, final String id) {
-        for(Factoid fact : getFacts(tenant)) {
-            if(!fact.isAlias()) continue;
-            if(fact.getData().equals(id)) delFact(tenant, fact.getId());
+        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        for(Map.Entry<String,Factoid> fact : config.all()) {
+            if(!fact.getValue().isAlias()) continue;
+            if(fact.getValue().getData().equals(id)) delFact(tenant, fact.getKey());
+        }
+    }
+
+    /**
+     * Delete all aliases for all deleted facts; delete all aliases to aliases
+     */
+    public void pruneAliases(final Tenant tenant) {
+        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        for(Map.Entry<String, Factoid> fact : config.all()) {
+            if(fact.getValue().isAlias()) {
+                final Factoid target = config.getById(fact.getValue().getData());
+                if(target == null || target.isAlias())
+                    delFact(tenant, fact.getKey());
+            }
         }
     }
 }

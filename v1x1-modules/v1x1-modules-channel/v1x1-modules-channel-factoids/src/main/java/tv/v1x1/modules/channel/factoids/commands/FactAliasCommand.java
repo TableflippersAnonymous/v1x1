@@ -5,9 +5,8 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
-import tv.v1x1.common.util.text.Shorten;
 import tv.v1x1.modules.channel.factoids.FactoidsModule;
-import tv.v1x1.modules.channel.factoids.dao.Factoid;
+import tv.v1x1.modules.channel.factoids.Factoid;
 
 import java.util.List;
 
@@ -30,8 +29,8 @@ public class FactAliasCommand extends Command {
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
         final String commander = chatMessage.getSender().getDisplayName();
-        final String aliasName = args.get(1);
-        final String aliasTargetName = args.get(0);
+        final String aliasName = args.get(1).toLowerCase();
+        String aliasTargetName = args.get(0).toLowerCase();
         final Factoid aliasTarget = module.getFact(channel.getTenant(), aliasTargetName);
         if(aliasTarget == null) {
             Chat.i18nMessage(module, channel, "noexist",
@@ -39,14 +38,15 @@ public class FactAliasCommand extends Command {
                     "id", aliasTargetName);
             return;
         }
+        aliasTargetName = aliasTarget.getId();
         final Factoid oldFact = module.getFactDirectly(channel.getTenant(), aliasName);
         if(oldFact != null) {
             Chat.i18nMessage(module, channel, "alreadyexists",
                     "commander", commander,
-                    "fact", oldFact.getId());
+                    "fact", aliasName);
             return;
         }
-        final Factoid fact = module.addFact(channel.getTenant(), aliasName, aliasTarget.getId(), null, true);
+        final Factoid fact = module.addFact(channel.getTenant(), aliasName, aliasTargetName, null, true);
         if(fact == null) {
             Chat.i18nMessage(module, channel, "generic.error",
                     "commander", commander,
@@ -54,7 +54,7 @@ public class FactAliasCommand extends Command {
         } else {
             Chat.i18nMessage(module, channel, "alias.success",
                     "commander", commander,
-                    "id", fact.getId(),
+                    "id", aliasName,
                     "alias", fact.getData());
         }
     }
