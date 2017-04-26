@@ -81,6 +81,7 @@ import zipkin.reporter.Reporter;
 import zipkin.reporter.Sender;
 import zipkin.reporter.okhttp3.OkHttpSender;
 
+import javax.annotation.Nullable;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -283,7 +284,7 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
     }
 
     @Provides @Singleton
-    public Reporter<Span> getReporter(final Sender sender) {
+    public Reporter<Span> getReporter(@Nullable final Sender sender) {
         if(sender == null)
             return Reporter.NOOP;
         return AsyncReporter.builder(sender).build();
