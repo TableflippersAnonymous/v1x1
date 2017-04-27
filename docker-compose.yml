@@ -77,6 +77,8 @@ services:
       - chat_router
   api:
     image: v1x1-api:latest
+    ports:
+      - "8080:8080"
     depends_on:
       - redis
       - zoo1
