@@ -47,13 +47,13 @@ public class FactInfoCommand extends Command {
                     Chat.i18nMessage(module, channel, "info.noperm",
                             "commander", commander,
                             "id", factName,
-                            "enabled", (fact.isEnabled() ? "enabled" : "disabled"),
+                            "enabled", (fact.isHidden() ? "hidden" : "not hidden"),
                             "fact", Shorten.genPreview(fact.getData(), 100));
                 } else {
                     Chat.i18nMessage(module, channel, "info.standard",
                             "commander", commander,
                             "id", factName,
-                            "enabled", (fact.isEnabled() ? "enabled" : "disabled"),
+                            "enabled", (fact.isHidden() ? "hidden" : "not hidden"),
                             "perm", fact.getPermission().getNode(),
                             "fact", Shorten.genPreview(fact.getData(), 100));
                 }
