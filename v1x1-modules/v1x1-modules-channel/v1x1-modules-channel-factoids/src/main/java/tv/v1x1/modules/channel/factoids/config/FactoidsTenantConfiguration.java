@@ -21,7 +21,7 @@ import java.util.Set;
 @ModuleConfig("factoids")
 @DisplayName("Factoids")
 @Description("This module adds factoids -- or custom commands, if you will")
-@Version(1)
+@Version(2)
 public class FactoidsTenantConfiguration extends BasicTenantConfiguration {
     @DisplayName("Factoids")
     @Description("List of facts you've made")

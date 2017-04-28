@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Description;
 import tv.v1x1.common.config.DisplayName;
+import tv.v1x1.common.config.TenantPermission;
 import tv.v1x1.common.config.Type;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.db.Permission;
@@ -15,6 +16,7 @@ import tv.v1x1.common.dto.db.Permission;
 public class Factoid {
     // Kludge to know what we called this fact by
     @JsonIgnore
+    @TenantPermission(tv.v1x1.common.config.Permission.NONE)
     private String id;
     @JsonProperty("enabled")
     @DisplayName("Hidden?")
