@@ -16,6 +16,7 @@ public class Shorten {
      * @return
      */
     public static String genPreview(final String message, final int length) {
+        if(message == null) return "";
         final String[] words = message.split(" ");
         final StringBuilder sb = new StringBuilder();
         int i = 0;
