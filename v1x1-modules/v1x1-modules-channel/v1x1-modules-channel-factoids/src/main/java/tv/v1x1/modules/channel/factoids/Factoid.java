@@ -18,11 +18,11 @@ public class Factoid {
     @JsonIgnore
     @TenantPermission(tv.v1x1.common.config.Permission.NONE)
     private String id;
-    @JsonProperty("enabled")
+    @JsonProperty("hidden")
     @DisplayName("Hidden?")
     @Description("Hiding a fact stops people from asking for it")
     @Type(ConfigType.BOOLEAN)
-    private boolean enabled;
+    private boolean hidden;
     @JsonProperty("alias")
     @DisplayName("Alias?")
     @Description("Is this just the name for a different fact?")
@@ -30,7 +30,7 @@ public class Factoid {
     private boolean alias;
     @JsonProperty("data")
     @DisplayName("Message")
-    @Description("The message we'll send when someone asks for the fact.\nIf this is an alias, this is the name of the aliased fact")
+    @Description("The message we'll send when someone asks for the fact. If this is an alias, this is the name of the aliased fact")
     @Type(ConfigType.STRING)
     private String data;
     @JsonProperty("permission")
@@ -45,7 +45,7 @@ public class Factoid {
     public Factoid(final Tenant tenant, final String data, final Permission permission, final boolean alias) {
         this.data = data;
         this.alias = alias;
-        this.enabled = true;
+        this.hidden = false;
         if(permission == null)
             this.permission = null;
         else
@@ -80,11 +80,11 @@ public class Factoid {
         this.data = data;
     }
 
-    public void setEnabled(final boolean enabled) {
-        this.enabled = enabled;
+    public void setHidden(final boolean hidden) {
+        this.hidden = hidden;
     }
 
-    public boolean isEnabled() {
-        return this.enabled;
+    public boolean isHidden() {
+        return this.hidden;
     }
 }
