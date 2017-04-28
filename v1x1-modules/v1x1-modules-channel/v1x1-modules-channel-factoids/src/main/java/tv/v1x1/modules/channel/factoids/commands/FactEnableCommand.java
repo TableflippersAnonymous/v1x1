@@ -21,7 +21,7 @@ public class FactEnableCommand extends Command {
 
     @Override
     public List<String> getCommands() {
-        return ImmutableList.of("enable");
+        return ImmutableList.of("unhide", "enable");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class FactEnableCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String commander = chatMessage.getSender().getDisplayName();
         final String factName = args.remove(0).toLowerCase();
-        final boolean result = module.enableFact(channel.getTenant(), factName, true);
+        final boolean result = module.hideFact(channel.getTenant(), factName, false);
         if(!result) {
             Chat.i18nMessage(module, channel, "noexist",
                     "commander", commander,
@@ -39,7 +39,7 @@ public class FactEnableCommand extends Command {
         Chat.i18nMessage(module, channel, "toggle.success",
                 "commander", commander,
                 "id", factName,
-                "status", "enabled");
+                "status", "unhidden");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class FactEnableCommand extends Command {
 
     @Override
     public String getDescription() {
-        return "enable a fact";
+        return "unhide a fact";
     }
 
     @Override

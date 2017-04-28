@@ -21,7 +21,7 @@ public class FactDisableCommand extends Command {
 
     @Override
     public List<String> getCommands() {
-        return ImmutableList.of("disable");
+        return ImmutableList.of("hide", "disable");
     }
 
     @Override
@@ -29,7 +29,7 @@ public class FactDisableCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String commander = chatMessage.getSender().getDisplayName();
         final String factName = args.remove(0).toLowerCase();
-        final boolean result = module.enableFact(channel.getTenant(), factName, false);
+        final boolean result = module.hideFact(channel.getTenant(), factName, true);
         if(!result) {
             Chat.i18nMessage(module, channel, "noexist",
                     "commander", commander,
@@ -39,7 +39,7 @@ public class FactDisableCommand extends Command {
         Chat.i18nMessage(module, channel, "toggle.success",
                 "commander", commander,
                 "id", factName,
-                "status", "disabled");
+                "status", "hidden");
     }
 
     @Override

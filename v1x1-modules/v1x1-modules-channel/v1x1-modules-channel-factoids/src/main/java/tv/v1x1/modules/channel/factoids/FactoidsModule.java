@@ -14,8 +14,6 @@ import tv.v1x1.modules.channel.factoids.config.FactoidsGlobalConfiguration;
 import tv.v1x1.modules.channel.factoids.config.FactoidsModuleSettings;
 import tv.v1x1.modules.channel.factoids.config.FactoidsTenantConfiguration;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -130,12 +128,12 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
         return fact;
     }
 
-    public boolean enableFact(final Tenant tenant, final String id, final boolean enabled) {
+    public boolean hideFact(final Tenant tenant, final String id, final boolean hidden) {
         final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
         final Factoid fact = config.chaseDownById(id);
         if(fact == null)
             return false;
-        fact.setEnabled(enabled);
+        fact.setHidden(hidden);
         getTenantConfigProvider().save(tenant, config);
         return true;
     }
