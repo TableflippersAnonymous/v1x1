@@ -200,6 +200,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
 
     /**
      * Delete all aliases for all deleted facts; delete all aliases to aliases
+     * @param tenant
      */
     public void pruneAliases(final Tenant tenant) {
         final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
@@ -209,6 +210,18 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
                 if(target == null || target.isAlias())
                     delFact(tenant, fact.getKey());
             }
+        }
+    }
+
+    /**
+     * Delete all facts that have no message
+     * @param tenant
+     */
+    public void pruneBlanks(final Tenant tenant) {
+        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        for(Map.Entry<String, Factoid> fact : config.all()) {
+            if(fact.getValue().getData() == null)
+                delFact(tenant, fact.getKey());
         }
     }
 }

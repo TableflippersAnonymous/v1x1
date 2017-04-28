@@ -22,6 +22,7 @@ public class FactoidsListener implements EventListener {
 
     @EventHandler
     public void onTenantConfigChange(TenantConfigChangeEvent ev) {
+        module.pruneBlanks(ev.getTenant());
         module.pruneAliases(ev.getTenant());
     }
 }
