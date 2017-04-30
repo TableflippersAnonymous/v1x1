@@ -1,5 +1,6 @@
 package tv.v1x1.common.modules;
 
+import brave.propagation.CurrentTraceContext;
 import org.slf4j.MDC;
 import tv.v1x1.common.dto.messages.Message;
 
@@ -16,15 +17,18 @@ public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalC
     private final ExecutorService executorService;
 
     protected ThreadedModule() {
-        executorService = new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
+        executorService = getInjector().getInstance(CurrentTraceContext.class)
+                .executorService(new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100)));
     }
 
     protected ThreadedModule(final int count) {
-        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
+        executorService = getInjector().getInstance(CurrentTraceContext.class)
+                .executorService(new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100)));
     }
 
     protected ThreadedModule(final int count, final int queueDepth) {
-        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth));
+        executorService = getInjector().getInstance(CurrentTraceContext.class)
+                .executorService(new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth)));
     }
 
     private void processMessageWrapper(final Message message) {

@@ -1,23 +1,7 @@
 package tv.v1x1.common.modules;
 
-import com.datastax.driver.core.AuthProvider;
 import com.datastax.driver.core.Cluster;
-import com.datastax.driver.core.CodecRegistry;
-import com.datastax.driver.core.ConsistencyLevel;
-import com.datastax.driver.core.PerHostPercentileTracker;
-import com.datastax.driver.core.PlainTextAuthProvider;
-import com.datastax.driver.core.QueryOptions;
 import com.datastax.driver.core.Session;
-import com.datastax.driver.core.SimpleStatement;
-import com.datastax.driver.core.SocketOptions;
-import com.datastax.driver.core.policies.DCAwareRoundRobinPolicy;
-import com.datastax.driver.core.policies.DowngradingConsistencyRetryPolicy;
-import com.datastax.driver.core.policies.ExponentialReconnectionPolicy;
-import com.datastax.driver.core.policies.LatencyAwarePolicy;
-import com.datastax.driver.core.policies.LoggingRetryPolicy;
-import com.datastax.driver.core.policies.PercentileSpeculativeExecutionPolicy;
-import com.datastax.driver.core.policies.TokenAwarePolicy;
-import com.datastax.driver.extras.codecs.enums.EnumOrdinalCodec;
 import com.datastax.driver.mapping.MappingManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ser.FilterProvider;
@@ -29,9 +13,6 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import io.dropwizard.util.Generics;
 import org.apache.curator.framework.CuratorFramework;
-import org.apache.curator.framework.CuratorFrameworkFactory;
-import org.apache.curator.retry.BoundedExponentialBackoffRetry;
-import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.RedissonNodeInitializer;
 import org.redisson.client.codec.Codec;
@@ -47,8 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import tv.v1x1.common.config.ConfigScanner;
-import tv.v1x1.common.config.ConfigType;
-import tv.v1x1.common.config.Permission;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
 import tv.v1x1.common.dao.DAOThirdPartyCredential;
 import tv.v1x1.common.dto.core.Channel;
@@ -73,31 +52,22 @@ import tv.v1x1.common.guice.TemporaryGlobal;
 import tv.v1x1.common.guice.TemporaryModule;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.rpc.client.ServiceClient;
-import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributorImpl;
-import tv.v1x1.common.services.coordination.LockManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
 import tv.v1x1.common.services.persistence.ChannelConfigurationProvider;
 import tv.v1x1.common.services.persistence.ConfigurationProvider;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.persistence.KeyValueStore;
-import tv.v1x1.common.services.persistence.PersistentKeyValueStoreImpl;
-import tv.v1x1.common.services.persistence.TemporaryKeyValueStoreImpl;
 import tv.v1x1.common.services.persistence.TenantConfigurationProvider;
 import tv.v1x1.common.services.persistence.TenantKeyValueStoreImpl;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.services.queue.MessageQueueManager;
-import tv.v1x1.common.services.queue.MessageQueueManagerImpl;
 import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.StateManager;
-import tv.v1x1.common.services.stats.NoopStatsCollector;
-import tv.v1x1.common.services.stats.StatsCollector;
 import tv.v1x1.common.services.twitch.TwitchApi;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.InvocationTargetException;
@@ -106,7 +76,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by naomi on 10/4/16.
@@ -229,8 +198,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* ******************************* TEAR-DOWN ******************************* */
     private void cleanup() {
-        getCassandraSession().close();
-        getCassandraCluster().close();
+        injector.getInstance(Session.class).close();
+        injector.getInstance(Cluster.class).close();
         for(final Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
             try {
                 entry.getValue().shutdown();
@@ -284,24 +253,12 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return injector.getInstance(Key.get(KeyValueStore.class, PersistentGlobal.class));
     }
 
-    protected StatsCollector getStatsCollector() {
-        return injector.getInstance(StatsCollector.class);
-    }
-
     public ModuleRegistry getModuleRegistry() {
         return injector.getInstance(ModuleRegistry.class);
     }
 
     protected UUID getInstanceId() {
         return instanceId;
-    }
-
-    protected Session getCassandraSession() {
-        return injector.getInstance(Session.class);
-    }
-
-    protected Cluster getCassandraCluster() {
-        return injector.getInstance(Cluster.class);
     }
 
     public MappingManager getMappingManager() {
@@ -338,14 +295,6 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     public TwitchApi getTwitchApi() {
         return injector.getInstance(TwitchApi.class);
-    }
-
-    public LockManager getLockManager() {
-        return injector.getInstance(LockManager.class);
-    }
-
-    public CacheManager getCacheManager() {
-        return injector.getInstance(CacheManager.class);
     }
 
     public DisplayNameService getDisplayNameService() {

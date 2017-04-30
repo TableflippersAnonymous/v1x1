@@ -1,5 +1,8 @@
 package tv.v1x1.common.rpc.client;
 
+import brave.Span;
+import brave.Tracer;
+import brave.propagation.CurrentTraceContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.messages.Message;
@@ -27,11 +30,13 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final Module<?, ?, ?, ?> module;
     private final String queueName;
-    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
+    private final ExecutorService executorService;
     private final Map<tv.v1x1.common.dto.core.UUID, ServiceFuture<U>> futureMap = new ConcurrentHashMap<>();
+    private final Map<tv.v1x1.common.dto.core.UUID, Span> spanMap = new ConcurrentHashMap<>();
 
     public ServiceClient(final Module<?, ?, ?, ?> module, final Class<U> responseClass) {
         this.module = module;
+        this.executorService = module.getInjector().getInstance(CurrentTraceContext.class).executorService(Executors.newSingleThreadExecutor());
         this.queueName = "ServiceResponse|" + module.getName() + "|" + getClass().getCanonicalName() + "|" + UUID.randomUUID().toString();
         final MessageQueue messageQueue = module.getMessageQueueManager().forName(queueName);
         executorService.submit(() -> {
@@ -42,6 +47,9 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
                         LOG.warn("Invalid class seen on response queue: {} expected: {}", m.getClass().getCanonicalName(), responseClass.getCanonicalName());
                         continue;
                     }
+                    final Span span = spanMap.remove(((Response) m).getRequestMessageId());
+                    if(span != null)
+                        span.finish();
                     if(m instanceof ExceptionResponse) {
                         final ExceptionResponse exceptionResponse = (ExceptionResponse) m;
                         final ServiceFuture<U> future = futureMap.remove(exceptionResponse.getRequestMessageId());
@@ -67,6 +75,15 @@ public abstract class ServiceClient<T extends Request, U extends Response<T>> {
     protected Future<U> send(final T request) {
         final ServiceFuture<U> future = new ServiceFuture<>();
         futureMap.put(request.getMessageId(), future);
+        final Tracer tracer = module.getInjector().getInstance(Tracer.class);
+        final Span currentSpan = tracer.currentSpan();
+        if(currentSpan != null) {
+            final Span span = tracer.newChild(currentSpan.context())
+                    .name(getClass().getCanonicalName())
+                    .kind(Span.Kind.CLIENT);
+            spanMap.put(request.getMessageId(), span);
+            span.start();
+        }
         module.send("Service|" + getServiceName(), request);
         return future;
     }
