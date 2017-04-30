@@ -17,18 +17,15 @@ public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalC
     private final ExecutorService executorService;
 
     protected ThreadedModule() {
-        executorService = getInjector().getInstance(CurrentTraceContext.class)
-                .executorService(new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100)));
+        executorService = new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
     }
 
     protected ThreadedModule(final int count) {
-        executorService = getInjector().getInstance(CurrentTraceContext.class)
-                .executorService(new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100)));
+        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
     }
 
     protected ThreadedModule(final int count, final int queueDepth) {
-        executorService = getInjector().getInstance(CurrentTraceContext.class)
-                .executorService(new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth)));
+        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth));
     }
 
     private void processMessageWrapper(final Message message) {
@@ -45,7 +42,7 @@ public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalC
     @Override
     protected void handle(final Message message) {
         final Map<String, String> contextMap = MDC.getCopyOfContextMap();
-        executorService.submit(() -> {
+        executorService.submit(getInjector().getInstance(CurrentTraceContext.class).wrap(() -> {
             final Map<String, String> oldContextMap = MDC.getCopyOfContextMap();
             MDC.setContextMap(contextMap);
             try {
@@ -53,7 +50,7 @@ public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalC
             } finally {
                 MDC.setContextMap(oldContextMap);
             }
-        });
+        }));
     }
 
     @Override
