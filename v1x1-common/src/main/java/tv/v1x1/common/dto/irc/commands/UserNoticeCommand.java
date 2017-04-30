@@ -17,11 +17,13 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
     }
 
     public enum MessageId {
-        RESUB;
+        SUB, RESUB, CHARITY;
 
         public IRC.UserNoticeCommand.MessageId toProto() {
             switch(this) {
                 case RESUB: return IRC.UserNoticeCommand.MessageId.RESUB;
+                case SUB: return IRC.UserNoticeCommand.MessageId.SUB;
+                case CHARITY: return IRC.UserNoticeCommand.MessageId.CHARITY;
                 default: throw new IllegalStateException("Unknown MessageId: " + this);
             }
         }
@@ -34,6 +36,8 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
     private int months;
     private String systemMessage;
     private String login;
+    private String planLevel;
+    private String planName;
 
     public UserNoticeCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel, final String message) {
         super(rawLine, tags, source, IrcCommand.USERNOTICE, rawArgs, args);
@@ -47,6 +51,10 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
             systemMessage = tags.get("system-msg");
         if(tags.containsKey("login") && !tags.get("login").isEmpty())
             login = tags.get("login");
+        if(tags.containsKey("msg-param-sub-plan") && !tags.get("msg-param-sub-plan").isEmpty())
+            planLevel = tags.get("msg-param-sub-plan");
+        if(tags.containsKey("msg-param-sub-plan-name") && !tags.get("msg-param-sub-plan-name").isEmpty())
+            planName = tags.get("msg-param-sub-plan-name");
     }
 
     public String getChannel() {
@@ -73,6 +81,14 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
         return login;
     }
 
+    public String getPlanLevel() {
+        return planLevel;
+    }
+
+    public String getPlanName() {
+        return planName;
+    }
+
     @Override
     protected IRC.IrcStanza.Builder toProtoBuilder() {
         return super.toProtoBuilder()
@@ -91,6 +107,10 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
             builder.setSystemMessage(systemMessage);
         if(login != null)
             builder.setLogin(login);
+        if(planLevel != null)
+            builder.setPlanLevel(planLevel);
+        if(planName != null)
+            builder.setPlanName(planName);
         builder.setMessageTaggedStanza(toProtoMessageTagged());
         return builder.build();
     }

@@ -291,6 +291,8 @@ message UserNoticeCommand {
     enum MessageId {
         UNKNOWN = 0;
         RESUB = 1;
+        SUB = 2;
+        CHARITY = 3;
     }
 
     required string channel = 1;
@@ -302,6 +304,9 @@ message UserNoticeCommand {
     optional string login = 6;
 
     required MessageTaggedIrcStanza message_tagged_stanza = 7;
+
+    optional string plan_level = 8;
+    optional string plan_name = 9;
 }
 
 message UserStateCommand {

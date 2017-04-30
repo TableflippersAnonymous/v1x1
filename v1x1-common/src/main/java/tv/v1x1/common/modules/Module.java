@@ -58,6 +58,7 @@ import tv.v1x1.common.dto.core.GlobalUser;
 import tv.v1x1.common.dto.core.ModuleInstance;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.TenantConfigurationDefinition;
+import tv.v1x1.common.dto.core.TwitchChannel;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.ThirdPartyCredential;
 import tv.v1x1.common.dto.db.TwitchOauthToken;
@@ -478,6 +479,21 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         if(twitchOauthToken == null)
             return null;
         return twitchOauthToken.getOauthToken();
+    }
+
+    public boolean isEnabled(final Channel channel) {
+        final ChannelConfiguration chanConfig = getChannelConfiguration(channel);
+        if(chanConfig instanceof BasicChannelConfiguration) {
+            final BasicChannelConfiguration basicChanConfig = (BasicChannelConfiguration) chanConfig;
+            if(basicChanConfig.isOverridden())
+                return basicChanConfig.isEnabled();
+        }
+        final TenantConfiguration config = getTenantConfiguration(channel.getTenant());
+        if(config instanceof BasicTenantConfiguration) {
+            final BasicTenantConfiguration basicConfig = (BasicTenantConfiguration) config;
+            return basicConfig.isEnabled();
+        }
+        return true;
     }
 
     /* ******************************* PRIVATE METHODS ******************************* */
