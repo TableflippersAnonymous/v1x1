@@ -1,6 +1,8 @@
 package tv.v1x1.common.guice;
 
 import brave.Tracer;
+import brave.Tracing;
+import brave.propagation.CurrentTraceContext;
 import com.datastax.driver.core.AuthProvider;
 import com.datastax.driver.core.Cluster;
 import com.datastax.driver.core.CodecRegistry;
@@ -291,10 +293,21 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
     }
 
     @Provides @Singleton
-    public Tracer getTracer(final Reporter<Span> reporter) {
-        return Tracer.newBuilder()
+    public CurrentTraceContext getCurrentTraceContext() {
+        return new CurrentTraceContext.Default();
+    }
+
+    @Provides @Singleton
+    public Tracing getTracing(final Reporter<Span> reporter, final CurrentTraceContext currentTraceContext) {
+        return Tracing.newBuilder()
                 .localServiceName("v1x1-" + module.getName())
                 .reporter(reporter)
+                .currentTraceContext(currentTraceContext)
                 .build();
+    }
+
+    @Provides @Singleton
+    public Tracer getTracer(final Tracing tracing) {
+        return tracing.tracer();
     }
 }
