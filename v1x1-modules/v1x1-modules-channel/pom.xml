@@ -23,6 +23,7 @@
       <module>v1x1-modules-channel-caster</module>
       <module>v1x1-modules-channel-factoids</module>
       <module>v1x1-modules-channel-uptime</module>
+      <module>v1x1-modules-channel-event_messages</module>
   </modules>
 
   <dependencies>

@@ -19747,6 +19747,34 @@ public final class IRC {
      * <code>required .tv.v1x1.common.dto.proto.core.MessageTaggedIrcStanza message_tagged_stanza = 7;</code>
      */
     tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanzaOrBuilder getMessageTaggedStanzaOrBuilder();
+
+    /**
+     * <code>optional string plan_level = 8;</code>
+     */
+    boolean hasPlanLevel();
+    /**
+     * <code>optional string plan_level = 8;</code>
+     */
+    java.lang.String getPlanLevel();
+    /**
+     * <code>optional string plan_level = 8;</code>
+     */
+    com.google.protobuf.ByteString
+        getPlanLevelBytes();
+
+    /**
+     * <code>optional string plan_name = 9;</code>
+     */
+    boolean hasPlanName();
+    /**
+     * <code>optional string plan_name = 9;</code>
+     */
+    java.lang.String getPlanName();
+    /**
+     * <code>optional string plan_name = 9;</code>
+     */
+    com.google.protobuf.ByteString
+        getPlanNameBytes();
   }
   /**
    * Protobuf type {@code tv.v1x1.common.dto.proto.core.UserNoticeCommand}
@@ -19766,6 +19794,8 @@ public final class IRC {
       months_ = 0;
       systemMessage_ = "";
       login_ = "";
+      planLevel_ = "";
+      planName_ = "";
     }
 
     @java.lang.Override
@@ -19849,6 +19879,18 @@ public final class IRC {
               bitField0_ |= 0x00000040;
               break;
             }
+            case 66: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000080;
+              planLevel_ = bs;
+              break;
+            }
+            case 74: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000100;
+              planName_ = bs;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -19886,6 +19928,14 @@ public final class IRC {
        * <code>RESUB = 1;</code>
        */
       RESUB(1),
+      /**
+       * <code>SUB = 2;</code>
+       */
+      SUB(2),
+      /**
+       * <code>CHARITY = 3;</code>
+       */
+      CHARITY(3),
       ;
 
       /**
@@ -19896,6 +19946,14 @@ public final class IRC {
        * <code>RESUB = 1;</code>
        */
       public static final int RESUB_VALUE = 1;
+      /**
+       * <code>SUB = 2;</code>
+       */
+      public static final int SUB_VALUE = 2;
+      /**
+       * <code>CHARITY = 3;</code>
+       */
+      public static final int CHARITY_VALUE = 3;
 
 
       public final int getNumber() {
@@ -19914,6 +19972,8 @@ public final class IRC {
         switch (value) {
           case 0: return UNKNOWN;
           case 1: return RESUB;
+          case 2: return SUB;
+          case 3: return CHARITY;
           default: return null;
         }
       }
@@ -20184,6 +20244,90 @@ public final class IRC {
       return messageTaggedStanza_ == null ? tv.v1x1.common.dto.proto.core.IRC.MessageTaggedIrcStanza.getDefaultInstance() : messageTaggedStanza_;
     }
 
+    public static final int PLAN_LEVEL_FIELD_NUMBER = 8;
+    private volatile java.lang.Object planLevel_;
+    /**
+     * <code>optional string plan_level = 8;</code>
+     */
+    public boolean hasPlanLevel() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional string plan_level = 8;</code>
+     */
+    public java.lang.String getPlanLevel() {
+      java.lang.Object ref = planLevel_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          planLevel_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string plan_level = 8;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPlanLevelBytes() {
+      java.lang.Object ref = planLevel_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        planLevel_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PLAN_NAME_FIELD_NUMBER = 9;
+    private volatile java.lang.Object planName_;
+    /**
+     * <code>optional string plan_name = 9;</code>
+     */
+    public boolean hasPlanName() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>optional string plan_name = 9;</code>
+     */
+    public java.lang.String getPlanName() {
+      java.lang.Object ref = planName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          planName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string plan_name = 9;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPlanNameBytes() {
+      java.lang.Object ref = planName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        planName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -20233,6 +20377,12 @@ public final class IRC {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeMessage(7, getMessageTaggedStanza());
       }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 8, planLevel_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 9, planName_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -20264,6 +20414,12 @@ public final class IRC {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(7, getMessageTaggedStanza());
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(8, planLevel_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(9, planName_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -20316,6 +20472,16 @@ public final class IRC {
         result = result && getMessageTaggedStanza()
             .equals(other.getMessageTaggedStanza());
       }
+      result = result && (hasPlanLevel() == other.hasPlanLevel());
+      if (hasPlanLevel()) {
+        result = result && getPlanLevel()
+            .equals(other.getPlanLevel());
+      }
+      result = result && (hasPlanName() == other.hasPlanName());
+      if (hasPlanName()) {
+        result = result && getPlanName()
+            .equals(other.getPlanName());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -20354,6 +20520,14 @@ public final class IRC {
       if (hasMessageTaggedStanza()) {
         hash = (37 * hash) + MESSAGE_TAGGED_STANZA_FIELD_NUMBER;
         hash = (53 * hash) + getMessageTaggedStanza().hashCode();
+      }
+      if (hasPlanLevel()) {
+        hash = (37 * hash) + PLAN_LEVEL_FIELD_NUMBER;
+        hash = (53 * hash) + getPlanLevel().hashCode();
+      }
+      if (hasPlanName()) {
+        hash = (37 * hash) + PLAN_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getPlanName().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -20492,6 +20666,10 @@ public final class IRC {
           messageTaggedStanzaBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000040);
+        planLevel_ = "";
+        bitField0_ = (bitField0_ & ~0x00000080);
+        planName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
 
@@ -20548,6 +20726,14 @@ public final class IRC {
         } else {
           result.messageTaggedStanza_ = messageTaggedStanzaBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.planLevel_ = planLevel_;
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.planName_ = planName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -20618,6 +20804,16 @@ public final class IRC {
         }
         if (other.hasMessageTaggedStanza()) {
           mergeMessageTaggedStanza(other.getMessageTaggedStanza());
+        }
+        if (other.hasPlanLevel()) {
+          bitField0_ |= 0x00000080;
+          planLevel_ = other.planLevel_;
+          onChanged();
+        }
+        if (other.hasPlanName()) {
+          bitField0_ |= 0x00000100;
+          planName_ = other.planName_;
+          onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -21147,6 +21343,158 @@ public final class IRC {
           messageTaggedStanza_ = null;
         }
         return messageTaggedStanzaBuilder_;
+      }
+
+      private java.lang.Object planLevel_ = "";
+      /**
+       * <code>optional string plan_level = 8;</code>
+       */
+      public boolean hasPlanLevel() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional string plan_level = 8;</code>
+       */
+      public java.lang.String getPlanLevel() {
+        java.lang.Object ref = planLevel_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            planLevel_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string plan_level = 8;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPlanLevelBytes() {
+        java.lang.Object ref = planLevel_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          planLevel_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string plan_level = 8;</code>
+       */
+      public Builder setPlanLevel(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        planLevel_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string plan_level = 8;</code>
+       */
+      public Builder clearPlanLevel() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        planLevel_ = getDefaultInstance().getPlanLevel();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string plan_level = 8;</code>
+       */
+      public Builder setPlanLevelBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000080;
+        planLevel_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object planName_ = "";
+      /**
+       * <code>optional string plan_name = 9;</code>
+       */
+      public boolean hasPlanName() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      /**
+       * <code>optional string plan_name = 9;</code>
+       */
+      public java.lang.String getPlanName() {
+        java.lang.Object ref = planName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            planName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string plan_name = 9;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPlanNameBytes() {
+        java.lang.Object ref = planName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          planName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string plan_name = 9;</code>
+       */
+      public Builder setPlanName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
+        planName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string plan_name = 9;</code>
+       */
+      public Builder clearPlanName() {
+        bitField0_ = (bitField0_ & ~0x00000100);
+        planName_ = getDefaultInstance().getPlanName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string plan_name = 9;</code>
+       */
+      public Builder setPlanNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
+        planName_ = value;
+        onChanged();
+        return this;
       }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
@@ -23460,30 +23808,32 @@ public final class IRC {
       "ember\032(\n\006Member\022\020\n\010nickname\030\001 \002(\t\022\014\n\004isO" +
       "p\030\002 \002(\0102j\n\004data\022(.tv.v1x1.common.dto.pro" +
       "to.core.IrcStanza\030q \001(\01322.tv.v1x1.common" +
-      ".dto.proto.core.RplNameReplyCommand\"\241\003\n\021" +
+      ".dto.proto.core.RplNameReplyCommand\"\336\003\n\021" +
       "UserNoticeCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007me" +
       "ssage\030\002 \002(\t\022N\n\nmessage_id\030\003 \001(\0162:.tv.v1x",
       "1.common.dto.proto.core.UserNoticeComman" +
       "d.MessageId\022\016\n\006months\030\004 \001(\005\022\026\n\016system_me" +
       "ssage\030\005 \001(\t\022\r\n\005login\030\006 \001(\t\022T\n\025message_ta" +
       "gged_stanza\030\007 \002(\01325.tv.v1x1.common.dto.p" +
-      "roto.core.MessageTaggedIrcStanza\"#\n\tMess" +
-      "ageId\022\013\n\007UNKNOWN\020\000\022\t\n\005RESUB\020\0012h\n\004data\022(." +
-      "tv.v1x1.common.dto.proto.core.IrcStanza\030" +
-      "r \001(\01320.tv.v1x1.common.dto.proto.core.Us" +
-      "erNoticeCommand\"\330\001\n\020UserStateCommand\022\017\n\007" +
-      "channel\030\001 \002(\t\022J\n\020emote_set_stanza\030\002 \002(\0132",
-      "0.tv.v1x1.common.dto.proto.core.EmoteSet" +
-      "IrcStanza2g\n\004data\022(.tv.v1x1.common.dto.p" +
-      "roto.core.IrcStanza\030s \001(\0132/.tv.v1x1.comm" +
-      "on.dto.proto.core.UserStateCommand\"\225\002\n\016W" +
-      "hisperCommand\022\016\n\006target\030\001 \002(\t\022\017\n\007message" +
-      "\030\002 \002(\t\022\021\n\tthread_id\030\003 \001(\t\022\022\n\nmessage_id\030" +
-      "\004 \001(\004\022T\n\025message_tagged_stanza\030\005 \002(\01325.t" +
-      "v.v1x1.common.dto.proto.core.MessageTagg" +
-      "edIrcStanza2e\n\004data\022(.tv.v1x1.common.dto" +
-      ".proto.core.IrcStanza\030t \001(\0132-.tv.v1x1.co",
-      "mmon.dto.proto.core.WhisperCommand"
+      "roto.core.MessageTaggedIrcStanza\022\022\n\nplan" +
+      "_level\030\010 \001(\t\022\021\n\tplan_name\030\t \001(\t\"9\n\tMessa" +
+      "geId\022\013\n\007UNKNOWN\020\000\022\t\n\005RESUB\020\001\022\007\n\003SUB\020\002\022\013\n" +
+      "\007CHARITY\020\0032h\n\004data\022(.tv.v1x1.common.dto." +
+      "proto.core.IrcStanza\030r \001(\01320.tv.v1x1.com" +
+      "mon.dto.proto.core.UserNoticeCommand\"\330\001\n",
+      "\020UserStateCommand\022\017\n\007channel\030\001 \002(\t\022J\n\020em" +
+      "ote_set_stanza\030\002 \002(\01320.tv.v1x1.common.dt" +
+      "o.proto.core.EmoteSetIrcStanza2g\n\004data\022(" +
+      ".tv.v1x1.common.dto.proto.core.IrcStanza" +
+      "\030s \001(\0132/.tv.v1x1.common.dto.proto.core.U" +
+      "serStateCommand\"\225\002\n\016WhisperCommand\022\016\n\006ta" +
+      "rget\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022\021\n\tthread_id" +
+      "\030\003 \001(\t\022\022\n\nmessage_id\030\004 \001(\004\022T\n\025message_ta" +
+      "gged_stanza\030\005 \002(\01325.tv.v1x1.common.dto.p" +
+      "roto.core.MessageTaggedIrcStanza2e\n\004data",
+      "\022(.tv.v1x1.common.dto.proto.core.IrcStan" +
+      "za\030t \001(\0132-.tv.v1x1.common.dto.proto.core" +
+      ".WhisperCommand"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -23647,7 +23997,7 @@ public final class IRC {
     internal_static_tv_v1x1_common_dto_proto_core_UserNoticeCommand_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_core_UserNoticeCommand_descriptor,
-        new java.lang.String[] { "Channel", "Message", "MessageId", "Months", "SystemMessage", "Login", "MessageTaggedStanza", });
+        new java.lang.String[] { "Channel", "Message", "MessageId", "Months", "SystemMessage", "Login", "MessageTaggedStanza", "PlanLevel", "PlanName", });
     internal_static_tv_v1x1_common_dto_proto_core_UserStateCommand_descriptor =
       getDescriptor().getMessageTypes().get(21);
     internal_static_tv_v1x1_common_dto_proto_core_UserStateCommand_fieldAccessorTable = new
