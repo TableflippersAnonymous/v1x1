@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+getBoolAnswer() {
+  while true; do
+   read -p "$@ [y/n] " -n1
+   printf "\n" >&2
+   REPLY=$(echo $REPLY|tr [A-Z] [a-z])
+   if [ $REPLY == "y" ] || [ $REPLY == "n" ]; then
+      echo $REPLY
+      return
+    fi
+  done
+}
+
+function yaml2json() {
+  ruby -ryaml -rjson -e 'puts JSON.pretty_generate(YAML.load(ARGF))' $*
+}
+
+function start() {
+  echo "Starting services..."
+  docker-compose up -d $@
+}
+
+function stop() {
+  echo "Stopping services..."
+  docker-compose stop $@
+  docker-compose rm -f $@
+}
+
+function clean() {
+  for module in $@; do
+    targets="v1x1-$module "
+  done
+  docker rmi $targets
+}
+
+function cleanAll() {
+  docker-compose down
+  clean $MODULES
+}
+
+function buildOne() {
+  local target=v1x1-modules/v1x1-modules-$2/v1x1-modules-$2-$1
+  V1X1_MAKE_TARGET="-pl v1x1-common,$target" V1X1_MAKE_ENV=dev make mvn-clean mvn-package
+}
+
+function buildAll() {
+  V1X1_MAKE_ENV=dev make mvn-clean mvn-package
+}
+
+function usage() {
+  echo "Usage: $0 <help|build|start|stop|web> [args]"
+}
+
+function help() {
+  cat <<EOM
+$(usage)
+
+Control the v1x1 dev environment
+
+    start [service]         - start a service. Default: all of them
+    stop [service]          - stop a service. Default: all of them
+    build [service [type]]  - build a service; type is core/channel/global. Default: channel
+    web <subcmd>            - not yet implemented
+EOM
+}
+
+function checkCoreServices() {
+  if [ $(docker-compose ps|egrep 'v1x1_(cass|zoo|redis)_1'|wc -l) = 3 ]; then
+    echo "online"
+  else
+    echo "offline"
+  fi
+}
+
+function webStart() {
+  echo Noop
+}
+
+function webStop() {
+  echo Noop
+}
+
+function cmdBuild() {
+  if [ $# -eq 0 ]; then
+    if [ "$(getBoolAnswer "Stop and rebuild the entire dev environment?")" == "n" ]; then
+      echo "Aborting..."
+      exit 2
+    fi
+    cleanAll
+    buildAll
+    if [ "$(getBoolAnswer "Start new dev environment?")" == "y" ]; then
+      cmdStart
+    else
+      echo "Okay! Bye!"
+    fi
+  else
+    if [ $# -eq 1 ]; then
+      TYPE=channel
+    else
+      TYPE=$2
+    fi
+    stop $1
+    clean v1x1-common $1
+    buildOne $1 $TYPE
+    start $1
+  fi
+}
+
+function cmdStart() {
+  if [ $# -eq 0 ]; then
+    if [ "$(checkCoreServices)" == "offline" ]; then
+      start cass redis zoo
+      echo "Waiting for core services to start..."
+      sleep 45
+    fi
+    echo "Core services online..."
+  fi
+  start $@
+}
+
+function cmdStop() {
+  if [ $# -eq 0 ]; then
+    if [ "$(getBoolAnswer "Stop the entire dev environment?")" == "n" ]; then
+      echo "Aborting..."
+      exit 2
+    fi
+  fi
+  stop $@
+}
+
+if [ $# -lt 1 ]; then
+  usage
+  exit 1
+fi
+
+echo "Finding services..."
+while read module; do
+  MODULES="$MODULES $module"
+done < <(yaml2json docker-compose.yml|jq -r '.services|keys|.[]' )
+
+CMD=$(echo -n $1|tr [A-Z] [a-z])
+shift 1
+if [ $# -eq 0 ]; then
+  ARGS=$MODULES
+else
+  ARGS=$@
+fi
+case $CMD in
+  start)
+    cmdStart $@
+    ;;
+  stop)
+    cmdStop $@
+    ;;
+  status)
+    docker-compose ps
+    ;;
+  build)
+    cmdBuild $@
+    ;;
+  web)
+    echo "Not yet supported"
+    ;;
+  help)
+    help
+    ;;
+  *)
+    usage
+    ;;
+esac
+exit 0
