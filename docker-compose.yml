@@ -2,15 +2,15 @@ version: '2'
 services:
   redis:
     image: redis:alpine
-  zoo1:
+  zoo:
     image: zookeeper@sha256:50cfe2c77fe203ab528ffb808f1a8b505db73b1f85aedbc52e4fdde69e2ebfe8
     environment:
       ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=zoo1:2888:3888
+      ZOO_SERVERS: server.1=zoo:2888:3888
     volumes:
-      - ./docker-data/zoo1/data:/data
-      - ./docker-data/zoo1/datalog:/datalog
-  cass1:
+      - ./docker-data/zoo/data:/data
+      - ./docker-data/zoo/datalog:/datalog
+  cass:
     image: cassandra:3.9
     environment:
       CASSANDRA_CLUSTER_NAME: v1x1_dev
@@ -20,44 +20,44 @@ services:
     image: v1x1-chat_router:latest
     depends_on:
       - redis
-      - zoo1
+      - zoo
   event_router:
     image: v1x1-event_router:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
   tmi:
     image: v1x1-tmi:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
   scheduler:
     image: v1x1-scheduler:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
   hello_world:
     image: v1x1-hello_world:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
   link_purger:
     image: v1x1-link_purger:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
       - chat_router
   timed_messages:
     image: v1x1-timed_messages:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
       - chat_router
       - event_router
       - scheduler
@@ -65,15 +65,15 @@ services:
     image: v1x1-caster:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
       - chat_router
   ops_tool:
     image: v1x1-ops_tool:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
       - chat_router
   api:
     image: v1x1-api:latest
@@ -81,23 +81,23 @@ services:
       - "8080:8080"
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
   quotes:
     image: v1x1-quotes:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
   factoids:
     image: v1x1-factoids:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
   uptime:
     image: v1x1-uptime:latest
     depends_on:
       - redis
-      - zoo1
-      - cass1
+      - zoo
+      - cass
