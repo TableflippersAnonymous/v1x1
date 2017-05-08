@@ -8,9 +8,9 @@ cassandra:
   cluster_name: "v1x1_dev"
   keyspace: "v1x1"
   contact_points:
-  - "cass1"
+  - "cass"
   authenticated: false
-zookeeper_connection_string: zoo1:2181
+zookeeper_connection_string: zoo:2181
 zipkin_config:
   enabled: false
   uri: ""
