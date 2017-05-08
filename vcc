@@ -48,7 +48,7 @@ function buildAll() {
 }
 
 function usage() {
-  echo "Usage: $0 <help|build|start|stop|web> [args]"
+  echo "Usage: $0 <help|subcmd> [args]"
 }
 
 function help() {
@@ -58,9 +58,11 @@ $(usage)
 Control the v1x1 dev environment
 
     start [service]         - start a service. Default: all of them
+    status                  - alias to docker-compose ps
     stop [service]          - stop a service. Default: all of them
     build [service [type]]  - build a service; type is core/channel/global. Default: channel
     web <subcmd>            - not yet implemented
+    help                    - new command, what dis
 EOM
 }
 
