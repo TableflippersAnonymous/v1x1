@@ -25,14 +25,24 @@
 
   <repositories>
     <repository>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-      <id>central</id>
-      <name>Maven Repository Switchboard</name>
-      <url>http://repo1.maven.org/maven2</url>
+      <id>tblflp</id>
+      <name>Tableflip Combined</name>
+      <url>https://bin.tblflp.zone/repository/maven-combined/</url>
     </repository>
   </repositories>
+
+  <distributionManagement>
+    <repository>
+      <id>tblflp-releases</id>
+      <name>Tableflip Releases</name>
+      <url>https://bin.tblflp.zone/repository/maven-tblflp-releases/</url>
+    </repository>
+    <snapshotRepository>
+      <id>tblflp-snapshots</id>
+      <name>Tableflip Snapshots</name>
+      <url>https://bin.tblflp.zone/repository/maven-tblflp-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <dependencyManagement>
     <dependencies>
