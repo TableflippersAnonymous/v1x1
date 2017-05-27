@@ -25,7 +25,7 @@ public class ApiGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        requestStaticInjection(PubsubResource.class);
+        //requestStaticInjection(PubsubResource.class);
     }
 
     @Provides
