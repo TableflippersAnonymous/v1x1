@@ -35,7 +35,7 @@ public class ApiApplication extends Application<ApiConfiguration> {
                 .setConfigClass(ApiConfiguration.class)
                 .build();
         bootstrap.addBundle(guiceBundle);
-        bootstrap.addBundle(new WebsocketBundle(PubsubResource.class));
+        //bootstrap.addBundle(new WebsocketBundle(PubsubResource.class));
     }
 
     @Override
