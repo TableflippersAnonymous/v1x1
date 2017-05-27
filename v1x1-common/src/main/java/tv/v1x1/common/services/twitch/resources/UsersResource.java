@@ -63,7 +63,7 @@ public class UsersResource {
      */
     public User getUserByUsername(final String username) {
         final List<User> userList = getUsersByUsernames(ImmutableList.of(username)).getUsers();
-        if(userList.size() == 0)
+        if(userList == null || userList.size() == 0)
             return null;
         return userList.get(0);
     }
