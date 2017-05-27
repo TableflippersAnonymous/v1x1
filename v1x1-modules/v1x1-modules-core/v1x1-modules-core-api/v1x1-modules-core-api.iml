@@ -97,6 +97,21 @@
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.7.0" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.7.6" level="project" />
     <orderEntry type="library" name="Maven: org.bouncycastle:bcprov-jdk15on:1.55" level="project" />
+    <orderEntry type="library" name="Maven: com.liveperson:dropwizard-websockets:1.1.0" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:javax-websocket-server-impl:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-annotations:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-plus:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-jndi:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.1" level="project" />
+    <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:5.1" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:javax-websocket-client-impl:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-client:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-client:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-server:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-common:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-api:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: org.eclipse.jetty.websocket:websocket-servlet:9.4.2.v20170220" level="project" />
+    <orderEntry type="library" name="Maven: javax.websocket:javax.websocket-api:1.0" level="project" />
     <orderEntry type="module" module-name="v1x1-common" />
     <orderEntry type="library" name="Maven: javax.validation:validation-api:1.1.0.Final" level="project" />
     <orderEntry type="library" name="Maven: com.google.protobuf:protobuf-java:3.1.0" level="project" />
@@ -131,8 +146,6 @@
     <orderEntry type="library" name="Maven: com.github.jnr:jnr-ffi:2.0.7" level="project" />
     <orderEntry type="library" name="Maven: com.github.jnr:jffi:1.2.10" level="project" />
     <orderEntry type="library" scope="RUNTIME" name="Maven: com.github.jnr:jffi:native:1.2.10" level="project" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm:5.0.3" level="project" />
-    <orderEntry type="library" name="Maven: org.ow2.asm:asm-commons:5.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-analysis:5.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-tree:5.0.3" level="project" />
     <orderEntry type="library" name="Maven: org.ow2.asm:asm-util:5.0.3" level="project" />

@@ -165,7 +165,10 @@ public class DAOTenantGroup {
     public TenantGroup addUserToGroup(final TenantGroup tenantGroup, final GlobalUser globalUser) {
         final TenantGroupMembership tenantGroupMembership = new TenantGroupMembership(tenantGroup.getTenantId(), tenantGroup.getGroupId(), globalUser.getId().getValue());
         final TenantGroupsByUser tenantGroupsByUser = getGroupsByUser(tenantGroup.getTenantId(), globalUser.getId().getValue());
-        tenantGroupsByUser.getGroups().add(tenantGroup.getGroupId());
+        final Set<UUID> groups = new HashSet<>(tenantGroupsByUser.getGroups());
+        groups.add(tenantGroup.getGroupId());
+        tenantGroupsByUser.getGroups().clear();
+        tenantGroupsByUser.getGroups().addAll(groups);
         final BatchStatement b = new BatchStatement();
         b.add(tenantGroupMembershipMapper.saveQuery(tenantGroupMembership));
         b.add(tenantGroupsByUserMapper.saveQuery(tenantGroupsByUser));

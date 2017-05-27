@@ -4,10 +4,12 @@ import com.hubspot.dropwizard.guice.GuiceBundle;
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.websockets.WebsocketBundle;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.core.api.config.ApiConfiguration;
+import tv.v1x1.modules.core.api.resources.ws.PubsubResource;
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -33,6 +35,7 @@ public class ApiApplication extends Application<ApiConfiguration> {
                 .setConfigClass(ApiConfiguration.class)
                 .build();
         bootstrap.addBundle(guiceBundle);
+        bootstrap.addBundle(new WebsocketBundle(PubsubResource.class));
     }
 
     @Override
