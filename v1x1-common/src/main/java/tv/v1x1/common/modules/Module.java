@@ -148,7 +148,6 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
                 LOG.info("Waiting {}ms before starting up...", settings.getWaitStartMs());
                 Thread.sleep(settings.getWaitStartMs());
             }
-            injector = Guice.createInjector(new GuiceModule<>(settings, this));
             preinit();
             initializeInternal();
             initialize();
@@ -195,8 +194,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* ******************************* TEAR-DOWN ******************************* */
     private void cleanup() {
-        injector.getInstance(Session.class).close();
-        injector.getInstance(Cluster.class).close();
+        getInjector().getInstance(Session.class).close();
+        getInjector().getInstance(Cluster.class).close();
         for(final Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
             try {
                 entry.getValue().shutdown();
@@ -215,7 +214,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
 
     /* ******************************* SIMPLE GETTERS ******************************* */
     public MessageQueueManager getMessageQueueManager() {
-        return injector.getInstance(MessageQueueManager.class);
+        return getInjector().getInstance(MessageQueueManager.class);
     }
 
     protected T getSettings() {
@@ -223,35 +222,35 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     public ConfigurationProvider<U> getGlobalConfigProvider() {
-        return injector.getInstance(ConfigurationProvider.class);
+        return getInjector().getInstance(ConfigurationProvider.class);
     }
 
     public TenantConfigurationProvider<V> getTenantConfigProvider() {
-        return injector.getInstance(TenantConfigurationProvider.class);
+        return getInjector().getInstance(TenantConfigurationProvider.class);
     }
 
     public ChannelConfigurationProvider<W> getChannelConfigProvider() {
-        return injector.getInstance(ChannelConfigurationProvider.class);
+        return getInjector().getInstance(ChannelConfigurationProvider.class);
     }
 
     protected KeyValueStore getTemporaryKeyValueStore() {
-        return injector.getInstance(Key.get(KeyValueStore.class, TemporaryModule.class));
+        return getInjector().getInstance(Key.get(KeyValueStore.class, TemporaryModule.class));
     }
 
     public KeyValueStore getTemporaryGlobalKeyValueStore() {
-        return injector.getInstance(Key.get(KeyValueStore.class, TemporaryGlobal.class));
+        return getInjector().getInstance(Key.get(KeyValueStore.class, TemporaryGlobal.class));
     }
 
     protected KeyValueStore getPersistentKeyValueStore() {
-        return injector.getInstance(Key.get(KeyValueStore.class, PersistentModule.class));
+        return getInjector().getInstance(Key.get(KeyValueStore.class, PersistentModule.class));
     }
 
     protected KeyValueStore getPersistentGlobalKeyValueStore() {
-        return injector.getInstance(Key.get(KeyValueStore.class, PersistentGlobal.class));
+        return getInjector().getInstance(Key.get(KeyValueStore.class, PersistentGlobal.class));
     }
 
     public ModuleRegistry getModuleRegistry() {
-        return injector.getInstance(ModuleRegistry.class);
+        return getInjector().getInstance(ModuleRegistry.class);
     }
 
     protected UUID getInstanceId() {
@@ -259,31 +258,31 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     public MappingManager getMappingManager() {
-        return injector.getInstance(MappingManager.class);
+        return getInjector().getInstance(MappingManager.class);
     }
 
     public DAOManager getDaoManager() {
-        return injector.getInstance(DAOManager.class);
+        return getInjector().getInstance(DAOManager.class);
     }
 
     protected Deduplicator getDeduplicator() {
-        return injector.getInstance(Deduplicator.class);
+        return getInjector().getInstance(Deduplicator.class);
     }
 
     public CuratorFramework getCuratorFramework() {
-        return injector.getInstance(CuratorFramework.class);
+        return getInjector().getInstance(CuratorFramework.class);
     }
 
     protected I18n getI18n() {
-        return injector.getInstance(I18n.class);
+        return getInjector().getInstance(I18n.class);
     }
 
     public RedissonClient getRedisson() {
-        return injector.getInstance(RedissonClient.class);
+        return getInjector().getInstance(RedissonClient.class);
     }
 
     public StateManager getStateManager() {
-        return injector.getInstance(StateManager.class);
+        return getInjector().getInstance(StateManager.class);
     }
 
     protected String getConfigFile() {
@@ -291,14 +290,16 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     public TwitchApi getTwitchApi() {
-        return injector.getInstance(TwitchApi.class);
+        return getInjector().getInstance(TwitchApi.class);
     }
 
     public DisplayNameService getDisplayNameService() {
-        return injector.getInstance(DisplayNameService.class);
+        return getInjector().getInstance(DisplayNameService.class);
     }
 
     public Injector getInjector() {
+        if(injector == null)
+            injector = Guice.createInjector(new GuiceModule<>(settings, this));
         return injector;
     }
 
