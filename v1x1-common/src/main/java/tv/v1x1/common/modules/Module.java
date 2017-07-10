@@ -135,12 +135,8 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     private void initializeInternal() {
-        injector = Guice.createInjector(new GuiceModule<>(settings, this));
-
         getModuleRegistry();
-
         registerGlobalMessages();
-
         updateConfigurationDefinitions();
     }
 
@@ -152,6 +148,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
                 LOG.info("Waiting {}ms before starting up...", settings.getWaitStartMs());
                 Thread.sleep(settings.getWaitStartMs());
             }
+            injector = Guice.createInjector(new GuiceModule<>(settings, this));
             preinit();
             initializeInternal();
             initialize();
