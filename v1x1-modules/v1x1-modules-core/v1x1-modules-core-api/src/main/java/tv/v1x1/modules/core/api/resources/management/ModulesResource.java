@@ -7,8 +7,8 @@ import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.db.GlobalConfiguration;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
 import tv.v1x1.common.services.persistence.DAOManager;
-import tv.v1x1.modules.core.api.api.ApiList;
-import tv.v1x1.modules.core.api.api.Configuration;
+import tv.v1x1.modules.core.api.api.rest.ApiList;
+import tv.v1x1.modules.core.api.api.rest.Configuration;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.Consumes;

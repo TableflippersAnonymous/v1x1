@@ -68,6 +68,8 @@ import tv.v1x1.common.services.persistence.KeyValueStore;
 import tv.v1x1.common.services.persistence.PersistentKeyValueStoreImpl;
 import tv.v1x1.common.services.persistence.TemporaryKeyValueStoreImpl;
 import tv.v1x1.common.services.persistence.TenantConfigurationProvider;
+import tv.v1x1.common.services.pubsub.TopicManager;
+import tv.v1x1.common.services.pubsub.TopicManagerImpl;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.queue.MessageQueueManagerImpl;
 import tv.v1x1.common.services.state.DisplayNameService;
@@ -129,6 +131,7 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
         bind(ConfigurationProvider.class);
         bind(TenantConfigurationProvider.class);
         bind(ChannelConfigurationProvider.class);
+        bind(TopicManager.class).to(TopicManagerImpl.class);
     }
 
     @Provides

@@ -12,9 +12,9 @@ import tv.v1x1.common.dto.db.Permission;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TenantGroup;
 import tv.v1x1.common.services.persistence.DAOManager;
-import tv.v1x1.modules.core.api.api.ApiList;
-import tv.v1x1.modules.core.api.api.ApiPrimitive;
-import tv.v1x1.modules.core.api.api.Group;
+import tv.v1x1.modules.core.api.api.rest.ApiList;
+import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
+import tv.v1x1.modules.core.api.api.rest.Group;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.Consumes;

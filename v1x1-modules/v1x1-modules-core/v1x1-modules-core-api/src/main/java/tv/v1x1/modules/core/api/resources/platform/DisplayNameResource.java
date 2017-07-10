@@ -7,7 +7,7 @@ import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.dto.users.User;
-import tv.v1x1.modules.core.api.api.DisplayNameRecord;
+import tv.v1x1.modules.core.api.api.rest.DisplayNameRecord;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

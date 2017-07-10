@@ -2,11 +2,13 @@ package tv.v1x1.modules.core.api;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
 import tv.v1x1.common.services.persistence.ConfigurationCacheManager;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
+import tv.v1x1.common.services.pubsub.TopicManager;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
@@ -25,7 +27,7 @@ public class ApiGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        //requestStaticInjection(PubsubResource.class);
+        requestStaticInjection(PubsubResource.class);
     }
 
     @Provides
@@ -39,6 +41,7 @@ public class ApiGuiceModule extends AbstractModule {
     }
 
     @Provides
+    @Singleton
     public Authorizer provideAuthorizer() {
         return new Authorizer(apiModule.getDaoManager().getDaoTenantGroup(), apiModule.getDaoManager().getDaoTenant(), apiModule.getDaoManager().getDaoThirdPartyCredential(), apiModule.getDaoManager().getDaoGlobalUser());
     }
@@ -76,5 +79,10 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public TwitchDisplayNameService provideTwitchDisplayNameService() {
         return apiModule.getInjector().getInstance(TwitchDisplayNameService.class);
+    }
+
+    @Provides
+    public TopicManager provideTopicManager() {
+        return apiModule.getInjector().getInstance(TopicManager.class);
     }
 }

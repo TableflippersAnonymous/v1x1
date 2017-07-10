@@ -28,10 +28,9 @@ import tv.v1x1.common.services.persistence.ConfigurationCacheManager;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.modules.core.api.ApiModule;
-import tv.v1x1.modules.core.api.api.Configuration;
+import tv.v1x1.modules.core.api.api.rest.Configuration;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
-import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;

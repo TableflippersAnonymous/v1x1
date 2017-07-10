@@ -13,6 +13,7 @@ message Message {
         EVENT = 1;
         REQUEST = 2;
         RESPONSE = 3;
+        PUBSUB = 4;
     };
 
     message Context {

@@ -1,4 +1,4 @@
-package tv.v1x1.modules.core.api.api;
+package tv.v1x1.modules.core.api.api.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.config.ConfigType;

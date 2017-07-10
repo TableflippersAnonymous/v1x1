@@ -11,31 +11,39 @@ import java.util.UUID;
  */
 public class AuthorizationContext {
 
-    private final GlobalUser globalUser;
+    private final Authorizer.Principal principal;
     private final Set<String> permissions;
 
-    public AuthorizationContext(final GlobalUser globalUser, final Set<String> permissions) {
-        this.globalUser = globalUser;
+    public AuthorizationContext(final Authorizer.Principal principal, final Set<String> permissions) {
+        this.principal = principal;
         this.permissions = permissions;
     }
 
     public AuthorizationContext ensurePermission(final String permission) {
-        if(!permissions.contains(permission))
+        if(!hasPermission(permission))
             throw new NotAuthorizedException("Not authorized");
         return this;
+    }
+
+    public boolean hasPermission(final String permission) {
+        return permissions.contains(permission);
     }
 
     public AuthorizationContext ensurePrincipal(final String globalUserId) {
-        if(!globalUser.getId().getValue().equals(UUID.fromString(globalUserId)))
+        if(!getGlobalUser().getId().getValue().equals(UUID.fromString(globalUserId)))
             throw new NotAuthorizedException("Not authorized");
         return this;
     }
 
-    public GlobalUser getGlobalUser() {
-        return globalUser;
+    public Authorizer.Principal getPrincipal() {
+        return principal;
     }
 
     public Set<String> getPermissions() {
         return permissions;
+    }
+
+    public GlobalUser getGlobalUser() {
+        return principal.getGlobalUser();
     }
 }
