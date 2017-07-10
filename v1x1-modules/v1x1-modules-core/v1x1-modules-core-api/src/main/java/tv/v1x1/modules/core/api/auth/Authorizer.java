@@ -22,7 +22,7 @@ import tv.v1x1.common.dto.core.GlobalUser;
 import tv.v1x1.common.dto.db.Permission;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.ThirdPartyCredential;
-import tv.v1x1.modules.core.api.api.AuthTokenResponse;
+import tv.v1x1.modules.core.api.api.rest.AuthTokenResponse;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.ForbiddenException;
@@ -86,13 +86,7 @@ public class Authorizer {
     }
 
     public AuthorizationContext tenantAuthorization(final UUID tenantId, final String authorizationHeader) {
-        return getContext(authorizationHeader,
-                principal -> daoTenantGroup.getAllPermissions(
-                        daoTenant.getById(tenantId).toCore(),
-                        principal.getGlobalUser(),
-                        Platform.API,
-                        "__API__",
-                        ImmutableSet.of("__DEFAULT__", "__DEFAULT_TENANT__")));
+        return tenantContext(forAuthorization(authorizationHeader), tenantId);
     }
 
     public AuthTokenResponse getAuthorizationFromPrincipal(final Principal principal, long ttl) {
@@ -115,6 +109,16 @@ public class Authorizer {
 
     public AuthTokenResponse getAuthorizationFromPrincipal(final Principal principal) {
         return getAuthorizationFromPrincipal(principal, 3600000);
+    }
+
+    public AuthorizationContext tenantContext(final AuthorizationContext authorizationContext, final UUID tenantId) {
+        return getContext(authorizationContext.getPrincipal(),
+                principal -> daoTenantGroup.getAllPermissions(
+                        daoTenant.getById(tenantId).toCore(),
+                        principal.getGlobalUser(),
+                        Platform.API,
+                        "__API__",
+                        ImmutableSet.of("__DEFAULT__", "__DEFAULT_TENANT__")));
     }
 
 
@@ -151,12 +155,16 @@ public class Authorizer {
 
     private AuthorizationContext getContext(final String authorizationHeader, final Function<Principal, Set<Permission>> f) {
         final Principal principal = getPrincipal(authorizationHeader);
+        return getContext(principal, f);
+    }
+
+    private AuthorizationContext getContext(final Principal principal, final Function<Principal, Set<Permission>> f) {
         final Set<Permission> allPermissions = f.apply(principal);
         Set<Permission> allowedPermissions = allPermissions;
         if(principal.getRestrictions() != null) {
             allowedPermissions = Sets.intersection(allPermissions, principal.getRestrictions());
         }
-        return new AuthorizationContext(principal.getGlobalUser(), allowedPermissions.stream().map(Permission::getNode).collect(Collectors.toSet()));
+        return new AuthorizationContext(principal, allowedPermissions.stream().map(Permission::getNode).collect(Collectors.toSet()));
     }
 
     private RSAPrivateKey getPrivateKeyPem(final ThirdPartyCredential thirdPartyCredential) {

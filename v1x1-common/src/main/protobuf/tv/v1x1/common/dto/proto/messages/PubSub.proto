@@ -1,0 +1,16 @@
+syntax = "proto2";
+
+package tv.v1x1.common.dto.proto.messages;
+
+import "Message.proto";
+
+message PubSubMessage {
+    extensions 100 to max;
+
+    extend Message {
+        optional PubSubMessage data = 104;
+    }
+
+    required string topic = 1;
+    required string json = 2;
+}

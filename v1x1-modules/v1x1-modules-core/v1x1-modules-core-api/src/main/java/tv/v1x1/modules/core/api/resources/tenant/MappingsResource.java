@@ -8,9 +8,9 @@ import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TenantGroup;
 import tv.v1x1.common.services.persistence.DAOManager;
-import tv.v1x1.modules.core.api.api.ApiList;
-import tv.v1x1.modules.core.api.api.ApiPrimitive;
-import tv.v1x1.modules.core.api.api.Channel;
+import tv.v1x1.modules.core.api.api.rest.ApiList;
+import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
+import tv.v1x1.modules.core.api.api.rest.Channel;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.BadRequestException;
@@ -53,17 +53,17 @@ public class MappingsResource {
     }
 
     @GET
-    public ApiList<tv.v1x1.modules.core.api.api.ChannelPlatformMapping> listMappings(@HeaderParam("Authorization") final String authorization,
-                                                                                     @PathParam("tenant_id") final String tenantId,
-                                                                                     @PathParam("platform") final String platformString,
-                                                                                     @PathParam("channel_id") final String channelId) {
+    public ApiList<tv.v1x1.modules.core.api.api.rest.ChannelPlatformMapping> listMappings(@HeaderParam("Authorization") final String authorization,
+                                                                                          @PathParam("tenant_id") final String tenantId,
+                                                                                          @PathParam("platform") final String platformString,
+                                                                                          @PathParam("channel_id") final String channelId) {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.permissions.read");
         final Platform platform = getDtoPlatform(platformString);
         final Channel channel = getDtoChannel(tenant, platform, channelId);
         final Iterable<ChannelPlatformMapping> channelPlatformMappings = daoTenantGroup.getChannelPlatformMappings(platform, channel.getChannelId());
         return new ApiList<>(StreamSupport.stream(channelPlatformMappings.spliterator(), false)
-                .map(cpm -> new tv.v1x1.modules.core.api.api.ChannelPlatformMapping(cpm.getPlatformGroup(), cpm.getGroupId().toString()))
+                .map(cpm -> new tv.v1x1.modules.core.api.api.rest.ChannelPlatformMapping(cpm.getPlatformGroup(), cpm.getGroupId().toString()))
                 .collect(Collectors.toList()));
     }
 

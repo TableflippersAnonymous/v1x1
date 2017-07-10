@@ -358,3 +358,8 @@ CREATE TABLE factoid (
     data text,
     PRIMARY KEY (tenant_id, id)
 );
+
+/* Version 9 */
+
+CREATE TABLE permission_set_definition (
+    name text,

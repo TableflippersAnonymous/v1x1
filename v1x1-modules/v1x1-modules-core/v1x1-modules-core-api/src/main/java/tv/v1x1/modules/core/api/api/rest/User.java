@@ -1,4 +1,4 @@
-package tv.v1x1.modules.core.api.api;
+package tv.v1x1.modules.core.api.api.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.dto.db.Platform;
@@ -6,28 +6,33 @@ import tv.v1x1.common.dto.db.Platform;
 import java.util.UUID;
 
 /**
- * Created by cobi on 3/6/2017.
+ * Created by cobi on 10/26/2016.
  */
-public class DisplayNameRecord {
+public class User {
+    @JsonProperty("global_user_id")
+    private UUID globalUserId;
     @JsonProperty
     private Platform platform;
     @JsonProperty("user_id")
     private String userId;
-    @JsonProperty
-    private String username;
     @JsonProperty("display_name")
     private String displayName;
-    @JsonProperty("global_user_id")
-    private UUID globalUserId;
 
-    public DisplayNameRecord() {
+    public User() {
     }
 
-    public DisplayNameRecord(final Platform platform, final String userId, final String username, final String displayName, final UUID globalUserId) {
+    public User(final UUID globalUserId, final Platform platform, final String userId, final String displayName) {
+        this.globalUserId = globalUserId;
         this.platform = platform;
         this.userId = userId;
-        this.username = username;
         this.displayName = displayName;
+    }
+
+    public UUID getGlobalUserId() {
+        return globalUserId;
+    }
+
+    public void setGlobalUserId(final UUID globalUserId) {
         this.globalUserId = globalUserId;
     }
 
@@ -47,27 +52,11 @@ public class DisplayNameRecord {
         this.userId = userId;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(final String username) {
-        this.username = username;
-    }
-
     public String getDisplayName() {
         return displayName;
     }
 
     public void setDisplayName(final String displayName) {
         this.displayName = displayName;
-    }
-
-    public UUID getGlobalUserId() {
-        return globalUserId;
-    }
-
-    public void setGlobalUserId(final UUID globalUserId) {
-        this.globalUserId = globalUserId;
     }
 }

@@ -3,5 +3,5 @@ package tv.v1x1.common.modules.eventhandler;
 /**
  * @author Josh
  */
-public interface EventListener {
+public interface EventListener extends java.util.EventListener {
 }

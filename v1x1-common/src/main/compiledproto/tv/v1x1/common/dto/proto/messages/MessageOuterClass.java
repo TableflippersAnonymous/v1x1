@@ -221,6 +221,10 @@ public final class MessageOuterClass {
        * <code>RESPONSE = 3;</code>
        */
       RESPONSE(3),
+      /**
+       * <code>PUBSUB = 4;</code>
+       */
+      PUBSUB(4),
       ;
 
       /**
@@ -239,6 +243,10 @@ public final class MessageOuterClass {
        * <code>RESPONSE = 3;</code>
        */
       public static final int RESPONSE_VALUE = 3;
+      /**
+       * <code>PUBSUB = 4;</code>
+       */
+      public static final int PUBSUB_VALUE = 4;
 
 
       public final int getNumber() {
@@ -259,6 +267,7 @@ public final class MessageOuterClass {
           case 1: return EVENT;
           case 2: return REQUEST;
           case 3: return RESPONSE;
+          case 4: return PUBSUB;
           default: return null;
         }
       }
@@ -2464,7 +2473,7 @@ public final class MessageOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\rMessage.proto\022!tv.v1x1.common.dto.prot" +
-      "o.messages\032\014Module.proto\032\nUUID.proto\"\227\004\n" +
+      "o.messages\032\014Module.proto\032\nUUID.proto\"\243\004\n" +
       "\007Message\022D\n\004type\030\001 \002(\01626.tv.v1x1.common." +
       "dto.proto.messages.Message.MessageType\0223" +
       "\n\004from\030\002 \002(\0132%.tv.v1x1.common.dto.proto." +
@@ -2476,9 +2485,9 @@ public final class MessageOuterClass {
       "ommon.dto.proto.core.UUID\0225\n\010trace_id\030\002 " +
       "\001(\0132#.tv.v1x1.common.dto.proto.core.UUID" +
       "\022\026\n\016parent_span_id\030\003 \001(\003\022\017\n\007span_id\030\004 \001(" +
-      "\003\022\017\n\007sampled\030\005 \001(\010\"@\n\013MessageType\022\013\n\007UNK" +
+      "\003\022\017\n\007sampled\030\005 \001(\010\"L\n\013MessageType\022\013\n\007UNK" +
       "NOWN\020\000\022\t\n\005EVENT\020\001\022\013\n\007REQUEST\020\002\022\014\n\010RESPON" +
-      "SE\020\003*\010\010d\020\200\200\200\200\002"
+      "SE\020\003\022\n\n\006PUBSUB\020\004*\010\010d\020\200\200\200\200\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

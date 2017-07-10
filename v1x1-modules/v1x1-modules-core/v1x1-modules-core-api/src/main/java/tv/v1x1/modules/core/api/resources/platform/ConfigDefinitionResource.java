@@ -6,8 +6,8 @@ import tv.v1x1.common.dto.db.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
 import tv.v1x1.common.services.persistence.DAOManager;
-import tv.v1x1.modules.core.api.api.ApiList;
-import tv.v1x1.modules.core.api.api.ConfigurationDefinition;
+import tv.v1x1.modules.core.api.api.rest.ApiList;
+import tv.v1x1.modules.core.api.api.rest.ConfigurationDefinition;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;

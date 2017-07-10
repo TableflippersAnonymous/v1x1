@@ -1,4 +1,4 @@
-package tv.v1x1.modules.core.api.api;
+package tv.v1x1.modules.core.api.api.rest;
 
 /**
  * Created by cobi on 12/17/2016.

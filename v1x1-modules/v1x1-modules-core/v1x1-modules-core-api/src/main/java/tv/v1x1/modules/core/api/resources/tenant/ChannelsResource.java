@@ -9,9 +9,9 @@ import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.ApiModule;
-import tv.v1x1.modules.core.api.api.ApiList;
-import tv.v1x1.modules.core.api.api.ApiPrimitive;
-import tv.v1x1.modules.core.api.api.Channel;
+import tv.v1x1.modules.core.api.api.rest.ApiList;
+import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
+import tv.v1x1.modules.core.api.api.rest.Channel;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.ClientErrorException;
@@ -28,7 +28,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 

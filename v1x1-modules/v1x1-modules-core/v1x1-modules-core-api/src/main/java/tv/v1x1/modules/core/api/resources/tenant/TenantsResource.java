@@ -7,8 +7,8 @@ import tv.v1x1.common.dao.DAOTenantGroup;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.persistence.DAOManager;
-import tv.v1x1.modules.core.api.api.ApiList;
-import tv.v1x1.modules.core.api.api.ApiPrimitive;
+import tv.v1x1.modules.core.api.api.rest.ApiList;
+import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
 import tv.v1x1.modules.core.api.auth.AuthorizationContext;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
@@ -20,7 +20,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
