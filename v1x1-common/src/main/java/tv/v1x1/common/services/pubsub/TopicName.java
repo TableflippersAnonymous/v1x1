@@ -65,7 +65,7 @@ public class TopicName {
     }
 
     public String getFullTopicName() {
-        return "topic:" + tenantId + ":" + module + ":" + name;
+        return "topic:" + tenantId + ":" + module.getName() + ":" + name;
     }
 
     @Override
