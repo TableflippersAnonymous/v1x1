@@ -11,7 +11,8 @@ import java.util.UUID;
  */
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
               include = JsonTypeInfo.As.EXISTING_PROPERTY,
-              property = "type")
+              property = "type",
+              visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = HelloWebSocketFrame.class, name = "HELLO"),
         @JsonSubTypes.Type(value = ErrorWebSocketFrame.class, name = "ERROR"),
