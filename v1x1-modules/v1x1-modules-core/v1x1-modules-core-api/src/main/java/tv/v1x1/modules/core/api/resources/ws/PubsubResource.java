@@ -60,6 +60,7 @@ public class PubsubResource {
 
     @OnOpen
     public void onOpen(final Session session) {
+        session.setMaxIdleTimeout(1800000);
         send(session, new HelloWebSocketFrame(UUID.randomUUID()));
     }
 
