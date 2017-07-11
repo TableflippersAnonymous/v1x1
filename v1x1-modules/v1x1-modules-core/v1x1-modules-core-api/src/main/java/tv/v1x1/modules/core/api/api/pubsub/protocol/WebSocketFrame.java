@@ -63,4 +63,12 @@ public abstract class WebSocketFrame {
     public void setType(final WebSocketFrameType type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "WebSocketFrame{" +
+                "id=" + id +
+                ", type=" + type +
+                '}';
+    }
 }
