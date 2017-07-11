@@ -73,7 +73,9 @@ public class PubsubResource {
     @OnMessage
     public void onMessage(final String message, final Session session) {
         try {
+            LOG.debug("WS Read: {}", message);
             final WebSocketFrame frame = mapper.readValue(message, WebSocketFrame.class);
+            LOG.debug("FRAME Read: {}", frame);
             switch(frame.getType()) {
                 case HELLO:
                 case ERROR:
@@ -213,7 +215,10 @@ public class PubsubResource {
 
     private static void send(final Session session, final WebSocketFrame webSocketFrame) {
         try {
-            session.getAsyncRemote().sendText(mapper.writeValueAsString(webSocketFrame));
+            LOG.debug("FRAME Send: {}", webSocketFrame);
+            final String frameJson = mapper.writeValueAsString(webSocketFrame);
+            LOG.debug("WS Send: {}", frameJson);
+            session.getAsyncRemote().sendText(frameJson);
         } catch (final JsonProcessingException e) {
             LOG.error("Error while handling send", e);
             try {
