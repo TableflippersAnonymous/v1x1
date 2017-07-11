@@ -12,6 +12,7 @@ import tv.v1x1.common.dto.proto.core.BotOuterClass;
 import tv.v1x1.common.dto.proto.core.IRC;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 import tv.v1x1.common.dto.proto.messages.MessageOuterClass;
+import tv.v1x1.common.dto.proto.messages.PubSub;
 import tv.v1x1.common.dto.proto.messages.RequestOuterClass;
 
 import java.lang.invoke.MethodHandles;
@@ -29,6 +30,7 @@ public abstract class Message {
         Message.register(EventOuterClass.Event.data);
         Message.register(RequestOuterClass.Request.data);
         Message.register(RequestOuterClass.Response.data);
+        Message.register(PubSub.PubSubMessage.data);
 
         /* On Event */
         Message.register(EventOuterClass.ChatJoinEvent.data);
@@ -114,6 +116,7 @@ public abstract class Message {
             case EVENT: return Event.fromProto(module, uuid, timestamp, context, message.getExtension(EventOuterClass.Event.data));
             case REQUEST: return Request.fromProto(module, uuid, timestamp, context, message.getExtension(RequestOuterClass.Request.data));
             case RESPONSE: return Response.fromProto(module, uuid, timestamp, context, message.getExtension(RequestOuterClass.Response.data));
+            case PUBSUB: return PubSubMessage.fromProto(module, uuid, timestamp, context, message.getExtension(PubSub.PubSubMessage.data));
             default: throw new IllegalStateException("Unknown message type " + message.getType().name());
         }
     }
