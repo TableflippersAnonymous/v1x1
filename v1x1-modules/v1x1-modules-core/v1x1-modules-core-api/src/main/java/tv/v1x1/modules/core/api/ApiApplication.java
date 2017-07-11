@@ -8,8 +8,11 @@ import io.dropwizard.websockets.WebsocketBundle;
 import org.eclipse.jetty.servlets.CrossOriginFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tv.v1x1.common.services.pubsub.TopicManager;
+import tv.v1x1.modules.core.api.auth.Authorizer;
 import tv.v1x1.modules.core.api.config.ApiConfiguration;
 import tv.v1x1.modules.core.api.resources.ws.PubsubResource;
+
 
 import javax.servlet.DispatcherType;
 import javax.servlet.FilterRegistration;
@@ -22,6 +25,7 @@ import java.util.EnumSet;
 public class ApiApplication extends Application<ApiConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final ApiModule module;
+    private GuiceBundle<ApiConfiguration> guiceBundle;
 
     public ApiApplication(final ApiModule module) {
         this.module = module;
@@ -29,7 +33,7 @@ public class ApiApplication extends Application<ApiConfiguration> {
 
     @Override
     public void initialize(final Bootstrap<ApiConfiguration> bootstrap) {
-        final GuiceBundle<ApiConfiguration> guiceBundle = GuiceBundle.<ApiConfiguration>newBuilder()
+        guiceBundle = GuiceBundle.<ApiConfiguration>newBuilder()
                 .addModule(new ApiGuiceModule(module))
                 .enableAutoConfig(getClass().getPackage().getName())
                 .setConfigClass(ApiConfiguration.class)
@@ -53,6 +57,8 @@ public class ApiApplication extends Application<ApiConfiguration> {
             module.wait();
         }
         LOG.info("Woken by module.");
+
+        PubsubResource.initialize(guiceBundle.getInjector().getInstance(TopicManager.class), guiceBundle.getInjector().getInstance(Authorizer.class));
 
         final FilterRegistration.Dynamic cors = environment.servlets().addFilter("CORS", CrossOriginFilter.class);
         cors.setInitParameter("allowedOrigins", "*");

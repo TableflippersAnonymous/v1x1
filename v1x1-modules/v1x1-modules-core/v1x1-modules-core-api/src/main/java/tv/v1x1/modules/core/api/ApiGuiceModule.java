@@ -27,7 +27,7 @@ public class ApiGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        requestStaticInjection(PubsubResource.class);
+        //requestStaticInjection(PubsubResource.class);
     }
 
     @Provides
@@ -41,7 +41,6 @@ public class ApiGuiceModule extends AbstractModule {
     }
 
     @Provides
-    @Singleton
     public Authorizer provideAuthorizer() {
         return new Authorizer(apiModule.getDaoManager().getDaoTenantGroup(), apiModule.getDaoManager().getDaoTenant(), apiModule.getDaoManager().getDaoThirdPartyCredential(), apiModule.getDaoManager().getDaoGlobalUser());
     }
