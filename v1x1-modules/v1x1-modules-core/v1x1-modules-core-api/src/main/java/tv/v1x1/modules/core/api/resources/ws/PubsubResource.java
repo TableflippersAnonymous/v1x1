@@ -47,14 +47,16 @@ public class PubsubResource {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 
-    @Inject
     private static TopicManager topicManager;
-
-    @Inject
     private static Authorizer authorizer;
 
     private Map<String, Integer> topics = new HashMap<>();
     private AuthorizationContext authContext = null;
+
+    public static void initialize(final TopicManager topicManager, final Authorizer authorizer) {
+        PubsubResource.topicManager = topicManager;
+        PubsubResource.authorizer = authorizer;
+    }
 
     @OnOpen
     public void onOpen(final Session session) {
