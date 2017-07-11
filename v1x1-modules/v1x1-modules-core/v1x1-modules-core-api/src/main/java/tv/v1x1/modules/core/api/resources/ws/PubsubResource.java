@@ -122,7 +122,7 @@ public class PubsubResource {
         }
 
         final AuthorizationContext tenantAuthContext = authorizer.tenantContext(authContext, topicName.getTenantId());
-        final String permission = "api.pubsub.write." + topicName.getModule() + "." + topicName.getName();
+        final String permission = "api.pubsub.write." + topicName.getModule().getName() + "." + topicName.getName();
         if(!tenantAuthContext.hasPermission(permission)) {
             send(session, new ErrorWebSocketFrame(UUID.randomUUID(), frame.getId(), "INSUFFICIENT_PRIVILEGES", "You require permission " + permission));
             return;
