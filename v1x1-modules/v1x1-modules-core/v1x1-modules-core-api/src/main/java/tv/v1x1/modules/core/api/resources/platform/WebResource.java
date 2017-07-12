@@ -37,7 +37,7 @@ public class WebResource {
          */
         return new WebConfig(
                 ImmutableMap.of(Platform.TWITCH, new String(module.requireCredential("Common|Twitch|ClientId"))),
-                ImmutableMap.of(Platform.TWITCH, new String(module.requireCredential("Common|Twitch|RedirectURI"))),
+                ImmutableMap.of(Platform.TWITCH, new String(module.requireCredential("Common|Twitch|RedirectUri"))),
                 "/api/v1",
                 "wss://pubsub.v1x1.tv"
         );
