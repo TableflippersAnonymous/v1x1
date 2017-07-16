@@ -20,7 +20,6 @@ params:
   V1X1_MODULE_PATH:
 
 run:
-  dir: v1x1-source
   path: sh
   args:
   - -exc
