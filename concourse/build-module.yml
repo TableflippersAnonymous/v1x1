@@ -29,3 +29,4 @@ run:
     sed -i -r "s/DEVELOPMENT-SNAPSHOT/git-$(cat v1x1-source/.git/refs/heads/master)/g" v1x1-source/pom.xml
     ( cd v1x1-source && mvn -s $M2_HOME/settings.xml -Dmaven.repo.local=$M2_HOME/repository -pl $V1X1_MODULE_PATH -DskipDocker deploy )
     cp v1x1-source/$V1X1_MODULE_PATH/target/v1x1-modules-*.jar v1x1-target/
+    cp v1x1-source/$V1X1_MODULE_PATH/docker/* v1x1-target/

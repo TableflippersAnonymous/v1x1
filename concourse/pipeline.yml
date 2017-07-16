@@ -183,9 +183,13 @@ jobs:
 
   - name: v1x1-caster
     plan:
-      - get: v1x1-source
-        passed: [v1x1-common]
-        trigger: true
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -194,3 +198,375 @@ jobs:
         file: v1x1-source/concourse/build-module.yml
         params:
           V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-caster
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-caster
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-echo
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-echo
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-echo
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-factoids
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-factoids
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-factoids
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-hello_world
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-hello_world
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-hello_world
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-link_purger
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-link_purger
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-link_purger
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-quotes
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-quotes
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-quotes
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-timed_messages
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-timed_messages
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-timed_messages
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-uptime
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-uptime
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-uptime
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-api
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-core/v1x1-modules-core-api
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-api
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-chat_router
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-core/v1x1-modules-core-chat_router
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-chat_router
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-cli
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-core/v1x1-modules-core-cli
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-cli
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-event_router
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-core/v1x1-modules-core-event_router
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-event_router
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-scheduler
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-core/v1x1-modules-core-scheduler
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-scheduler
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-tmi
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-core/v1x1-modules-core-tmi
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-tmi
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-ops_tool
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common]
+          trigger: true
+        - get: v1x1-base
+          passed: [v1x1-base]
+          trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-global/v1x1-modules-global-ops_tool
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-ops_tool
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
