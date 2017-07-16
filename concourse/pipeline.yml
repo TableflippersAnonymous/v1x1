@@ -1,3 +1,9 @@
+resource_types:
+  - name: kubernetes
+    type: docker-image
+    source:
+      repository: cobi/concourse-kubernetes-resource
+
 resources:
   - name: v1x1-source
     type: git
@@ -5,6 +11,13 @@ resources:
       uri: git@github.com:LegionServers/v1x1.git
       branch: master
       private_key: {{v1x1-deploy-key}}
+  - name: kubernetes
+    type: kubernetes
+    source:
+      cluster_url: https://k8s-master.tblflp.zone
+      namespace: v1x1
+      username: circleci
+      password: {{kube-pass}}
   - name: v1x1-base
     type: docker-image
     source:
@@ -207,6 +220,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-caster-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: caster
+          image_name: registry.tblflp.zone:5443/v1x1-caster
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-echo
     plan:
@@ -234,6 +257,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-echo-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: echo
+          image_name: registry.tblflp.zone:5443/v1x1-echo
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-factoids
     plan:
@@ -261,6 +294,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-factoids-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: factoids
+          image_name: registry.tblflp.zone:5443/v1x1-factoids
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-hello_world
     plan:
@@ -288,6 +331,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-hello_world-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: hello_world
+          image_name: registry.tblflp.zone:5443/v1x1-hello_world
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-link_purger
     plan:
@@ -315,6 +368,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-link_purger-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: link_purger
+          image_name: registry.tblflp.zone:5443/v1x1-link_purger
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-quotes
     plan:
@@ -342,6 +405,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-quotes-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: quotes
+          image_name: registry.tblflp.zone:5443/v1x1-quotes
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-timed_messages
     plan:
@@ -369,6 +442,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-timed_messages-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: timed_messages
+          image_name: registry.tblflp.zone:5443/v1x1-timed_messages
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-uptime
     plan:
@@ -396,6 +479,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-uptime-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: uptime
+          image_name: registry.tblflp.zone:5443/v1x1-uptime
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-api
     plan:
@@ -423,6 +516,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-api-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: api
+          image_name: registry.tblflp.zone:5443/v1x1-api
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-chat_router
     plan:
@@ -450,6 +553,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-chat_router-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: chat_router
+          image_name: registry.tblflp.zone:5443/v1x1-chat_router
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-cli
     plan:
@@ -504,6 +617,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-event_router-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: event_router
+          image_name: registry.tblflp.zone:5443/v1x1-event_router
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-scheduler
     plan:
@@ -531,6 +654,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-scheduler-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: scheduler
+          image_name: registry.tblflp.zone:5443/v1x1-scheduler
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-tmi
     plan:
@@ -558,6 +691,16 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-tmi-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: tmi
+          image_name: registry.tblflp.zone:5443/v1x1-tmi
+          image_tag: v1x1-source/.git/refs/heads/master
 
   - name: v1x1-ops_tool
     plan:
@@ -585,3 +728,13 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+  - name: v1x1-ops_tool-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-caster]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: ops_tool
+          image_name: registry.tblflp.zone:5443/v1x1-ops_tool
+          image_tag: v1x1-source/.git/refs/heads/master
