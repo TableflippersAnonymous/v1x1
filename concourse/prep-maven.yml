@@ -15,7 +15,6 @@ params:
   NEXUS_PASSWORD:
 
 run:
-  dir: v1x1-source
   path: sh
   args:
   - -ec
