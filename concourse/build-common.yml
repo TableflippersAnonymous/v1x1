@@ -17,6 +17,7 @@ run:
   args:
   - -exc
   - |
-    export HOME=$(pwd)
+    export HOME=$(pwd)/root
+    export M2_HOME=$(pwd)/root/.m2
     sed -i -r "s/DEVELOPMENT-SNAPSHOT/git-$(cat v1x1-source/.git/refs/heads/master)/g" v1x1-source/pom.xml
-    ( cd v1x1-source && mvn -pl v1x1-common -DskipDocker deploy )
+    ( cd v1x1-source && mvn -s $M2_HOME/settings.xml -Dmaven.repo.local=$M2_HOME/repository -pl v1x1-common -DskipDocker deploy )
