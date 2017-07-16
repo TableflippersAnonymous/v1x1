@@ -13,7 +13,6 @@ inputs:
   path: root/.m2
 
 run:
-  dir: v1x1-source
   path: sh
   args:
   - -exc
