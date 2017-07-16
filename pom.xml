@@ -32,6 +32,14 @@
     </repository>
   </repositories>
 
+  <pluginRepositories>
+    <pluginRepository>
+      <id>tblflp</id>
+      <name>Tableflip Combined</name>
+      <url>https://bin.tblflp.zone/repository/maven-combined/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
   <distributionManagement>
     <repository>
       <id>tblflp-releases</id>
