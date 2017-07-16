@@ -188,6 +188,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -214,6 +216,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -240,6 +244,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -266,6 +272,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -292,6 +300,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -318,6 +328,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -344,6 +356,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -370,6 +384,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -396,6 +412,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -422,6 +440,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -448,6 +468,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -474,6 +496,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -500,6 +524,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -526,6 +552,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
@@ -552,6 +580,8 @@ jobs:
           passed: [v1x1-common]
           trigger: true
         - get: v1x1-base
+          params:
+            save: true
           passed: [v1x1-base]
           trigger: true
       - task: prep-maven
