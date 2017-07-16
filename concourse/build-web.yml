@@ -14,6 +14,9 @@ outputs:
 - name: v1x1-web-target
   path: v1x1-target
 
+caches:
+- path: v1x1-source/v1x1-web/node_modules
+
 run:
   path: sh
   args:

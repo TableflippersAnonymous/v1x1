@@ -12,6 +12,9 @@ inputs:
 - name: maven-config
   path: root/.m2
 
+caches:
+- path: root/.m2/repository
+
 run:
   path: sh
   args:
