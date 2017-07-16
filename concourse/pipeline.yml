@@ -162,6 +162,10 @@ jobs:
     plan:
       - get: v1x1-source
         trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
       - task: build
         file: v1x1-source/concourse/build-common.yml
 
@@ -182,6 +186,10 @@ jobs:
       - get: v1x1-source
         passed: [v1x1-common]
         trigger: true
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:

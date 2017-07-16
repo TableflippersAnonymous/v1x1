@@ -9,12 +9,15 @@ image_resource:
 
 inputs:
 - name: v1x1-source
-- name: v1x1-common-maven
+- name: maven-config
   path: root/.m2
 
 outputs:
 - name: v1x1-module-target
   path: v1x1-target
+
+caches:
+- path: root/.m2/repository
 
 params:
   V1X1_MODULE_PATH:
@@ -25,5 +28,6 @@ run:
   args:
   - -exc
   - |
-    ( cd v1x1-source && mvn -pl $V1X1_MODULE_PATH -DskipDocker package )
+    sed -i -r "s/DEVELOPMENT-SNAPSHOT/git-$(cat v1x1-source/.git/refs/heads/master)/g" v1x1-source/pom.xml
+    ( cd v1x1-source && mvn -pl $V1X1_MODULE_PATH -DskipDocker deploy )
     cp v1x1-source/$V1X1_MODULE_PATH/target/v1x1-modules-*.jar v1x1-target/
