@@ -1,0 +1,188 @@
+resources:
+  - name: v1x1-source
+    type: git
+    source:
+      uri: git@github.com:LegionServers/v1x1.git
+      branch: master
+      private_key: {{v1x1-deploy-key}}
+  - name: v1x1-base
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-base
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+
+  # Channel Modules:
+  - name: v1x1-caster
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-caster
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-echo
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-echo
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-factoids
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-factoids
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-hello_world
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-hello_world
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-link_purger
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-link_purger
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-quotes
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-quotes
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-timed_messages
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-timed_messages
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-uptime
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-uptime
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+
+  # Core Modules:
+  - name: v1x1-api
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-api
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-chat_router
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-chat_router
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-cli
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-cli
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-event_router
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-event_router
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-scheduler
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-scheduler
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+  - name: v1x1-tmi
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-tmi
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+
+  # Global Modules:
+  - name: v1x1-ops_tool
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-ops_tool
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
+
+
+jobs:
+  - name: v1x1-common
+    plan:
+      - get: v1x1-source
+        trigger: true
+      - task: build
+        file: v1x1-source/concourse/build-common.yml
+
+  - name: v1x1-base
+    plan:
+      - get: v1x1-source
+        trigger: true
+      - put: v1x1-base
+        params:
+          build: v1x1-source/docker
+          build_args:
+            APP_ENV: prod
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+
+  - name: v1x1-caster
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-common]
+        trigger: true
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-caster
