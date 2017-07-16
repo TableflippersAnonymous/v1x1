@@ -193,6 +193,7 @@ jobs:
             APP_ENV: prod
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
 
   - name: v1x1-caster
     plan:
@@ -220,6 +221,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-caster-deploy
     plan:
       - get: v1x1-source
@@ -257,6 +259,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-echo-deploy
     plan:
       - get: v1x1-source
@@ -294,6 +297,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-factoids-deploy
     plan:
       - get: v1x1-source
@@ -331,6 +335,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-hello_world-deploy
     plan:
       - get: v1x1-source
@@ -368,6 +373,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-link_purger-deploy
     plan:
       - get: v1x1-source
@@ -405,6 +411,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-quotes-deploy
     plan:
       - get: v1x1-source
@@ -442,6 +449,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-timed_messages-deploy
     plan:
       - get: v1x1-source
@@ -479,6 +487,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-uptime-deploy
     plan:
       - get: v1x1-source
@@ -516,6 +525,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-api-deploy
     plan:
       - get: v1x1-source
@@ -553,6 +563,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-chat_router-deploy
     plan:
       - get: v1x1-source
@@ -590,6 +601,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
 
   - name: v1x1-event_router
     plan:
@@ -617,6 +629,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-event_router-deploy
     plan:
       - get: v1x1-source
@@ -654,6 +667,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-scheduler-deploy
     plan:
       - get: v1x1-source
@@ -691,6 +705,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-tmi-deploy
     plan:
       - get: v1x1-source
@@ -728,6 +743,7 @@ jobs:
           load_base: v1x1-base-output
           tag: v1x1-source/.git/refs/heads/master
           tag_as_latest: true
+          skip_download: true
   - name: v1x1-ops_tool-deploy
     plan:
       - get: v1x1-source
