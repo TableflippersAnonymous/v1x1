@@ -10,7 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>v1x1-modules-core-event_router</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${v1x1.version}</version>
     <packaging>jar</packaging>
 
     <name>v1x1-modules-core-event_router</name>

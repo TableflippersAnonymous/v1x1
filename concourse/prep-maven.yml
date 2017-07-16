@@ -1,0 +1,24 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: maven
+    tag: 3-jdk-8
+
+outputs:
+- name: maven-config
+  path: root/.m2
+
+params:
+  NEXUS_PASSWORD:
+
+run:
+  dir: v1x1-source
+  path: sh
+  args:
+  - -ec
+  - |
+    mkdir -p root/.m2
+    echo "<settings><servers><server><id>tblflp</id><username>concourseci</username><password>${NEXUS_PASSWORD}</password></server><server><id>tblflp-releases</id><username>concourseci</username><password>${NEXUS_PASSWORD}</password></server><server><id>tblflp-snapshots</id><username>concourseci</username><password>${NEXUS_PASSWORD}</password></server></servers></settings>" > root/.m2/settings.xml

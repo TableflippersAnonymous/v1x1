@@ -16,6 +16,7 @@
     <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>yyyy-MM-dd HH:mm</maven.build.timestamp.format>
     <environment>dev</environment>
+    <v1x1.version>0.0.1-DEVELOPMENT-SNAPSHOT</v1x1.version>
   </properties>
 
   <modules>

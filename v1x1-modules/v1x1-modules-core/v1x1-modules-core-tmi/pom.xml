@@ -9,7 +9,7 @@
   </parent>
 
   <artifactId>v1x1-modules-core-tmi</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${v1x1.version}</version>
   <packaging>jar</packaging>
 
   <name>v1x1-modules-core-tmi</name>

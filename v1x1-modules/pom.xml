@@ -24,7 +24,7 @@
     <dependency>
       <groupId>tv.v1x1</groupId>
       <artifactId>v1x1-common</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <version>${v1x1.version}</version>
     </dependency>
   </dependencies>
 </project>
