@@ -24,6 +24,7 @@ run:
   args:
   - -exc
   - |
+    export HOME=$(pwd)
     sed -i -r "s/DEVELOPMENT-SNAPSHOT/git-$(cat v1x1-source/.git/refs/heads/master)/g" v1x1-source/pom.xml
     ( cd v1x1-source && mvn -pl $V1X1_MODULE_PATH -DskipDocker deploy )
     cp v1x1-source/$V1X1_MODULE_PATH/target/v1x1-modules-*.jar v1x1-target/
