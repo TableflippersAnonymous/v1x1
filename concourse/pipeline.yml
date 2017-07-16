@@ -185,13 +185,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -213,13 +212,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -241,13 +239,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -269,13 +266,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -297,13 +293,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -325,13 +320,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -353,13 +347,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -381,13 +374,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -409,13 +401,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -437,13 +428,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -465,13 +455,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -493,13 +482,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -521,13 +509,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -549,13 +536,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
@@ -577,13 +563,12 @@ jobs:
     plan:
       - aggregate:
         - get: v1x1-source
-          passed: [v1x1-common]
+          passed: [v1x1-common, v1x1-base]
           trigger: true
         - get: v1x1-base
           params:
             save: true
-          passed: [v1x1-base]
-          trigger: true
+          passed: [v1x1-common, v1x1-base]
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
