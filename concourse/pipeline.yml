@@ -18,6 +18,14 @@ resources:
       namespace: v1x1
       username: circleci
       password: {{kube-pass}}
+  - name: v1x1-web
+    type: s3
+    source:
+      bucket: v1x1-web
+      access_key_id: {{aws-access-key}}
+      secret_access_key: {{aws-secret-key}}
+      regexp: (.*)
+
   - name: v1x1-base
     type: docker-image
     source:
@@ -798,3 +806,36 @@ jobs:
           image_tag: v1x1-source/.git/refs/heads/master
         get_params:
           resource_name: ops-tool
+
+  - name: v1x1-web
+    plan:
+      - get: v1x1-source
+        trigger: true
+      - task: build
+        file: v1x1-source/concourse/build-web.yml
+      - aggregate:
+        - put: v1x1-web
+          params:
+            file: v1x1-web-target/app.*.js
+            content_type: application/javascript
+        - put: v1x1-web
+          params:
+            file: v1x1-web-target/polyfills.*.js
+            content_type: application/javascript
+        - put: v1x1-web
+          params:
+            file: v1x1-web-target/vendor.*.js
+            content_type: application/javascript
+        - put: v1x1-web
+          params:
+            file: v1x1-web-target/*.css
+            content_type: text/css
+        - put: v1x1-web
+          params:
+            file: v1x1-web-target/*.html
+            content_type: text/html
+      - task: invalidate
+        file: v1x1-source/concourse/invalidate-cloudfront.yml
+        params:
+          AWS_ACCESS_KEY_ID: {{aws-access-key}}
+          AWS_SECRET_ACCESS_KEY: {{aws-secret-key}}
