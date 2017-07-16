@@ -16,9 +16,6 @@ outputs:
 - name: v1x1-module-target
   path: v1x1-target
 
-caches:
-- path: root/.m2/repository
-
 params:
   V1X1_MODULE_PATH:
 

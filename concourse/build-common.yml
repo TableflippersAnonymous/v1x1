@@ -12,9 +12,6 @@ inputs:
 - name: maven-config
   path: root/.m2
 
-caches:
-- path: root/.m2/repository
-
 run:
   dir: v1x1-source
   path: sh
