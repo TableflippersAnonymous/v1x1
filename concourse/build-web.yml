@@ -1,0 +1,23 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: node
+    tag: "8"
+
+inputs:
+- name: v1x1-source
+
+outputs:
+- name: v1x1-web-target
+  path: v1x1-target
+
+run:
+  path: sh
+  args:
+  - -exc
+  - |
+    ( cd v1x1-source/v1x1-web && npm install && npm run build )
+    cp v1x1-source/v1x1-web/dist/*.{css,js,html} v1x1-target/
