@@ -20,4 +20,4 @@ run:
   - -exc
   - |
     ( cd v1x1-source/v1x1-web && npm install && npm run build )
-    cp v1x1-source/v1x1-web/dist/*.{css,js,html} v1x1-target/
+    cp -rvf v1x1-source/v1x1-web/dist/. v1x1-target/
