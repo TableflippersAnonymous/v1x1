@@ -1,0 +1,29 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: maven
+    tag: 3-jdk-8
+
+inputs:
+- name: v1x1-source
+- name: v1x1-common-maven
+  path: root/.m2
+
+outputs:
+- name: v1x1-module-target
+  path: v1x1-target
+
+params:
+  V1X1_MODULE_PATH:
+
+run:
+  dir: v1x1-source
+  path: sh
+  args:
+  - -exc
+  - |
+    ( cd v1x1-source && mvn -pl $V1X1_MODULE_PATH -DskipDocker package )
+    cp v1x1-source/$V1X1_MODULE_PATH/target/v1x1-modules-*.jar v1x1-target/
