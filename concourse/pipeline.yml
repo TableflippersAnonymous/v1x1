@@ -260,7 +260,7 @@ jobs:
   - name: v1x1-echo-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-echo]
         trigger: true
       - put: kubernetes
         params:
@@ -297,7 +297,7 @@ jobs:
   - name: v1x1-factoids-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-factoids]
         trigger: true
       - put: kubernetes
         params:
@@ -334,7 +334,7 @@ jobs:
   - name: v1x1-hello_world-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-hello_world]
         trigger: true
       - put: kubernetes
         params:
@@ -371,7 +371,7 @@ jobs:
   - name: v1x1-link_purger-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-link_purger]
         trigger: true
       - put: kubernetes
         params:
@@ -408,7 +408,7 @@ jobs:
   - name: v1x1-quotes-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-quotes]
         trigger: true
       - put: kubernetes
         params:
@@ -445,7 +445,7 @@ jobs:
   - name: v1x1-timed_messages-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-timed_messages]
         trigger: true
       - put: kubernetes
         params:
@@ -482,7 +482,7 @@ jobs:
   - name: v1x1-uptime-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-uptime]
         trigger: true
       - put: kubernetes
         params:
@@ -519,7 +519,7 @@ jobs:
   - name: v1x1-api-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-api]
         trigger: true
       - put: kubernetes
         params:
@@ -556,7 +556,7 @@ jobs:
   - name: v1x1-chat_router-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-chat_router]
         trigger: true
       - put: kubernetes
         params:
@@ -620,7 +620,7 @@ jobs:
   - name: v1x1-event_router-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-event_router]
         trigger: true
       - put: kubernetes
         params:
@@ -657,7 +657,7 @@ jobs:
   - name: v1x1-scheduler-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-scheduler]
         trigger: true
       - put: kubernetes
         params:
@@ -694,7 +694,7 @@ jobs:
   - name: v1x1-tmi-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-tmi]
         trigger: true
       - put: kubernetes
         params:
@@ -731,7 +731,7 @@ jobs:
   - name: v1x1-ops_tool-deploy
     plan:
       - get: v1x1-source
-        passed: [v1x1-caster]
+        passed: [v1x1-ops_tool]
         trigger: true
       - put: kubernetes
         params:
