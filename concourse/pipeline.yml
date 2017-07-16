@@ -357,7 +357,7 @@ jobs:
           resource_name: hello-world
           image_name: registry.tblflp.zone:5443/v1x1-hello_world
           image_tag: v1x1-source/.git/refs/heads/master
-        get-params:
+        get_params:
           resource_name: hello-world
 
   - name: v1x1-link_purger
