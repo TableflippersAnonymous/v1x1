@@ -7,6 +7,7 @@ import {V1x1Tenant} from "../model/v1x1_tenant";
 import {V1x1GlobalState} from "../services/global_state";
 import {Router} from "@angular/router";
 import {UrlId} from "../services/url_id";
+import {V1x1WebInfo} from "../services/web_info";
 
 @Component({
   selector: 'v1x1-app',
@@ -21,7 +22,7 @@ export class AppComponent {
   activeTenant: V1x1Tenant = null;
   activeTenantId: string = "";
 
-  constructor(private apiCache: V1x1ApiCache, private api: V1x1Api, private globalState: V1x1GlobalState, private router: Router) {
+  constructor(private apiCache: V1x1ApiCache, private api: V1x1Api, private globalState: V1x1GlobalState, private router: Router, private webInfo: V1x1WebInfo) {
     this.apiCache.preload();
 
     if(window.location.search) {
@@ -66,7 +67,7 @@ export class AppComponent {
       if (expiry <= new Date().getTime()) {
         this.relogin();
       } else {
-        this.api.setAuthorization(localStorage.getItem("authorization"));
+        this.globalState.authorization.set(localStorage.getItem("authorization"));
         this.globalState.loggedIn.set(true);
         setTimeout(() => {
           this.relogin();
@@ -87,17 +88,21 @@ export class AppComponent {
     localStorage.removeItem("auth_expiry");
     localStorage.setItem("auth_redirect", window.location.hash);
     localStorage.setItem("auth_redirect_expiry", (new Date().getTime() + 3600).toString(10));
-    this.api.getState().subscribe(
-      state => {
-        window.location.href = 'https://api.twitch.tv/kraken/oauth2/authorize' +
-          '?response_type=code' +
-          '&client_id=' + this.api.getClientId() +
-          '&redirect_uri=https://v1x1.tv/' +
-          '&scope=' +
-          'user_read+channel_editor+' +
-          'channel_commercial+channel_subscriptions+' +
-          'channel_feed_read+channel_feed_edit' +
-          '&state=' + state.state;
+    this.webInfo.getWebConfig().subscribe(
+      webConfig => {
+        this.api.getState().subscribe(
+          state => {
+            window.location.href = 'https://api.twitch.tv/kraken/oauth2/authorize' +
+              '?response_type=code' +
+              '&client_id=' + webConfig.clientIds['TWITCH'] +
+              '&redirect_uri=' + webConfig.redirectUris['TWITCH'] +
+              '&scope=' +
+              'user_read+channel_editor+' +
+              'channel_commercial+channel_subscriptions+' +
+              'channel_feed_read+channel_feed_edit' +
+              '&state=' + state.state;
+          }
+        );
       }
     );
   }

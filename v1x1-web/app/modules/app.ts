@@ -42,6 +42,8 @@ import {RouterModule, Routes} from "@angular/router";
 import {V1x1GlobalState} from "../services/global_state";
 import {NavRouterComponent} from "../components/nav/nav_router";
 import {UrlId} from "../services/url_id";
+import {V1x1PubSub} from "../services/pubsub";
+import {V1x1WebInfo} from "../services/web_info";
 
 /**
  * <welcome-page [loggedIn]="loggedIn"></welcome-page>
@@ -116,7 +118,7 @@ const routes: Routes = [
     WelcomePageComponent,
     TenantFormatterComponent, UserFormatterComponent
   ],
-  providers:    [ V1x1Api, V1x1ApiCache, V1x1GlobalState ],
+  providers:    [ V1x1Api, V1x1ApiCache, V1x1GlobalState, V1x1PubSub, V1x1WebInfo ],
   bootstrap:    [ AppComponent ]
 })
 export class AppModule { }
