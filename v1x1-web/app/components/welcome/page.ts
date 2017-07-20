@@ -1,6 +1,8 @@
 import {Component, Input} from '@angular/core';
 import {V1x1Api} from "../../services/api";
 import {V1x1State} from "../../model/v1x1_state";
+import {V1x1WebInfo} from "../../services/web_info";
+import {Observable} from "rxjs";
 @Component({
   selector: 'welcome-page',
   template: `
@@ -11,7 +13,7 @@ import {V1x1State} from "../../model/v1x1_state";
       <p>Hi! My name is v1x1 ("Vixie"), a chat robot that can help you manage your Twitch chat!</p>
       <div *ngIf="!loggedIn">
         <p><b>What's your name?</b></p>
-        <p><button class="btn btn-twitch" (click)="twitchLogin()"><i class="fa fa-twitch"></i> My name is ...</button></p>
+        <p><button class="btn btn-twitch" (click)="doTwitchLogin()"><i class="fa fa-twitch"></i> My name is ...</button></p>
       </div>
     </div>
   `
@@ -21,14 +23,8 @@ export class WelcomePageComponent {
   expires: number = 0;
   @Input() loggedIn: boolean;
 
-  constructor(private api: V1x1Api) {
+  constructor(private api: V1x1Api, private webInfo: V1x1WebInfo) {
     this.renewState();
-  }
-
-  twitchLogin() {
-    if(this.expires < new Date().getTime())
-      this.api.getState().subscribe(state => this.doTwitchLogin(state));
-    this.doTwitchLogin(this.state);
   }
 
   renewState() {
@@ -38,15 +34,28 @@ export class WelcomePageComponent {
     });
   }
 
-  doTwitchLogin(state: V1x1State) {
-    window.location.href = 'https://api.twitch.tv/kraken/oauth2/authorize' +
-        '?response_type=code' +
-        '&client_id=' + this.api.getClientId() +
-        '&redirect_uri=https://v1x1.tv/' +
-        '&scope=' +
-          'user_read+channel_editor+' +
-          'channel_commercial+channel_subscriptions+' +
-          'channel_feed_read+channel_feed_edit' +
-        '&state=' + state.state;
+  getState(): Observable<string> {
+    if(this.expires < new Date().getTime())
+      return this.api.getState().map(s => s.state);
+    else
+      return Observable.of(this.state.state);
+  }
+
+  doTwitchLogin() {
+    Observable.zip(
+      this.webInfo.getWebConfig(),
+      this.getState()
+    ).subscribe(
+      ([wc, state]) =>
+        window.location.href = 'https://api.twitch.tv/kraken/oauth2/authorize' +
+          '?response_type=code' +
+          '&client_id=' + wc.clientIds['TWITCH'] +
+          '&redirect_uri=' + wc.redirectUris['TWITCH'] +
+          '&scope=' +
+            'user_read+channel_editor+' +
+            'channel_commercial+channel_subscriptions+' +
+            'channel_feed_read+channel_feed_edit' +
+          '&state=' + state
+    );
   }
 }

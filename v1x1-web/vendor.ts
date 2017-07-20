@@ -9,3 +9,6 @@ import '@angular/router';
 import 'rxjs';
 import 'long';
 import 'bytebuffer';
+import 'rxjs-websockets';
+import 'queueing-subject';
+import 'uuid';

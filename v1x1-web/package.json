@@ -31,7 +31,10 @@
     "zone.js": "^0.7.4",
     "@types/bytebuffer": "5.0.33",
     "long": "3.2.0",
-    "bytebuffer": "5.0.1"
+    "bytebuffer": "5.0.1",
+    "uuid": "3.1.0",
+    "rxjs-websockets": "1.0.0",
+    "queueing-subject": "0.1.1"
   },
   "devDependencies": {
     "concurrently": "^3.1.0",

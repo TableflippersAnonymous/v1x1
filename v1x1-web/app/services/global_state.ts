@@ -6,4 +6,5 @@ export class V1x1GlobalState {
   activeTenant: ObservableVariable<V1x1Tenant> = new ObservableVariable<V1x1Tenant>(undefined);
   tenants: ObservableVariable<V1x1Tenant[]> = new ObservableVariable<V1x1Tenant[]>([]);
   loggedIn: ObservableVariable<boolean> = new ObservableVariable<boolean>(false);
+  authorization: ObservableVariable<string> = new ObservableVariable<string>(null);
 }

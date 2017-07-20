@@ -9,7 +9,7 @@ export class ObservableVariable<T> {
     return () => {
       delete this.observers[this.observers.indexOf(obs)];
     };
-  });
+  }).publishReplay(1).refCount();
 
   constructor(value: T) {
     this.value = value;

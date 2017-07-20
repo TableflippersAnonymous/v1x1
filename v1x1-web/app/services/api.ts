@@ -20,19 +20,19 @@ import {V1x1Configuration} from "../model/v1x1_configuration";
 import {V1x1Group} from "../model/v1x1_group";
 import {V1x1GroupMembership} from "../model/v1x1_group_membership";
 import {V1x1DisplayNameRecord} from "../model/v1x1_display_name_record";
+import {V1x1WebInfo} from "./web_info";
+import {V1x1GlobalState} from "./global_state";
 
 @Injectable()
 export class V1x1Api {
-  private v1x1ApiBase: string = '/api/v1';
-  private clientId: string = 'cdzt2rwhcwzrf1col1eqaktuntugdct';
-  private authorization: string = undefined;
-
-  constructor(private http: Http) {}
+  constructor(private http: Http, private webInfo: V1x1WebInfo, private globalState: V1x1GlobalState) {}
 
   getConfigurationDefinitionList(type: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + '/platform/config-definitions/' + type)
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries);
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/platform/config-definitions/' + type)
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+    ).mergeAll();
   }
 
   getModuleList(): Observable<string[]> {
@@ -44,8 +44,10 @@ export class V1x1Api {
   }
 
   getConfigurationDefinition(type: string, moduleName: string): Observable<V1x1ConfigurationDefinition> {
-    return this.http.get(this.v1x1ApiBase + '/platform/config-definitions/' + type + '/' + moduleName)
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1ConfigurationDefinition)).catch((err, caught) => Observable.of(null));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/platform/config-definitions/' + type + '/' + moduleName)
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1ConfigurationDefinition)).catch((err, caught) => Observable.of(null))
+    ).mergeAll();
   }
 
   getConfigurationDefinitionSet(moduleName: string): Observable<V1x1ConfigurationDefinitionSet> {
@@ -74,55 +76,57 @@ export class V1x1Api {
   }
 
   getState(): Observable<V1x1State> {
-    return this.http.get(this.v1x1ApiBase + '/meta/state').map((r) => JsonConvert.deserializeObject(r.json(), V1x1State));
-  }
-
-  getClientId(): string {
-    return this.clientId;
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/meta/state').map((r) => JsonConvert.deserializeObject(r.json(), V1x1State))
+    ).mergeAll();
   }
 
   loginTwitch(twitchOauthCode: V1x1TwitchOauthCode): Observable<V1x1AuthToken> {
-    return this.http.post(
-      this.v1x1ApiBase + '/meta/login/twitch',
-      JsonConvert.serializeObject({
-        'oauth_code': twitchOauthCode.oauthCode,
-        'oauth_state': twitchOauthCode.oauthState
-      }),
-      new RequestOptions({
-        headers: new Headers({
-          'Content-Type': 'application/json'
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.post(
+        wc.apiBase + '/meta/login/twitch',
+        JsonConvert.serializeObject({
+          'oauth_code': twitchOauthCode.oauthCode,
+          'oauth_state': twitchOauthCode.oauthState
+        }),
+        new RequestOptions({
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
         })
-      })
-    ).map((r) => JsonConvert.deserializeObject(r.json(), V1x1AuthToken));
-  }
-
-  setAuthorization(authorization: string) {
-    this.authorization = authorization;
+      ).map((r) => JsonConvert.deserializeObject(r.json(), V1x1AuthToken))
+    ).mergeAll();
   }
 
   getAuthorization(): RequestOptions {
     return new RequestOptions({
       headers: new Headers({
-        Authorization: this.authorization
+        Authorization: this.globalState.authorization.getCurrent()
       })
     });
   }
 
   getUserPlatforms(globalUserId: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + "/global-users/" + globalUserId + "/users", this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries);
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + "/global-users/" + globalUserId + "/users", this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+    ).mergeAll();
   }
 
   getUserIdsByPlatform(globalUserId: string, platform: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + "/global-users/" + globalUserId + "/users/" + platform, this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries);
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + "/global-users/" + globalUserId + "/users/" + platform, this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+    ).mergeAll();
   }
 
   getUser(globalUserId: string, platform: string, userId: string): Observable<V1x1User> {
-    return this.http.get(this.v1x1ApiBase + "/global-users/" + globalUserId + "/users/" + platform + "/" + userId, this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1User));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + "/global-users/" + globalUserId + "/users/" + platform + "/" + userId, this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1User))
+    ).mergeAll();
   }
 
   getUsersByPlatform(globalUserId: string, platform: string): Observable<V1x1User[]> {
@@ -152,8 +156,10 @@ export class V1x1Api {
   }
 
   getDisplayNameRecordByUsername(platform: string, username: string): Observable<V1x1DisplayNameRecord> {
-    return this.http.get(this.v1x1ApiBase + "/platform/display-name/" + encodeURIComponent(platform.toLowerCase()) + "/user/by-username/" + encodeURIComponent(username))
-      .map(r => JsonConvert.deserializeObject(r.json(), V1x1DisplayNameRecord));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + "/platform/display-name/" + encodeURIComponent(platform.toLowerCase()) + "/user/by-username/" + encodeURIComponent(username))
+        .map(r => JsonConvert.deserializeObject(r.json(), V1x1DisplayNameRecord))
+    ).mergeAll();
   }
 
   getSelf(): Observable<V1x1GlobalUser> {
@@ -163,34 +169,44 @@ export class V1x1Api {
   }
 
   getSelfId(): Observable<string> {
-    return this.http.get(this.v1x1ApiBase + '/meta/self', this.getAuthorization())
-      .map(r => JsonConvert.deserializeObject(r.json(), V1x1ApiString))
-      .map(r => r.value);
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/meta/self', this.getAuthorization())
+        .map(r => JsonConvert.deserializeObject(r.json(), V1x1ApiString))
+        .map(r => r.value)
+    ).mergeAll();
   }
 
   getTenantIds(): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + '/tenants', this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries)
-      .map(tenantIds => tenantIds.filter(tenantId => tenantId !== '493073c3-8a6f-38fa-8e38-16af0b436482'));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants', this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+        .map(tenantIds => tenantIds.filter(tenantId => tenantId !== '493073c3-8a6f-38fa-8e38-16af0b436482'))
+    ).mergeAll();
   }
 
   getTenantPlatforms(tenantId: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/channels', this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries)
-      .catch((err, caught) => Observable.of([]));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/channels', this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+        .catch((err, caught) => Observable.of([]))
+    ).mergeAll();
   }
 
   getChannelIdsByPlatform(tenantId: string, platform: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/channels/' + platform, this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries);
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/channels/' + platform, this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+    ).mergeAll();
   }
 
   getChannel(tenantId: string, platform: string, channelId: string): Observable<V1x1Channel> {
-    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/channels/' + platform + '/' + encodeURIComponent(channelId), this.getAuthorization())
-      .map(r => JsonConvert.deserializeObject(r.json(), V1x1Channel));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/channels/' + platform + '/' + encodeURIComponent(channelId), this.getAuthorization())
+        .map(r => JsonConvert.deserializeObject(r.json(), V1x1Channel))
+    ).mergeAll();
   }
 
   getChannelsByPlatform(tenantId: string, platform: string): Observable<V1x1Channel[]> {
@@ -222,25 +238,29 @@ export class V1x1Api {
   }
 
   getTenantConfiguration(tenantId: string, module: string): Observable<V1x1Configuration> {
-    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/config/' + module, this.getAuthorization())
-      .map(r => r.json())
-      .map(r => new V1x1Configuration(JSON.parse(r.config_json)));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/config/' + module, this.getAuthorization())
+        .map(r => r.json())
+        .map(r => new V1x1Configuration(JSON.parse(r.config_json)))
+    ).mergeAll();
   }
 
   putTenantConfiguration(tenantId: string, module: string, config: V1x1Configuration): Observable<V1x1Configuration> {
-    return this.http.put(
-      this.v1x1ApiBase + '/tenants/' + tenantId + '/config/' + module,
-      JsonConvert.serializeObject({
-        'config_json': JSON.stringify(config.configuration)
-      }),
-      new RequestOptions({
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Authorization: this.authorization
-        })
-      }))
-        .map(r => r.json())
-        .map(r => new V1x1Configuration(JSON.parse(r.config_json)));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.put(
+        wc.apiBase + '/tenants/' + tenantId + '/config/' + module,
+        JsonConvert.serializeObject({
+          'config_json': JSON.stringify(config.configuration)
+        }),
+        new RequestOptions({
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            Authorization: this.globalState.authorization.getCurrent()
+          })
+        }))
+          .map(r => r.json())
+          .map(r => new V1x1Configuration(JSON.parse(r.config_json)))
+    ).mergeAll();
   }
 
   getTenantGroupWithMemberships(tenantId: string): Observable<V1x1GroupMembership[]> {
@@ -251,10 +271,12 @@ export class V1x1Api {
   }
 
   getGroupIds(tenantId: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups', this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries)
-      .catch((err, caught) => Observable.of([]));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/groups', this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+        .catch((err, caught) => Observable.of([]))
+    ).mergeAll();
   }
 
   getGroupMembership(tenantId: string, groupId: string): Observable<V1x1GroupMembership> {
@@ -266,8 +288,10 @@ export class V1x1Api {
   }
 
   getGroup(tenantId: string, groupId: string): Observable<V1x1Group> {
-    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId, this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1Group));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId, this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1Group))
+    ).mergeAll();
   }
 
   getGroupUsers(tenantId: string, groupId: string): Observable<V1x1GlobalUser[]> {
@@ -278,97 +302,113 @@ export class V1x1Api {
   }
 
   getGroupUserIds(tenantId: string, groupId: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users', this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries)
-      .catch((err, caught) => Observable.of([]));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users', this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+        .catch((err, caught) => Observable.of([]))
+    ).mergeAll();
   }
 
   addUserToGroup(tenantId: string, groupId: string, userId: string): Observable<V1x1GlobalUser[]> {
-    return this.http.post(
-      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users',
-      JsonConvert.serializeObject({
-        'value': userId
-      }),
-      new RequestOptions({
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Authorization: this.authorization
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.post(
+        wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users',
+        JsonConvert.serializeObject({
+          'value': userId
+        }),
+        new RequestOptions({
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            Authorization: this.globalState.authorization.getCurrent()
+          })
         })
-      })
-    )
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries)
-      .catch((err, caught) => Observable.of([]))
-      .map(userIds => userIds.map(userId => this.getGlobalUser(userId)))
-      .map(observableUsers => observableUsers.length === 0 ? Observable.of([]) : Observable.forkJoin(observableUsers))
-      .mergeAll();
+      )
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+        .catch((err, caught) => Observable.of([]))
+        .map(userIds => userIds.map(userId => this.getGlobalUser(userId)))
+        .map(observableUsers => observableUsers.length === 0 ? Observable.of([]) : Observable.forkJoin(observableUsers))
+        .mergeAll()
+    ).mergeAll();
   }
 
   removeUserFromGroup(tenantId: string, groupId: string, userId: string): Observable<V1x1GlobalUser[]> {
-    return this.http.delete(
-      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users/' + userId,
-      this.getAuthorization()
-    )
-      .map((r) => this.getGroupUsers(tenantId, groupId))
-      .mergeAll();
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.delete(
+        wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/users/' + userId,
+        this.getAuthorization()
+      )
+        .map((r) => this.getGroupUsers(tenantId, groupId))
+        .mergeAll()
+    ).mergeAll();
   }
 
   addPermissionToGroup(tenantId: string, groupId: string, permission: string): Observable<string[]> {
-    return this.http.post(
-      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions',
-      JsonConvert.serializeObject({
-        'value': permission
-      }),
-      new RequestOptions({
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Authorization: this.authorization
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.post(
+        wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions',
+        JsonConvert.serializeObject({
+          'value': permission
+        }),
+        new RequestOptions({
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            Authorization: this.globalState.authorization.getCurrent()
+          })
         })
-      })
-    )
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries)
-      .catch((err, caught) => Observable.of([]));
+      )
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+        .catch((err, caught) => Observable.of([]))
+    ).mergeAll();
   }
 
   removePermissionFromGroup(tenantId: string, groupId: string, permission: string): Observable<string[]> {
-    return this.http.delete(
-      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions/' + permission,
-      this.getAuthorization()
-    )
-      .map((r) => this.getGroupPermissions(tenantId, groupId))
-      .mergeAll();
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.delete(
+        wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions/' + permission,
+        this.getAuthorization()
+      )
+        .map((r) => this.getGroupPermissions(tenantId, groupId))
+        .mergeAll()
+    ).mergeAll();
   }
 
   getGroupPermissions(tenantId: string, groupId: string): Observable<string[]> {
-    return this.http.get(this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions', this.getAuthorization())
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-      .map((l: V1x1List<string>) => l.entries)
-      .catch((err, caught) => Observable.of([]));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId + '/permissions', this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((l: V1x1List<string>) => l.entries)
+        .catch((err, caught) => Observable.of([]))
+    ).mergeAll();
   }
 
   createGroup(tenantId: string, groupName: string): Observable<V1x1Group> {
-    return this.http.post(
-      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups',
-      JsonConvert.serializeObject({
-        'value': groupName
-      }),
-      new RequestOptions({
-        headers: new Headers({
-          'Content-Type': 'application/json',
-          Authorization: this.authorization
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.post(
+        wc.apiBase + '/tenants/' + tenantId + '/groups',
+        JsonConvert.serializeObject({
+          'value': groupName
+        }),
+        new RequestOptions({
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            Authorization: this.globalState.authorization.getCurrent()
+          })
         })
-      })
-    )
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1Group))
+      )
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1Group))
+    ).mergeAll();
   }
 
   deleteGroup(tenantId: string, groupId: string): Observable<boolean> {
-    return this.http.delete(
-      this.v1x1ApiBase + '/tenants/' + tenantId + '/groups/' + groupId,
-      this.getAuthorization()
-    )
-      .map(r => true);
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.delete(
+        wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId,
+        this.getAuthorization()
+      )
+        .map(r => true)
+    ).mergeAll();
   }
 }
