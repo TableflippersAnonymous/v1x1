@@ -2,7 +2,6 @@ package tv.v1x1.modules.channel.link_purger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.User;
@@ -40,7 +39,7 @@ public class LinkPurgerListener implements EventListener {
      */
     @EventHandler
     public void onChatMessage(final ChatMessageEvent ev) {
-        if(!module.getTenantConfiguration(ev.getChatMessage().getChannel().getTenant()).isEnabled())
+        if(!module.getConfiguration(ev.getChatMessage().getChannel()).isEnabled())
             return;
         module.delegator.handleChatMessage(ev);
         if(!shouldMonitorUser(ev)) return;

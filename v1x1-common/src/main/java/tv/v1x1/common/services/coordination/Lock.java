@@ -31,9 +31,6 @@ public class Lock {
                 throw e;
             }
             return callable.call();
-        } catch(final Exception e) {
-            LOG.warn("Got exception executing lock: {}", name, e);
-            throw e;
         } finally {
             try {
                 interProcessMutex.release();

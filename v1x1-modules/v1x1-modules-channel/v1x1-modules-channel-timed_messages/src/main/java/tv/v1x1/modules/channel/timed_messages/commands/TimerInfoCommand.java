@@ -12,7 +12,6 @@ import tv.v1x1.modules.channel.timed_messages.Timer;
 import tv.v1x1.modules.channel.timed_messages.TimerEntry;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * @author Josh
@@ -39,7 +38,7 @@ import java.util.Set;
         final Channel channel = chatMessage.getChannel();
         final String senderName = chatMessage.getSender().getDisplayName();
         final String timerStr = args.get(0);
-        final Timer t = module.getTimer(channel.getTenant(), timerStr);
+        final Timer t = module.getTimer(channel.getChannelGroup().getTenant(), timerStr);
         if(t == null) {
             Chat.i18nMessage(module, channel, "invalid.timer",
                     "commander", senderName,

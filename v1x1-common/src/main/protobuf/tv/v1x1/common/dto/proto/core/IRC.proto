@@ -99,6 +99,7 @@ message MessageTaggedIrcStanza {
         PREMIUM = 7;
         BITS = 8;
         BROADCASTER = 9;
+        TWITCHCON2017 = 10;
     }
 
     message Emote {

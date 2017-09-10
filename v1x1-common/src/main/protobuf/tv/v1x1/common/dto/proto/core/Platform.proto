@@ -6,4 +6,9 @@ enum Platform {
     UNKNOWN = 0;
     TWITCH = 1;
     DISCORD = 2;
+    SLACK = 3;
+    MIXER = 4;
+    YOUTUBE = 5;
+    CURSE = 6;
+    API = 7;
 };

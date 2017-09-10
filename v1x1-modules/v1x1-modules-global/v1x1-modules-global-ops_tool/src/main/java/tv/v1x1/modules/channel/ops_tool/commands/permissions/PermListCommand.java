@@ -1,7 +1,6 @@
 package tv.v1x1.modules.channel.ops_tool.commands.permissions;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
@@ -49,7 +48,7 @@ public class PermListCommand extends Command {
         final String search = args.get(0);
         final String groupName = args.get(1);
         final Channel channel = chatMessage.getChannel();
-        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getPlatform(), search);
+        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getChannelGroup().getPlatform(), search);
         if(tenant == null) {
             opsTool.respond(channel, "I don't know about that channel");
             return;

@@ -14,7 +14,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import tv.v1x1.common.dto.core.GlobalUser;
 import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.dto.db.ChannelPlatformMapping;
+import tv.v1x1.common.dto.db.ChannelGroupPlatformMapping;
 import tv.v1x1.common.dto.db.Permission;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.TenantGroup;
@@ -24,6 +24,7 @@ import tv.v1x1.common.dto.db.TenantGroupsByUser;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -33,13 +34,13 @@ import java.util.stream.Collectors;
  */
 @Singleton
 public class DAOTenantGroup {
-    public static final Tenant GLOBAL_TENANT = new Tenant(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes("__GLOBAL_TENANT__".getBytes())), ImmutableList.of());
+    public static final Tenant GLOBAL_TENANT = new Tenant(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes("__GLOBAL_TENANT__".getBytes())), "Global Tenant", ImmutableList.of());
 
     private final Session session;
     private final Mapper<TenantGroup> tenantGroupMapper;
     private final Mapper<TenantGroupMembership> tenantGroupMembershipMapper;
     private final Mapper<TenantGroupsByUser> tenantGroupsByUserMapper;
-    private final Mapper<ChannelPlatformMapping> channelPlatformMappingMapper;
+    private final Mapper<ChannelGroupPlatformMapping> channelGroupPlatformMappingMapper;
     private final TenantGroupAccessor accessor;
 
     @Accessor
@@ -53,8 +54,8 @@ public class DAOTenantGroup {
         @Query("SELECT * FROM tenant_groups_by_user WHERE user_id = ?")
         Result<TenantGroupsByUser> getTenantsByUser(UUID userId);
 
-        @Query("SELECT * FROM channel_platform_mapping WHERE platform = ? AND channel_id = ?")
-        Result<ChannelPlatformMapping> getChannelPlatformMappings(Platform platform, String channelId);
+        @Query("SELECT * FROM channel_group_platform_mapping WHERE platform = ? AND channel_group_id = ?")
+        Result<ChannelGroupPlatformMapping> getChannelGroupPlatformMappings(Platform platform, String channelGroupId);
     }
 
     @Inject
@@ -63,7 +64,7 @@ public class DAOTenantGroup {
         tenantGroupMapper = mappingManager.mapper(TenantGroup.class);
         tenantGroupMembershipMapper = mappingManager.mapper(TenantGroupMembership.class);
         tenantGroupsByUserMapper = mappingManager.mapper(TenantGroupsByUser.class);
-        channelPlatformMappingMapper = mappingManager.mapper(ChannelPlatformMapping.class);
+        channelGroupPlatformMappingMapper = mappingManager.mapper(ChannelGroupPlatformMapping.class);
         accessor = mappingManager.createAccessor(TenantGroupAccessor.class);
     }
 
@@ -82,20 +83,20 @@ public class DAOTenantGroup {
         return tenantGroupMapper.get(tenant.getId().getValue(), groupId);
     }
 
-    public ChannelPlatformMapping getChannelPlatformMapping(final Platform platform, final String channelId, final String platformGroup) {
-        return channelPlatformMappingMapper.get(platform, channelId, platformGroup);
+    public ChannelGroupPlatformMapping getChannelGroupPlatformMapping(final Platform platform, final String channelGroupId, final String platformGroup) {
+        return channelGroupPlatformMappingMapper.get(platform, channelGroupId, platformGroup);
     }
 
-    public Iterable<ChannelPlatformMapping> getChannelPlatformMappings(final Platform platform, final String channelId) {
-        return accessor.getChannelPlatformMappings(platform, channelId);
+    public Iterable<ChannelGroupPlatformMapping> getChannelGroupPlatformMappings(final Platform platform, final String channelGroupId) {
+        return accessor.getChannelGroupPlatformMappings(platform, channelGroupId);
     }
 
-    public Set<UUID> getGroupsByPlatformGroups(final Platform platform, final String channelId, final Set<String> platformGroups) {
-        return platformGroups.stream().map(platformGroup -> getChannelPlatformMapping(platform, channelId, platformGroup)).filter(mapping -> mapping != null).map(ChannelPlatformMapping::getGroupId).collect(Collectors.toSet());
+    public Set<UUID> getGroupsByPlatformGroups(final Platform platform, final String channelGroupId, final Set<String> platformGroups) {
+        return platformGroups.stream().map(platformGroup -> getChannelGroupPlatformMapping(platform, channelGroupId, platformGroup)).filter(Objects::nonNull).map(ChannelGroupPlatformMapping::getGroupId).collect(Collectors.toSet());
     }
 
     public Set<Permission> getPermissionsFromGroups(final Tenant tenant, final Set<UUID> groupIds) {
-        return groupIds.stream().map(groupId -> getTenantGroup(tenant, groupId)).filter(group -> group != null).map(TenantGroup::getPermissions).collect(HashSet::new, HashSet::addAll, HashSet::addAll);
+        return groupIds.stream().map(groupId -> getTenantGroup(tenant, groupId)).filter(Objects::nonNull).map(TenantGroup::getPermissions).collect(HashSet::new, HashSet::addAll, HashSet::addAll);
     }
 
     public Set<Permission> getTenantPermissions(final Tenant tenant, final GlobalUser globalUser) {
@@ -109,12 +110,12 @@ public class DAOTenantGroup {
         return getTenantPermissions(GLOBAL_TENANT, globalUser);
     }
 
-    public Set<Permission> getChannelPlatformPermissions(final Tenant tenant, final Platform platform, final String channelId, final Set<String> platformGroups) {
-        return getPermissionsFromGroups(tenant, getGroupsByPlatformGroups(platform, channelId, platformGroups));
+    public Set<Permission> getChannelGroupPlatformPermissions(final Tenant tenant, final Platform platform, final String channelGroupId, final Set<String> platformGroups) {
+        return getPermissionsFromGroups(tenant, getGroupsByPlatformGroups(platform, channelGroupId, platformGroups));
     }
 
-    public Set<Permission> getChannelPlatformPermissions(final Tenant tenant, final Platform platform, final String channelId, final String platformGroup) {
-        return getChannelPlatformPermissions(tenant, platform, channelId, ImmutableSet.of(platformGroup));
+    public Set<Permission> getChannelGroupPlatformPermissions(final Tenant tenant, final Platform platform, final String channelGroupId, final String platformGroup) {
+        return getChannelGroupPlatformPermissions(tenant, platform, channelGroupId, ImmutableSet.of(platformGroup));
     }
 
     public Set<Permission> getAllPermissions(final Tenant tenant, final GlobalUser globalUser) {
@@ -125,10 +126,10 @@ public class DAOTenantGroup {
         return set;
     }
 
-    public Set<Permission> getAllPermissions(final Tenant tenant, final GlobalUser globalUser, final Platform platform, final String channelId, final Set<String> platformGroups) {
+    public Set<Permission> getAllPermissions(final Tenant tenant, final GlobalUser globalUser, final Platform platform, final String channelGroupId, final Set<String> platformGroups) {
         final Set<Permission> set = getAllPermissions(tenant, globalUser);
         if(tenant != null)
-            set.addAll(getChannelPlatformPermissions(tenant, platform, channelId, platformGroups));
+            set.addAll(getChannelGroupPlatformPermissions(tenant, platform, channelGroupId, platformGroups));
         return set;
     }
 
@@ -211,11 +212,11 @@ public class DAOTenantGroup {
         tenantGroupMapper.delete(tenantGroup);
     }
 
-    public void setChannelPlatformMapping(final Platform platform, final String channelId, final String platformGroup, final TenantGroup tenantGroup) {
-        channelPlatformMappingMapper.save(new ChannelPlatformMapping(platform, channelId, platformGroup, tenantGroup.getGroupId()));
+    public void setChannelGroupPlatformMapping(final Platform platform, final String channelGroupId, final String platformGroup, final TenantGroup tenantGroup) {
+        channelGroupPlatformMappingMapper.save(new ChannelGroupPlatformMapping(platform, channelGroupId, platformGroup, tenantGroup.getGroupId()));
     }
 
-    public void clearChannelPlatformMapping(final Platform platform, final String channelId, final String platformGroup) {
-        channelPlatformMappingMapper.delete(new ChannelPlatformMapping(platform, channelId, platformGroup, null));
+    public void clearChannelGroupPlatformMapping(final Platform platform, final String channelGroupId, final String platformGroup) {
+        channelGroupPlatformMappingMapper.delete(new ChannelGroupPlatformMapping(platform, channelGroupId, platformGroup, null));
     }
 }

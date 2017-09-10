@@ -1,13 +1,23 @@
 import {V1x1Configuration} from "./v1x1_configuration";
+import {V1x1ChannelGroupConfigurationWrapper} from "./v1x1_channel_group_configuration_wrapper";
+
 export class V1x1ConfigurationSet {
-  global: V1x1Configuration;
   tenant: V1x1Configuration;
-  channel: V1x1Configuration;
+  channelGroups: V1x1ChannelGroupConfigurationWrapper[];
 
-
-  constructor(global: V1x1Configuration, tenant: V1x1Configuration, channel: V1x1Configuration) {
-    this.global = global;
+  constructor(tenant: V1x1Configuration, channelGroups: V1x1ChannelGroupConfigurationWrapper[]) {
     this.tenant = tenant;
-    this.channel = channel;
+    this.channelGroups = channelGroups;
+  }
+
+  dirty(): boolean {
+    return this.tenant.dirty() || this.childrenDirty();
+  }
+
+  childrenDirty(): boolean {
+    for(let i = 0; i < this.channelGroups.length; i++)
+      if(this.channelGroups[i].config.dirty())
+        return true;
+    return false;
   }
 }

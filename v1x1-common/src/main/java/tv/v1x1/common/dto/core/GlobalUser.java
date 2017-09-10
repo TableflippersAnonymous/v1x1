@@ -2,6 +2,7 @@ package tv.v1x1.common.dto.core;
 
 import com.google.common.collect.ImmutableList;
 import com.google.protobuf.InvalidProtocolBufferException;
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.proto.core.UUIDOuterClass;
 import tv.v1x1.common.dto.proto.core.UserOuterClass;
 import tv.v1x1.common.services.cache.CodecCache;
@@ -9,6 +10,7 @@ import tv.v1x1.common.services.cache.LambdaCodec;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -86,5 +88,9 @@ public class GlobalUser {
     @Override
     public String toString() {
         return "{GlobalUser/" + getId() + "}";
+    }
+
+    public Optional<User> getUser(final Platform platform, final String userId) {
+        return entries.stream().filter(user -> user.getPlatform().equals(platform) && user.getId().equals(userId)).findFirst();
     }
 }

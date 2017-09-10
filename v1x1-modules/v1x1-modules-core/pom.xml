@@ -16,6 +16,7 @@
 
   <modules>
     <module>v1x1-modules-core-tmi</module>
+    <module>v1x1-modules-core-discord</module>
     <module>v1x1-modules-core-chat_router</module>
     <module>v1x1-modules-core-event_router</module>
     <module>v1x1-modules-core-scheduler</module>

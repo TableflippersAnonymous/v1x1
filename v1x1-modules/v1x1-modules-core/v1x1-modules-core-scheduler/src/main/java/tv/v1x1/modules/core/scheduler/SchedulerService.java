@@ -7,10 +7,7 @@ import tv.v1x1.common.dto.messages.requests.DelayScheduleRequest;
 import tv.v1x1.common.dto.messages.requests.IntervalScheduleRequest;
 import tv.v1x1.common.dto.messages.requests.ScheduleRequest;
 import tv.v1x1.common.dto.messages.responses.ScheduleResponse;
-import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.Module;
-import tv.v1x1.common.modules.ModuleSettings;
-import tv.v1x1.common.modules.TenantConfiguration;
 import tv.v1x1.common.rpc.services.ThreadedService;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.modules.core.scheduler.dao.DAOCronSchedule;
@@ -29,7 +26,7 @@ public class SchedulerService extends ThreadedService<ScheduleRequest, ScheduleR
     private final DelayScheduler delayScheduler;
     private final IntervalScheduler intervalScheduler;
 
-    public SchedulerService(final Module<?, ?, ?, ?> module) {
+    public SchedulerService(final Module<?, ?> module) {
         super(module, "Scheduler", ScheduleRequest.class);
         final MessageQueue messageQueue = module.getMessageQueueManager().forName(Module.getMainQueueForModule(new tv.v1x1.common.dto.core.Module("event_router")));
         final MappingManager mappingManager = module.getMappingManager();

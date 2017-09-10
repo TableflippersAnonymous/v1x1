@@ -52,12 +52,12 @@ public class UnlinkCommand extends Command {
         final String vgroup = args.get(1);
         final String pgroup = args.get(2);
         final Channel channel = chatMessage.getChannel();
-        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getPlatform(), search);
+        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getChannelGroup().getPlatform(), search);
         if(tenant == null) {
             opsTool.respond(channel, "I don't know about that channel");
             return;
         }
-        if(opsTool.clearLink(channel, channel.getPlatform(), vgroup, pgroup)) {
+        if(opsTool.clearLink(channel, channel.getChannelGroup().getPlatform(), vgroup, pgroup)) {
             opsTool.respond(channel, "Platform mapping removed");
         } else {
             opsTool.respond(channel, "Group doesn't exist");

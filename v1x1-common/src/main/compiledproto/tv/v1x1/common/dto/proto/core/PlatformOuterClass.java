@@ -31,6 +31,26 @@ public final class PlatformOuterClass {
      * <code>DISCORD = 2;</code>
      */
     DISCORD(2),
+    /**
+     * <code>SLACK = 3;</code>
+     */
+    SLACK(3),
+    /**
+     * <code>MIXER = 4;</code>
+     */
+    MIXER(4),
+    /**
+     * <code>YOUTUBE = 5;</code>
+     */
+    YOUTUBE(5),
+    /**
+     * <code>CURSE = 6;</code>
+     */
+    CURSE(6),
+    /**
+     * <code>API = 7;</code>
+     */
+    API(7),
     ;
 
     /**
@@ -45,6 +65,26 @@ public final class PlatformOuterClass {
      * <code>DISCORD = 2;</code>
      */
     public static final int DISCORD_VALUE = 2;
+    /**
+     * <code>SLACK = 3;</code>
+     */
+    public static final int SLACK_VALUE = 3;
+    /**
+     * <code>MIXER = 4;</code>
+     */
+    public static final int MIXER_VALUE = 4;
+    /**
+     * <code>YOUTUBE = 5;</code>
+     */
+    public static final int YOUTUBE_VALUE = 5;
+    /**
+     * <code>CURSE = 6;</code>
+     */
+    public static final int CURSE_VALUE = 6;
+    /**
+     * <code>API = 7;</code>
+     */
+    public static final int API_VALUE = 7;
 
 
     public final int getNumber() {
@@ -64,6 +104,11 @@ public final class PlatformOuterClass {
         case 0: return UNKNOWN;
         case 1: return TWITCH;
         case 2: return DISCORD;
+        case 3: return SLACK;
+        case 4: return MIXER;
+        case 5: return YOUTUBE;
+        case 6: return CURSE;
+        case 7: return API;
         default: return null;
       }
     }
@@ -123,8 +168,9 @@ public final class PlatformOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\016Platform.proto\022\035tv.v1x1.common.dto.pro" +
-      "to.core*0\n\010Platform\022\013\n\007UNKNOWN\020\000\022\n\n\006TWIT" +
-      "CH\020\001\022\013\n\007DISCORD\020\002"
+      "to.core*g\n\010Platform\022\013\n\007UNKNOWN\020\000\022\n\n\006TWIT" +
+      "CH\020\001\022\013\n\007DISCORD\020\002\022\t\n\005SLACK\020\003\022\t\n\005MIXER\020\004\022" +
+      "\013\n\007YOUTUBE\020\005\022\t\n\005CURSE\020\006\022\007\n\003API\020\007"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

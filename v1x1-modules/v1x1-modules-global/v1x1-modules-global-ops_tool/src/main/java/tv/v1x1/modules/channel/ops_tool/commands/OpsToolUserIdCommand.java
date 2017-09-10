@@ -52,7 +52,7 @@ public class OpsToolUserIdCommand extends Command {
                 userId = displayNameService.getIdFromDisplayName(channel, args.get(0));
             else
                 userId = chatMessage.getSender().getId();
-            final GlobalUser user = opsTool.getUser(channel.getPlatform(), userId);
+            final GlobalUser user = opsTool.getUser(channel.getChannelGroup().getPlatform(), userId);
             if (user == null)
                 opsTool.respond(channel, "I don't know that user");
             else

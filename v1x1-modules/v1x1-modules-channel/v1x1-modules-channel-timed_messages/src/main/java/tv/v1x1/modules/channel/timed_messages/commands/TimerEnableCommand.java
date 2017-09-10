@@ -40,7 +40,7 @@ public class TimerEnableCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String senderName = chatMessage.getSender().getDisplayName();
         final String timerStr = args.get(0);
-        final Timer t = module.getTimer(channel.getTenant(), timerStr);
+        final Timer t = module.getTimer(channel.getChannelGroup().getTenant(), timerStr);
         if(t == null) {
             Chat.i18nMessage(module, channel, "invalid.timer");
             return;
@@ -51,7 +51,7 @@ public class TimerEnableCommand extends Command {
         else
             enabled = false;
         try {
-            if(module.enableTimer(channel.getTenant(), timerStr, enabled)) {
+            if(module.enableTimer(channel.getChannelGroup().getTenant(), timerStr, enabled)) {
                 Chat.i18nMessage(module, channel, command + ".success",
                         "commander", senderName,
                         "id", timerStr);

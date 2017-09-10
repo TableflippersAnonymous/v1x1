@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by naomi on 10/5/16.
  */
-public abstract class ThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> extends Module<T, U, V, W> {
+public abstract class ThreadedModule<T extends GlobalConfiguration, U extends UserConfiguration> extends Module<T, U> {
     private final ExecutorService executorService;
 
     protected ThreadedModule() {

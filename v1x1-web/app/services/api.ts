@@ -10,69 +10,72 @@ import {V1x1List} from "../model/v1x1_list";
 import {JsonConvert} from "json2typescript";
 import {V1x1State} from "../model/v1x1_state";
 import {V1x1AuthToken} from "../model/v1x1_auth_token";
-import {V1x1TwitchOauthCode} from "../model/v1x1_twitch_oauth_code";
+import {V1x1OauthCode} from "../model/v1x1_oauth_code";
 import {V1x1GlobalUser} from "../model/v1x1_global_user";
 import {V1x1User} from "../model/v1x1_user";
 import {V1x1ApiString} from "../model/v1x1_api_string";
 import {V1x1Tenant} from "../model/v1x1_tenant";
-import {V1x1Channel} from "../model/v1x1_channel";
 import {V1x1Configuration} from "../model/v1x1_configuration";
 import {V1x1Group} from "../model/v1x1_group";
 import {V1x1GroupMembership} from "../model/v1x1_group_membership";
 import {V1x1DisplayNameRecord} from "../model/v1x1_display_name_record";
 import {V1x1WebInfo} from "./web_info";
 import {V1x1GlobalState} from "./global_state";
+import {V1x1ConfigurationSet} from "../model/v1x1_configuration_set";
+import {V1x1ChannelGroup} from "../model/v1x1_channel_group";
+import {V1x1ChannelGroupConfiguration} from "../model/v1x1_channel_group_configuration";
+import {V1x1ChannelGroupConfigurationWrapper} from "../model/v1x1_channel_group_configuration_wrapper";
+import {V1x1Channel} from "../model/v1x1_channel";
+import {V1x1ChannelConfigurationWrapper} from "../model/v1x1_channel_configuration_wrapper";
+import {V1x1ChannelGroupPlatformMapping} from "../model/v1x1_channel_group_platform_mapping";
+import {V1x1TenantPlatformMapping} from "../model/v1x1_tenant_platform_mapping";
+import {V1x1ChannelGroupPlatformMappingWrapper} from "../model/v1x1_channel_group_platform_mapping_wrapper";
 
 @Injectable()
 export class V1x1Api {
   constructor(private http: Http, private webInfo: V1x1WebInfo, private globalState: V1x1GlobalState) {}
 
-  getConfigurationDefinitionList(type: string): Observable<string[]> {
+  getConfigurationDefinitionList(type: string): Observable<V1x1ConfigurationDefinition[]> {
     return this.webInfo.getWebConfig().map((wc) =>
       this.http.get(wc.apiBase + '/platform/config-definitions/' + type)
         .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-        .map((l: V1x1List<string>) => l.entries)
+        .map((l: V1x1List<any>) => l.entries.map(x => JsonConvert.deserializeObject(x, V1x1ConfigurationDefinition)))
     ).mergeAll();
   }
 
-  getModuleList(): Observable<string[]> {
-    return Observable.forkJoin([
-      //this.getConfigurationDefinitionList("global"),
-      this.getConfigurationDefinitionList("tenant"),
-      this.getConfigurationDefinitionList("channel")
-    ]).map(r => [].concat.apply([], r).filter((v, idx, self) => self.indexOf(v) === idx));
+  getModuleList(global: V1x1ConfigurationDefinition[], user: V1x1ConfigurationDefinition[]): string[] {
+    let moduleNames: string[] = global.concat(user).map((configDefinition: V1x1ConfigurationDefinition) => configDefinition.name);
+    return [].concat.apply([], moduleNames).filter((v, idx, self) => self.indexOf(v) === idx);
   }
 
-  getConfigurationDefinition(type: string, moduleName: string): Observable<V1x1ConfigurationDefinition> {
-    return this.webInfo.getWebConfig().map((wc) =>
-      this.http.get(wc.apiBase + '/platform/config-definitions/' + type + '/' + moduleName)
-        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1ConfigurationDefinition)).catch((err, caught) => Observable.of(null))
-    ).mergeAll();
-  }
-
-  getConfigurationDefinitionSet(moduleName: string): Observable<V1x1ConfigurationDefinitionSet> {
+  getConfigurationDefinitions(): Observable<V1x1ConfigurationDefinitionSet[]> {
     return Observable.zip(
-      //this.getConfigurationDefinition("global", moduleName),
-      this.getConfigurationDefinition("tenant", moduleName),
-      this.getConfigurationDefinition("channel", moduleName),
-      (/*global: V1x1ConfigurationDefinition,*/ tenant: V1x1ConfigurationDefinition, channel: V1x1ConfigurationDefinition) => new V1x1ConfigurationDefinitionSet(/*global*/null, tenant, channel)
+      this.getConfigurationDefinitionList("global"),
+      this.getConfigurationDefinitionList("user"),
+      (global: V1x1ConfigurationDefinition[], user: V1x1ConfigurationDefinition[]) => this.getModuleList(global, user)
+        .map((moduleName: string) => new V1x1ConfigurationDefinitionSet(
+          global.find((configDefinition: V1x1ConfigurationDefinition) => configDefinition.name == moduleName),
+          user.find((configDefinition: V1x1ConfigurationDefinition) => configDefinition.name == moduleName)
+        ))
     );
   }
 
-  getModule(moduleName: string): Observable<V1x1Module> {
-    return Observable.zip(
-      this.getConfigurationDefinitionSet(moduleName),
-      (configDefinitionSet: V1x1ConfigurationDefinitionSet) => new V1x1Module(moduleName, configDefinitionSet)
+  getModule(configurationDefinitionSet: V1x1ConfigurationDefinitionSet): V1x1Module {
+    return new V1x1Module((configurationDefinitionSet.global || configurationDefinitionSet.user).name, configurationDefinitionSet);
+  }
+
+  getModulesFromConfigurationDefinitions(configurationDefinitionSets: V1x1ConfigurationDefinitionSet[]): V1x1Module[] {
+    return configurationDefinitionSets.map(
+      (configDefinitionSet: V1x1ConfigurationDefinitionSet) =>
+        this.getModule(configDefinitionSet)
     );
   }
 
   getModules(): Observable<V1x1Module[]> {
-    return this.getModuleList().map(
-      modules =>
-        Observable.forkJoin(modules.map(
-          moduleName => this.getModule(moduleName)
-        ))
-    ).mergeAll();
+    return this.getConfigurationDefinitions().map(
+      (configDefinitions: V1x1ConfigurationDefinitionSet[]) =>
+        this.getModulesFromConfigurationDefinitions(configDefinitions)
+    );
   }
 
   getState(): Observable<V1x1State> {
@@ -81,13 +84,30 @@ export class V1x1Api {
     ).mergeAll();
   }
 
-  loginTwitch(twitchOauthCode: V1x1TwitchOauthCode): Observable<V1x1AuthToken> {
+  loginTwitch(twitchOauthCode: V1x1OauthCode): Observable<V1x1AuthToken> {
     return this.webInfo.getWebConfig().map((wc) =>
       this.http.post(
         wc.apiBase + '/meta/login/twitch',
         JsonConvert.serializeObject({
           'oauth_code': twitchOauthCode.oauthCode,
           'oauth_state': twitchOauthCode.oauthState
+        }),
+        new RequestOptions({
+          headers: new Headers({
+            'Content-Type': 'application/json'
+          })
+        })
+      ).map((r) => JsonConvert.deserializeObject(r.json(), V1x1AuthToken))
+    ).mergeAll();
+  }
+
+  loginDiscord(oauthCode: V1x1OauthCode): Observable<V1x1AuthToken> {
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.post(
+        wc.apiBase + '/meta/login/discord',
+        JsonConvert.serializeObject({
+          'oauth_code': oauthCode.oauthCode,
+          'oauth_state': oauthCode.oauthState
         }),
         new RequestOptions({
           headers: new Headers({
@@ -185,48 +205,11 @@ export class V1x1Api {
     ).mergeAll();
   }
 
-  getTenantPlatforms(tenantId: string): Observable<string[]> {
-    return this.webInfo.getWebConfig().map((wc) =>
-      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/channels', this.getAuthorization())
-        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-        .map((l: V1x1List<string>) => l.entries)
-        .catch((err, caught) => Observable.of([]))
-    ).mergeAll();
-  }
-
-  getChannelIdsByPlatform(tenantId: string, platform: string): Observable<string[]> {
-    return this.webInfo.getWebConfig().map((wc) =>
-      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/channels/' + platform, this.getAuthorization())
-        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-        .map((l: V1x1List<string>) => l.entries)
-    ).mergeAll();
-  }
-
-  getChannel(tenantId: string, platform: string, channelId: string): Observable<V1x1Channel> {
-    return this.webInfo.getWebConfig().map((wc) =>
-      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/channels/' + platform + '/' + encodeURIComponent(channelId), this.getAuthorization())
-        .map(r => JsonConvert.deserializeObject(r.json(), V1x1Channel))
-    ).mergeAll();
-  }
-
-  getChannelsByPlatform(tenantId: string, platform: string): Observable<V1x1Channel[]> {
-    return this.getChannelIdsByPlatform(tenantId, platform)
-      .map(channelIds => channelIds.map(channelId => this.getChannel(tenantId, platform, channelId)))
-      .map(observableChannels => Observable.forkJoin(observableChannels))
-      .mergeAll();
-  }
-
-  getChannels(tenantId: string): Observable<V1x1Channel[]> {
-    return this.getTenantPlatforms(tenantId)
-      .map(platforms => platforms.map(platform => this.getChannelsByPlatform(tenantId, platform)))
-      .map(observableChannels => Observable.forkJoin(observableChannels))
-      .mergeAll()
-      .map(channels => [].concat.apply([], channels));
-  }
-
   getTenant(tenantId: string): Observable<V1x1Tenant> {
-    return this.getChannels(tenantId)
-      .map(channels => channels.length === 0 ? null : new V1x1Tenant(tenantId, channels));
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/tenants/' + tenantId, this.getAuthorization())
+        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1Tenant))
+    ).mergeAll();
   }
 
   getTenants(): Observable<V1x1Tenant[]> {
@@ -237,11 +220,27 @@ export class V1x1Api {
       .map(tenants => tenants.filter(tenant => tenant !== null));
   }
 
-  getTenantConfiguration(tenantId: string, module: string): Observable<V1x1Configuration> {
+  getTenantConfigurationSet(tenantId: string, module: string): Observable<V1x1ConfigurationSet> {
     return this.webInfo.getWebConfig().map((wc) =>
-      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/config/' + module, this.getAuthorization())
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/config/' + module + '/all', this.getAuthorization())
         .map(r => r.json())
-        .map(r => new V1x1Configuration(JSON.parse(r.config_json)))
+        .map(r => new V1x1ConfigurationSet(
+          new V1x1Configuration(r.tenant_configuration.enabled, JSON.parse(r.tenant_configuration.config_json)),
+          r.channel_group_configurations.map(
+            channelGroupConfiguration => new V1x1ChannelGroupConfigurationWrapper(
+              JsonConvert.deserializeObject(channelGroupConfiguration.channel_group, V1x1ChannelGroup),
+              new V1x1ChannelGroupConfiguration(
+                new V1x1Configuration(channelGroupConfiguration.channel_group_configuration.enabled, JSON.parse(channelGroupConfiguration.channel_group_configuration.config_json)),
+                channelGroupConfiguration.channel_configurations.map(
+                  channelConfiguration => new V1x1ChannelConfigurationWrapper(
+                    JsonConvert.deserializeObject(channelConfiguration.channel, V1x1Channel),
+                    new V1x1Configuration(channelConfiguration.channel_configuration.enabled, JSON.parse(channelConfiguration.channel_configuration.config_json))
+                  )
+                )
+              )
+            )
+          )
+        ))
     ).mergeAll();
   }
 
@@ -259,38 +258,66 @@ export class V1x1Api {
           })
         }))
           .map(r => r.json())
-          .map(r => new V1x1Configuration(JSON.parse(r.config_json)))
+          .map(r => new V1x1Configuration(r.enabled, JSON.parse(r.config_json)))
+    ).mergeAll();
+  }
+
+  putChannelGroupConfiguration(tenantId: string, module: string, platform: string, channelGroupId: string, config: V1x1Configuration): Observable<V1x1Configuration> {
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.put(
+        wc.apiBase + '/tenants/' + tenantId + '/config/' + module + '/' + platform + '/' + channelGroupId,
+        JsonConvert.serializeObject({
+          'enabled': config.enabled,
+          'config_json': JSON.stringify(config.configuration)
+        }),
+        new RequestOptions({
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            Authorization: this.globalState.authorization.getCurrent()
+          })
+        }))
+        .map(r => r.json())
+        .map(r => new V1x1Configuration(r.enabled, JSON.parse(r.config_json)))
+    ).mergeAll();
+  }
+
+  putChannelConfiguration(tenantId: string, module: string, platform: string, channelGroupId: string, channelId: string, config: V1x1Configuration): Observable<V1x1Configuration> {
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.put(
+        wc.apiBase + '/tenants/' + tenantId + '/config/' + module + '/' + platform + '/' + channelGroupId + '/' + channelId,
+        JsonConvert.serializeObject({
+          'enabled': config.enabled,
+          'config_json': JSON.stringify(config.configuration)
+        }),
+        new RequestOptions({
+          headers: new Headers({
+            'Content-Type': 'application/json',
+            Authorization: this.globalState.authorization.getCurrent()
+          })
+        }))
+        .map(r => r.json())
+        .map(r => new V1x1Configuration(r.enabled, JSON.parse(r.config_json)))
     ).mergeAll();
   }
 
   getTenantGroupWithMemberships(tenantId: string): Observable<V1x1GroupMembership[]> {
-    return this.getGroupIds(tenantId)
-      .map(groupIds => groupIds.map(groupId => this.getGroupMembership(tenantId, groupId)))
-      .map(observableGroups => Observable.forkJoin(observableGroups))
-      .mergeAll();
-  }
-
-  getGroupIds(tenantId: string): Observable<string[]> {
     return this.webInfo.getWebConfig().map((wc) =>
-      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/groups', this.getAuthorization())
+      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/groups/all', this.getAuthorization())
         .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
-        .map((l: V1x1List<string>) => l.entries)
-        .catch((err, caught) => Observable.of([]))
-    ).mergeAll();
-  }
-
-  getGroupMembership(tenantId: string, groupId: string): Observable<V1x1GroupMembership> {
-    return Observable.zip(
-      this.getGroup(tenantId, groupId),
-      this.getGroupUsers(tenantId, groupId),
-      (group, users) => new V1x1GroupMembership(group, users)
-    );
-  }
-
-  getGroup(tenantId: string, groupId: string): Observable<V1x1Group> {
-    return this.webInfo.getWebConfig().map((wc) =>
-      this.http.get(wc.apiBase + '/tenants/' + tenantId + '/groups/' + groupId, this.getAuthorization())
-        .map((r) => JsonConvert.deserializeObject(r.json(), V1x1Group))
+        .map((l: V1x1List<any>) => l.entries)
+        .map((r: any) => r.map(
+          (groupMembership: any) => new V1x1GroupMembership(
+            JsonConvert.deserializeObject(groupMembership.group, V1x1Group),
+            groupMembership.members.map(
+              globalUser => new V1x1GlobalUser(
+                globalUser.id,
+                globalUser.users.map(
+                  user => JsonConvert.deserializeObject(user, V1x1User)
+                )
+              )
+            )
+          )
+        ))
     ).mergeAll();
   }
 
@@ -410,5 +437,30 @@ export class V1x1Api {
       )
         .map(r => true)
     ).mergeAll();
+  }
+
+  getChannelGroupPlatformMappings(tenantId: string, platform: string, channelGroupId: string): Observable<V1x1ChannelGroupPlatformMapping[]> {
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(
+        wc.apiBase + '/tenants/' + tenantId + '/channels/' + platform + '/' + channelGroupId + '/mappings',
+        this.getAuthorization()
+      )
+        .map(r => JsonConvert.deserializeObject(r.json(), V1x1List))
+        .map((r: V1x1List<any>) => r.entries.map(e => JsonConvert.deserializeObject(e, V1x1ChannelGroupPlatformMapping)))
+        .catch((err, caught) => Observable.of([]))
+    ).mergeAll();
+  }
+
+  getChannelGroupPlatformMappingWrapper(tenantId: string, channelGroup: V1x1ChannelGroup): Observable<V1x1ChannelGroupPlatformMappingWrapper> {
+    return this.getChannelGroupPlatformMappings(tenantId, channelGroup.platform, channelGroup.id)
+      .map(r => new V1x1ChannelGroupPlatformMappingWrapper(channelGroup, r));
+  }
+
+  getTenantPlatformMappings(tenant: V1x1Tenant): Observable<V1x1TenantPlatformMapping> {
+    return Observable.forkJoin(
+      tenant.channelGroups.map(
+        channelGroup => this.getChannelGroupPlatformMappingWrapper(tenant.id, channelGroup)
+      )
+    ).map(r => new V1x1TenantPlatformMapping(r));
   }
 }

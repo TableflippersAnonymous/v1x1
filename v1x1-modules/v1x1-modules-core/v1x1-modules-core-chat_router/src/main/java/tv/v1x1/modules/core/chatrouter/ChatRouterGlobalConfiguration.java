@@ -5,5 +5,5 @@ import tv.v1x1.common.modules.GlobalConfiguration;
 /**
  * Created by naomi on 10/16/2016.
  */
-public class ChatRouterGlobalConfiguration implements GlobalConfiguration {
+public class ChatRouterGlobalConfiguration extends GlobalConfiguration {
 }

@@ -31,12 +31,12 @@ import tv.v1x1.common.config.ConfigScanner;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
 import tv.v1x1.common.dao.DAOThirdPartyCredential;
 import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.ChannelConfigurationDefinition;
+import tv.v1x1.common.dto.core.ChannelGroup;
 import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.core.GlobalUser;
 import tv.v1x1.common.dto.core.ModuleInstance;
 import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.dto.core.TenantConfigurationDefinition;
+import tv.v1x1.common.dto.core.UserConfigurationDefinition;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.ThirdPartyCredential;
 import tv.v1x1.common.dto.db.TwitchOauthToken;
@@ -55,13 +55,12 @@ import tv.v1x1.common.rpc.client.ServiceClient;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributorImpl;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
-import tv.v1x1.common.services.persistence.ChannelConfigurationProvider;
 import tv.v1x1.common.services.persistence.ConfigurationProvider;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.persistence.KeyValueStore;
-import tv.v1x1.common.services.persistence.TenantConfigurationProvider;
 import tv.v1x1.common.services.persistence.TenantKeyValueStoreImpl;
+import tv.v1x1.common.services.persistence.UserConfigurationProvider;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.state.DisplayNameService;
@@ -80,7 +79,7 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by naomi on 10/4/16.
  */
-public abstract class Module<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> {
+public abstract class Module<T extends GlobalConfiguration, U extends UserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     /* Config */
@@ -131,7 +130,7 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         configFile = filename;
         final String settingsString = new String(Files.readAllBytes(Paths.get(filename)));
         final String fixedSettings = settingsString.replace("{{module_name}}", getClass().getCanonicalName());
-        settings = mapper.readValue(fixedSettings, getSettingsClass());
+        settings = mapper.readValue(fixedSettings, getGlobalConfigurationClass());
     }
 
     private void initializeInternal() {
@@ -221,16 +220,12 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return settings;
     }
 
-    public ConfigurationProvider<U> getGlobalConfigProvider() {
+    public ConfigurationProvider<T> getGlobalConfigProvider() {
         return getInjector().getInstance(ConfigurationProvider.class);
     }
 
-    public TenantConfigurationProvider<V> getTenantConfigProvider() {
-        return getInjector().getInstance(TenantConfigurationProvider.class);
-    }
-
-    public ChannelConfigurationProvider<W> getChannelConfigProvider() {
-        return getInjector().getInstance(ChannelConfigurationProvider.class);
+    public UserConfigurationProvider<U> getUserConfigProvider() {
+        return getInjector().getInstance(UserConfigurationProvider.class);
     }
 
     protected KeyValueStore getTemporaryKeyValueStore() {
@@ -345,16 +340,20 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         return loadBalancingDistributorMap.get(path);
     }
 
-    public U getGlobalConfiguration() {
+    public T getGlobalConfiguration() {
         return getGlobalConfigProvider().getConfiguration();
     }
 
-    public V getTenantConfiguration(final Tenant tenant) {
-        return getTenantConfigProvider().getTenantConfiguration(tenant);
+    public U getConfiguration(final Tenant tenant) {
+        return getUserConfigProvider().getConfiguration(tenant);
     }
 
-    public W getChannelConfiguration(final Channel channel) {
-        return getChannelConfigProvider().getChannelConfiguration(channel);
+    public U getConfiguration(final ChannelGroup channelGroup) {
+        return getUserConfigProvider().getConfiguration(channelGroup);
+    }
+
+    public U getConfiguration(final Channel channel) {
+        return getUserConfigProvider().getConfiguration(channel);
     }
 
     public TwitchApi getTwitchApi(final String userId) {
@@ -428,20 +427,12 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
     }
 
     /* ******************************* PRIVATE METHODS ******************************* */
-    private Class<T> getSettingsClass() {
-        return Generics.getTypeParameter(getClass(), ModuleSettings.class);
-    }
-
-    public Class<U> getGlobalConfigurationClass() {
+    public Class<T> getGlobalConfigurationClass() {
         return Generics.getTypeParameter(getClass(), GlobalConfiguration.class);
     }
 
-    public Class<V> getTenantConfigurationClass() {
-        return Generics.getTypeParameter(getClass(), TenantConfiguration.class);
-    }
-
-    public Class<W> getChannelConfigurationClass() {
-        return Generics.getTypeParameter(getClass(), ChannelConfiguration.class);
+    public Class<U> getUserConfigurationClass() {
+        return Generics.getTypeParameter(getClass(), UserConfiguration.class);
     }
 
     private void updateConfigurationDefinitions() {
@@ -449,12 +440,9 @@ public abstract class Module<T extends ModuleSettings, U extends GlobalConfigura
         final GlobalConfigurationDefinition globalConfigurationDefinition = ConfigScanner.scanGlobal(getGlobalConfigurationClass());
         if(globalConfigurationDefinition != null)
             daoConfigurationDefinition.put(globalConfigurationDefinition.toDB());
-        final TenantConfigurationDefinition tenantConfigurationDefinition = ConfigScanner.scanTenant(getTenantConfigurationClass());
-        if(tenantConfigurationDefinition != null)
-            daoConfigurationDefinition.put(tenantConfigurationDefinition.toDB());
-        final ChannelConfigurationDefinition channelConfigurationDefinition = ConfigScanner.scanChannel(getChannelConfigurationClass());
-        if(channelConfigurationDefinition != null)
-            daoConfigurationDefinition.put(channelConfigurationDefinition.toDB());
+        final UserConfigurationDefinition userConfigurationDefinition = ConfigScanner.scanUser(getUserConfigurationClass());
+        if(userConfigurationDefinition != null)
+            daoConfigurationDefinition.put(userConfigurationDefinition.toDB());
     }
 
     /* ******************************* LANGUAGE ******************************* */

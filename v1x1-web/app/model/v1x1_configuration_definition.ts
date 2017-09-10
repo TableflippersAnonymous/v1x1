@@ -1,9 +1,11 @@
-import {V1x1ConfigurationDefinitionField, Permission} from "./v1x1_configuration_definition_field";
-import {JsonObject, JsonProperty, JsonConvert} from "json2typescript";
+import {Permission, V1x1ConfigurationDefinitionField} from "./v1x1_configuration_definition_field";
+import {JsonConvert, JsonObject, JsonProperty} from "json2typescript";
+
 @JsonObject
 export class V1x1ConfigurationDefinition {
   name: string = undefined;
-  display_name: string = undefined;
+  @JsonProperty("display_name")
+  displayName: string = undefined;
   description: string = undefined;
   @JsonProperty("tenant_permission")
   tenantPermissionString: string = undefined;

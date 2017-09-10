@@ -33,6 +33,12 @@ services:
       - redis
       - zoo
       - cass
+  discord:
+    image: v1x1-discord:latest
+    depends_on:
+      - redis
+      - zoo
+      - cass
   scheduler:
     image: v1x1-scheduler:latest
     depends_on:

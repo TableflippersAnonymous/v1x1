@@ -7,8 +7,8 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
-import tv.v1x1.modules.channel.factoids.FactoidsModule;
 import tv.v1x1.modules.channel.factoids.Factoid;
+import tv.v1x1.modules.channel.factoids.FactoidsModule;
 
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class FactListCommand extends Command {
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
         final String commander = chatMessage.getSender().getDisplayName();
-        final Set<Map.Entry<String, Factoid>> facts = module.getFacts(channel.getTenant());
+        final Set<Map.Entry<String, Factoid>> facts = module.getFacts(channel.getChannelGroup().getTenant());
         if(facts == null || facts.isEmpty()) {
             Chat.i18nMessage(module, channel, "list.nofacts",
             "commander", commander);

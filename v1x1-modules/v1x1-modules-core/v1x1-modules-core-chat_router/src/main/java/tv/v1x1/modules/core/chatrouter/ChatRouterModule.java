@@ -5,7 +5,7 @@ import tv.v1x1.common.modules.ServiceModule;
 /**
  * Created by naomi on 10/16/2016.
  */
-public class ChatRouterModule extends ServiceModule<ChatRouterSettings, ChatRouterGlobalConfiguration, ChatRouterTenantConfiguration, ChatRouterChannelConfiguration> {
+public class ChatRouterModule extends ServiceModule<ChatRouterGlobalConfiguration, ChatRouterUserConfiguration> {
     @Override
     public String getName() {
         return "chat_router";

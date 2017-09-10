@@ -2,6 +2,7 @@ import {Component, Input} from "@angular/core";
 import {V1x1ConfigurationDefinitionField} from "../../../model/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "../configurable";
 import {V1x1Api} from "../../../services/api";
+
 @Component({
   selector: 'configuration-field-value-user-list',
   template: `
@@ -14,9 +15,16 @@ import {V1x1Api} from "../../../services/api";
     <div>
       <div class="input-group">
         <div class="input-group-addon" style="padding: .25rem .75rem;">
-          <select class="form-control" style="font-family: 'FontAwesome', Arial; width: auto; height: auto; padding: .25rem .75rem;" [(ngModel)]="newPlatform">
-            <option value="TWITCH">&#xf1e8;/</option>
-          </select>
+          <div ngbDropdown>
+            <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
+              <span *ngIf="newPlatform === 'TWITCH'" class="color-twitch"><i class="fab fa-twitch"></i></span>
+              <span *ngIf="newPlatform === 'DISCORD'" class="color-discord"><i class="fab fa-discord"></i></span>
+            </a>
+            <div class="dropdown-menu" style="left: auto; right: 0;">
+              <a href="#" class="dropdown-item color-twitch" [class.active]="newPlatform === 'TWITCH'" (click)="newPlatform = 'TWITCH'; false;"><i class="fab fa-twitch"></i> Twitch</a>
+              <a href="#" class="dropdown-item color-discord" [class.active]="newPlatform === 'DISCORD'" (click)="newPlatform = 'DISCORD'; false;"><i class="fab fa-discord"></i> Discord</a>
+            </div>
+          </div>
         </div>
         <input type="text" class="form-control" placeholder="Username" [(ngModel)]="newUsername">
         <span class="input-group-btn">

@@ -52,7 +52,7 @@ import java.util.List;
         final String senderName = chatMessage.getSender().getDisplayName();
         final String timerName = args.remove(0);
         final String message = String.join(" ", args);
-        if(module.addTimerEntry(channel.getTenant(), timerName, message))
+        if(module.addTimerEntry(channel.getChannelGroup().getTenant(), timerName, message))
             Chat.i18nMessage(module, channel, "add.success",
                     "commander", senderName,
                     "id", timerName,

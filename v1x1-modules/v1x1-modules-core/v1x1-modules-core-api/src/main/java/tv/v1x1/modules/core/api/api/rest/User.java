@@ -28,6 +28,10 @@ public class User {
         this.displayName = displayName;
     }
 
+    public User(final tv.v1x1.common.dto.core.User user) {
+        this(user.getGlobalUser().getId().getValue(), user.getPlatform(), user.getId(), user.getDisplayName());
+    }
+
     public UUID getGlobalUserId() {
         return globalUserId;
     }

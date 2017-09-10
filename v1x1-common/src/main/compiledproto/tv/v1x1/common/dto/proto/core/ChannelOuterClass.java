@@ -33,40 +33,31 @@ public final class ChannelOuterClass {
         getIdBytes();
 
     /**
-     * <code>required string displayName = 2;</code>
+     * <code>required string display_name = 2;</code>
      */
     boolean hasDisplayName();
     /**
-     * <code>required string displayName = 2;</code>
+     * <code>required string display_name = 2;</code>
      */
     java.lang.String getDisplayName();
     /**
-     * <code>required string displayName = 2;</code>
+     * <code>required string display_name = 2;</code>
      */
     com.google.protobuf.ByteString
         getDisplayNameBytes();
 
     /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Platform platform = 3;</code>
+     * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
      */
-    boolean hasPlatform();
+    boolean hasChannelGroup();
     /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Platform platform = 3;</code>
+     * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
      */
-    tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform getPlatform();
-
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getChannelGroup();
     /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
+     * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
      */
-    boolean hasTenant();
-    /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
-     */
-    tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant getTenant();
-    /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
-     */
-    tv.v1x1.common.dto.proto.core.ChannelOuterClass.TenantOrBuilder getTenantOrBuilder();
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder getChannelGroupOrBuilder();
   }
   /**
    * Protobuf type {@code tv.v1x1.common.dto.proto.core.Channel}
@@ -82,7 +73,6 @@ public final class ChannelOuterClass {
     private Channel() {
       id_ = "";
       displayName_ = "";
-      platform_ = 0;
     }
 
     @java.lang.Override
@@ -125,28 +115,17 @@ public final class ChannelOuterClass {
               displayName_ = bs;
               break;
             }
-            case 24: {
-              int rawValue = input.readEnum();
-              tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform value = tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(3, rawValue);
-              } else {
-                bitField0_ |= 0x00000004;
-                platform_ = rawValue;
+            case 26: {
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = channelGroup_.toBuilder();
               }
-              break;
-            }
-            case 34: {
-              tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000008) == 0x00000008)) {
-                subBuilder = tenant_.toBuilder();
-              }
-              tenant_ = input.readMessage(tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant.PARSER, extensionRegistry);
+              channelGroup_ = input.readMessage(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.PARSER, extensionRegistry);
               if (subBuilder != null) {
-                subBuilder.mergeFrom(tenant_);
-                tenant_ = subBuilder.buildPartial();
+                subBuilder.mergeFrom(channelGroup_);
+                channelGroup_ = subBuilder.buildPartial();
               }
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000004;
               break;
             }
           }
@@ -216,16 +195,16 @@ public final class ChannelOuterClass {
       }
     }
 
-    public static final int DISPLAYNAME_FIELD_NUMBER = 2;
+    public static final int DISPLAY_NAME_FIELD_NUMBER = 2;
     private volatile java.lang.Object displayName_;
     /**
-     * <code>required string displayName = 2;</code>
+     * <code>required string display_name = 2;</code>
      */
     public boolean hasDisplayName() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required string displayName = 2;</code>
+     * <code>required string display_name = 2;</code>
      */
     public java.lang.String getDisplayName() {
       java.lang.Object ref = displayName_;
@@ -242,7 +221,7 @@ public final class ChannelOuterClass {
       }
     }
     /**
-     * <code>required string displayName = 2;</code>
+     * <code>required string display_name = 2;</code>
      */
     public com.google.protobuf.ByteString
         getDisplayNameBytes() {
@@ -258,41 +237,25 @@ public final class ChannelOuterClass {
       }
     }
 
-    public static final int PLATFORM_FIELD_NUMBER = 3;
-    private int platform_;
+    public static final int CHANNEL_GROUP_FIELD_NUMBER = 3;
+    private tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup channelGroup_;
     /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Platform platform = 3;</code>
+     * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
      */
-    public boolean hasPlatform() {
+    public boolean hasChannelGroup() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Platform platform = 3;</code>
+     * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
      */
-    public tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
-      tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform result = tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
-      return result == null ? tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
-    }
-
-    public static final int TENANT_FIELD_NUMBER = 4;
-    private tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant tenant_;
-    /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
-     */
-    public boolean hasTenant() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getChannelGroup() {
+      return channelGroup_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance() : channelGroup_;
     }
     /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
+     * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
      */
-    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant getTenant() {
-      return tenant_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant.getDefaultInstance() : tenant_;
-    }
-    /**
-     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
-     */
-    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.TenantOrBuilder getTenantOrBuilder() {
-      return tenant_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant.getDefaultInstance() : tenant_;
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder getChannelGroupOrBuilder() {
+      return channelGroup_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance() : channelGroup_;
     }
 
     private byte memoizedIsInitialized = -1;
@@ -309,15 +272,11 @@ public final class ChannelOuterClass {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasPlatform()) {
+      if (!hasChannelGroup()) {
         memoizedIsInitialized = 0;
         return false;
       }
-      if (!hasTenant()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!getTenant().isInitialized()) {
+      if (!getChannelGroup().isInitialized()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -334,10 +293,7 @@ public final class ChannelOuterClass {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, displayName_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeEnum(3, platform_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeMessage(4, getTenant());
+        output.writeMessage(3, getChannelGroup());
       }
       unknownFields.writeTo(output);
     }
@@ -355,11 +311,7 @@ public final class ChannelOuterClass {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(3, platform_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(4, getTenant());
+          .computeMessageSize(3, getChannelGroup());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -388,14 +340,10 @@ public final class ChannelOuterClass {
         result = result && getDisplayName()
             .equals(other.getDisplayName());
       }
-      result = result && (hasPlatform() == other.hasPlatform());
-      if (hasPlatform()) {
-        result = result && platform_ == other.platform_;
-      }
-      result = result && (hasTenant() == other.hasTenant());
-      if (hasTenant()) {
-        result = result && getTenant()
-            .equals(other.getTenant());
+      result = result && (hasChannelGroup() == other.hasChannelGroup());
+      if (hasChannelGroup()) {
+        result = result && getChannelGroup()
+            .equals(other.getChannelGroup());
       }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
@@ -413,16 +361,12 @@ public final class ChannelOuterClass {
         hash = (53 * hash) + getId().hashCode();
       }
       if (hasDisplayName()) {
-        hash = (37 * hash) + DISPLAYNAME_FIELD_NUMBER;
+        hash = (37 * hash) + DISPLAY_NAME_FIELD_NUMBER;
         hash = (53 * hash) + getDisplayName().hashCode();
       }
-      if (hasPlatform()) {
-        hash = (37 * hash) + PLATFORM_FIELD_NUMBER;
-        hash = (53 * hash) + platform_;
-      }
-      if (hasTenant()) {
-        hash = (37 * hash) + TENANT_FIELD_NUMBER;
-        hash = (53 * hash) + getTenant().hashCode();
+      if (hasChannelGroup()) {
+        hash = (37 * hash) + CHANNEL_GROUP_FIELD_NUMBER;
+        hash = (53 * hash) + getChannelGroup().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -538,7 +482,7 @@ public final class ChannelOuterClass {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
-          getTenantFieldBuilder();
+          getChannelGroupFieldBuilder();
         }
       }
       public Builder clear() {
@@ -547,14 +491,12 @@ public final class ChannelOuterClass {
         bitField0_ = (bitField0_ & ~0x00000001);
         displayName_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        platform_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        if (tenantBuilder_ == null) {
-          tenant_ = null;
+        if (channelGroupBuilder_ == null) {
+          channelGroup_ = null;
         } else {
-          tenantBuilder_.clear();
+          channelGroupBuilder_.clear();
         }
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -590,14 +532,10 @@ public final class ChannelOuterClass {
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.platform_ = platform_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        if (tenantBuilder_ == null) {
-          result.tenant_ = tenant_;
+        if (channelGroupBuilder_ == null) {
+          result.channelGroup_ = channelGroup_;
         } else {
-          result.tenant_ = tenantBuilder_.build();
+          result.channelGroup_ = channelGroupBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -651,11 +589,8 @@ public final class ChannelOuterClass {
           displayName_ = other.displayName_;
           onChanged();
         }
-        if (other.hasPlatform()) {
-          setPlatform(other.getPlatform());
-        }
-        if (other.hasTenant()) {
-          mergeTenant(other.getTenant());
+        if (other.hasChannelGroup()) {
+          mergeChannelGroup(other.getChannelGroup());
         }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
@@ -669,13 +604,10 @@ public final class ChannelOuterClass {
         if (!hasDisplayName()) {
           return false;
         }
-        if (!hasPlatform()) {
+        if (!hasChannelGroup()) {
           return false;
         }
-        if (!hasTenant()) {
-          return false;
-        }
-        if (!getTenant().isInitialized()) {
+        if (!getChannelGroup().isInitialized()) {
           return false;
         }
         return true;
@@ -778,13 +710,13 @@ public final class ChannelOuterClass {
 
       private java.lang.Object displayName_ = "";
       /**
-       * <code>required string displayName = 2;</code>
+       * <code>required string display_name = 2;</code>
        */
       public boolean hasDisplayName() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required string displayName = 2;</code>
+       * <code>required string display_name = 2;</code>
        */
       public java.lang.String getDisplayName() {
         java.lang.Object ref = displayName_;
@@ -801,7 +733,7 @@ public final class ChannelOuterClass {
         }
       }
       /**
-       * <code>required string displayName = 2;</code>
+       * <code>required string display_name = 2;</code>
        */
       public com.google.protobuf.ByteString
           getDisplayNameBytes() {
@@ -817,7 +749,7 @@ public final class ChannelOuterClass {
         }
       }
       /**
-       * <code>required string displayName = 2;</code>
+       * <code>required string display_name = 2;</code>
        */
       public Builder setDisplayName(
           java.lang.String value) {
@@ -830,7 +762,7 @@ public final class ChannelOuterClass {
         return this;
       }
       /**
-       * <code>required string displayName = 2;</code>
+       * <code>required string display_name = 2;</code>
        */
       public Builder clearDisplayName() {
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -839,7 +771,1149 @@ public final class ChannelOuterClass {
         return this;
       }
       /**
-       * <code>required string displayName = 2;</code>
+       * <code>required string display_name = 2;</code>
+       */
+      public Builder setDisplayNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        displayName_ = value;
+        onChanged();
+        return this;
+      }
+
+      private tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup channelGroup_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder> channelGroupBuilder_;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      public boolean hasChannelGroup() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getChannelGroup() {
+        if (channelGroupBuilder_ == null) {
+          return channelGroup_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance() : channelGroup_;
+        } else {
+          return channelGroupBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      public Builder setChannelGroup(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup value) {
+        if (channelGroupBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          channelGroup_ = value;
+          onChanged();
+        } else {
+          channelGroupBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      public Builder setChannelGroup(
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder builderForValue) {
+        if (channelGroupBuilder_ == null) {
+          channelGroup_ = builderForValue.build();
+          onChanged();
+        } else {
+          channelGroupBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      public Builder mergeChannelGroup(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup value) {
+        if (channelGroupBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              channelGroup_ != null &&
+              channelGroup_ != tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance()) {
+            channelGroup_ =
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.newBuilder(channelGroup_).mergeFrom(value).buildPartial();
+          } else {
+            channelGroup_ = value;
+          }
+          onChanged();
+        } else {
+          channelGroupBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      public Builder clearChannelGroup() {
+        if (channelGroupBuilder_ == null) {
+          channelGroup_ = null;
+          onChanged();
+        } else {
+          channelGroupBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder getChannelGroupBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getChannelGroupFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder getChannelGroupOrBuilder() {
+        if (channelGroupBuilder_ != null) {
+          return channelGroupBuilder_.getMessageOrBuilder();
+        } else {
+          return channelGroup_ == null ?
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance() : channelGroup_;
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder> 
+          getChannelGroupFieldBuilder() {
+        if (channelGroupBuilder_ == null) {
+          channelGroupBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder>(
+                  getChannelGroup(),
+                  getParentForChildren(),
+                  isClean());
+          channelGroup_ = null;
+        }
+        return channelGroupBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.core.Channel)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.core.Channel)
+    private static final tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel();
+    }
+
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<Channel>
+        PARSER = new com.google.protobuf.AbstractParser<Channel>() {
+      public Channel parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Channel(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<Channel> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<Channel> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
+  public interface ChannelGroupOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.core.ChannelGroup)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required string id = 1;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    boolean hasDisplayName();
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    java.lang.String getDisplayName();
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getDisplayNameBytes();
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Platform platform = 3;</code>
+     */
+    boolean hasPlatform();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Platform platform = 3;</code>
+     */
+    tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform getPlatform();
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
+     */
+    boolean hasTenant();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant getTenant();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.TenantOrBuilder getTenantOrBuilder();
+
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> 
+        getEntriesList();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getEntries(int index);
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    int getEntriesCount();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    java.util.List<? extends tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> 
+        getEntriesOrBuilderList();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder getEntriesOrBuilder(
+        int index);
+  }
+  /**
+   * Protobuf type {@code tv.v1x1.common.dto.proto.core.ChannelGroup}
+   */
+  public  static final class ChannelGroup extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.core.ChannelGroup)
+      ChannelGroupOrBuilder {
+    // Use ChannelGroup.newBuilder() to construct.
+    private ChannelGroup(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ChannelGroup() {
+      id_ = "";
+      displayName_ = "";
+      platform_ = 0;
+      entries_ = java.util.Collections.emptyList();
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ChannelGroup(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              id_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              displayName_ = bs;
+              break;
+            }
+            case 24: {
+              int rawValue = input.readEnum();
+              tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform value = tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(3, rawValue);
+              } else {
+                bitField0_ |= 0x00000004;
+                platform_ = rawValue;
+              }
+              break;
+            }
+            case 34: {
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000008) == 0x00000008)) {
+                subBuilder = tenant_.toBuilder();
+              }
+              tenant_ = input.readMessage(tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(tenant_);
+                tenant_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000008;
+              break;
+            }
+            case 42: {
+              if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+                entries_ = new java.util.ArrayList<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry>();
+                mutable_bitField0_ |= 0x00000010;
+              }
+              entries_.add(
+                  input.readMessage(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
+          entries_ = java.util.Collections.unmodifiableList(entries_);
+        }
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.class, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          id_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DISPLAY_NAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object displayName_;
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    public boolean hasDisplayName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    public java.lang.String getDisplayName() {
+      java.lang.Object ref = displayName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          displayName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDisplayNameBytes() {
+      java.lang.Object ref = displayName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        displayName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int PLATFORM_FIELD_NUMBER = 3;
+    private int platform_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Platform platform = 3;</code>
+     */
+    public boolean hasPlatform() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Platform platform = 3;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform getPlatform() {
+      tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform result = tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.valueOf(platform_);
+      return result == null ? tv.v1x1.common.dto.proto.core.PlatformOuterClass.Platform.UNKNOWN : result;
+    }
+
+    public static final int TENANT_FIELD_NUMBER = 4;
+    private tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant tenant_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
+     */
+    public boolean hasTenant() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant getTenant() {
+      return tenant_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant.getDefaultInstance() : tenant_;
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.core.Tenant tenant = 4;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.TenantOrBuilder getTenantOrBuilder() {
+      return tenant_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.Tenant.getDefaultInstance() : tenant_;
+    }
+
+    public static final int ENTRIES_FIELD_NUMBER = 5;
+    private java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> entries_;
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    public java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> getEntriesList() {
+      return entries_;
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    public java.util.List<? extends tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> 
+        getEntriesOrBuilderList() {
+      return entries_;
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    public int getEntriesCount() {
+      return entries_.size();
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getEntries(int index) {
+      return entries_.get(index);
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder getEntriesOrBuilder(
+        int index) {
+      return entries_.get(index);
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasDisplayName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasPlatform()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasTenant()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!getTenant().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      for (int i = 0; i < getEntriesCount(); i++) {
+        if (!getEntries(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, displayName_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeEnum(3, platform_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeMessage(4, getTenant());
+      }
+      for (int i = 0; i < entries_.size(); i++) {
+        output.writeMessage(5, entries_.get(i));
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, displayName_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(3, platform_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, getTenant());
+      }
+      for (int i = 0; i < entries_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, entries_.get(i));
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup)) {
+        return super.equals(obj);
+      }
+      tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup other = (tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup) obj;
+
+      boolean result = true;
+      result = result && (hasId() == other.hasId());
+      if (hasId()) {
+        result = result && getId()
+            .equals(other.getId());
+      }
+      result = result && (hasDisplayName() == other.hasDisplayName());
+      if (hasDisplayName()) {
+        result = result && getDisplayName()
+            .equals(other.getDisplayName());
+      }
+      result = result && (hasPlatform() == other.hasPlatform());
+      if (hasPlatform()) {
+        result = result && platform_ == other.platform_;
+      }
+      result = result && (hasTenant() == other.hasTenant());
+      if (hasTenant()) {
+        result = result && getTenant()
+            .equals(other.getTenant());
+      }
+      result = result && getEntriesList()
+          .equals(other.getEntriesList());
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+      }
+      if (hasDisplayName()) {
+        hash = (37 * hash) + DISPLAY_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getDisplayName().hashCode();
+      }
+      if (hasPlatform()) {
+        hash = (37 * hash) + PLATFORM_FIELD_NUMBER;
+        hash = (53 * hash) + platform_;
+      }
+      if (hasTenant()) {
+        hash = (37 * hash) + TENANT_FIELD_NUMBER;
+        hash = (53 * hash) + getTenant().hashCode();
+      }
+      if (getEntriesCount() > 0) {
+        hash = (37 * hash) + ENTRIES_FIELD_NUMBER;
+        hash = (53 * hash) + getEntriesList().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.core.ChannelGroup}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.core.ChannelGroup)
+        tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.class, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder.class);
+      }
+
+      // Construct using tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getTenantFieldBuilder();
+          getEntriesFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        id_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        displayName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        platform_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        if (tenantBuilder_ == null) {
+          tenant_ = null;
+        } else {
+          tenantBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000008);
+        if (entriesBuilder_ == null) {
+          entries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+        } else {
+          entriesBuilder_.clear();
+        }
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_descriptor;
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getDefaultInstanceForType() {
+        return tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance();
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup build() {
+        tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup buildPartial() {
+        tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup result = new tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.displayName_ = displayName_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.platform_ = platform_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        if (tenantBuilder_ == null) {
+          result.tenant_ = tenant_;
+        } else {
+          result.tenant_ = tenantBuilder_.build();
+        }
+        if (entriesBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            entries_ = java.util.Collections.unmodifiableList(entries_);
+            bitField0_ = (bitField0_ & ~0x00000010);
+          }
+          result.entries_ = entries_;
+        } else {
+          result.entries_ = entriesBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup) {
+          return mergeFrom((tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup other) {
+        if (other == tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          bitField0_ |= 0x00000001;
+          id_ = other.id_;
+          onChanged();
+        }
+        if (other.hasDisplayName()) {
+          bitField0_ |= 0x00000002;
+          displayName_ = other.displayName_;
+          onChanged();
+        }
+        if (other.hasPlatform()) {
+          setPlatform(other.getPlatform());
+        }
+        if (other.hasTenant()) {
+          mergeTenant(other.getTenant());
+        }
+        if (entriesBuilder_ == null) {
+          if (!other.entries_.isEmpty()) {
+            if (entries_.isEmpty()) {
+              entries_ = other.entries_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+            } else {
+              ensureEntriesIsMutable();
+              entries_.addAll(other.entries_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.entries_.isEmpty()) {
+            if (entriesBuilder_.isEmpty()) {
+              entriesBuilder_.dispose();
+              entriesBuilder_ = null;
+              entries_ = other.entries_;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              entriesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getEntriesFieldBuilder() : null;
+            } else {
+              entriesBuilder_.addAllMessages(other.entries_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        if (!hasDisplayName()) {
+          return false;
+        }
+        if (!hasPlatform()) {
+          return false;
+        }
+        if (!hasTenant()) {
+          return false;
+        }
+        if (!getTenant().isInitialized()) {
+          return false;
+        }
+        for (int i = 0; i < getEntriesCount(); i++) {
+          if (!getEntries(i).isInitialized()) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object id_ = "";
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            id_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder clearId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object displayName_ = "";
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public boolean hasDisplayName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public java.lang.String getDisplayName() {
+        java.lang.Object ref = displayName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            displayName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDisplayNameBytes() {
+        java.lang.Object ref = displayName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          displayName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public Builder setDisplayName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        displayName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public Builder clearDisplayName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        displayName_ = getDefaultInstance().getDisplayName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string display_name = 2;</code>
        */
       public Builder setDisplayNameBytes(
           com.google.protobuf.ByteString value) {
@@ -1005,6 +2079,246 @@ public final class ChannelOuterClass {
         }
         return tenantBuilder_;
       }
+
+      private java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> entries_ =
+        java.util.Collections.emptyList();
+      private void ensureEntriesIsMutable() {
+        if (!((bitField0_ & 0x00000010) == 0x00000010)) {
+          entries_ = new java.util.ArrayList<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry>(entries_);
+          bitField0_ |= 0x00000010;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> entriesBuilder_;
+
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> getEntriesList() {
+        if (entriesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(entries_);
+        } else {
+          return entriesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public int getEntriesCount() {
+        if (entriesBuilder_ == null) {
+          return entries_.size();
+        } else {
+          return entriesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getEntries(int index) {
+        if (entriesBuilder_ == null) {
+          return entries_.get(index);
+        } else {
+          return entriesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder setEntries(
+          int index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.set(index, value);
+          onChanged();
+        } else {
+          entriesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder setEntries(
+          int index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder addEntries(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.add(value);
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder addEntries(
+          int index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.add(index, value);
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder addEntries(
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.add(builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder addEntries(
+          int index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder addAllEntries(
+          java.lang.Iterable<? extends tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> values) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, entries_);
+          onChanged();
+        } else {
+          entriesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder clearEntries() {
+        if (entriesBuilder_ == null) {
+          entries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000010);
+          onChanged();
+        } else {
+          entriesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public Builder removeEntries(int index) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.remove(index);
+          onChanged();
+        } else {
+          entriesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder getEntriesBuilder(
+          int index) {
+        return getEntriesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder getEntriesOrBuilder(
+          int index) {
+        if (entriesBuilder_ == null) {
+          return entries_.get(index);  } else {
+          return entriesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public java.util.List<? extends tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> 
+           getEntriesOrBuilderList() {
+        if (entriesBuilder_ != null) {
+          return entriesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(entries_);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder addEntriesBuilder() {
+        return getEntriesFieldBuilder().addBuilder(
+            tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder addEntriesBuilder(
+          int index) {
+        return getEntriesFieldBuilder().addBuilder(
+            index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 5;</code>
+       */
+      public java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder> 
+           getEntriesBuilderList() {
+        return getEntriesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> 
+          getEntriesFieldBuilder() {
+        if (entriesBuilder_ == null) {
+          entriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder>(
+                  entries_,
+                  ((bitField0_ & 0x00000010) == 0x00000010),
+                  getParentForChildren(),
+                  isClean());
+          entries_ = null;
+        }
+        return entriesBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -1016,39 +2330,39 @@ public final class ChannelOuterClass {
       }
 
 
-      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.core.Channel)
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.core.ChannelGroup)
     }
 
-    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.core.Channel)
-    private static final tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel DEFAULT_INSTANCE;
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.core.ChannelGroup)
+    private static final tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup DEFAULT_INSTANCE;
     static {
-      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel();
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup();
     }
 
-    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel getDefaultInstance() {
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getDefaultInstance() {
       return DEFAULT_INSTANCE;
     }
 
-    @java.lang.Deprecated public static final com.google.protobuf.Parser<Channel>
-        PARSER = new com.google.protobuf.AbstractParser<Channel>() {
-      public Channel parsePartialFrom(
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ChannelGroup>
+        PARSER = new com.google.protobuf.AbstractParser<ChannelGroup>() {
+      public ChannelGroup parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-          return new Channel(input, extensionRegistry);
+          return new ChannelGroup(input, extensionRegistry);
       }
     };
 
-    public static com.google.protobuf.Parser<Channel> parser() {
+    public static com.google.protobuf.Parser<ChannelGroup> parser() {
       return PARSER;
     }
 
     @java.lang.Override
-    public com.google.protobuf.Parser<Channel> getParserForType() {
+    public com.google.protobuf.Parser<ChannelGroup> getParserForType() {
       return PARSER;
     }
 
-    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel getDefaultInstanceForType() {
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getDefaultInstanceForType() {
       return DEFAULT_INSTANCE;
     }
 
@@ -1094,6 +2408,20 @@ public final class ChannelOuterClass {
      */
     tv.v1x1.common.dto.proto.core.ChannelOuterClass.TenantEntryOrBuilder getEntriesOrBuilder(
         int index);
+
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    boolean hasDisplayName();
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    java.lang.String getDisplayName();
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    com.google.protobuf.ByteString
+        getDisplayNameBytes();
   }
   /**
    * Protobuf type {@code tv.v1x1.common.dto.proto.core.Tenant}
@@ -1108,6 +2436,7 @@ public final class ChannelOuterClass {
     }
     private Tenant() {
       entries_ = java.util.Collections.emptyList();
+      displayName_ = "";
     }
 
     @java.lang.Override
@@ -1158,6 +2487,12 @@ public final class ChannelOuterClass {
               }
               entries_.add(
                   input.readMessage(tv.v1x1.common.dto.proto.core.ChannelOuterClass.TenantEntry.PARSER, extensionRegistry));
+              break;
+            }
+            case 26: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              displayName_ = bs;
               break;
             }
           }
@@ -1244,6 +2579,48 @@ public final class ChannelOuterClass {
       return entries_.get(index);
     }
 
+    public static final int DISPLAY_NAME_FIELD_NUMBER = 3;
+    private volatile java.lang.Object displayName_;
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    public boolean hasDisplayName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    public java.lang.String getDisplayName() {
+      java.lang.Object ref = displayName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          displayName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string display_name = 3;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDisplayNameBytes() {
+      java.lang.Object ref = displayName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        displayName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -1251,6 +2628,10 @@ public final class ChannelOuterClass {
       if (isInitialized == 0) return false;
 
       if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasDisplayName()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -1276,6 +2657,9 @@ public final class ChannelOuterClass {
       for (int i = 0; i < entries_.size(); i++) {
         output.writeMessage(2, entries_.get(i));
       }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 3, displayName_);
+      }
       unknownFields.writeTo(output);
     }
 
@@ -1291,6 +2675,9 @@ public final class ChannelOuterClass {
       for (int i = 0; i < entries_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, entries_.get(i));
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, displayName_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -1316,6 +2703,11 @@ public final class ChannelOuterClass {
       }
       result = result && getEntriesList()
           .equals(other.getEntriesList());
+      result = result && (hasDisplayName() == other.hasDisplayName());
+      if (hasDisplayName()) {
+        result = result && getDisplayName()
+            .equals(other.getDisplayName());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -1334,6 +2726,10 @@ public final class ChannelOuterClass {
       if (getEntriesCount() > 0) {
         hash = (37 * hash) + ENTRIES_FIELD_NUMBER;
         hash = (53 * hash) + getEntriesList().hashCode();
+      }
+      if (hasDisplayName()) {
+        hash = (37 * hash) + DISPLAY_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getDisplayName().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -1467,6 +2863,8 @@ public final class ChannelOuterClass {
         } else {
           entriesBuilder_.clear();
         }
+        displayName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -1508,6 +2906,10 @@ public final class ChannelOuterClass {
         } else {
           result.entries_ = entriesBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.displayName_ = displayName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1579,6 +2981,11 @@ public final class ChannelOuterClass {
             }
           }
         }
+        if (other.hasDisplayName()) {
+          bitField0_ |= 0x00000004;
+          displayName_ = other.displayName_;
+          onChanged();
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -1586,6 +2993,9 @@ public final class ChannelOuterClass {
 
       public final boolean isInitialized() {
         if (!hasId()) {
+          return false;
+        }
+        if (!hasDisplayName()) {
           return false;
         }
         if (!getId().isInitialized()) {
@@ -1975,6 +3385,82 @@ public final class ChannelOuterClass {
         }
         return entriesBuilder_;
       }
+
+      private java.lang.Object displayName_ = "";
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public boolean hasDisplayName() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public java.lang.String getDisplayName() {
+        java.lang.Object ref = displayName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            displayName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDisplayNameBytes() {
+        java.lang.Object ref = displayName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          displayName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public Builder setDisplayName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        displayName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public Builder clearDisplayName() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        displayName_ = getDefaultInstance().getDisplayName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string display_name = 3;</code>
+       */
+      public Builder setDisplayNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        displayName_ = value;
+        onChanged();
+        return this;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -2064,6 +3550,30 @@ public final class ChannelOuterClass {
      */
     com.google.protobuf.ByteString
         getDisplayNameBytes();
+
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> 
+        getEntriesList();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getEntries(int index);
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    int getEntriesCount();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    java.util.List<? extends tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> 
+        getEntriesOrBuilderList();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder getEntriesOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code tv.v1x1.common.dto.proto.core.TenantEntry}
@@ -2080,6 +3590,7 @@ public final class ChannelOuterClass {
       id_ = "";
       platform_ = 0;
       displayName_ = "";
+      entries_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -2133,6 +3644,15 @@ public final class ChannelOuterClass {
               displayName_ = bs;
               break;
             }
+            case 34: {
+              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+                entries_ = new java.util.ArrayList<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry>();
+                mutable_bitField0_ |= 0x00000008;
+              }
+              entries_.add(
+                  input.readMessage(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2141,6 +3661,9 @@ public final class ChannelOuterClass {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
+          entries_ = java.util.Collections.unmodifiableList(entries_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -2258,6 +3781,41 @@ public final class ChannelOuterClass {
       }
     }
 
+    public static final int ENTRIES_FIELD_NUMBER = 4;
+    private java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> entries_;
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    public java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> getEntriesList() {
+      return entries_;
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    public java.util.List<? extends tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> 
+        getEntriesOrBuilderList() {
+      return entries_;
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    public int getEntriesCount() {
+      return entries_.size();
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getEntries(int index) {
+      return entries_.get(index);
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder getEntriesOrBuilder(
+        int index) {
+      return entries_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -2276,6 +3834,12 @@ public final class ChannelOuterClass {
         memoizedIsInitialized = 0;
         return false;
       }
+      for (int i = 0; i < getEntriesCount(); i++) {
+        if (!getEntries(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -2290,6 +3854,9 @@ public final class ChannelOuterClass {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 3, displayName_);
+      }
+      for (int i = 0; i < entries_.size(); i++) {
+        output.writeMessage(4, entries_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -2308,6 +3875,10 @@ public final class ChannelOuterClass {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, displayName_);
+      }
+      for (int i = 0; i < entries_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(4, entries_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -2340,6 +3911,8 @@ public final class ChannelOuterClass {
         result = result && getDisplayName()
             .equals(other.getDisplayName());
       }
+      result = result && getEntriesList()
+          .equals(other.getEntriesList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -2362,6 +3935,10 @@ public final class ChannelOuterClass {
       if (hasDisplayName()) {
         hash = (37 * hash) + DISPLAY_NAME_FIELD_NUMBER;
         hash = (53 * hash) + getDisplayName().hashCode();
+      }
+      if (getEntriesCount() > 0) {
+        hash = (37 * hash) + ENTRIES_FIELD_NUMBER;
+        hash = (53 * hash) + getEntriesList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -2477,6 +4054,7 @@ public final class ChannelOuterClass {
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessageV3
                 .alwaysUseFieldBuilders) {
+          getEntriesFieldBuilder();
         }
       }
       public Builder clear() {
@@ -2487,6 +4065,12 @@ public final class ChannelOuterClass {
         bitField0_ = (bitField0_ & ~0x00000002);
         displayName_ = "";
         bitField0_ = (bitField0_ & ~0x00000004);
+        if (entriesBuilder_ == null) {
+          entries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+        } else {
+          entriesBuilder_.clear();
+        }
         return this;
       }
 
@@ -2523,6 +4107,15 @@ public final class ChannelOuterClass {
           to_bitField0_ |= 0x00000004;
         }
         result.displayName_ = displayName_;
+        if (entriesBuilder_ == null) {
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            entries_ = java.util.Collections.unmodifiableList(entries_);
+            bitField0_ = (bitField0_ & ~0x00000008);
+          }
+          result.entries_ = entries_;
+        } else {
+          result.entries_ = entriesBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -2578,6 +4171,32 @@ public final class ChannelOuterClass {
           displayName_ = other.displayName_;
           onChanged();
         }
+        if (entriesBuilder_ == null) {
+          if (!other.entries_.isEmpty()) {
+            if (entries_.isEmpty()) {
+              entries_ = other.entries_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+            } else {
+              ensureEntriesIsMutable();
+              entries_.addAll(other.entries_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.entries_.isEmpty()) {
+            if (entriesBuilder_.isEmpty()) {
+              entriesBuilder_.dispose();
+              entriesBuilder_ = null;
+              entries_ = other.entries_;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              entriesBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getEntriesFieldBuilder() : null;
+            } else {
+              entriesBuilder_.addAllMessages(other.entries_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -2592,6 +4211,11 @@ public final class ChannelOuterClass {
         }
         if (!hasDisplayName()) {
           return false;
+        }
+        for (int i = 0; i < getEntriesCount(); i++) {
+          if (!getEntries(i).isInitialized()) {
+            return false;
+          }
         }
         return true;
       }
@@ -2802,6 +4426,246 @@ public final class ChannelOuterClass {
         onChanged();
         return this;
       }
+
+      private java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> entries_ =
+        java.util.Collections.emptyList();
+      private void ensureEntriesIsMutable() {
+        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
+          entries_ = new java.util.ArrayList<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry>(entries_);
+          bitField0_ |= 0x00000008;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> entriesBuilder_;
+
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> getEntriesList() {
+        if (entriesBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(entries_);
+        } else {
+          return entriesBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public int getEntriesCount() {
+        if (entriesBuilder_ == null) {
+          return entries_.size();
+        } else {
+          return entriesBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getEntries(int index) {
+        if (entriesBuilder_ == null) {
+          return entries_.get(index);
+        } else {
+          return entriesBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder setEntries(
+          int index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.set(index, value);
+          onChanged();
+        } else {
+          entriesBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder setEntries(
+          int index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder addEntries(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.add(value);
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder addEntries(
+          int index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry value) {
+        if (entriesBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureEntriesIsMutable();
+          entries_.add(index, value);
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder addEntries(
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.add(builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder addEntries(
+          int index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder builderForValue) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          entriesBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder addAllEntries(
+          java.lang.Iterable<? extends tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry> values) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, entries_);
+          onChanged();
+        } else {
+          entriesBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder clearEntries() {
+        if (entriesBuilder_ == null) {
+          entries_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000008);
+          onChanged();
+        } else {
+          entriesBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public Builder removeEntries(int index) {
+        if (entriesBuilder_ == null) {
+          ensureEntriesIsMutable();
+          entries_.remove(index);
+          onChanged();
+        } else {
+          entriesBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder getEntriesBuilder(
+          int index) {
+        return getEntriesFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder getEntriesOrBuilder(
+          int index) {
+        if (entriesBuilder_ == null) {
+          return entries_.get(index);  } else {
+          return entriesBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public java.util.List<? extends tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> 
+           getEntriesOrBuilderList() {
+        if (entriesBuilder_ != null) {
+          return entriesBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(entries_);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder addEntriesBuilder() {
+        return getEntriesFieldBuilder().addBuilder(
+            tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder addEntriesBuilder(
+          int index) {
+        return getEntriesFieldBuilder().addBuilder(
+            index, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.ChannelGroupEntry entries = 4;</code>
+       */
+      public java.util.List<tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder> 
+           getEntriesBuilderList() {
+        return getEntriesFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder> 
+          getEntriesFieldBuilder() {
+        if (entriesBuilder_ == null) {
+          entriesBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder>(
+                  entries_,
+                  ((bitField0_ & 0x00000008) == 0x00000008),
+                  getParentForChildren(),
+                  isClean());
+          entries_ = null;
+        }
+        return entriesBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -2851,11 +4715,739 @@ public final class ChannelOuterClass {
 
   }
 
+  public interface ChannelGroupEntryOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.core.ChannelGroupEntry)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>required string id = 1;</code>
+     */
+    boolean hasId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    java.lang.String getId();
+    /**
+     * <code>required string id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getIdBytes();
+
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    boolean hasDisplayName();
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    java.lang.String getDisplayName();
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getDisplayNameBytes();
+  }
+  /**
+   * Protobuf type {@code tv.v1x1.common.dto.proto.core.ChannelGroupEntry}
+   */
+  public  static final class ChannelGroupEntry extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.core.ChannelGroupEntry)
+      ChannelGroupEntryOrBuilder {
+    // Use ChannelGroupEntry.newBuilder() to construct.
+    private ChannelGroupEntry(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private ChannelGroupEntry() {
+      id_ = "";
+      displayName_ = "";
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private ChannelGroupEntry(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000001;
+              id_ = bs;
+              break;
+            }
+            case 18: {
+              com.google.protobuf.ByteString bs = input.readBytes();
+              bitField0_ |= 0x00000002;
+              displayName_ = bs;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.class, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder.class);
+    }
+
+    private int bitField0_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public boolean hasId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          id_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getIdBytes() {
+      java.lang.Object ref = id_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        id_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    public static final int DISPLAY_NAME_FIELD_NUMBER = 2;
+    private volatile java.lang.Object displayName_;
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    public boolean hasDisplayName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    public java.lang.String getDisplayName() {
+      java.lang.Object ref = displayName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          displayName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string display_name = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getDisplayNameBytes() {
+      java.lang.Object ref = displayName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        displayName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasDisplayName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, displayName_);
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, displayName_);
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry)) {
+        return super.equals(obj);
+      }
+      tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry other = (tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry) obj;
+
+      boolean result = true;
+      result = result && (hasId() == other.hasId());
+      if (hasId()) {
+        result = result && getId()
+            .equals(other.getId());
+      }
+      result = result && (hasDisplayName() == other.hasDisplayName());
+      if (hasDisplayName()) {
+        result = result && getDisplayName()
+            .equals(other.getDisplayName());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasId()) {
+        hash = (37 * hash) + ID_FIELD_NUMBER;
+        hash = (53 * hash) + getId().hashCode();
+      }
+      if (hasDisplayName()) {
+        hash = (37 * hash) + DISPLAY_NAME_FIELD_NUMBER;
+        hash = (53 * hash) + getDisplayName().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.core.ChannelGroupEntry}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.core.ChannelGroupEntry)
+        tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntryOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.class, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.Builder.class);
+      }
+
+      // Construct using tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        id_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        displayName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.v1x1.common.dto.proto.core.ChannelOuterClass.internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_descriptor;
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getDefaultInstanceForType() {
+        return tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.getDefaultInstance();
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry build() {
+        tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry buildPartial() {
+        tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry result = new tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.id_ = id_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.displayName_ = displayName_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry) {
+          return mergeFrom((tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry other) {
+        if (other == tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry.getDefaultInstance()) return this;
+        if (other.hasId()) {
+          bitField0_ |= 0x00000001;
+          id_ = other.id_;
+          onChanged();
+        }
+        if (other.hasDisplayName()) {
+          bitField0_ |= 0x00000002;
+          displayName_ = other.displayName_;
+          onChanged();
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasId()) {
+          return false;
+        }
+        if (!hasDisplayName()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private java.lang.Object id_ = "";
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public boolean hasId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            id_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getIdBytes() {
+        java.lang.Object ref = id_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          id_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setId(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder clearId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        id_ = getDefaultInstance().getId();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string id = 1;</code>
+       */
+      public Builder setIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        id_ = value;
+        onChanged();
+        return this;
+      }
+
+      private java.lang.Object displayName_ = "";
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public boolean hasDisplayName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public java.lang.String getDisplayName() {
+        java.lang.Object ref = displayName_;
+        if (!(ref instanceof java.lang.String)) {
+          com.google.protobuf.ByteString bs =
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            displayName_ = s;
+          }
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getDisplayNameBytes() {
+        java.lang.Object ref = displayName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          displayName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public Builder setDisplayName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        displayName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public Builder clearDisplayName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        displayName_ = getDefaultInstance().getDisplayName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>required string display_name = 2;</code>
+       */
+      public Builder setDisplayNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        displayName_ = value;
+        onChanged();
+        return this;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.core.ChannelGroupEntry)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.core.ChannelGroupEntry)
+    private static final tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry();
+    }
+
+    public static tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<ChannelGroupEntry>
+        PARSER = new com.google.protobuf.AbstractParser<ChannelGroupEntry>() {
+      public ChannelGroupEntry parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ChannelGroupEntry(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<ChannelGroupEntry> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ChannelGroupEntry> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupEntry getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+  }
+
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_v1x1_common_dto_proto_core_Channel_descriptor;
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_v1x1_common_dto_proto_core_Channel_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_fieldAccessorTable;
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_tv_v1x1_common_dto_proto_core_Tenant_descriptor;
   private static final 
@@ -2866,6 +5458,11 @@ public final class ChannelOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_v1x1_common_dto_proto_core_TenantEntry_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -2876,17 +5473,25 @@ public final class ChannelOuterClass {
   static {
     java.lang.String[] descriptorData = {
       "\n\rChannel.proto\022\035tv.v1x1.common.dto.prot" +
-      "o.core\032\nUUID.proto\032\016Platform.proto\"\234\001\n\007C" +
-      "hannel\022\n\n\002id\030\001 \002(\t\022\023\n\013displayName\030\002 \002(\t\022" +
-      "9\n\010platform\030\003 \002(\0162\'.tv.v1x1.common.dto.p" +
-      "roto.core.Platform\0225\n\006tenant\030\004 \002(\0132%.tv." +
-      "v1x1.common.dto.proto.core.Tenant\"v\n\006Ten" +
-      "ant\022/\n\002id\030\001 \002(\0132#.tv.v1x1.common.dto.pro" +
-      "to.core.UUID\022;\n\007entries\030\002 \003(\0132*.tv.v1x1." +
-      "common.dto.proto.core.TenantEntry\"j\n\013Ten" +
-      "antEntry\022\n\n\002id\030\001 \002(\t\0229\n\010platform\030\002 \002(\0162\'",
-      ".tv.v1x1.common.dto.proto.core.Platform\022" +
-      "\024\n\014display_name\030\003 \002(\t"
+      "o.core\032\nUUID.proto\032\016Platform.proto\"o\n\007Ch" +
+      "annel\022\n\n\002id\030\001 \002(\t\022\024\n\014display_name\030\002 \002(\t\022" +
+      "B\n\rchannel_group\030\003 \002(\0132+.tv.v1x1.common." +
+      "dto.proto.core.ChannelGroup\"\345\001\n\014ChannelG" +
+      "roup\022\n\n\002id\030\001 \002(\t\022\024\n\014display_name\030\002 \002(\t\0229" +
+      "\n\010platform\030\003 \002(\0162\'.tv.v1x1.common.dto.pr" +
+      "oto.core.Platform\0225\n\006tenant\030\004 \002(\0132%.tv.v" +
+      "1x1.common.dto.proto.core.Tenant\022A\n\007entr" +
+      "ies\030\005 \003(\01320.tv.v1x1.common.dto.proto.cor",
+      "e.ChannelGroupEntry\"\214\001\n\006Tenant\022/\n\002id\030\001 \002" +
+      "(\0132#.tv.v1x1.common.dto.proto.core.UUID\022" +
+      ";\n\007entries\030\002 \003(\0132*.tv.v1x1.common.dto.pr" +
+      "oto.core.TenantEntry\022\024\n\014display_name\030\003 \002" +
+      "(\t\"\255\001\n\013TenantEntry\022\n\n\002id\030\001 \002(\t\0229\n\010platfo" +
+      "rm\030\002 \002(\0162\'.tv.v1x1.common.dto.proto.core" +
+      ".Platform\022\024\n\014display_name\030\003 \002(\t\022A\n\007entri" +
+      "es\030\004 \003(\01320.tv.v1x1.common.dto.proto.core" +
+      ".ChannelGroupEntry\"5\n\021ChannelGroupEntry\022" +
+      "\n\n\002id\030\001 \002(\t\022\024\n\014display_name\030\002 \002(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -2907,19 +5512,31 @@ public final class ChannelOuterClass {
     internal_static_tv_v1x1_common_dto_proto_core_Channel_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_core_Channel_descriptor,
-        new java.lang.String[] { "Id", "DisplayName", "Platform", "Tenant", });
-    internal_static_tv_v1x1_common_dto_proto_core_Tenant_descriptor =
+        new java.lang.String[] { "Id", "DisplayName", "ChannelGroup", });
+    internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_descriptor =
       getDescriptor().getMessageTypes().get(1);
+    internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_core_ChannelGroup_descriptor,
+        new java.lang.String[] { "Id", "DisplayName", "Platform", "Tenant", "Entries", });
+    internal_static_tv_v1x1_common_dto_proto_core_Tenant_descriptor =
+      getDescriptor().getMessageTypes().get(2);
     internal_static_tv_v1x1_common_dto_proto_core_Tenant_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_core_Tenant_descriptor,
-        new java.lang.String[] { "Id", "Entries", });
+        new java.lang.String[] { "Id", "Entries", "DisplayName", });
     internal_static_tv_v1x1_common_dto_proto_core_TenantEntry_descriptor =
-      getDescriptor().getMessageTypes().get(2);
+      getDescriptor().getMessageTypes().get(3);
     internal_static_tv_v1x1_common_dto_proto_core_TenantEntry_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_core_TenantEntry_descriptor,
-        new java.lang.String[] { "Id", "Platform", "DisplayName", });
+        new java.lang.String[] { "Id", "Platform", "DisplayName", "Entries", });
+    internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_descriptor =
+      getDescriptor().getMessageTypes().get(4);
+    internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_core_ChannelGroupEntry_descriptor,
+        new java.lang.String[] { "Id", "DisplayName", });
     tv.v1x1.common.dto.proto.core.UUIDOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.PlatformOuterClass.getDescriptor();
   }

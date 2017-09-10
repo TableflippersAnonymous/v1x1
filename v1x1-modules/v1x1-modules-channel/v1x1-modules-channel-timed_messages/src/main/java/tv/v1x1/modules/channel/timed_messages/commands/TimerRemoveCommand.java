@@ -38,7 +38,7 @@ public class TimerRemoveCommand extends Command {
         final String senderName = chatMessage.getSender().getDisplayName();
         final String timerName = args.remove(0);
         final String message = String.join(" ", args);
-        final int matches = module.countMatchingTimerEntries(channel.getTenant(), timerName, message);
+        final int matches = module.countMatchingTimerEntries(channel.getChannelGroup().getTenant(), timerName, message);
         if(matches == -1) {
             Chat.i18nMessage(module, channel, "invalid.timer",
                     "commander", senderName,
@@ -52,7 +52,7 @@ public class TimerRemoveCommand extends Command {
                     "id", timerName);
             return;
         }
-        TimerEntry entry = module.removeTimerEntry(channel.getTenant(), timerName, message);
+        TimerEntry entry = module.removeTimerEntry(channel.getChannelGroup().getTenant(), timerName, message);
         if(entry == null) {
             Chat.i18nMessage(module, channel, "remove.nomatch",
                     "commander", senderName,

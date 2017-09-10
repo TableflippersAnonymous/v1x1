@@ -36,8 +36,14 @@ public class WebResource {
          * out of the client.
          */
         return new WebConfig(
-                ImmutableMap.of(Platform.TWITCH, new String(module.requireCredential("Common|Twitch|ClientId"))),
-                ImmutableMap.of(Platform.TWITCH, new String(module.requireCredential("Common|Twitch|RedirectUri"))),
+                ImmutableMap.of(
+                        Platform.TWITCH, new String(module.requireCredential("Common|Twitch|ClientId")),
+                        Platform.DISCORD, new String(module.requireCredential("Common|Discord|ClientId"))
+                ),
+                ImmutableMap.of(
+                        Platform.TWITCH, new String(module.requireCredential("Common|Twitch|RedirectUri")),
+                        Platform.DISCORD, new String(module.requireCredential("Common|Discord|RedirectUri"))
+                ),
                 "/api/v1",
                 "wss://pubsub.v1x1.tv"
         );

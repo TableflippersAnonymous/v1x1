@@ -2,7 +2,26 @@ package tv.v1x1.common.dto.messages;
 
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
-import tv.v1x1.common.dto.messages.events.*;
+import tv.v1x1.common.dto.messages.events.ChatJoinEvent;
+import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
+import tv.v1x1.common.dto.messages.events.ChatPartEvent;
+import tv.v1x1.common.dto.messages.events.ConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.DiscordVoiceStateEvent;
+import tv.v1x1.common.dto.messages.events.PrivateMessageEvent;
+import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotChannelStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotConnectedEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotGlobalStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChannelEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChannelUsersEvent;
+import tv.v1x1.common.dto.messages.events.TwitchHostEvent;
+import tv.v1x1.common.dto.messages.events.TwitchPingEvent;
+import tv.v1x1.common.dto.messages.events.TwitchRawMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchReconnectEvent;
+import tv.v1x1.common.dto.messages.events.TwitchRoomStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchTimeoutEvent;
+import tv.v1x1.common.dto.messages.events.TwitchUserEvent;
+import tv.v1x1.common.dto.messages.events.TwitchUserModChangeEvent;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 import tv.v1x1.common.dto.proto.messages.MessageOuterClass;
 
@@ -31,6 +50,7 @@ public abstract class Event extends Message {
             case TWITCH_USER_MOD_CHANGE: return TwitchUserModChangeEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.TwitchUserModChangeEvent.data));
             case SCHEDULER_NOTIFY: return SchedulerNotifyEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.SchedulerNotifyEvent.data));
             case CONFIG_CHANGE: return ConfigChangeEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.ConfigChangeEvent.data));
+            case DISCORD_VOICE_STATE: return DiscordVoiceStateEvent.fromProto(module, uuid, timestamp, context, event.getExtension(EventOuterClass.DiscordVoiceStateEvent.data));
             default: throw new IllegalStateException("Unknown event type " + event.getType().name());
         }
     }

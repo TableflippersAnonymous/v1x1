@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {V1x1Module} from "../../model/v1x1_module";
 import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
 import {V1x1Tenant} from "../../model/v1x1_tenant";
@@ -6,28 +6,24 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
 @Component({
   selector: 'configuration-module',
   template: `
-    <div class="jumbotron" style="margin: 1rem;">
-      <h1 class="display-3">{{v1x1Module.displayName}}</h1>
-      <p class="lead">{{v1x1Module.description}}</p>
-      <hr class="my-4">
-      <p>Additional help can be found in the help pages.</p>
-    </div>
-    <ngb-tabset>
-      <ngb-tab [title]="'Global' + (configurationSet.global.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.global !== null && v1x1Module.configurationDefinitionSet.global.tenantPermission !== NONE">
+    <ngb-tabset class="tabs-left">
+      <ngb-tab [title]="'Everything' + (configurationSet.tenant.dirty() ? '*' : '')">
         <template ngbTabContent>
-          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.global" [(originalConfiguration)]="configurationSet.global.originalConfiguration" [(configuration)]="configurationSet.global.configuration" [activeTenant]="activeTenant" [scope]="'global'"></configuration-scope>
+          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [(originalConfiguration)]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.tenant.configuration" [activeTenant]="activeTenant" [activeChannelGroup]="null" [activeChannel]="null" [enabled]="true" [originalEnabled]="true" [scope]="'tenant'"></configuration-scope>
         </template>
       </ngb-tab>
-      <ngb-tab [title]="'Tenant' + (configurationSet.tenant.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.tenant !== null && v1x1Module.configurationDefinitionSet.tenant.tenantPermission !== NONE">
-        <template ngbTabContent>
-          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.tenant" [(originalConfiguration)]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.tenant.configuration" [activeTenant]="activeTenant" [scope]="'tenant'"></configuration-scope>
-        </template>
-      </ngb-tab>
-      <ngb-tab [title]="'Channel' + (configurationSet.channel.dirty() ? '*' : '')" *ngIf="v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== NONE">
-        <template ngbTabContent>
-          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.channel" [(originalConfiguration)]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.channel.configuration" [activeTenant]="activeTenant" [scope]="'channel'"></configuration-scope>
-        </template>
-      </ngb-tab>
+      <div *ngFor="let channelGroup of configurationSet.channelGroups; let i = index">
+        <ngb-tab>
+          <template ngbTabTitle>
+            <span [class.color-twitch]="channelGroup.channelGroup.platform === 'TWITCH'" [class.color-discord]="channelGroup.channelGroup.platform === 'DISCORD'">
+              <i [class.fa-twitch]="channelGroup.channelGroup.platform === 'TWITCH'" [class.fa-discord]="channelGroup.channelGroup.platform === 'DISCORD'" [class.fab]="true"></i> {{channelGroup.channelGroup.displayName}}{{channelGroup.config.dirty() ? '*' : ''}}
+            </span>
+          </template>
+          <template ngbTabContent>
+            <configuration-channel-group [(v1x1Module)]="v1x1Module" [(activeTenant)]="activeTenant" [(activeChannelGroup)]="configurationSet.channelGroups[i]"></configuration-channel-group>
+          </template>
+        </ngb-tab>
+      </div>
     </ngb-tabset>
   `
 })

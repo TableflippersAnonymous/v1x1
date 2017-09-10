@@ -31,6 +31,7 @@ public final class EventOuterClass {
     registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.PrivateMessageEvent.data);
     registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.TwitchPrivateMessageEvent.data);
     registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.ConfigChangeEvent.data);
+    registry.add(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.data);
   }
 
   public static void registerAllExtensions(
@@ -216,6 +217,10 @@ public final class EventOuterClass {
        * <code>CONFIG_CHANGE = 19;</code>
        */
       CONFIG_CHANGE(19),
+      /**
+       * <code>DISCORD_VOICE_STATE = 20;</code>
+       */
+      DISCORD_VOICE_STATE(20),
       ;
 
       /**
@@ -298,6 +303,10 @@ public final class EventOuterClass {
        * <code>CONFIG_CHANGE = 19;</code>
        */
       public static final int CONFIG_CHANGE_VALUE = 19;
+      /**
+       * <code>DISCORD_VOICE_STATE = 20;</code>
+       */
+      public static final int DISCORD_VOICE_STATE_VALUE = 20;
 
 
       public final int getNumber() {
@@ -334,6 +343,7 @@ public final class EventOuterClass {
           case 17: return SCHEDULER_NOTIFY;
           case 18: return PRIVATE_MESSAGE;
           case 19: return CONFIG_CHANGE;
+          case 20: return DISCORD_VOICE_STATE;
           default: return null;
         }
       }
@@ -20116,6 +20126,19 @@ public final class EventOuterClass {
      * <code>optional .tv.v1x1.common.dto.proto.core.Channel channel = 4;</code>
      */
     tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelOrBuilder getChannelOrBuilder();
+
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+     */
+    boolean hasChannelGroup();
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getChannelGroup();
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+     */
+    tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder getChannelGroupOrBuilder();
   }
   /**
    * Protobuf type {@code tv.v1x1.common.dto.proto.messages.ConfigChangeEvent}
@@ -20210,6 +20233,19 @@ public final class EventOuterClass {
               bitField0_ |= 0x00000008;
               break;
             }
+            case 42: {
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000010) == 0x00000010)) {
+                subBuilder = channelGroup_.toBuilder();
+              }
+              channelGroup_ = input.readMessage(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(channelGroup_);
+                channelGroup_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000010;
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -20255,6 +20291,10 @@ public final class EventOuterClass {
        * <code>CHANNEL = 3;</code>
        */
       CHANNEL(3),
+      /**
+       * <code>CHANNEL_GROUP = 4;</code>
+       */
+      CHANNEL_GROUP(4),
       ;
 
       /**
@@ -20273,6 +20313,10 @@ public final class EventOuterClass {
        * <code>CHANNEL = 3;</code>
        */
       public static final int CHANNEL_VALUE = 3;
+      /**
+       * <code>CHANNEL_GROUP = 4;</code>
+       */
+      public static final int CHANNEL_GROUP_VALUE = 4;
 
 
       public final int getNumber() {
@@ -20293,6 +20337,7 @@ public final class EventOuterClass {
           case 1: return GLOBAL;
           case 2: return TENANT;
           case 3: return CHANNEL;
+          case 4: return CHANNEL_GROUP;
           default: return null;
         }
       }
@@ -20422,6 +20467,27 @@ public final class EventOuterClass {
       return channel_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.Channel.getDefaultInstance() : channel_;
     }
 
+    public static final int CHANNEL_GROUP_FIELD_NUMBER = 5;
+    private tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup channelGroup_;
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+     */
+    public boolean hasChannelGroup() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getChannelGroup() {
+      return channelGroup_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance() : channelGroup_;
+    }
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder getChannelGroupOrBuilder() {
+      return channelGroup_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance() : channelGroup_;
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -20452,6 +20518,12 @@ public final class EventOuterClass {
           return false;
         }
       }
+      if (hasChannelGroup()) {
+        if (!getChannelGroup().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -20469,6 +20541,9 @@ public final class EventOuterClass {
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeMessage(4, getChannel());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeMessage(5, getChannelGroup());
       }
       unknownFields.writeTo(output);
     }
@@ -20493,6 +20568,10 @@ public final class EventOuterClass {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(4, getChannel());
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(5, getChannelGroup());
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -20530,6 +20609,11 @@ public final class EventOuterClass {
         result = result && getChannel()
             .equals(other.getChannel());
       }
+      result = result && (hasChannelGroup() == other.hasChannelGroup());
+      if (hasChannelGroup()) {
+        result = result && getChannelGroup()
+            .equals(other.getChannelGroup());
+      }
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -20556,6 +20640,10 @@ public final class EventOuterClass {
       if (hasChannel()) {
         hash = (37 * hash) + CHANNEL_FIELD_NUMBER;
         hash = (53 * hash) + getChannel().hashCode();
+      }
+      if (hasChannelGroup()) {
+        hash = (37 * hash) + CHANNEL_GROUP_FIELD_NUMBER;
+        hash = (53 * hash) + getChannelGroup().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -20674,6 +20762,7 @@ public final class EventOuterClass {
           getModuleFieldBuilder();
           getTenantFieldBuilder();
           getChannelFieldBuilder();
+          getChannelGroupFieldBuilder();
         }
       }
       public Builder clear() {
@@ -20698,6 +20787,12 @@ public final class EventOuterClass {
           channelBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000008);
+        if (channelGroupBuilder_ == null) {
+          channelGroup_ = null;
+        } else {
+          channelGroupBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
         return this;
       }
 
@@ -20749,6 +20844,14 @@ public final class EventOuterClass {
           result.channel_ = channel_;
         } else {
           result.channel_ = channelBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        if (channelGroupBuilder_ == null) {
+          result.channelGroup_ = channelGroup_;
+        } else {
+          result.channelGroup_ = channelGroupBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -20804,6 +20907,9 @@ public final class EventOuterClass {
         if (other.hasChannel()) {
           mergeChannel(other.getChannel());
         }
+        if (other.hasChannelGroup()) {
+          mergeChannelGroup(other.getChannelGroup());
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -20826,6 +20932,11 @@ public final class EventOuterClass {
         }
         if (hasChannel()) {
           if (!getChannel().isInitialized()) {
+            return false;
+          }
+        }
+        if (hasChannelGroup()) {
+          if (!getChannelGroup().isInitialized()) {
             return false;
           }
         }
@@ -21240,6 +21351,124 @@ public final class EventOuterClass {
         }
         return channelBuilder_;
       }
+
+      private tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup channelGroup_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder> channelGroupBuilder_;
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      public boolean hasChannelGroup() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup getChannelGroup() {
+        if (channelGroupBuilder_ == null) {
+          return channelGroup_ == null ? tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance() : channelGroup_;
+        } else {
+          return channelGroupBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      public Builder setChannelGroup(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup value) {
+        if (channelGroupBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          channelGroup_ = value;
+          onChanged();
+        } else {
+          channelGroupBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      public Builder setChannelGroup(
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder builderForValue) {
+        if (channelGroupBuilder_ == null) {
+          channelGroup_ = builderForValue.build();
+          onChanged();
+        } else {
+          channelGroupBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      public Builder mergeChannelGroup(tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup value) {
+        if (channelGroupBuilder_ == null) {
+          if (((bitField0_ & 0x00000010) == 0x00000010) &&
+              channelGroup_ != null &&
+              channelGroup_ != tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance()) {
+            channelGroup_ =
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.newBuilder(channelGroup_).mergeFrom(value).buildPartial();
+          } else {
+            channelGroup_ = value;
+          }
+          onChanged();
+        } else {
+          channelGroupBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000010;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      public Builder clearChannelGroup() {
+        if (channelGroupBuilder_ == null) {
+          channelGroup_ = null;
+          onChanged();
+        } else {
+          channelGroupBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder getChannelGroupBuilder() {
+        bitField0_ |= 0x00000010;
+        onChanged();
+        return getChannelGroupFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder getChannelGroupOrBuilder() {
+        if (channelGroupBuilder_ != null) {
+          return channelGroupBuilder_.getMessageOrBuilder();
+        } else {
+          return channelGroup_ == null ?
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.getDefaultInstance() : channelGroup_;
+        }
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.core.ChannelGroup channel_group = 5;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder> 
+          getChannelGroupFieldBuilder() {
+        if (channelGroupBuilder_ == null) {
+          channelGroupBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroup.Builder, tv.v1x1.common.dto.proto.core.ChannelOuterClass.ChannelGroupOrBuilder>(
+                  getChannelGroup(),
+                  getParentForChildren(),
+                  isClean());
+          channelGroup_ = null;
+        }
+        return channelGroupBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -21300,6 +21529,2349 @@ public final class EventOuterClass {
           0,
           tv.v1x1.common.dto.proto.messages.EventOuterClass.ConfigChangeEvent.class,
           tv.v1x1.common.dto.proto.messages.EventOuterClass.ConfigChangeEvent.getDefaultInstance());
+  }
+
+  public interface DiscordVoiceStateEventOrBuilder extends
+      // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent)
+      com.google.protobuf.MessageOrBuilder {
+
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+     */
+    boolean hasOldVoiceState();
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+     */
+    tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getOldVoiceState();
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+     */
+    tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder getOldVoiceStateOrBuilder();
+
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+     */
+    boolean hasNewVoiceState();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+     */
+    tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getNewVoiceState();
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+     */
+    tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder getNewVoiceStateOrBuilder();
+  }
+  /**
+   * Protobuf type {@code tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent}
+   */
+  public  static final class DiscordVoiceStateEvent extends
+      com.google.protobuf.GeneratedMessageV3 implements
+      // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent)
+      DiscordVoiceStateEventOrBuilder {
+    // Use DiscordVoiceStateEvent.newBuilder() to construct.
+    private DiscordVoiceStateEvent(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+      super(builder);
+    }
+    private DiscordVoiceStateEvent() {
+    }
+
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+    getUnknownFields() {
+      return this.unknownFields;
+    }
+    private DiscordVoiceStateEvent(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      this();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                subBuilder = oldVoiceState_.toBuilder();
+              }
+              oldVoiceState_ = input.readMessage(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(oldVoiceState_);
+                oldVoiceState_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000001;
+              break;
+            }
+            case 18: {
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                subBuilder = newVoiceState_.toBuilder();
+              }
+              newVoiceState_ = input.readMessage(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(newVoiceState_);
+                newVoiceState_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000002;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.class, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.Builder.class);
+    }
+
+    public interface VoiceStateOrBuilder extends
+        // @@protoc_insertion_point(interface_extends:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState)
+        com.google.protobuf.MessageOrBuilder {
+
+      /**
+       * <code>optional string guild_id = 1;</code>
+       */
+      boolean hasGuildId();
+      /**
+       * <code>optional string guild_id = 1;</code>
+       */
+      java.lang.String getGuildId();
+      /**
+       * <code>optional string guild_id = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getGuildIdBytes();
+
+      /**
+       * <code>optional string channel_id = 2;</code>
+       */
+      boolean hasChannelId();
+      /**
+       * <code>optional string channel_id = 2;</code>
+       */
+      java.lang.String getChannelId();
+      /**
+       * <code>optional string channel_id = 2;</code>
+       */
+      com.google.protobuf.ByteString
+          getChannelIdBytes();
+
+      /**
+       * <code>required string user_id = 3;</code>
+       */
+      boolean hasUserId();
+      /**
+       * <code>required string user_id = 3;</code>
+       */
+      java.lang.String getUserId();
+      /**
+       * <code>required string user_id = 3;</code>
+       */
+      com.google.protobuf.ByteString
+          getUserIdBytes();
+
+      /**
+       * <code>required string session_id = 4;</code>
+       */
+      boolean hasSessionId();
+      /**
+       * <code>required string session_id = 4;</code>
+       */
+      java.lang.String getSessionId();
+      /**
+       * <code>required string session_id = 4;</code>
+       */
+      com.google.protobuf.ByteString
+          getSessionIdBytes();
+
+      /**
+       * <code>required bool deaf = 5;</code>
+       */
+      boolean hasDeaf();
+      /**
+       * <code>required bool deaf = 5;</code>
+       */
+      boolean getDeaf();
+
+      /**
+       * <code>required bool mute = 6;</code>
+       */
+      boolean hasMute();
+      /**
+       * <code>required bool mute = 6;</code>
+       */
+      boolean getMute();
+
+      /**
+       * <code>required bool self_deaf = 7;</code>
+       */
+      boolean hasSelfDeaf();
+      /**
+       * <code>required bool self_deaf = 7;</code>
+       */
+      boolean getSelfDeaf();
+
+      /**
+       * <code>required bool self_mute = 8;</code>
+       */
+      boolean hasSelfMute();
+      /**
+       * <code>required bool self_mute = 8;</code>
+       */
+      boolean getSelfMute();
+
+      /**
+       * <code>required bool suppress = 9;</code>
+       */
+      boolean hasSuppress();
+      /**
+       * <code>required bool suppress = 9;</code>
+       */
+      boolean getSuppress();
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState}
+     */
+    public  static final class VoiceState extends
+        com.google.protobuf.GeneratedMessageV3 implements
+        // @@protoc_insertion_point(message_implements:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState)
+        VoiceStateOrBuilder {
+      // Use VoiceState.newBuilder() to construct.
+      private VoiceState(com.google.protobuf.GeneratedMessageV3.Builder<?> builder) {
+        super(builder);
+      }
+      private VoiceState() {
+        guildId_ = "";
+        channelId_ = "";
+        userId_ = "";
+        sessionId_ = "";
+        deaf_ = false;
+        mute_ = false;
+        selfDeaf_ = false;
+        selfMute_ = false;
+        suppress_ = false;
+      }
+
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+      getUnknownFields() {
+        return this.unknownFields;
+      }
+      private VoiceState(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        this();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                com.google.protobuf.ByteString bs = input.readBytes();
+                bitField0_ |= 0x00000001;
+                guildId_ = bs;
+                break;
+              }
+              case 18: {
+                com.google.protobuf.ByteString bs = input.readBytes();
+                bitField0_ |= 0x00000002;
+                channelId_ = bs;
+                break;
+              }
+              case 26: {
+                com.google.protobuf.ByteString bs = input.readBytes();
+                bitField0_ |= 0x00000004;
+                userId_ = bs;
+                break;
+              }
+              case 34: {
+                com.google.protobuf.ByteString bs = input.readBytes();
+                bitField0_ |= 0x00000008;
+                sessionId_ = bs;
+                break;
+              }
+              case 40: {
+                bitField0_ |= 0x00000010;
+                deaf_ = input.readBool();
+                break;
+              }
+              case 48: {
+                bitField0_ |= 0x00000020;
+                mute_ = input.readBool();
+                break;
+              }
+              case 56: {
+                bitField0_ |= 0x00000040;
+                selfDeaf_ = input.readBool();
+                break;
+              }
+              case 64: {
+                bitField0_ |= 0x00000080;
+                selfMute_ = input.readBool();
+                break;
+              }
+              case 72: {
+                bitField0_ |= 0x00000100;
+                suppress_ = input.readBool();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.class, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder.class);
+      }
+
+      private int bitField0_;
+      public static final int GUILD_ID_FIELD_NUMBER = 1;
+      private volatile java.lang.Object guildId_;
+      /**
+       * <code>optional string guild_id = 1;</code>
+       */
+      public boolean hasGuildId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string guild_id = 1;</code>
+       */
+      public java.lang.String getGuildId() {
+        java.lang.Object ref = guildId_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            guildId_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>optional string guild_id = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getGuildIdBytes() {
+        java.lang.Object ref = guildId_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          guildId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int CHANNEL_ID_FIELD_NUMBER = 2;
+      private volatile java.lang.Object channelId_;
+      /**
+       * <code>optional string channel_id = 2;</code>
+       */
+      public boolean hasChannelId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string channel_id = 2;</code>
+       */
+      public java.lang.String getChannelId() {
+        java.lang.Object ref = channelId_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            channelId_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>optional string channel_id = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getChannelIdBytes() {
+        java.lang.Object ref = channelId_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          channelId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int USER_ID_FIELD_NUMBER = 3;
+      private volatile java.lang.Object userId_;
+      /**
+       * <code>required string user_id = 3;</code>
+       */
+      public boolean hasUserId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required string user_id = 3;</code>
+       */
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            userId_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>required string user_id = 3;</code>
+       */
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int SESSION_ID_FIELD_NUMBER = 4;
+      private volatile java.lang.Object sessionId_;
+      /**
+       * <code>required string session_id = 4;</code>
+       */
+      public boolean hasSessionId() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>required string session_id = 4;</code>
+       */
+      public java.lang.String getSessionId() {
+        java.lang.Object ref = sessionId_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            sessionId_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>required string session_id = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getSessionIdBytes() {
+        java.lang.Object ref = sessionId_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          sessionId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      public static final int DEAF_FIELD_NUMBER = 5;
+      private boolean deaf_;
+      /**
+       * <code>required bool deaf = 5;</code>
+       */
+      public boolean hasDeaf() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>required bool deaf = 5;</code>
+       */
+      public boolean getDeaf() {
+        return deaf_;
+      }
+
+      public static final int MUTE_FIELD_NUMBER = 6;
+      private boolean mute_;
+      /**
+       * <code>required bool mute = 6;</code>
+       */
+      public boolean hasMute() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>required bool mute = 6;</code>
+       */
+      public boolean getMute() {
+        return mute_;
+      }
+
+      public static final int SELF_DEAF_FIELD_NUMBER = 7;
+      private boolean selfDeaf_;
+      /**
+       * <code>required bool self_deaf = 7;</code>
+       */
+      public boolean hasSelfDeaf() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>required bool self_deaf = 7;</code>
+       */
+      public boolean getSelfDeaf() {
+        return selfDeaf_;
+      }
+
+      public static final int SELF_MUTE_FIELD_NUMBER = 8;
+      private boolean selfMute_;
+      /**
+       * <code>required bool self_mute = 8;</code>
+       */
+      public boolean hasSelfMute() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>required bool self_mute = 8;</code>
+       */
+      public boolean getSelfMute() {
+        return selfMute_;
+      }
+
+      public static final int SUPPRESS_FIELD_NUMBER = 9;
+      private boolean suppress_;
+      /**
+       * <code>required bool suppress = 9;</code>
+       */
+      public boolean hasSuppress() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      /**
+       * <code>required bool suppress = 9;</code>
+       */
+      public boolean getSuppress() {
+        return suppress_;
+      }
+
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized == 1) return true;
+        if (isInitialized == 0) return false;
+
+        if (!hasUserId()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasSessionId()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasDeaf()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasMute()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasSelfDeaf()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasSelfMute()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasSuppress()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 1, guildId_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 2, channelId_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 3, userId_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          com.google.protobuf.GeneratedMessageV3.writeString(output, 4, sessionId_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          output.writeBool(5, deaf_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          output.writeBool(6, mute_);
+        }
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          output.writeBool(7, selfDeaf_);
+        }
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
+          output.writeBool(8, selfMute_);
+        }
+        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+          output.writeBool(9, suppress_);
+        }
+        unknownFields.writeTo(output);
+      }
+
+      public int getSerializedSize() {
+        int size = memoizedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, guildId_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, channelId_);
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(3, userId_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.GeneratedMessageV3.computeStringSize(4, sessionId_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(5, deaf_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(6, mute_);
+        }
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(7, selfDeaf_);
+        }
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(8, selfMute_);
+        }
+        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(9, suppress_);
+        }
+        size += unknownFields.getSerializedSize();
+        memoizedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      public boolean equals(final java.lang.Object obj) {
+        if (obj == this) {
+         return true;
+        }
+        if (!(obj instanceof tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState)) {
+          return super.equals(obj);
+        }
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState other = (tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState) obj;
+
+        boolean result = true;
+        result = result && (hasGuildId() == other.hasGuildId());
+        if (hasGuildId()) {
+          result = result && getGuildId()
+              .equals(other.getGuildId());
+        }
+        result = result && (hasChannelId() == other.hasChannelId());
+        if (hasChannelId()) {
+          result = result && getChannelId()
+              .equals(other.getChannelId());
+        }
+        result = result && (hasUserId() == other.hasUserId());
+        if (hasUserId()) {
+          result = result && getUserId()
+              .equals(other.getUserId());
+        }
+        result = result && (hasSessionId() == other.hasSessionId());
+        if (hasSessionId()) {
+          result = result && getSessionId()
+              .equals(other.getSessionId());
+        }
+        result = result && (hasDeaf() == other.hasDeaf());
+        if (hasDeaf()) {
+          result = result && (getDeaf()
+              == other.getDeaf());
+        }
+        result = result && (hasMute() == other.hasMute());
+        if (hasMute()) {
+          result = result && (getMute()
+              == other.getMute());
+        }
+        result = result && (hasSelfDeaf() == other.hasSelfDeaf());
+        if (hasSelfDeaf()) {
+          result = result && (getSelfDeaf()
+              == other.getSelfDeaf());
+        }
+        result = result && (hasSelfMute() == other.hasSelfMute());
+        if (hasSelfMute()) {
+          result = result && (getSelfMute()
+              == other.getSelfMute());
+        }
+        result = result && (hasSuppress() == other.hasSuppress());
+        if (hasSuppress()) {
+          result = result && (getSuppress()
+              == other.getSuppress());
+        }
+        result = result && unknownFields.equals(other.unknownFields);
+        return result;
+      }
+
+      @java.lang.Override
+      public int hashCode() {
+        if (memoizedHashCode != 0) {
+          return memoizedHashCode;
+        }
+        int hash = 41;
+        hash = (19 * hash) + getDescriptorForType().hashCode();
+        if (hasGuildId()) {
+          hash = (37 * hash) + GUILD_ID_FIELD_NUMBER;
+          hash = (53 * hash) + getGuildId().hashCode();
+        }
+        if (hasChannelId()) {
+          hash = (37 * hash) + CHANNEL_ID_FIELD_NUMBER;
+          hash = (53 * hash) + getChannelId().hashCode();
+        }
+        if (hasUserId()) {
+          hash = (37 * hash) + USER_ID_FIELD_NUMBER;
+          hash = (53 * hash) + getUserId().hashCode();
+        }
+        if (hasSessionId()) {
+          hash = (37 * hash) + SESSION_ID_FIELD_NUMBER;
+          hash = (53 * hash) + getSessionId().hashCode();
+        }
+        if (hasDeaf()) {
+          hash = (37 * hash) + DEAF_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getDeaf());
+        }
+        if (hasMute()) {
+          hash = (37 * hash) + MUTE_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getMute());
+        }
+        if (hasSelfDeaf()) {
+          hash = (37 * hash) + SELF_DEAF_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getSelfDeaf());
+        }
+        if (hasSelfMute()) {
+          hash = (37 * hash) + SELF_MUTE_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getSelfMute());
+        }
+        if (hasSuppress()) {
+          hash = (37 * hash) + SUPPRESS_FIELD_NUMBER;
+          hash = (53 * hash) + com.google.protobuf.Internal.hashBoolean(
+              getSuppress());
+        }
+        hash = (29 * hash) + unknownFields.hashCode();
+        memoizedHashCode = hash;
+        return hash;
+      }
+
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input);
+      }
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return com.google.protobuf.GeneratedMessageV3
+            .parseWithIOException(PARSER, input, extensionRegistry);
+      }
+
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder() {
+        return DEFAULT_INSTANCE.toBuilder();
+      }
+      public static Builder newBuilder(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState prototype) {
+        return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() {
+        return this == DEFAULT_INSTANCE
+            ? new Builder() : new Builder().mergeFrom(this);
+      }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+          // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState)
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.class, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder.class);
+        }
+
+        // Construct using tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessageV3
+                  .alwaysUseFieldBuilders) {
+          }
+        }
+        public Builder clear() {
+          super.clear();
+          guildId_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          channelId_ = "";
+          bitField0_ = (bitField0_ & ~0x00000002);
+          userId_ = "";
+          bitField0_ = (bitField0_ & ~0x00000004);
+          sessionId_ = "";
+          bitField0_ = (bitField0_ & ~0x00000008);
+          deaf_ = false;
+          bitField0_ = (bitField0_ & ~0x00000010);
+          mute_ = false;
+          bitField0_ = (bitField0_ & ~0x00000020);
+          selfDeaf_ = false;
+          bitField0_ = (bitField0_ & ~0x00000040);
+          selfMute_ = false;
+          bitField0_ = (bitField0_ & ~0x00000080);
+          suppress_ = false;
+          bitField0_ = (bitField0_ & ~0x00000100);
+          return this;
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_descriptor;
+        }
+
+        public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getDefaultInstanceForType() {
+          return tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance();
+        }
+
+        public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState build() {
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState buildPartial() {
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState result = new tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.guildId_ = guildId_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.channelId_ = channelId_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          result.userId_ = userId_;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.sessionId_ = sessionId_;
+          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+            to_bitField0_ |= 0x00000010;
+          }
+          result.deaf_ = deaf_;
+          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+            to_bitField0_ |= 0x00000020;
+          }
+          result.mute_ = mute_;
+          if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+            to_bitField0_ |= 0x00000040;
+          }
+          result.selfDeaf_ = selfDeaf_;
+          if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+            to_bitField0_ |= 0x00000080;
+          }
+          result.selfMute_ = selfMute_;
+          if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+            to_bitField0_ |= 0x00000100;
+          }
+          result.suppress_ = suppress_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder clone() {
+          return (Builder) super.clone();
+        }
+        public Builder setField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            Object value) {
+          return (Builder) super.setField(field, value);
+        }
+        public Builder clearField(
+            com.google.protobuf.Descriptors.FieldDescriptor field) {
+          return (Builder) super.clearField(field);
+        }
+        public Builder clearOneof(
+            com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+          return (Builder) super.clearOneof(oneof);
+        }
+        public Builder setRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            int index, Object value) {
+          return (Builder) super.setRepeatedField(field, index, value);
+        }
+        public Builder addRepeatedField(
+            com.google.protobuf.Descriptors.FieldDescriptor field,
+            Object value) {
+          return (Builder) super.addRepeatedField(field, value);
+        }
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState) {
+            return mergeFrom((tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState other) {
+          if (other == tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance()) return this;
+          if (other.hasGuildId()) {
+            bitField0_ |= 0x00000001;
+            guildId_ = other.guildId_;
+            onChanged();
+          }
+          if (other.hasChannelId()) {
+            bitField0_ |= 0x00000002;
+            channelId_ = other.channelId_;
+            onChanged();
+          }
+          if (other.hasUserId()) {
+            bitField0_ |= 0x00000004;
+            userId_ = other.userId_;
+            onChanged();
+          }
+          if (other.hasSessionId()) {
+            bitField0_ |= 0x00000008;
+            sessionId_ = other.sessionId_;
+            onChanged();
+          }
+          if (other.hasDeaf()) {
+            setDeaf(other.getDeaf());
+          }
+          if (other.hasMute()) {
+            setMute(other.getMute());
+          }
+          if (other.hasSelfDeaf()) {
+            setSelfDeaf(other.getSelfDeaf());
+          }
+          if (other.hasSelfMute()) {
+            setSelfMute(other.getSelfMute());
+          }
+          if (other.hasSuppress()) {
+            setSuppress(other.getSuppress());
+          }
+          this.mergeUnknownFields(other.unknownFields);
+          onChanged();
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          if (!hasUserId()) {
+            return false;
+          }
+          if (!hasSessionId()) {
+            return false;
+          }
+          if (!hasDeaf()) {
+            return false;
+          }
+          if (!hasMute()) {
+            return false;
+          }
+          if (!hasSelfDeaf()) {
+            return false;
+          }
+          if (!hasSelfMute()) {
+            return false;
+          }
+          if (!hasSuppress()) {
+            return false;
+          }
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState) e.getUnfinishedMessage();
+            throw e.unwrapIOException();
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        private java.lang.Object guildId_ = "";
+        /**
+         * <code>optional string guild_id = 1;</code>
+         */
+        public boolean hasGuildId() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>optional string guild_id = 1;</code>
+         */
+        public java.lang.String getGuildId() {
+          java.lang.Object ref = guildId_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              guildId_ = s;
+            }
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>optional string guild_id = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getGuildIdBytes() {
+          java.lang.Object ref = guildId_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            guildId_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>optional string guild_id = 1;</code>
+         */
+        public Builder setGuildId(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          guildId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional string guild_id = 1;</code>
+         */
+        public Builder clearGuildId() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          guildId_ = getDefaultInstance().getGuildId();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional string guild_id = 1;</code>
+         */
+        public Builder setGuildIdBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          guildId_ = value;
+          onChanged();
+          return this;
+        }
+
+        private java.lang.Object channelId_ = "";
+        /**
+         * <code>optional string channel_id = 2;</code>
+         */
+        public boolean hasChannelId() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional string channel_id = 2;</code>
+         */
+        public java.lang.String getChannelId() {
+          java.lang.Object ref = channelId_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              channelId_ = s;
+            }
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>optional string channel_id = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+            getChannelIdBytes() {
+          java.lang.Object ref = channelId_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            channelId_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>optional string channel_id = 2;</code>
+         */
+        public Builder setChannelId(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          channelId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional string channel_id = 2;</code>
+         */
+        public Builder clearChannelId() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          channelId_ = getDefaultInstance().getChannelId();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional string channel_id = 2;</code>
+         */
+        public Builder setChannelIdBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          channelId_ = value;
+          onChanged();
+          return this;
+        }
+
+        private java.lang.Object userId_ = "";
+        /**
+         * <code>required string user_id = 3;</code>
+         */
+        public boolean hasUserId() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        /**
+         * <code>required string user_id = 3;</code>
+         */
+        public java.lang.String getUserId() {
+          java.lang.Object ref = userId_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              userId_ = s;
+            }
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>required string user_id = 3;</code>
+         */
+        public com.google.protobuf.ByteString
+            getUserIdBytes() {
+          java.lang.Object ref = userId_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            userId_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>required string user_id = 3;</code>
+         */
+        public Builder setUserId(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+          userId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string user_id = 3;</code>
+         */
+        public Builder clearUserId() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          userId_ = getDefaultInstance().getUserId();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string user_id = 3;</code>
+         */
+        public Builder setUserIdBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+          userId_ = value;
+          onChanged();
+          return this;
+        }
+
+        private java.lang.Object sessionId_ = "";
+        /**
+         * <code>required string session_id = 4;</code>
+         */
+        public boolean hasSessionId() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        /**
+         * <code>required string session_id = 4;</code>
+         */
+        public java.lang.String getSessionId() {
+          java.lang.Object ref = sessionId_;
+          if (!(ref instanceof java.lang.String)) {
+            com.google.protobuf.ByteString bs =
+                (com.google.protobuf.ByteString) ref;
+            java.lang.String s = bs.toStringUtf8();
+            if (bs.isValidUtf8()) {
+              sessionId_ = s;
+            }
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>required string session_id = 4;</code>
+         */
+        public com.google.protobuf.ByteString
+            getSessionIdBytes() {
+          java.lang.Object ref = sessionId_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            sessionId_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>required string session_id = 4;</code>
+         */
+        public Builder setSessionId(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+          sessionId_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string session_id = 4;</code>
+         */
+        public Builder clearSessionId() {
+          bitField0_ = (bitField0_ & ~0x00000008);
+          sessionId_ = getDefaultInstance().getSessionId();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required string session_id = 4;</code>
+         */
+        public Builder setSessionIdBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+          sessionId_ = value;
+          onChanged();
+          return this;
+        }
+
+        private boolean deaf_ ;
+        /**
+         * <code>required bool deaf = 5;</code>
+         */
+        public boolean hasDeaf() {
+          return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+        /**
+         * <code>required bool deaf = 5;</code>
+         */
+        public boolean getDeaf() {
+          return deaf_;
+        }
+        /**
+         * <code>required bool deaf = 5;</code>
+         */
+        public Builder setDeaf(boolean value) {
+          bitField0_ |= 0x00000010;
+          deaf_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bool deaf = 5;</code>
+         */
+        public Builder clearDeaf() {
+          bitField0_ = (bitField0_ & ~0x00000010);
+          deaf_ = false;
+          onChanged();
+          return this;
+        }
+
+        private boolean mute_ ;
+        /**
+         * <code>required bool mute = 6;</code>
+         */
+        public boolean hasMute() {
+          return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+        /**
+         * <code>required bool mute = 6;</code>
+         */
+        public boolean getMute() {
+          return mute_;
+        }
+        /**
+         * <code>required bool mute = 6;</code>
+         */
+        public Builder setMute(boolean value) {
+          bitField0_ |= 0x00000020;
+          mute_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bool mute = 6;</code>
+         */
+        public Builder clearMute() {
+          bitField0_ = (bitField0_ & ~0x00000020);
+          mute_ = false;
+          onChanged();
+          return this;
+        }
+
+        private boolean selfDeaf_ ;
+        /**
+         * <code>required bool self_deaf = 7;</code>
+         */
+        public boolean hasSelfDeaf() {
+          return ((bitField0_ & 0x00000040) == 0x00000040);
+        }
+        /**
+         * <code>required bool self_deaf = 7;</code>
+         */
+        public boolean getSelfDeaf() {
+          return selfDeaf_;
+        }
+        /**
+         * <code>required bool self_deaf = 7;</code>
+         */
+        public Builder setSelfDeaf(boolean value) {
+          bitField0_ |= 0x00000040;
+          selfDeaf_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bool self_deaf = 7;</code>
+         */
+        public Builder clearSelfDeaf() {
+          bitField0_ = (bitField0_ & ~0x00000040);
+          selfDeaf_ = false;
+          onChanged();
+          return this;
+        }
+
+        private boolean selfMute_ ;
+        /**
+         * <code>required bool self_mute = 8;</code>
+         */
+        public boolean hasSelfMute() {
+          return ((bitField0_ & 0x00000080) == 0x00000080);
+        }
+        /**
+         * <code>required bool self_mute = 8;</code>
+         */
+        public boolean getSelfMute() {
+          return selfMute_;
+        }
+        /**
+         * <code>required bool self_mute = 8;</code>
+         */
+        public Builder setSelfMute(boolean value) {
+          bitField0_ |= 0x00000080;
+          selfMute_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bool self_mute = 8;</code>
+         */
+        public Builder clearSelfMute() {
+          bitField0_ = (bitField0_ & ~0x00000080);
+          selfMute_ = false;
+          onChanged();
+          return this;
+        }
+
+        private boolean suppress_ ;
+        /**
+         * <code>required bool suppress = 9;</code>
+         */
+        public boolean hasSuppress() {
+          return ((bitField0_ & 0x00000100) == 0x00000100);
+        }
+        /**
+         * <code>required bool suppress = 9;</code>
+         */
+        public boolean getSuppress() {
+          return suppress_;
+        }
+        /**
+         * <code>required bool suppress = 9;</code>
+         */
+        public Builder setSuppress(boolean value) {
+          bitField0_ |= 0x00000100;
+          suppress_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>required bool suppress = 9;</code>
+         */
+        public Builder clearSuppress() {
+          bitField0_ = (bitField0_ & ~0x00000100);
+          suppress_ = false;
+          onChanged();
+          return this;
+        }
+        public final Builder setUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.setUnknownFields(unknownFields);
+        }
+
+        public final Builder mergeUnknownFields(
+            final com.google.protobuf.UnknownFieldSet unknownFields) {
+          return super.mergeUnknownFields(unknownFields);
+        }
+
+
+        // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState)
+      }
+
+      // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState)
+      private static final tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState DEFAULT_INSTANCE;
+      static {
+        DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState();
+      }
+
+      public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getDefaultInstance() {
+        return DEFAULT_INSTANCE;
+      }
+
+      @java.lang.Deprecated public static final com.google.protobuf.Parser<VoiceState>
+          PARSER = new com.google.protobuf.AbstractParser<VoiceState>() {
+        public VoiceState parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+            return new VoiceState(input, extensionRegistry);
+        }
+      };
+
+      public static com.google.protobuf.Parser<VoiceState> parser() {
+        return PARSER;
+      }
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<VoiceState> getParserForType() {
+        return PARSER;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getDefaultInstanceForType() {
+        return DEFAULT_INSTANCE;
+      }
+
+    }
+
+    private int bitField0_;
+    public static final int OLD_VOICE_STATE_FIELD_NUMBER = 1;
+    private tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState oldVoiceState_;
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+     */
+    public boolean hasOldVoiceState() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+     */
+    public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getOldVoiceState() {
+      return oldVoiceState_ == null ? tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : oldVoiceState_;
+    }
+    /**
+     * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+     */
+    public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder getOldVoiceStateOrBuilder() {
+      return oldVoiceState_ == null ? tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : oldVoiceState_;
+    }
+
+    public static final int NEW_VOICE_STATE_FIELD_NUMBER = 2;
+    private tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState newVoiceState_;
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+     */
+    public boolean hasNewVoiceState() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+     */
+    public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getNewVoiceState() {
+      return newVoiceState_ == null ? tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : newVoiceState_;
+    }
+    /**
+     * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+     */
+    public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder getNewVoiceStateOrBuilder() {
+      return newVoiceState_ == null ? tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : newVoiceState_;
+    }
+
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized == 1) return true;
+      if (isInitialized == 0) return false;
+
+      if (!hasNewVoiceState()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (hasOldVoiceState()) {
+        if (!getOldVoiceState().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      if (!getNewVoiceState().isInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeMessage(1, getOldVoiceState());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, getNewVoiceState());
+      }
+      unknownFields.writeTo(output);
+    }
+
+    public int getSerializedSize() {
+      int size = memoizedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, getOldVoiceState());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, getNewVoiceState());
+      }
+      size += unknownFields.getSerializedSize();
+      memoizedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    public boolean equals(final java.lang.Object obj) {
+      if (obj == this) {
+       return true;
+      }
+      if (!(obj instanceof tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent)) {
+        return super.equals(obj);
+      }
+      tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent other = (tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent) obj;
+
+      boolean result = true;
+      result = result && (hasOldVoiceState() == other.hasOldVoiceState());
+      if (hasOldVoiceState()) {
+        result = result && getOldVoiceState()
+            .equals(other.getOldVoiceState());
+      }
+      result = result && (hasNewVoiceState() == other.hasNewVoiceState());
+      if (hasNewVoiceState()) {
+        result = result && getNewVoiceState()
+            .equals(other.getNewVoiceState());
+      }
+      result = result && unknownFields.equals(other.unknownFields);
+      return result;
+    }
+
+    @java.lang.Override
+    public int hashCode() {
+      if (memoizedHashCode != 0) {
+        return memoizedHashCode;
+      }
+      int hash = 41;
+      hash = (19 * hash) + getDescriptorForType().hashCode();
+      if (hasOldVoiceState()) {
+        hash = (37 * hash) + OLD_VOICE_STATE_FIELD_NUMBER;
+        hash = (53 * hash) + getOldVoiceState().hashCode();
+      }
+      if (hasNewVoiceState()) {
+        hash = (37 * hash) + NEW_VOICE_STATE_FIELD_NUMBER;
+        hash = (53 * hash) + getNewVoiceState().hashCode();
+      }
+      hash = (29 * hash) + unknownFields.hashCode();
+      memoizedHashCode = hash;
+      return hash;
+    }
+
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseDelimitedWithIOException(PARSER, input, extensionRegistry);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input);
+    }
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return com.google.protobuf.GeneratedMessageV3
+          .parseWithIOException(PARSER, input, extensionRegistry);
+    }
+
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder() {
+      return DEFAULT_INSTANCE.toBuilder();
+    }
+    public static Builder newBuilder(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent prototype) {
+      return DEFAULT_INSTANCE.toBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() {
+      return this == DEFAULT_INSTANCE
+          ? new Builder() : new Builder().mergeFrom(this);
+    }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageV3.Builder<Builder> implements
+        // @@protoc_insertion_point(builder_implements:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent)
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEventOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.class, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.Builder.class);
+      }
+
+      // Construct using tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessageV3.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessageV3
+                .alwaysUseFieldBuilders) {
+          getOldVoiceStateFieldBuilder();
+          getNewVoiceStateFieldBuilder();
+        }
+      }
+      public Builder clear() {
+        super.clear();
+        if (oldVoiceStateBuilder_ == null) {
+          oldVoiceState_ = null;
+        } else {
+          oldVoiceStateBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (newVoiceStateBuilder_ == null) {
+          newVoiceState_ = null;
+        } else {
+          newVoiceStateBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent getDefaultInstanceForType() {
+        return tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.getDefaultInstance();
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent build() {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent buildPartial() {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent result = new tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        if (oldVoiceStateBuilder_ == null) {
+          result.oldVoiceState_ = oldVoiceState_;
+        } else {
+          result.oldVoiceState_ = oldVoiceStateBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (newVoiceStateBuilder_ == null) {
+          result.newVoiceState_ = newVoiceState_;
+        } else {
+          result.newVoiceState_ = newVoiceStateBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder clone() {
+        return (Builder) super.clone();
+      }
+      public Builder setField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.setField(field, value);
+      }
+      public Builder clearField(
+          com.google.protobuf.Descriptors.FieldDescriptor field) {
+        return (Builder) super.clearField(field);
+      }
+      public Builder clearOneof(
+          com.google.protobuf.Descriptors.OneofDescriptor oneof) {
+        return (Builder) super.clearOneof(oneof);
+      }
+      public Builder setRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          int index, Object value) {
+        return (Builder) super.setRepeatedField(field, index, value);
+      }
+      public Builder addRepeatedField(
+          com.google.protobuf.Descriptors.FieldDescriptor field,
+          Object value) {
+        return (Builder) super.addRepeatedField(field, value);
+      }
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent) {
+          return mergeFrom((tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent other) {
+        if (other == tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.getDefaultInstance()) return this;
+        if (other.hasOldVoiceState()) {
+          mergeOldVoiceState(other.getOldVoiceState());
+        }
+        if (other.hasNewVoiceState()) {
+          mergeNewVoiceState(other.getNewVoiceState());
+        }
+        this.mergeUnknownFields(other.unknownFields);
+        onChanged();
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasNewVoiceState()) {
+          return false;
+        }
+        if (hasOldVoiceState()) {
+          if (!getOldVoiceState().isInitialized()) {
+            return false;
+          }
+        }
+        if (!getNewVoiceState().isInitialized()) {
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent) e.getUnfinishedMessage();
+          throw e.unwrapIOException();
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      private tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState oldVoiceState_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder> oldVoiceStateBuilder_;
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      public boolean hasOldVoiceState() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getOldVoiceState() {
+        if (oldVoiceStateBuilder_ == null) {
+          return oldVoiceState_ == null ? tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : oldVoiceState_;
+        } else {
+          return oldVoiceStateBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      public Builder setOldVoiceState(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState value) {
+        if (oldVoiceStateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          oldVoiceState_ = value;
+          onChanged();
+        } else {
+          oldVoiceStateBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      public Builder setOldVoiceState(
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder builderForValue) {
+        if (oldVoiceStateBuilder_ == null) {
+          oldVoiceState_ = builderForValue.build();
+          onChanged();
+        } else {
+          oldVoiceStateBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      public Builder mergeOldVoiceState(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState value) {
+        if (oldVoiceStateBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001) &&
+              oldVoiceState_ != null &&
+              oldVoiceState_ != tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance()) {
+            oldVoiceState_ =
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.newBuilder(oldVoiceState_).mergeFrom(value).buildPartial();
+          } else {
+            oldVoiceState_ = value;
+          }
+          onChanged();
+        } else {
+          oldVoiceStateBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000001;
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      public Builder clearOldVoiceState() {
+        if (oldVoiceStateBuilder_ == null) {
+          oldVoiceState_ = null;
+          onChanged();
+        } else {
+          oldVoiceStateBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder getOldVoiceStateBuilder() {
+        bitField0_ |= 0x00000001;
+        onChanged();
+        return getOldVoiceStateFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder getOldVoiceStateOrBuilder() {
+        if (oldVoiceStateBuilder_ != null) {
+          return oldVoiceStateBuilder_.getMessageOrBuilder();
+        } else {
+          return oldVoiceState_ == null ?
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : oldVoiceState_;
+        }
+      }
+      /**
+       * <code>optional .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState old_voice_state = 1;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder> 
+          getOldVoiceStateFieldBuilder() {
+        if (oldVoiceStateBuilder_ == null) {
+          oldVoiceStateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder>(
+                  getOldVoiceState(),
+                  getParentForChildren(),
+                  isClean());
+          oldVoiceState_ = null;
+        }
+        return oldVoiceStateBuilder_;
+      }
+
+      private tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState newVoiceState_ = null;
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder> newVoiceStateBuilder_;
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      public boolean hasNewVoiceState() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState getNewVoiceState() {
+        if (newVoiceStateBuilder_ == null) {
+          return newVoiceState_ == null ? tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : newVoiceState_;
+        } else {
+          return newVoiceStateBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      public Builder setNewVoiceState(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState value) {
+        if (newVoiceStateBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          newVoiceState_ = value;
+          onChanged();
+        } else {
+          newVoiceStateBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      public Builder setNewVoiceState(
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder builderForValue) {
+        if (newVoiceStateBuilder_ == null) {
+          newVoiceState_ = builderForValue.build();
+          onChanged();
+        } else {
+          newVoiceStateBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      public Builder mergeNewVoiceState(tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState value) {
+        if (newVoiceStateBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              newVoiceState_ != null &&
+              newVoiceState_ != tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance()) {
+            newVoiceState_ =
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.newBuilder(newVoiceState_).mergeFrom(value).buildPartial();
+          } else {
+            newVoiceState_ = value;
+          }
+          onChanged();
+        } else {
+          newVoiceStateBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      public Builder clearNewVoiceState() {
+        if (newVoiceStateBuilder_ == null) {
+          newVoiceState_ = null;
+          onChanged();
+        } else {
+          newVoiceStateBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder getNewVoiceStateBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getNewVoiceStateFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder getNewVoiceStateOrBuilder() {
+        if (newVoiceStateBuilder_ != null) {
+          return newVoiceStateBuilder_.getMessageOrBuilder();
+        } else {
+          return newVoiceState_ == null ?
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : newVoiceState_;
+        }
+      }
+      /**
+       * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilderV3<
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder> 
+          getNewVoiceStateFieldBuilder() {
+        if (newVoiceStateBuilder_ == null) {
+          newVoiceStateBuilder_ = new com.google.protobuf.SingleFieldBuilderV3<
+              tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.Builder, tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder>(
+                  getNewVoiceState(),
+                  getParentForChildren(),
+                  isClean());
+          newVoiceState_ = null;
+        }
+        return newVoiceStateBuilder_;
+      }
+      public final Builder setUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.setUnknownFields(unknownFields);
+      }
+
+      public final Builder mergeUnknownFields(
+          final com.google.protobuf.UnknownFieldSet unknownFields) {
+        return super.mergeUnknownFields(unknownFields);
+      }
+
+
+      // @@protoc_insertion_point(builder_scope:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent)
+    }
+
+    // @@protoc_insertion_point(class_scope:tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent)
+    private static final tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent DEFAULT_INSTANCE;
+    static {
+      DEFAULT_INSTANCE = new tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent();
+    }
+
+    public static tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent getDefaultInstance() {
+      return DEFAULT_INSTANCE;
+    }
+
+    @java.lang.Deprecated public static final com.google.protobuf.Parser<DiscordVoiceStateEvent>
+        PARSER = new com.google.protobuf.AbstractParser<DiscordVoiceStateEvent>() {
+      public DiscordVoiceStateEvent parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+          return new DiscordVoiceStateEvent(input, extensionRegistry);
+      }
+    };
+
+    public static com.google.protobuf.Parser<DiscordVoiceStateEvent> parser() {
+      return PARSER;
+    }
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<DiscordVoiceStateEvent> getParserForType() {
+      return PARSER;
+    }
+
+    public tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent getDefaultInstanceForType() {
+      return DEFAULT_INSTANCE;
+    }
+
+    public static final int DATA_FIELD_NUMBER = 120;
+    /**
+     * <code>extend .tv.v1x1.common.dto.proto.messages.Event { ... }</code>
+     */
+    public static final
+      com.google.protobuf.GeneratedMessage.GeneratedExtension<
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.Event,
+        tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent> data = com.google.protobuf.GeneratedMessage
+            .newMessageScopedGeneratedExtension(
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.getDefaultInstance(),
+          0,
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.class,
+          tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.getDefaultInstance());
   }
 
   private static final com.google.protobuf.Descriptors.Descriptor
@@ -21422,6 +23994,16 @@ public final class EventOuterClass {
   private static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_tv_v1x1_common_dto_proto_messages_ConfigChangeEvent_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_descriptor;
+  private static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -21435,9 +24017,9 @@ public final class EventOuterClass {
       "messages\032\rMessage.proto\032\021ChatMessage.pro" +
       "to\032\rChannel.proto\032\nUser.proto\032\tIRC.proto" +
       "\032\tBot.proto\032\016Platform.proto\032\014Module.prot" +
-      "o\032\nUUID.proto\"\361\004\n\005Event\022@\n\004type\030\001 \002(\01622." +
+      "o\032\nUUID.proto\"\212\005\n\005Event\022@\n\004type\030\001 \002(\01622." +
       "tv.v1x1.common.dto.proto.messages.Event." +
-      "EventType\"\267\003\n\tEventType\022\013\n\007UNKNOWN\020\000\022\020\n\014" +
+      "EventType\"\320\003\n\tEventType\022\013\n\007UNKNOWN\020\000\022\020\n\014" +
       "CHAT_MESSAGE\020\001\022\r\n\tCHAT_JOIN\020\002\022\r\n\tCHAT_PA" +
       "RT\020\003\022\034\n\030TWITCH_BOT_CHANNEL_STATE\020\004\022\030\n\024TW" +
       "ITCH_BOT_CONNECTED\020\005\022\033\n\027TWITCH_BOT_GLOBA",
@@ -21448,171 +24030,186 @@ public final class EventOuterClass {
       "TE\020\r\022\022\n\016TWITCH_TIMEOUT\020\016\022\017\n\013TWITCH_USER\020" +
       "\017\022\032\n\026TWITCH_USER_MOD_CHANGE\020\020\022\024\n\020SCHEDUL" +
       "ER_NOTIFY\020\021\022\023\n\017PRIVATE_MESSAGE\020\022\022\021\n\rCONF" +
-      "IG_CHANGE\020\023*\010\010d\020\200\200\200\200\0022b\n\004data\022*.tv.v1x1." +
-      "common.dto.proto.messages.Message\030e \001(\0132" +
-      "(.tv.v1x1.common.dto.proto.messages.Even",
-      "t\"\202\002\n\020ChatMessageEvent\022@\n\014chat_message\030\001" +
-      " \002(\0132*.tv.v1x1.common.dto.proto.core.Cha" +
-      "tMessage\0225\n\004type\030\002 \002(\0162\'.tv.v1x1.common." +
-      "dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022k\n\004dat" +
-      "a\022(.tv.v1x1.common.dto.proto.messages.Ev" +
-      "ent\030e \001(\01323.tv.v1x1.common.dto.proto.mes" +
-      "sages.ChatMessageEvent\"\246\002\n\rChatJoinEvent" +
-      "\0221\n\004user\030\001 \002(\0132#.tv.v1x1.common.dto.prot" +
-      "o.core.User\0227\n\007channel\030\002 \002(\0132&.tv.v1x1.c" +
-      "ommon.dto.proto.core.Channel\0225\n\004type\030\003 \002",
-      "(\0162\'.tv.v1x1.common.dto.proto.core.Platf" +
-      "orm*\010\010d\020\200\200\200\200\0022h\n\004data\022(.tv.v1x1.common.d" +
-      "to.proto.messages.Event\030f \001(\01320.tv.v1x1." +
-      "common.dto.proto.messages.ChatJoinEvent\"" +
-      "\246\002\n\rChatPartEvent\0221\n\004user\030\001 \002(\0132#.tv.v1x" +
-      "1.common.dto.proto.core.User\0227\n\007channel\030" +
-      "\002 \002(\0132&.tv.v1x1.common.dto.proto.core.Ch" +
-      "annel\0225\n\004type\030\003 \002(\0162\'.tv.v1x1.common.dto" +
-      ".proto.core.Platform*\010\010d\020\200\200\200\200\0022h\n\004data\022(" +
-      ".tv.v1x1.common.dto.proto.messages.Event",
-      "\030g \001(\01320.tv.v1x1.common.dto.proto.messag" +
-      "es.ChatPartEvent\"\303\002\n\032TwitchBotChannelSta" +
-      "teEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.commo" +
-      "n.dto.proto.core.Channel\022/\n\003bot\030\002 \002(\0132\"." +
-      "tv.v1x1.common.dto.proto.core.Bot\022D\n\022use" +
-      "r_state_command\030\003 \002(\0132(.tv.v1x1.common.d" +
-      "to.proto.core.IrcStanza2u\n\004data\022(.tv.v1x" +
-      "1.common.dto.proto.messages.Event\030h \001(\0132" +
-      "=.tv.v1x1.common.dto.proto.messages.Twit" +
-      "chBotChannelStateEvent\"\211\002\n\027TwitchBotConn",
-      "ectedEvent\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.common" +
-      ".dto.proto.core.Bot\022I\n\027rpl_end_of_motd_c" +
-      "ommand\030\002 \002(\0132(.tv.v1x1.common.dto.proto." +
-      "core.IrcStanza2r\n\004data\022(.tv.v1x1.common." +
-      "dto.proto.messages.Event\030i \001(\0132:.tv.v1x1" +
-      ".common.dto.proto.messages.TwitchBotConn" +
-      "ectedEvent\"\217\002\n\031TwitchBotGlobalStateEvent" +
-      "\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.common.dto.proto" +
-      ".core.Bot\022K\n\031global_user_state_command\030\002" +
-      " \002(\0132(.tv.v1x1.common.dto.proto.core.Irc",
-      "Stanza2t\n\004data\022(.tv.v1x1.common.dto.prot" +
-      "o.messages.Event\030j \001(\0132<.tv.v1x1.common." +
-      "dto.proto.messages.TwitchBotGlobalStateE" +
-      "vent\"\217\002\n\022TwitchChannelEvent\0227\n\007channel\030\001" +
-      " \002(\0132&.tv.v1x1.common.dto.proto.core.Cha" +
-      "nnel\022\017\n\007message\030\002 \002(\t\022@\n\016notice_command\030" +
-      "\003 \002(\0132(.tv.v1x1.common.dto.proto.core.Ir" +
-      "cStanza2m\n\004data\022(.tv.v1x1.common.dto.pro" +
-      "to.messages.Event\030k \001(\01325.tv.v1x1.common" +
-      ".dto.proto.messages.TwitchChannelEvent\"\304",
-      "\002\n\027TwitchChannelUsersEvent\0227\n\007channel\030\001 " +
-      "\002(\0132&.tv.v1x1.common.dto.proto.core.Chan" +
-      "nel\0222\n\005users\030\002 \003(\0132#.tv.v1x1.common.dto." +
-      "proto.core.User\022H\n\026rpl_name_reply_comman" +
-      "d\030\003 \002(\0132(.tv.v1x1.common.dto.proto.core." +
-      "IrcStanza2r\n\004data\022(.tv.v1x1.common.dto.p" +
-      "roto.messages.Event\030l \001(\0132:.tv.v1x1.comm" +
-      "on.dto.proto.messages.TwitchChannelUsers" +
-      "Event\"\315\001\n\023TwitchChatJoinEvent\022>\n\014join_co" +
-      "mmand\030\001 \002(\0132(.tv.v1x1.common.dto.proto.c",
-      "ore.IrcStanza2v\n\004data\0220.tv.v1x1.common.d" +
-      "to.proto.messages.ChatJoinEvent\030e \001(\01326." +
-      "tv.v1x1.common.dto.proto.messages.Twitch" +
-      "ChatJoinEvent\"\331\001\n\026TwitchChatMessageEvent" +
-      "\022A\n\017privmsg_command\030\001 \002(\0132(.tv.v1x1.comm" +
-      "on.dto.proto.core.IrcStanza2|\n\004data\0223.tv" +
-      ".v1x1.common.dto.proto.messages.ChatMess" +
-      "ageEvent\030e \001(\01329.tv.v1x1.common.dto.prot" +
-      "o.messages.TwitchChatMessageEvent\"\315\001\n\023Tw" +
-      "itchChatPartEvent\022>\n\014part_command\030\001 \002(\0132",
-      "(.tv.v1x1.common.dto.proto.core.IrcStanz" +
-      "a2v\n\004data\0220.tv.v1x1.common.dto.proto.mes" +
-      "sages.ChatPartEvent\030e \001(\01326.tv.v1x1.comm" +
-      "on.dto.proto.messages.TwitchChatPartEven" +
-      "t\"\275\002\n\017TwitchHostEvent\0227\n\007channel\030\001 \002(\0132&" +
-      ".tv.v1x1.common.dto.proto.core.Channel\022>" +
-      "\n\016target_channel\030\002 \001(\0132&.tv.v1x1.common." +
-      "dto.proto.core.Channel\022E\n\023host_target_co" +
-      "mmand\030\003 \002(\0132(.tv.v1x1.common.dto.proto.c" +
-      "ore.IrcStanza2j\n\004data\022(.tv.v1x1.common.d",
-      "to.proto.messages.Event\030m \001(\01322.tv.v1x1." +
-      "common.dto.proto.messages.TwitchHostEven" +
-      "t\"\314\001\n\017TwitchPingEvent\022\r\n\005token\030\001 \002(\t\022>\n\014" +
-      "ping_command\030\002 \002(\0132(.tv.v1x1.common.dto." +
-      "proto.core.IrcStanza2j\n\004data\022(.tv.v1x1.c" +
-      "ommon.dto.proto.messages.Event\030n \001(\01322.t" +
-      "v.v1x1.common.dto.proto.messages.TwitchP" +
-      "ingEvent\"\370\001\n\025TwitchRawMessageEvent\022/\n\003bo" +
-      "t\030\001 \002(\0132\".tv.v1x1.common.dto.proto.core." +
-      "Bot\022<\n\nirc_stanza\030\002 \002(\0132(.tv.v1x1.common",
-      ".dto.proto.core.IrcStanza2p\n\004data\022(.tv.v" +
-      "1x1.common.dto.proto.messages.Event\030o \001(" +
-      "\01328.tv.v1x1.common.dto.proto.messages.Tw" +
-      "itchRawMessageEvent\"\375\001\n\024TwitchReconnectE" +
-      "vent\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.common.dto.p" +
-      "roto.core.Bot\022C\n\021reconnect_command\030\002 \002(\013" +
-      "2(.tv.v1x1.common.dto.proto.core.IrcStan" +
-      "za2o\n\004data\022(.tv.v1x1.common.dto.proto.me" +
-      "ssages.Event\030p \001(\01327.tv.v1x1.common.dto." +
-      "proto.messages.TwitchReconnectEvent\"\206\002\n\024",
-      "TwitchRoomStateEvent\0227\n\007channel\030\001 \002(\0132&." +
-      "tv.v1x1.common.dto.proto.core.Channel\022D\n" +
-      "\022room_state_command\030\002 \002(\0132(.tv.v1x1.comm" +
-      "on.dto.proto.core.IrcStanza2o\n\004data\022(.tv" +
-      ".v1x1.common.dto.proto.messages.Event\030q " +
-      "\001(\01327.tv.v1x1.common.dto.proto.messages." +
-      "TwitchRoomStateEvent\"\265\002\n\022TwitchTimeoutEv" +
-      "ent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common.dt" +
-      "o.proto.core.Channel\0221\n\004user\030\002 \002(\0132#.tv." +
-      "v1x1.common.dto.proto.core.User\022D\n\022clear",
-      "_chat_command\030\003 \002(\0132(.tv.v1x1.common.dto" +
-      ".proto.core.IrcStanza2m\n\004data\022(.tv.v1x1." +
-      "common.dto.proto.messages.Event\030r \001(\01325." +
-      "tv.v1x1.common.dto.proto.messages.Twitch" +
-      "TimeoutEvent\"\301\002\n\017TwitchUserEvent\0227\n\007chan" +
+      "IG_CHANGE\020\023\022\027\n\023DISCORD_VOICE_STATE\020\024*\010\010d" +
+      "\020\200\200\200\200\0022b\n\004data\022*.tv.v1x1.common.dto.prot" +
+      "o.messages.Message\030e \001(\0132(.tv.v1x1.commo",
+      "n.dto.proto.messages.Event\"\202\002\n\020ChatMessa" +
+      "geEvent\022@\n\014chat_message\030\001 \002(\0132*.tv.v1x1." +
+      "common.dto.proto.core.ChatMessage\0225\n\004typ" +
+      "e\030\002 \002(\0162\'.tv.v1x1.common.dto.proto.core." +
+      "Platform*\010\010d\020\200\200\200\200\0022k\n\004data\022(.tv.v1x1.com" +
+      "mon.dto.proto.messages.Event\030e \001(\01323.tv." +
+      "v1x1.common.dto.proto.messages.ChatMessa" +
+      "geEvent\"\246\002\n\rChatJoinEvent\0221\n\004user\030\001 \002(\0132" +
+      "#.tv.v1x1.common.dto.proto.core.User\0227\n\007" +
+      "channel\030\002 \002(\0132&.tv.v1x1.common.dto.proto",
+      ".core.Channel\0225\n\004type\030\003 \002(\0162\'.tv.v1x1.co" +
+      "mmon.dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022h" +
+      "\n\004data\022(.tv.v1x1.common.dto.proto.messag" +
+      "es.Event\030f \001(\01320.tv.v1x1.common.dto.prot" +
+      "o.messages.ChatJoinEvent\"\246\002\n\rChatPartEve" +
+      "nt\0221\n\004user\030\001 \002(\0132#.tv.v1x1.common.dto.pr" +
+      "oto.core.User\0227\n\007channel\030\002 \002(\0132&.tv.v1x1" +
+      ".common.dto.proto.core.Channel\0225\n\004type\030\003" +
+      " \002(\0162\'.tv.v1x1.common.dto.proto.core.Pla" +
+      "tform*\010\010d\020\200\200\200\200\0022h\n\004data\022(.tv.v1x1.common",
+      ".dto.proto.messages.Event\030g \001(\01320.tv.v1x" +
+      "1.common.dto.proto.messages.ChatPartEven" +
+      "t\"\303\002\n\032TwitchBotChannelStateEvent\0227\n\007chan" +
       "nel\030\001 \002(\0132&.tv.v1x1.common.dto.proto.cor" +
-      "e.Channel\0221\n\004user\030\002 \002(\0132#.tv.v1x1.common" +
-      ".dto.proto.core.User\022\017\n\007message\030\003 \002(\t\022E\n" +
-      "\023user_notice_command\030\004 \002(\0132(.tv.v1x1.com" +
-      "mon.dto.proto.core.IrcStanza2j\n\004data\022(.t",
-      "v.v1x1.common.dto.proto.messages.Event\030s" +
-      " \001(\01322.tv.v1x1.common.dto.proto.messages" +
-      ".TwitchUserEvent\"\317\002\n\030TwitchUserModChange" +
+      "e.Channel\022/\n\003bot\030\002 \002(\0132\".tv.v1x1.common." +
+      "dto.proto.core.Bot\022D\n\022user_state_command" +
+      "\030\003 \002(\0132(.tv.v1x1.common.dto.proto.core.I" +
+      "rcStanza2u\n\004data\022(.tv.v1x1.common.dto.pr" +
+      "oto.messages.Event\030h \001(\0132=.tv.v1x1.commo" +
+      "n.dto.proto.messages.TwitchBotChannelSta",
+      "teEvent\"\211\002\n\027TwitchBotConnectedEvent\022/\n\003b" +
+      "ot\030\001 \002(\0132\".tv.v1x1.common.dto.proto.core" +
+      ".Bot\022I\n\027rpl_end_of_motd_command\030\002 \002(\0132(." +
+      "tv.v1x1.common.dto.proto.core.IrcStanza2" +
+      "r\n\004data\022(.tv.v1x1.common.dto.proto.messa" +
+      "ges.Event\030i \001(\0132:.tv.v1x1.common.dto.pro" +
+      "to.messages.TwitchBotConnectedEvent\"\217\002\n\031" +
+      "TwitchBotGlobalStateEvent\022/\n\003bot\030\001 \002(\0132\"" +
+      ".tv.v1x1.common.dto.proto.core.Bot\022K\n\031gl" +
+      "obal_user_state_command\030\002 \002(\0132(.tv.v1x1.",
+      "common.dto.proto.core.IrcStanza2t\n\004data\022" +
+      "(.tv.v1x1.common.dto.proto.messages.Even" +
+      "t\030j \001(\0132<.tv.v1x1.common.dto.proto.messa" +
+      "ges.TwitchBotGlobalStateEvent\"\217\002\n\022Twitch" +
+      "ChannelEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1." +
+      "common.dto.proto.core.Channel\022\017\n\007message" +
+      "\030\002 \002(\t\022@\n\016notice_command\030\003 \002(\0132(.tv.v1x1" +
+      ".common.dto.proto.core.IrcStanza2m\n\004data" +
+      "\022(.tv.v1x1.common.dto.proto.messages.Eve" +
+      "nt\030k \001(\01325.tv.v1x1.common.dto.proto.mess",
+      "ages.TwitchChannelEvent\"\304\002\n\027TwitchChanne" +
+      "lUsersEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.c" +
+      "ommon.dto.proto.core.Channel\0222\n\005users\030\002 " +
+      "\003(\0132#.tv.v1x1.common.dto.proto.core.User" +
+      "\022H\n\026rpl_name_reply_command\030\003 \002(\0132(.tv.v1" +
+      "x1.common.dto.proto.core.IrcStanza2r\n\004da" +
+      "ta\022(.tv.v1x1.common.dto.proto.messages.E" +
+      "vent\030l \001(\0132:.tv.v1x1.common.dto.proto.me" +
+      "ssages.TwitchChannelUsersEvent\"\315\001\n\023Twitc" +
+      "hChatJoinEvent\022>\n\014join_command\030\001 \002(\0132(.t",
+      "v.v1x1.common.dto.proto.core.IrcStanza2v" +
+      "\n\004data\0220.tv.v1x1.common.dto.proto.messag" +
+      "es.ChatJoinEvent\030e \001(\01326.tv.v1x1.common." +
+      "dto.proto.messages.TwitchChatJoinEvent\"\331" +
+      "\001\n\026TwitchChatMessageEvent\022A\n\017privmsg_com" +
+      "mand\030\001 \002(\0132(.tv.v1x1.common.dto.proto.co" +
+      "re.IrcStanza2|\n\004data\0223.tv.v1x1.common.dt" +
+      "o.proto.messages.ChatMessageEvent\030e \001(\0132" +
+      "9.tv.v1x1.common.dto.proto.messages.Twit" +
+      "chChatMessageEvent\"\315\001\n\023TwitchChatPartEve",
+      "nt\022>\n\014part_command\030\001 \002(\0132(.tv.v1x1.commo" +
+      "n.dto.proto.core.IrcStanza2v\n\004data\0220.tv." +
+      "v1x1.common.dto.proto.messages.ChatPartE" +
+      "vent\030e \001(\01326.tv.v1x1.common.dto.proto.me" +
+      "ssages.TwitchChatPartEvent\"\275\002\n\017TwitchHos" +
+      "tEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common" +
+      ".dto.proto.core.Channel\022>\n\016target_channe" +
+      "l\030\002 \001(\0132&.tv.v1x1.common.dto.proto.core." +
+      "Channel\022E\n\023host_target_command\030\003 \002(\0132(.t" +
+      "v.v1x1.common.dto.proto.core.IrcStanza2j",
+      "\n\004data\022(.tv.v1x1.common.dto.proto.messag" +
+      "es.Event\030m \001(\01322.tv.v1x1.common.dto.prot" +
+      "o.messages.TwitchHostEvent\"\314\001\n\017TwitchPin" +
+      "gEvent\022\r\n\005token\030\001 \002(\t\022>\n\014ping_command\030\002 " +
+      "\002(\0132(.tv.v1x1.common.dto.proto.core.IrcS" +
+      "tanza2j\n\004data\022(.tv.v1x1.common.dto.proto" +
+      ".messages.Event\030n \001(\01322.tv.v1x1.common.d" +
+      "to.proto.messages.TwitchPingEvent\"\370\001\n\025Tw" +
+      "itchRawMessageEvent\022/\n\003bot\030\001 \002(\0132\".tv.v1" +
+      "x1.common.dto.proto.core.Bot\022<\n\nirc_stan",
+      "za\030\002 \002(\0132(.tv.v1x1.common.dto.proto.core" +
+      ".IrcStanza2p\n\004data\022(.tv.v1x1.common.dto." +
+      "proto.messages.Event\030o \001(\01328.tv.v1x1.com" +
+      "mon.dto.proto.messages.TwitchRawMessageE" +
+      "vent\"\375\001\n\024TwitchReconnectEvent\022/\n\003bot\030\001 \002" +
+      "(\0132\".tv.v1x1.common.dto.proto.core.Bot\022C" +
+      "\n\021reconnect_command\030\002 \002(\0132(.tv.v1x1.comm" +
+      "on.dto.proto.core.IrcStanza2o\n\004data\022(.tv" +
+      ".v1x1.common.dto.proto.messages.Event\030p " +
+      "\001(\01327.tv.v1x1.common.dto.proto.messages.",
+      "TwitchReconnectEvent\"\206\002\n\024TwitchRoomState" +
       "Event\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common." +
-      "dto.proto.core.Channel\0221\n\004user\030\002 \002(\0132#.t" +
-      "v.v1x1.common.dto.proto.core.User\022\022\n\nis_" +
-      "now_mod\030\003 \002(\010\022>\n\014mode_command\030\004 \002(\0132(.tv" +
-      ".v1x1.common.dto.proto.core.IrcStanza2s\n" +
-      "\004data\022(.tv.v1x1.common.dto.proto.message" +
-      "s.Event\030t \001(\0132;.tv.v1x1.common.dto.proto",
-      ".messages.TwitchUserModChangeEvent\"\200\002\n\024S" +
-      "chedulerNotifyEvent\0225\n\006module\030\001 \002(\0132%.tv" +
-      ".v1x1.common.dto.proto.core.Module\022/\n\002id" +
-      "\030\002 \002(\0132#.tv.v1x1.common.dto.proto.core.U" +
-      "UID\022\017\n\007payload\030\003 \002(\0142o\n\004data\022(.tv.v1x1.c" +
-      "ommon.dto.proto.messages.Event\030u \001(\01327.t" +
-      "v.v1x1.common.dto.proto.messages.Schedul" +
-      "erNotifyEvent\"\216\002\n\023PrivateMessageEvent\022F\n" +
-      "\017private_message\030\001 \002(\0132-.tv.v1x1.common." +
-      "dto.proto.core.PrivateMessage\0225\n\004type\030\002 ",
-      "\002(\0162\'.tv.v1x1.common.dto.proto.core.Plat" +
-      "form*\010\010d\020\200\200\200\200\0022n\n\004data\022(.tv.v1x1.common." +
-      "dto.proto.messages.Event\030v \001(\01326.tv.v1x1" +
-      ".common.dto.proto.messages.PrivateMessag" +
-      "eEvent\"\343\001\n\031TwitchPrivateMessageEvent\022A\n\017" +
-      "whisper_command\030\001 \002(\0132(.tv.v1x1.common.d" +
-      "to.proto.core.IrcStanza2\202\001\n\004data\0226.tv.v1" +
-      "x1.common.dto.proto.messages.PrivateMess" +
-      "ageEvent\030e \001(\0132<.tv.v1x1.common.dto.prot" +
-      "o.messages.TwitchPrivateMessageEvent\"\276\003\n",
-      "\021ConfigChangeEvent\0225\n\006module\030\001 \002(\0132%.tv." +
-      "v1x1.common.dto.proto.core.Module\022T\n\013con" +
-      "fig_type\030\002 \002(\0162?.tv.v1x1.common.dto.prot" +
-      "o.messages.ConfigChangeEvent.ConfigType\022" +
-      "5\n\006tenant\030\003 \001(\0132%.tv.v1x1.common.dto.pro" +
-      "to.core.Tenant\0227\n\007channel\030\004 \001(\0132&.tv.v1x" +
-      "1.common.dto.proto.core.Channel\">\n\nConfi" +
-      "gType\022\013\n\007UNKNOWN\020\000\022\n\n\006GLOBAL\020\001\022\n\n\006TENANT" +
-      "\020\002\022\013\n\007CHANNEL\020\0032l\n\004data\022(.tv.v1x1.common" +
-      ".dto.proto.messages.Event\030w \001(\01324.tv.v1x",
-      "1.common.dto.proto.messages.ConfigChange" +
-      "Event"
+      "dto.proto.core.Channel\022D\n\022room_state_com" +
+      "mand\030\002 \002(\0132(.tv.v1x1.common.dto.proto.co" +
+      "re.IrcStanza2o\n\004data\022(.tv.v1x1.common.dt" +
+      "o.proto.messages.Event\030q \001(\01327.tv.v1x1.c" +
+      "ommon.dto.proto.messages.TwitchRoomState" +
+      "Event\"\265\002\n\022TwitchTimeoutEvent\0227\n\007channel\030" +
+      "\001 \002(\0132&.tv.v1x1.common.dto.proto.core.Ch" +
+      "annel\0221\n\004user\030\002 \002(\0132#.tv.v1x1.common.dto",
+      ".proto.core.User\022D\n\022clear_chat_command\030\003" +
+      " \002(\0132(.tv.v1x1.common.dto.proto.core.Irc" +
+      "Stanza2m\n\004data\022(.tv.v1x1.common.dto.prot" +
+      "o.messages.Event\030r \001(\01325.tv.v1x1.common." +
+      "dto.proto.messages.TwitchTimeoutEvent\"\301\002" +
+      "\n\017TwitchUserEvent\0227\n\007channel\030\001 \002(\0132&.tv." +
+      "v1x1.common.dto.proto.core.Channel\0221\n\004us" +
+      "er\030\002 \002(\0132#.tv.v1x1.common.dto.proto.core" +
+      ".User\022\017\n\007message\030\003 \002(\t\022E\n\023user_notice_co" +
+      "mmand\030\004 \002(\0132(.tv.v1x1.common.dto.proto.c",
+      "ore.IrcStanza2j\n\004data\022(.tv.v1x1.common.d" +
+      "to.proto.messages.Event\030s \001(\01322.tv.v1x1." +
+      "common.dto.proto.messages.TwitchUserEven" +
+      "t\"\317\002\n\030TwitchUserModChangeEvent\0227\n\007channe" +
+      "l\030\001 \002(\0132&.tv.v1x1.common.dto.proto.core." +
+      "Channel\0221\n\004user\030\002 \002(\0132#.tv.v1x1.common.d" +
+      "to.proto.core.User\022\022\n\nis_now_mod\030\003 \002(\010\022>" +
+      "\n\014mode_command\030\004 \002(\0132(.tv.v1x1.common.dt" +
+      "o.proto.core.IrcStanza2s\n\004data\022(.tv.v1x1" +
+      ".common.dto.proto.messages.Event\030t \001(\0132;",
+      ".tv.v1x1.common.dto.proto.messages.Twitc" +
+      "hUserModChangeEvent\"\200\002\n\024SchedulerNotifyE" +
+      "vent\0225\n\006module\030\001 \002(\0132%.tv.v1x1.common.dt" +
+      "o.proto.core.Module\022/\n\002id\030\002 \002(\0132#.tv.v1x" +
+      "1.common.dto.proto.core.UUID\022\017\n\007payload\030" +
+      "\003 \002(\0142o\n\004data\022(.tv.v1x1.common.dto.proto" +
+      ".messages.Event\030u \001(\01327.tv.v1x1.common.d" +
+      "to.proto.messages.SchedulerNotifyEvent\"\216" +
+      "\002\n\023PrivateMessageEvent\022F\n\017private_messag" +
+      "e\030\001 \002(\0132-.tv.v1x1.common.dto.proto.core.",
+      "PrivateMessage\0225\n\004type\030\002 \002(\0162\'.tv.v1x1.c" +
+      "ommon.dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022" +
+      "n\n\004data\022(.tv.v1x1.common.dto.proto.messa" +
+      "ges.Event\030v \001(\01326.tv.v1x1.common.dto.pro" +
+      "to.messages.PrivateMessageEvent\"\343\001\n\031Twit" +
+      "chPrivateMessageEvent\022A\n\017whisper_command" +
+      "\030\001 \002(\0132(.tv.v1x1.common.dto.proto.core.I" +
+      "rcStanza2\202\001\n\004data\0226.tv.v1x1.common.dto.p" +
+      "roto.messages.PrivateMessageEvent\030e \001(\0132" +
+      "<.tv.v1x1.common.dto.proto.messages.Twit",
+      "chPrivateMessageEvent\"\225\004\n\021ConfigChangeEv" +
+      "ent\0225\n\006module\030\001 \002(\0132%.tv.v1x1.common.dto" +
+      ".proto.core.Module\022T\n\013config_type\030\002 \002(\0162" +
+      "?.tv.v1x1.common.dto.proto.messages.Conf" +
+      "igChangeEvent.ConfigType\0225\n\006tenant\030\003 \001(\013" +
+      "2%.tv.v1x1.common.dto.proto.core.Tenant\022" +
+      "7\n\007channel\030\004 \001(\0132&.tv.v1x1.common.dto.pr" +
+      "oto.core.Channel\022B\n\rchannel_group\030\005 \001(\0132" +
+      "+.tv.v1x1.common.dto.proto.core.ChannelG" +
+      "roup\"Q\n\nConfigType\022\013\n\007UNKNOWN\020\000\022\n\n\006GLOBA",
+      "L\020\001\022\n\n\006TENANT\020\002\022\013\n\007CHANNEL\020\003\022\021\n\rCHANNEL_" +
+      "GROUP\020\0042l\n\004data\022(.tv.v1x1.common.dto.pro" +
+      "to.messages.Event\030w \001(\01324.tv.v1x1.common" +
+      ".dto.proto.messages.ConfigChangeEvent\"\367\003" +
+      "\n\026DiscordVoiceStateEvent\022]\n\017old_voice_st" +
+      "ate\030\001 \001(\0132D.tv.v1x1.common.dto.proto.mes" +
+      "sages.DiscordVoiceStateEvent.VoiceState\022" +
+      "]\n\017new_voice_state\030\002 \002(\0132D.tv.v1x1.commo" +
+      "n.dto.proto.messages.DiscordVoiceStateEv" +
+      "ent.VoiceState\032\253\001\n\nVoiceState\022\020\n\010guild_i",
+      "d\030\001 \001(\t\022\022\n\nchannel_id\030\002 \001(\t\022\017\n\007user_id\030\003" +
+      " \002(\t\022\022\n\nsession_id\030\004 \002(\t\022\014\n\004deaf\030\005 \002(\010\022\014" +
+      "\n\004mute\030\006 \002(\010\022\021\n\tself_deaf\030\007 \002(\010\022\021\n\tself_" +
+      "mute\030\010 \002(\010\022\020\n\010suppress\030\t \002(\0102q\n\004data\022(.t" +
+      "v.v1x1.common.dto.proto.messages.Event\030x" +
+      " \001(\01329.tv.v1x1.common.dto.proto.messages" +
+      ".DiscordVoiceStateEvent"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -21778,7 +24375,19 @@ public final class EventOuterClass {
     internal_static_tv_v1x1_common_dto_proto_messages_ConfigChangeEvent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_messages_ConfigChangeEvent_descriptor,
-        new java.lang.String[] { "Module", "ConfigType", "Tenant", "Channel", });
+        new java.lang.String[] { "Module", "ConfigType", "Tenant", "Channel", "ChannelGroup", });
+    internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor =
+      getDescriptor().getMessageTypes().get(24);
+    internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor,
+        new java.lang.String[] { "OldVoiceState", "NewVoiceState", });
+    internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_descriptor =
+      internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor.getNestedTypes().get(0);
+    internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_descriptor,
+        new java.lang.String[] { "GuildId", "ChannelId", "UserId", "SessionId", "Deaf", "Mute", "SelfDeaf", "SelfMute", "Suppress", });
     tv.v1x1.common.dto.proto.messages.MessageOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.ChatMessageOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.ChannelOuterClass.getDescriptor();

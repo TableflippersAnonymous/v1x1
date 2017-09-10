@@ -16,6 +16,7 @@ public abstract class ChatMessageEvent extends Event {
         final ChatMessage chatMessage = ChatMessage.fromProto(chatMessageEvent.getChatMessage());
         switch(chatMessageEvent.getType()) {
             case TWITCH: return TwitchChatMessageEvent.fromProto(module, uuid, timestamp, context, chatMessage, chatMessageEvent.getExtension(EventOuterClass.TwitchChatMessageEvent.data));
+            case DISCORD: return DiscordChatMessageEvent.fromProto(module, uuid, timestamp, context, chatMessage);
             default: throw new IllegalStateException("Unknown ChatMessageEvent type: " + chatMessageEvent.getType());
         }
     }

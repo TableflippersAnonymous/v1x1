@@ -5,5 +5,5 @@ import tv.v1x1.common.modules.GlobalConfiguration;
 /**
  * Created by naomi on 3/4/2017.
  */
-public class CliGlobalConfig implements GlobalConfiguration {
+public class CliGlobalConfig extends GlobalConfiguration {
 }

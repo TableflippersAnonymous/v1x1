@@ -11,7 +11,7 @@ import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.auth.TokenResponse;
 import tv.v1x1.modules.core.api.api.rest.ApiList;
-import tv.v1x1.modules.core.api.api.rest.TwitchOauthCode;
+import tv.v1x1.modules.core.api.api.rest.OauthCode;
 import tv.v1x1.modules.core.api.api.rest.User;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
@@ -102,7 +102,7 @@ public class UsersResource {
     public User linkUser(@HeaderParam("Authorization") final String authorization,
                          @PathParam("global_user_id") final String globalUserId,
                          @PathParam("platform") final String platform,
-                         @PathParam("user_id") final String userId, final TwitchOauthCode twitchOauthCode) {
+                         @PathParam("user_id") final String userId, final OauthCode oauthCode) {
         authorizer.forAuthorization(authorization).ensurePermission("api.global_users.write").ensurePrincipal(globalUserId);
         if(!platform.equalsIgnoreCase("twitch"))
             throw new NotFoundException();
@@ -112,7 +112,7 @@ public class UsersResource {
         final Optional<GlobalUser.Entry> entry = globalUser.getEntries().stream().filter(e -> e.getPlatform().name().toLowerCase().equals(platform) && e.getUserId().equals(userId)).findFirst();
         if(!entry.isPresent())
             throw new NotFoundException();
-        final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(twitchOauthCode.getOauthCode(), twitchOauthCode.getOauthState());
+        final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(oauthCode.getOauthCode(), oauthCode.getOauthState());
         if(tokenResponse == null)
             throw new BadRequestException();
         daoTwitchOauthToken.put(new TwitchOauthToken(globalUser.getId(), userId, tokenResponse.getAccessToken(), tokenResponse.getScope()));

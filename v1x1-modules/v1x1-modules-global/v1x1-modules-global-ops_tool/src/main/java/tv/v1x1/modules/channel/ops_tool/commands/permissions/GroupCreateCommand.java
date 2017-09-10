@@ -5,7 +5,6 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.dto.db.TenantGroup;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.ops_tool.OpsTool;
 
@@ -52,7 +51,7 @@ public class GroupCreateCommand extends Command {
         final String search = args.get(0);
         final String groupName = args.get(1);
         final Channel channel = chatMessage.getChannel();
-        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getPlatform(), search);
+        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getChannelGroup().getPlatform(), search);
         if(tenant == null) {
             opsTool.respond(channel, "I don't know about that channel");
         }

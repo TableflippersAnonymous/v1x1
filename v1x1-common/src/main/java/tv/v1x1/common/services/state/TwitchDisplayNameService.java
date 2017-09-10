@@ -12,7 +12,6 @@ import tv.v1x1.common.services.twitch.dto.channels.Channel;
 import tv.v1x1.common.services.twitch.dto.users.User;
 
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -327,7 +326,8 @@ public class TwitchDisplayNameService {
     private void cacheUser(final User user) {
         if(user == null)
             return;
-        userByDisplayNameCache.put(user.getDisplayName(), user);
+        if(user.getDisplayName() != null)
+            userByDisplayNameCache.put(user.getDisplayName(), user);
         userByUsernameCache.put(user.getName(), user);
         userByUserIdCache.put(String.valueOf(user.getId()), user);
         cache(String.valueOf(user.getId()), user.getName(), user.getDisplayName());
@@ -336,7 +336,8 @@ public class TwitchDisplayNameService {
     private void cacheChannel(final Channel channel) {
         if(channel == null)
             return;
-        channelByDisplayNameCache.put(channel.getDisplayName(), channel);
+        if(channel.getDisplayName() != null)
+            channelByDisplayNameCache.put(channel.getDisplayName(), channel);
         channelByChannelNameCache.put(channel.getName(), channel);
         channelByChannelIdCache.put(String.valueOf(channel.getId()), channel);
         cache(String.valueOf(channel.getId()), channel.getName(), channel.getDisplayName());

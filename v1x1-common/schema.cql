@@ -141,7 +141,6 @@ CREATE TABLE tenant_configuration_definition (
 );
 
 /* Version 2 */
-
 DROP TABLE tenant_user_permissions;
 
 CREATE TABLE channel_configuration (
@@ -184,7 +183,6 @@ CREATE TABLE tenant_group_membership (
 );
 
 /* Version 3 */
-
 DROP TABLE tenant_configuration_definition;
 DROP TABLE global_configuration_definition;
 DROP TYPE configuration_definition_field;
@@ -234,7 +232,6 @@ CREATE TABLE channel_configuration_definition (
 );
 
 /* Version 4 */
-
 CREATE TABLE third_party_credential (
     name text,
     credential blob,
@@ -260,14 +257,12 @@ CREATE TABLE twitch_user_information (
 );
 
 /* Version 5 */
-
 CREATE TABLE joined_twitch_channel (
     channel text,
     PRIMARY KEY (channel)
 );
 
 /* Version 6 */
-
 CREATE TABLE naive_bayes_classifier (
     name text,
     stats_id uuid,
@@ -337,7 +332,6 @@ CREATE TABLE artificial_neural_network_rdb (
 );
 
 /* Version 7 */
-
 CREATE TABLE quote (
     id int,
     tenant_id uuid,
@@ -349,7 +343,6 @@ CREATE TABLE quote (
 );
 
 /* Version 8 */
-
 CREATE TABLE factoid (
     tenant_id uuid,
     id text,
@@ -360,6 +353,91 @@ CREATE TABLE factoid (
 );
 
 /* Version 9 */
-
-CREATE TABLE permission_set_definition (
+CREATE TABLE user_configuration_definition (
     name text,
+    display_name text,
+    description text,
+    version int,
+    tenant_permission int,
+    fields list<frozen<configuration_definition_field>>,
+    complex_fields map<text, frozen<list<configuration_definition_field>>>,
+    PRIMARY KEY (name)
+);
+
+DROP TABLE factoid;
+
+CREATE TABLE channel (
+    platform int,
+    id text,
+    display_name text,
+    channel_group_id text,
+    PRIMARY KEY ((platform, id))
+);
+
+CREATE TABLE channel_group (
+    platform int,
+    id text,
+    display_name text,
+    tenant_id uuid,
+    PRIMARY KEY ((platform, id))
+);
+
+CREATE TABLE tenant_v2 (
+    id uuid,
+    display_name text,
+    PRIMARY KEY (id)
+);
+
+CREATE MATERIALIZED VIEW channel_groups_by_tenant
+    AS SELECT tenant_id, platform, id, display_name
+        FROM channel_group
+        WHERE tenant_id IS NOT NULL
+        AND platform IS NOT NULL
+        AND id IS NOT NULL
+    PRIMARY KEY (tenant_id, platform, id);
+
+CREATE MATERIALIZED VIEW channels_by_channel_group
+    AS SELECT platform, channel_group_id, id, display_name
+        FROM channel
+        WHERE platform IS NOT NULL
+        AND channel_group_id IS NOT NULL
+        AND id IS NOT NULL
+    PRIMARY KEY ((platform, channel_group_id), id);
+
+CREATE TABLE channel_group_configuration (
+    module text,
+    tenant_id uuid,
+    platform int,
+    channel_group_id text,
+    enabled boolean,
+    json text,
+    PRIMARY KEY ((module, tenant_id), platform, channel_group_id)
+);
+
+CREATE TABLE channel_configuration_v2 (
+    module text,
+    channel_group_id text,
+    platform int,
+    channel_id text,
+    enabled boolean,
+    json text,
+    PRIMARY KEY ((module, platform, channel_group_id), channel_id)
+);
+
+CREATE TABLE channel_group_platform_mapping (
+    platform int,
+    channel_group_id text,
+    platform_group text,
+    group_id uuid,
+    PRIMARY KEY ((platform, channel_group_id), platform_group)
+);
+
+/* Post-Version 9 */
+DROP TABLE tenant;
+DROP TYPE tenant_entry;
+DROP TABLE tenant_configuration_definition;
+DROP TABLE channel_configuration_definition;
+DROP TABLE twitch_channel;
+DROP TABLE discord_channel;
+DROP TABLE channel_configuration;
+DROP TABLE channel_platform_mapping;

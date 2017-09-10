@@ -9,12 +9,12 @@ import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.modules.GlobalConfiguration;
-import tv.v1x1.common.modules.TenantConfiguration;
+import tv.v1x1.common.modules.UserConfiguration;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.persistence.ConfigurationCacheManager;
 import tv.v1x1.common.services.persistence.ConfigurationProvider;
 import tv.v1x1.common.services.persistence.DAOManager;
-import tv.v1x1.common.services.persistence.TenantConfigurationProvider;
+import tv.v1x1.common.services.persistence.UserConfigurationProvider;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.modules.core.api.api.rest.ApiList;
 
@@ -44,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class BotsResource {
-    public static class TmiTenantConfiguration implements TenantConfiguration {
+    public static class TmiUserConfiguration implements UserConfiguration {
         @JsonProperty("custom_bot")
         private boolean customBot = false;
 
@@ -60,7 +60,7 @@ public class BotsResource {
         }
     }
 
-    public static class TmiGlobalConfiguration implements GlobalConfiguration {
+    public static class TmiGlobalConfiguration extends GlobalConfiguration {
         @JsonProperty("default_username")
         private String defaultUsername = "v1x1";
 
@@ -71,14 +71,14 @@ public class BotsResource {
 
     private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
     private final DAOTenant daoTenant;
-    private final TenantConfigurationProvider<TmiTenantConfiguration> tmiTenantConfigProvider;
+    private final UserConfigurationProvider<TmiUserConfiguration> tmiUserConfigProvider;
     private final ConfigurationProvider<TmiGlobalConfiguration> tmiGlobalConfigProvider;
 
     @Inject
     public BotsResource(final DAOManager daoManager, final CacheManager cacheManager, final MessageQueueManager messageQueueManager, final ConfigurationCacheManager configurationCacheManager) {
         this.daoJoinedTwitchChannel = daoManager.getDaoJoinedTwitchChannel();
         this.daoTenant = daoManager.getDaoTenant();
-        this.tmiTenantConfigProvider = new TenantConfigurationProvider<>(new Module("tmi"), cacheManager, daoManager, TmiTenantConfiguration.class, messageQueueManager, configurationCacheManager);
+        this.tmiUserConfigProvider = new UserConfigurationProvider<>(new Module("tmi"), cacheManager, daoManager, TmiUserConfiguration.class, messageQueueManager, configurationCacheManager);
         this.tmiGlobalConfigProvider = new ConfigurationProvider<>(new Module("tmi"), cacheManager, daoManager, TmiGlobalConfiguration.class, messageQueueManager, configurationCacheManager);
     }
 
@@ -110,14 +110,14 @@ public class BotsResource {
             final Tenant tenant = daoTenant.getByChannel(Platform.TWITCH, joinedTwitchChannel.getChannel());
             if(tenant == null)
                 return;
-            final TmiTenantConfiguration tmiTenantConfiguration = tmiTenantConfigProvider.getTenantConfiguration(tenant.toCore());
-            if(tmiTenantConfiguration == null)
+            final TmiUserConfiguration tmiUserConfiguration = tmiUserConfigProvider.getConfiguration(tenant.toCore(daoTenant));
+            if(tmiUserConfiguration == null)
                 return;
-            final String botName = tmiTenantConfiguration.isCustomBot()
-                    ? tmiTenantConfiguration.getBotName()
-                    : tmiTenantConfiguration.getBotName() == null
+            final String botName = tmiUserConfiguration.isCustomBot()
+                    ? tmiUserConfiguration.getBotName()
+                    : tmiUserConfiguration.getBotName() == null
                         ? defaultUsername
-                        : tmiTenantConfiguration.getBotName();
+                        : tmiUserConfiguration.getBotName();
             if(!ret.containsKey(botName))
                 ret.put(botName, new ArrayList<>());
             ret.get(botName).add(joinedTwitchChannel.getChannel());

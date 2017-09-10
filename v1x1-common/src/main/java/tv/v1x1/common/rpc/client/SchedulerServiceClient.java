@@ -6,10 +6,7 @@ import tv.v1x1.common.dto.messages.requests.DelayScheduleRequest;
 import tv.v1x1.common.dto.messages.requests.IntervalScheduleRequest;
 import tv.v1x1.common.dto.messages.requests.ScheduleRequest;
 import tv.v1x1.common.dto.messages.responses.ScheduleResponse;
-import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.Module;
-import tv.v1x1.common.modules.ModuleSettings;
-import tv.v1x1.common.modules.TenantConfiguration;
 
 import java.util.Date;
 import java.util.Set;
@@ -19,7 +16,7 @@ import java.util.concurrent.Future;
  * Created by naomi on 10/23/2016.
  */
 public class SchedulerServiceClient extends ServiceClient<ScheduleRequest, ScheduleResponse> {
-    public SchedulerServiceClient(final Module<?, ?, ?, ?> module) {
+    public SchedulerServiceClient(final Module<?, ?> module) {
         super(module, ScheduleResponse.class);
     }
 

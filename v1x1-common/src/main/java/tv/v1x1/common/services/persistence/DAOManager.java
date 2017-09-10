@@ -22,6 +22,7 @@ public class DAOManager {
     private final DAOLanguage daoLanguage;
     private final DAOConfigurationDefinition daoConfigurationDefinition;
     private final DAOChannelConfiguration daoChannelConfiguration;
+    private final DAOChannelGroupConfiguration daoChannelGroupConfiguration;
     private final DAOThirdPartyCredential daoThirdPartyCredential;
     private final DAOTwitchOauthToken daoTwitchOauthToken;
     private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
@@ -37,6 +38,7 @@ public class DAOManager {
         daoLanguage = new DAOLanguage(mappingManager);
         daoConfigurationDefinition = new DAOConfigurationDefinition(mappingManager);
         daoChannelConfiguration = new DAOChannelConfiguration(mappingManager);
+        daoChannelGroupConfiguration = new DAOChannelGroupConfiguration(mappingManager);
         daoThirdPartyCredential = new DAOThirdPartyCredential(mappingManager);
         daoTwitchOauthToken = new DAOTwitchOauthToken(mappingManager);
         daoJoinedTwitchChannel = new DAOJoinedTwitchChannel(mappingManager);
@@ -88,5 +90,9 @@ public class DAOManager {
 
     public DAOJoinedTwitchChannel getDaoJoinedTwitchChannel() {
         return daoJoinedTwitchChannel;
+    }
+
+    public DAOChannelGroupConfiguration getDaoChannelGroupConfiguration() {
+        return daoChannelGroupConfiguration;
     }
 }

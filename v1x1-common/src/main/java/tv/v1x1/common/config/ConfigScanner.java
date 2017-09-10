@@ -7,13 +7,11 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
-import tv.v1x1.common.dto.core.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.core.ConfigurationDefinition;
 import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
-import tv.v1x1.common.dto.core.TenantConfigurationDefinition;
-import tv.v1x1.common.modules.ChannelConfiguration;
+import tv.v1x1.common.dto.core.UserConfigurationDefinition;
 import tv.v1x1.common.modules.GlobalConfiguration;
-import tv.v1x1.common.modules.TenantConfiguration;
+import tv.v1x1.common.modules.UserConfiguration;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -45,7 +43,7 @@ public class ConfigScanner {
         return new GlobalConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields, complexFields);
     }
 
-    public static <T extends TenantConfiguration> TenantConfigurationDefinition scanTenant(final Class<T> clazz) {
+    public static <T extends UserConfiguration> UserConfigurationDefinition scanUser(final Class<T> clazz) {
         final String name = getName(clazz);
         if(name == null)
             return null;
@@ -55,20 +53,7 @@ public class ConfigScanner {
         final Permission tenantPermission = getTenantPermission(clazz);
         final Map<String, List<ConfigurationDefinition.Field>> complexFields = new HashMap<>();
         final List<ConfigurationDefinition.Field> fields = scanFields(clazz, complexFields);
-        return new TenantConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields, complexFields);
-    }
-
-    public static <T extends ChannelConfiguration> ChannelConfigurationDefinition scanChannel(final Class<T> clazz) {
-        final String name = getName(clazz);
-        if(name == null)
-            return null;
-        final String displayName = getDisplayName(clazz);
-        final String description = getDescription(clazz);
-        final int version = getVersion(clazz);
-        final Permission tenantPermission = getTenantPermission(clazz);
-        final Map<String, List<ConfigurationDefinition.Field>> complexFields = new HashMap<>();
-        final List<ConfigurationDefinition.Field> fields = scanFields(clazz, complexFields);
-        return new ChannelConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields, complexFields);
+        return new UserConfigurationDefinition(name, displayName == null ? name : displayName, description, version, tenantPermission, fields, complexFields);
     }
 
     private static String getName(final Class<?> clazz) {

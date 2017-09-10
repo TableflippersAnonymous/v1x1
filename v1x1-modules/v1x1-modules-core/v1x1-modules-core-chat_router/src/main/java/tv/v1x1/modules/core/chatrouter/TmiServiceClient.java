@@ -3,10 +3,7 @@ package tv.v1x1.modules.core.chatrouter;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.messages.requests.SendMessageRequest;
 import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
-import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.Module;
-import tv.v1x1.common.modules.ModuleSettings;
-import tv.v1x1.common.modules.TenantConfiguration;
 import tv.v1x1.common.rpc.client.ServiceClient;
 
 import java.util.concurrent.Future;
@@ -17,7 +14,7 @@ import java.util.concurrent.Future;
 public class TmiServiceClient extends ServiceClient<SendMessageRequest, SendMessageResponse> {
     private final String channel;
 
-    public TmiServiceClient(final Module<?, ?, ?, ?> module, final String channel) {
+    public TmiServiceClient(final Module<?, ?> module, final String channel) {
         super(module, SendMessageResponse.class);
         this.channel = channel;
     }

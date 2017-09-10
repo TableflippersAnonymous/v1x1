@@ -66,7 +66,7 @@ public class ModulesResource {
     public Configuration getConfig(@HeaderParam("Authorization") final String authorization,
                                    @PathParam("module") final String moduleName) {
         authorizer.forAuthorization(authorization).ensurePermission("api.modules.read");
-        return new Configuration(daoManager.getDaoGlobalConfiguration().get(new Module(moduleName)).getJson());
+        return new Configuration(daoManager.getDaoGlobalConfiguration().get(new Module(moduleName)).getJson(), true);
     }
 
     @Path("/{module}/config")

@@ -18,7 +18,7 @@ public class FactoidCommandProvider implements CommandProvider {
     @Override
     public Command provide(final String command, final ChatMessage chatMessage) {
         try {
-            final Factoid factoid = module.getTenantConfiguration(chatMessage.getChannel().getTenant()).chaseDownById(command);
+            final Factoid factoid = module.getConfiguration(chatMessage.getChannel()).chaseDownById(command);
             if(factoid != null && !factoid.isHidden()) {
                 return new CustomCommand(module, command, factoid.getData(), factoid.getPermission());
             }

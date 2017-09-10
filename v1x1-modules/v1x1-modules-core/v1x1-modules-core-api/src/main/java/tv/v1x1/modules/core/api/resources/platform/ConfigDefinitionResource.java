@@ -2,9 +2,8 @@ package tv.v1x1.modules.core.api.resources.platform;
 
 import com.google.inject.Inject;
 import io.dropwizard.jersey.caching.CacheControl;
-import tv.v1x1.common.dto.db.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
-import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
+import tv.v1x1.common.dto.db.UserConfigurationDefinition;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.api.rest.ApiList;
 import tv.v1x1.modules.core.api.api.rest.ConfigurationDefinition;
@@ -28,8 +27,8 @@ import java.util.concurrent.TimeUnit;
     /config-definitions
       /global - GET: list of modules with GlobalConfigurationDefinitions.
         /{module} - GET: GlobalConfigurationDefinition for module.
-      /tenant - GET: list of modules with TenantConfigurationDefinitions.
-        /{module} - GET: TenantConfigurationDefinition for module.
+      /user - GET: list of modules with UserConfigurationDefinitions.
+        /{module} - GET: UserConfigurationDefinition for module.
  */
 @Path("/api/v1/platform/config-definitions")
 @Produces(MediaType.APPLICATION_JSON)
@@ -42,43 +41,22 @@ public class ConfigDefinitionResource {
         this.daoManager = daoManager;
     }
 
-    @Path("/channel")
+    @Path("/user")
     @GET
     @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
-    public ApiList<String> listChannelConfigDefinitions() {
-        final List<String> ret = new ArrayList<>();
-        for(final ChannelConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllChannel()) {
-            ret.add(def.getName());
+    public ApiList<ConfigurationDefinition> listUserConfigDefinitions() {
+        final List<ConfigurationDefinition> ret = new ArrayList<>();
+        for(final UserConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllUser()) {
+            ret.add(ConfigurationDefinition.fromCore(def.toCore()));
         }
         return new ApiList<>(ret);
     }
 
-    @Path("/channel/{name}")
+    @Path("/user/{name}")
     @GET
     @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
-    public ConfigurationDefinition getChannelConfigurationDefinition(@PathParam("name") final String name) {
-        final ChannelConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getChannel(name);
-        if(definition == null)
-            throw new NotFoundException();
-        return ConfigurationDefinition.fromCore(definition.toCore());
-    }
-
-    @Path("/tenant")
-    @GET
-    @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
-    public ApiList<String> listTenantConfigDefinitions() {
-        final List<String> ret = new ArrayList<>();
-        for(final TenantConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllTenant()) {
-            ret.add(def.getName());
-        }
-        return new ApiList<>(ret);
-    }
-
-    @Path("/tenant/{name}")
-    @GET
-    @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
-    public ConfigurationDefinition getTenantConfigurationDefinition(@PathParam("name") final String name) {
-        final TenantConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getTenant(name);
+    public ConfigurationDefinition getUserConfigurationDefinition(@PathParam("name") final String name) {
+        final UserConfigurationDefinition definition = daoManager.getDaoConfigurationDefinition().getUser(name);
         if(definition == null)
             throw new NotFoundException();
         return ConfigurationDefinition.fromCore(definition.toCore());
@@ -87,10 +65,10 @@ public class ConfigDefinitionResource {
     @Path("/global")
     @GET
     @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
-    public ApiList<String> listGlobalConfigDefinitions() {
-        final List<String> ret = new ArrayList<>();
+    public ApiList<ConfigurationDefinition> listGlobalConfigDefinitions() {
+        final List<ConfigurationDefinition> ret = new ArrayList<>();
         for(final GlobalConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllGlobal()) {
-            ret.add(def.getName());
+            ret.add(ConfigurationDefinition.fromCore(def.toCore()));
         }
         return new ApiList<>(ret);
     }

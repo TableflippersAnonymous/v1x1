@@ -29,7 +29,7 @@ public class FactDisableCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String commander = chatMessage.getSender().getDisplayName();
         final String factName = args.remove(0).toLowerCase();
-        final boolean result = module.hideFact(channel.getTenant(), factName, true);
+        final boolean result = module.hideFact(channel.getChannelGroup().getTenant(), factName, true);
         if(!result) {
             Chat.i18nMessage(module, channel, "noexist",
                     "commander", commander,

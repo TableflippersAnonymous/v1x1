@@ -10,28 +10,30 @@ import java.util.UUID;
 /**
  * Created by naomi on 11/5/2016.
  */
-@Table(name = "channel_configuration")
+@Table(name = "channel_configuration_v2")
 public class ChannelConfiguration {
     @PartitionKey(0)
     private String module;
     @PartitionKey(1)
-    @Column(name = "tenant_id")
-    private UUID tenantId;
-    @ClusteringColumn(0)
     private Platform platform;
+    @PartitionKey(2)
+    @Column(name = "channel_group_id")
+    private String channelGroupId;
+    @ClusteringColumn(0)
     @Column(name = "channel_id")
-    @ClusteringColumn(1)
     private String channelId;
+    private boolean enabled;
     private String json;
 
     public ChannelConfiguration() {
     }
 
-    public ChannelConfiguration(final String module, final UUID tenantId, final Platform platform, final String channelId, final String json) {
+    public ChannelConfiguration(final String module, final Platform platform, final String channelGroupId, final String channelId, final boolean enabled, final String json) {
         this.module = module;
-        this.tenantId = tenantId;
         this.platform = platform;
+        this.channelGroupId = channelGroupId;
         this.channelId = channelId;
+        this.enabled = enabled;
         this.json = json;
     }
 
@@ -39,8 +41,8 @@ public class ChannelConfiguration {
         return module;
     }
 
-    public UUID getTenantId() {
-        return tenantId;
+    public String getChannelGroupId() {
+        return channelGroupId;
     }
 
     public String getJson() {
@@ -53,5 +55,9 @@ public class ChannelConfiguration {
 
     public String getChannelId() {
         return channelId;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

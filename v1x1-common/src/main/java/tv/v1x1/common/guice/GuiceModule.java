@@ -36,6 +36,7 @@ import tv.v1x1.common.config.ConfigType;
 import tv.v1x1.common.config.Permission;
 import tv.v1x1.common.dao.DAOArtificialNeuralNetwork;
 import tv.v1x1.common.dao.DAOChannelConfiguration;
+import tv.v1x1.common.dao.DAOChannelGroupConfiguration;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
 import tv.v1x1.common.dao.DAOGlobalConfiguration;
 import tv.v1x1.common.dao.DAOGlobalUser;
@@ -51,23 +52,21 @@ import tv.v1x1.common.dto.core.ModuleInstance;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.CassandraConfig;
-import tv.v1x1.common.modules.ChannelConfiguration;
 import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.Module;
-import tv.v1x1.common.modules.ModuleSettings;
-import tv.v1x1.common.modules.TenantConfiguration;
+import tv.v1x1.common.modules.UserConfiguration;
 import tv.v1x1.common.modules.ZipkinConfig;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.LockManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
-import tv.v1x1.common.services.persistence.ChannelConfigurationProvider;
+import tv.v1x1.common.services.discord.DiscordApi;
 import tv.v1x1.common.services.persistence.ConfigurationProvider;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.persistence.KeyValueStore;
 import tv.v1x1.common.services.persistence.PersistentKeyValueStoreImpl;
 import tv.v1x1.common.services.persistence.TemporaryKeyValueStoreImpl;
-import tv.v1x1.common.services.persistence.TenantConfigurationProvider;
+import tv.v1x1.common.services.persistence.UserConfigurationProvider;
 import tv.v1x1.common.services.pubsub.TopicManager;
 import tv.v1x1.common.services.pubsub.TopicManagerImpl;
 import tv.v1x1.common.services.queue.MessageQueueManager;
@@ -75,7 +74,6 @@ import tv.v1x1.common.services.queue.MessageQueueManagerImpl;
 import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.MembershipService;
 import tv.v1x1.common.services.state.StateManager;
-import tv.v1x1.common.services.stats.NoopStatsCollector;
 import tv.v1x1.common.services.stats.StatsCollector;
 import tv.v1x1.common.services.stats.ZipkinStatsCollector;
 import tv.v1x1.common.services.twitch.TwitchApi;
@@ -91,11 +89,11 @@ import java.util.concurrent.TimeUnit;
 /**
  * Created by jcarter on 1/27/17.
  */
-public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> extends AbstractModule {
+public class GuiceModule<T extends GlobalConfiguration, U extends UserConfiguration> extends AbstractModule {
     private final T settings;
-    private final Module<T, U, V, W> module;
+    private final Module<T, U> module;
 
-    public GuiceModule(final T settings, final Module<T, U, V, W> module) {
+    public GuiceModule(final T settings, final Module<T, U> module) {
         this.settings = settings;
         this.module = module;
     }
@@ -104,6 +102,7 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
     protected void configure() {
         bind(DAOArtificialNeuralNetwork.class);
         bind(DAOChannelConfiguration.class);
+        bind(DAOChannelGroupConfiguration.class);
         bind(DAOConfigurationDefinition.class);
         bind(DAOGlobalConfiguration.class);
         bind(DAOGlobalUser.class);
@@ -129,18 +128,17 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
         bind(MembershipService.class);
         bind(StateManager.class);
         bind(ConfigurationProvider.class);
-        bind(TenantConfigurationProvider.class);
-        bind(ChannelConfigurationProvider.class);
+        bind(UserConfigurationProvider.class);
         bind(TopicManager.class).to(TopicManagerImpl.class);
     }
 
     @Provides
-    public ModuleSettings getSettings() {
+    public GlobalConfiguration getSettings() {
         return settings;
     }
 
     @Provides
-    public Config getRedissonConfig(final ModuleSettings settings) {
+    public Config getRedissonConfig(final GlobalConfiguration settings) {
         return settings.getRedissonConfig();
     }
 
@@ -150,12 +148,12 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
     }
 
     @Provides
-    public CassandraConfig getCassandraConfig(final ModuleSettings settings) {
+    public CassandraConfig getCassandraConfig(final GlobalConfiguration settings) {
         return settings.getCassandraConfig();
     }
 
     @Provides
-    public ZipkinConfig getZipkinConfig(final ModuleSettings settings) {
+    public ZipkinConfig getZipkinConfig(final GlobalConfiguration settings) {
         return settings.getZipkinConfig();
     }
 
@@ -190,7 +188,7 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
     }
 
     @Provides @Singleton
-    public CuratorFramework getCurator(final ModuleSettings settings) {
+    public CuratorFramework getCurator(final GlobalConfiguration settings) {
         final CuratorFramework curatorFramework = CuratorFrameworkFactory.newClient(settings.getZookeeperConnectionString(), new BoundedExponentialBackoffRetry(50, 1000, 29));
         curatorFramework.start();
         return curatorFramework;
@@ -261,14 +259,9 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
         return module.getGlobalConfigurationClass();
     }
 
-    @Provides @Named("tenantConfigurationClass") @Singleton
-    public Class getTenantConfigurationClass(final Module module) {
-        return module.getTenantConfigurationClass();
-    }
-
-    @Provides @Named("channelConfigurationClass") @Singleton
-    public Class getChannelConfigurationClass(final Module module) {
-        return module.getChannelConfigurationClass();
+    @Provides @Named("userConfigurationClass") @Singleton
+    public Class getUserConfigurationClass(final Module module) {
+        return module.getUserConfigurationClass();
     }
 
     @Provides @Singleton
@@ -278,6 +271,16 @@ public class GuiceModule<T extends ModuleSettings, U extends GlobalConfiguration
                 new String(module.requireCredential("Common|Twitch|OAuthToken")),
                 new String(module.requireCredential("Common|Twitch|ClientSecret")),
                 new String(module.requireCredential("Common|Twitch|RedirectUri")));
+    }
+
+    @Provides @Singleton
+    public DiscordApi getDiscordApi(final Module module) {
+        return new DiscordApi(
+                new String(module.requireCredential("Common|Discord|ClientId")),
+                new String(module.requireCredential("Common|Discord|OAuthToken")),
+                new String(module.requireCredential("Common|Discord|ClientSecret")),
+                new String(module.requireCredential("Common|Discord|RedirectUri")),
+                "Bot");
     }
 
     @Provides @Singleton

@@ -9,11 +9,15 @@ public class Configuration {
     @JsonProperty("config_json")
     private String configJson;
 
+    @JsonProperty("enabled")
+    private boolean enabled;
+
     public Configuration() {
     }
 
-    public Configuration(final String configJson) {
+    public Configuration(final String configJson, final boolean enabled) {
         this.configJson = configJson;
+        this.enabled = enabled;
     }
 
     public String getConfigJson() {
@@ -22,5 +26,13 @@ public class Configuration {
 
     public void setConfigJson(final String configJson) {
         this.configJson = configJson;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(final boolean enabled) {
+        this.enabled = enabled;
     }
 }

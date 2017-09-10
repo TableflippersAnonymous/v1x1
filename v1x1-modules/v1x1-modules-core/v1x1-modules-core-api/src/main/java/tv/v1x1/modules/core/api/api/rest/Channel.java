@@ -1,40 +1,27 @@
 package tv.v1x1.modules.core.api.api.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import tv.v1x1.common.dto.db.Platform;
-
-import java.util.UUID;
 
 /**
  * @author Josh
  */
 public class Channel {
-    @JsonProperty("tenant_id")
-    private String tenantId;
-    @JsonProperty("platform")
-    private String platform;
     @JsonProperty("display_name")
     private String displayName;
-    @JsonProperty("channel_id")
-    private String channelId;
+    @JsonProperty("id")
+    private String id;
 
     public Channel() {
         // For Jackson
     }
 
-    public Channel(final UUID tenantId, final Platform platform, final String displayName, final String channelId) {
-        this.tenantId = tenantId.toString();
-        this.platform = platform.name();
+    public Channel(final String displayName, final String id) {
         this.displayName = displayName;
-        this.channelId = channelId;
+        this.id = id;
     }
 
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(final String platform) {
-        this.platform = platform;
+    public Channel(final tv.v1x1.common.dto.core.Channel channel) {
+        this(channel.getDisplayName(), channel.getId());
     }
 
     public String getDisplayName() {
@@ -45,19 +32,11 @@ public class Channel {
         this.displayName = displayName;
     }
 
-    public String getChannelId() {
-        return channelId;
+    public String getId() {
+        return id;
     }
 
-    public void setChannelId(final String channelId) {
-        this.channelId = channelId;
-    }
-
-    public String getTenantId() {
-        return tenantId;
-    }
-
-    public void setTenantId(final String tenantId) {
-        this.tenantId = tenantId;
+    public void setId(final String id) {
+        this.id = id;
     }
 }

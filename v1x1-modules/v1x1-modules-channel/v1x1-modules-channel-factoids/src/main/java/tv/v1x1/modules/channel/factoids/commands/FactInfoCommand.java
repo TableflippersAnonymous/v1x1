@@ -6,8 +6,8 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.common.util.text.Shorten;
-import tv.v1x1.modules.channel.factoids.FactoidsModule;
 import tv.v1x1.modules.channel.factoids.Factoid;
+import tv.v1x1.modules.channel.factoids.FactoidsModule;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class FactInfoCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String commander = chatMessage.getSender().getDisplayName();
         final String factName = args.get(0).toLowerCase();
-        final Factoid fact = module.getFactDirectly(channel.getTenant(), factName);
+        final Factoid fact = module.getFactDirectly(channel.getChannelGroup().getTenant(), factName);
         if(fact == null) {
             Chat.i18nMessage(module, channel, "noexist",
             "commander", commander,

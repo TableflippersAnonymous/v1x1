@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {V1x1ApiCache} from "../services/api_cache";
-import {V1x1TwitchOauthCode} from "../model/v1x1_twitch_oauth_code";
+import {V1x1OauthCode} from "../model/v1x1_oauth_code";
 import {V1x1Api} from "../services/api";
 import {Observable} from "rxjs";
 import {V1x1Tenant} from "../model/v1x1_tenant";
@@ -33,26 +33,42 @@ export class AppComponent {
     }
 
     if(this.queryString['code'] && this.queryString['state'])
-      this.handleLogin(new V1x1TwitchOauthCode(this.queryString['code'], this.queryString['state']));
+      this.handleLogin(new V1x1OauthCode(this.queryString['code'], this.queryString['state']));
     else
       this.loginFromLocalStorage();
   }
 
-  handleLogin(oauthCode: V1x1TwitchOauthCode) {
+  handleLogin(oauthCode: V1x1OauthCode) {
     this.loggingIn = true;
-    this.api.loginTwitch(oauthCode).catch((_err, _caught) => {
-      this.loggingIn = false;
-      return Observable.of(null);
-    }).subscribe(authToken => {
-      if(authToken === null)
-        return;
-      localStorage.setItem("authorization", authToken.authorization);
-      localStorage.setItem("auth_expiry", authToken.expires);
-      this.loginFromLocalStorage();
-      if(history && history.pushState)
-        history.pushState(null, null, '/');
-      this.postLogin();
-    })
+    if(localStorage.getItem("auth_in_progress") === "twitch") {
+      this.api.loginTwitch(oauthCode).catch((_err, _caught) => {
+        this.loggingIn = false;
+        return Observable.of(null);
+      }).subscribe(authToken => {
+        if (authToken === null)
+          return;
+        localStorage.setItem("authorization", authToken.authorization);
+        localStorage.setItem("auth_expiry", authToken.expires);
+        this.loginFromLocalStorage();
+        if (history && history.pushState)
+          history.pushState(null, null, '/');
+        this.postLogin();
+      });
+    } else if(localStorage.getItem("auth_in_progress") === "discord") {
+      this.api.loginDiscord(oauthCode).catch((_err, _caught) => {
+        this.loggingIn = false;
+        return Observable.of(null);
+      }).subscribe(authToken => {
+        if (authToken === null)
+          return;
+        localStorage.setItem("authorization", authToken.authorization);
+        localStorage.setItem("auth_expiry", authToken.expires);
+        this.loginFromLocalStorage();
+        if (history && history.pushState)
+          history.pushState(null, null, '/');
+        this.postLogin();
+      });
+    }
   }
 
   setActiveTenant(tenant: V1x1Tenant) {
@@ -88,23 +104,41 @@ export class AppComponent {
     localStorage.removeItem("auth_expiry");
     localStorage.setItem("auth_redirect", window.location.hash);
     localStorage.setItem("auth_redirect_expiry", (new Date().getTime() + 3600).toString(10));
-    this.webInfo.getWebConfig().subscribe(
-      webConfig => {
-        this.api.getState().subscribe(
-          state => {
-            window.location.href = 'https://api.twitch.tv/kraken/oauth2/authorize' +
-              '?response_type=code' +
-              '&client_id=' + webConfig.clientIds['TWITCH'] +
-              '&redirect_uri=' + webConfig.redirectUris['TWITCH'] +
-              '&scope=' +
-              'user_read+channel_editor+' +
-              'channel_commercial+channel_subscriptions+' +
-              'channel_feed_read+channel_feed_edit' +
-              '&state=' + state.state;
-          }
-        );
-      }
-    );
+    if(localStorage.getItem("auth_in_progress") === "twitch") {
+      this.webInfo.getWebConfig().subscribe(
+        webConfig => {
+          this.api.getState().subscribe(
+            state => {
+              window.location.href = 'https://api.twitch.tv/kraken/oauth2/authorize' +
+                '?response_type=code' +
+                '&client_id=' + webConfig.clientIds['TWITCH'] +
+                '&redirect_uri=' + webConfig.redirectUris['TWITCH'] +
+                '&scope=' +
+                'user_read+channel_editor+' +
+                'channel_commercial+channel_subscriptions+' +
+                'channel_feed_read+channel_feed_edit' +
+                '&state=' + state.state;
+            }
+          );
+        }
+      );
+    } else if(localStorage.getItem("auth_in_progress") === "discord") {
+      this.webInfo.getWebConfig().subscribe(
+        webConfig => {
+          this.api.getState().subscribe(
+            state => {
+              window.location.href = 'https://discordapp.com/api/oauth2/authorize' +
+                '?response_type=code' +
+                '&client_id=' + webConfig.clientIds['DISCORD'] +
+                '&redirect_uri=' + webConfig.redirectUris['DISCORD'] +
+                '&scope=' +
+                'identify+connections' +
+                '&state=' + state.state;
+            }
+          );
+        }
+      );
+    }
   }
 
   postLogin() {

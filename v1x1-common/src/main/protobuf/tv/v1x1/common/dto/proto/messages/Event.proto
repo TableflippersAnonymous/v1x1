@@ -34,6 +34,7 @@ message Event {
         SCHEDULER_NOTIFY = 17;
         PRIVATE_MESSAGE = 18;
         CONFIG_CHANGE = 19;
+        DISCORD_VOICE_STATE = 20;
     };
 
     extensions 100 to max; /* Convention is to use the same 100 + your EventType ID */
@@ -265,6 +266,7 @@ message ConfigChangeEvent {
         GLOBAL = 1;
         TENANT = 2;
         CHANNEL = 3;
+        CHANNEL_GROUP = 4;
     };
 
     extend Event {
@@ -275,4 +277,26 @@ message ConfigChangeEvent {
     required ConfigType config_type = 2;
     optional core.Tenant tenant = 3;
     optional core.Channel channel = 4;
+    optional core.ChannelGroup channel_group = 5;
+}
+
+message DiscordVoiceStateEvent {
+    message VoiceState {
+        optional string guild_id = 1;
+        optional string channel_id = 2;
+        required string user_id = 3;
+        required string session_id = 4;
+        required bool deaf = 5;
+        required bool mute = 6;
+        required bool self_deaf = 7;
+        required bool self_mute = 8;
+        required bool suppress = 9;
+    }
+
+    extend Event {
+        optional DiscordVoiceStateEvent data = 120;
+    }
+
+    optional VoiceState old_voice_state = 1;
+    required VoiceState new_voice_state = 2;
 }

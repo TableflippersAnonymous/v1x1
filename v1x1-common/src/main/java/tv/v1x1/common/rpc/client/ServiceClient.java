@@ -9,10 +9,7 @@ import tv.v1x1.common.dto.messages.Message;
 import tv.v1x1.common.dto.messages.Request;
 import tv.v1x1.common.dto.messages.Response;
 import tv.v1x1.common.dto.messages.responses.ExceptionResponse;
-import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.Module;
-import tv.v1x1.common.modules.ModuleSettings;
-import tv.v1x1.common.modules.TenantConfiguration;
 import tv.v1x1.common.services.queue.MessageQueue;
 
 import java.lang.invoke.MethodHandles;
@@ -28,13 +25,13 @@ import java.util.concurrent.Future;
  */
 public abstract class ServiceClient<T extends Request, U extends Response<T>> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final Module<?, ?, ?, ?> module;
+    private final Module<?, ?> module;
     private final String queueName;
     private final ExecutorService executorService;
     private final Map<tv.v1x1.common.dto.core.UUID, ServiceFuture<U>> futureMap = new ConcurrentHashMap<>();
     private final Map<tv.v1x1.common.dto.core.UUID, Span> spanMap = new ConcurrentHashMap<>();
 
-    public ServiceClient(final Module<?, ?, ?, ?> module, final Class<U> responseClass) {
+    public ServiceClient(final Module<?, ?> module, final Class<U> responseClass) {
         this.module = module;
         this.executorService = module.getInjector().getInstance(CurrentTraceContext.class).executorService(Executors.newSingleThreadExecutor());
         this.queueName = "ServiceResponse|" + module.getName() + "|" + getClass().getCanonicalName() + "|" + UUID.randomUUID().toString();

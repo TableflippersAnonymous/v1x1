@@ -47,7 +47,7 @@ public class PermAddCommand extends Command {
         final String groupName = args.get(1);
         final String permission = args.get(2);
         final Channel channel = chatMessage.getChannel();
-        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getPlatform(), search);
+        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getChannelGroup().getPlatform(), search);
         if(tenant == null) {
             opsTool.respond(channel, "I don't know about that channel");
             return;
