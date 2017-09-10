@@ -9,7 +9,6 @@ import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.timed_messages.TimedMessages;
-import tv.v1x1.modules.channel.timed_messages.Timer;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -55,7 +54,7 @@ public class TimerRescheduleCommand extends Command {
                     "usage", getUsage());
             return;
         }
-        if(module.rescheduleTimer(channel.getTenant(), timerStr, interval)) {
+        if(module.rescheduleTimer(channel.getChannelGroup().getTenant(), timerStr, interval)) {
         Chat.i18nMessage(module, channel, "reschedule.success",
                 "commander", senderName,
                 "id", timerStr,

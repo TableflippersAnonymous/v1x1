@@ -51,14 +51,17 @@ public class TenantsResource {
     public ApiList<String> listTenantsForUser(@HeaderParam("Authorization") final String authorization) {
         final AuthorizationContext authorizationContext = authorizer.forAuthorization(authorization);
         authorizationContext.ensurePermission("api.tenants.list");
-        return new ApiList<>(Lists.newArrayList(daoTenantGroup.getTenantsByUser(authorizationContext.getGlobalUser())).stream().map(UUID::toString).collect(Collectors.toList()));
+        return new ApiList<>(Lists.newArrayList(daoTenantGroup.getTenantsByUser(authorizationContext.getGlobalUser()))
+                .stream().map(UUID::toString).collect(Collectors.toList()));
     }
 
     @Path("/{tenant_id: [0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}}")
     @GET
-    public ApiList<String> listTenantEndpoints(@HeaderParam("Authorization") final String authorization,
-                                               @PathParam("tenant_id") final String tenantId) {
-        return null; //TODO
+    public tv.v1x1.modules.core.api.api.rest.Tenant getTenant(@HeaderParam("Authorization") final String authorization,
+                                                              @PathParam("tenant_id") final String tenantId) {
+        final tv.v1x1.common.dto.core.Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.read");
+        return new tv.v1x1.modules.core.api.api.rest.Tenant(tenant);
     }
 
     @Path("/{platform: [a-z]+}/{id}")
@@ -70,5 +73,12 @@ public class TenantsResource {
         if(tenant == null)
             throw new NotFoundException();
         return new ApiPrimitive<>(tenant.getId().toString());
+    }
+
+    private tv.v1x1.common.dto.core.Tenant getTenant(final String tenantId) {
+        final Tenant dbTenant = daoTenant.getById(UUID.fromString(tenantId));
+        if(dbTenant == null)
+            throw new NotFoundException();
+        return dbTenant.toCore(daoTenant);
     }
 }

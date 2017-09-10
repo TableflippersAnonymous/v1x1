@@ -2,28 +2,33 @@ package tv.v1x1.common.dto.db;
 
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
-
-import java.util.UUID;
+import com.datastax.driver.mapping.annotations.Table;
+import tv.v1x1.common.dto.core.ChannelGroup;
+import tv.v1x1.common.dto.core.DiscordChannel;
+import tv.v1x1.common.dto.core.TwitchChannel;
 
 /**
  * Created by cobi on 10/15/2016.
  */
-public abstract class Channel {
-
+@Table(name = "channel")
+public class Channel {
     @PartitionKey
+    private Platform platform;
+    @PartitionKey(1)
     private String id;
     @Column(name = "display_name")
     private String displayName;
-    @Column(name = "tenant_id")
-    private UUID tenantId;
+    @Column(name = "channel_group_id")
+    private String channelGroupId;
 
     public Channel() {
     }
 
-    public Channel(final String id, final String displayName, final UUID tenantId) {
+    public Channel(final Platform platform, final String id, final String displayName, final String channelGroupId) {
+        this.platform = platform;
         this.id = id;
         this.displayName = displayName;
-        this.tenantId = tenantId;
+        this.channelGroupId = channelGroupId;
     }
 
     public String getId() {
@@ -34,9 +39,19 @@ public abstract class Channel {
         return displayName;
     }
 
-    public UUID getTenantId() {
-        return tenantId;
+    public String getChannelGroupId() {
+        return channelGroupId;
     }
 
-    public abstract tv.v1x1.common.dto.core.Channel toCore(TenantAccessor accessor);
+    public Platform getPlatform() {
+        return platform;
+    }
+
+    public tv.v1x1.common.dto.core.Channel toCore(final ChannelGroup channelGroup) {
+        switch(platform) {
+            case TWITCH: return new TwitchChannel(id, channelGroup, displayName);
+            case DISCORD: return new DiscordChannel(id, channelGroup, displayName);
+            default: throw new IllegalStateException("Unknown platform " + platform);
+        }
+    }
 }

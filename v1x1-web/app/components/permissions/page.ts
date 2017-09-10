@@ -1,5 +1,6 @@
 import {Component} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
+
 @Component({
   selector: 'permissions-page',
   template: `
@@ -12,11 +13,8 @@ import {ActivatedRoute, Router} from "@angular/router";
           <li class="nav-item" [class.active]="router.isActive(router.createUrlTree(['./groups'], {relativeTo: route}), false)">
             <a class="nav-link" [routerLink]="['./groups']">Groups</a>
           </li>
-          <li class="nav-item" [class.active]="activeIdx === 1" *ngIf="false">
-            <a class="nav-link" href="#" (click)="setActive(1);">Mapping</a>
-          </li>
-          <li class="nav-item" [class.active]="activeIdx === 2" *ngIf="false">
-            <a class="nav-link" href="#" (click)="setActive(2);">Users</a>
+          <li class="nav-item" [class.active]="router.isActive(router.createUrlTree(['./mapping'], {relativeTo: route}), false)">
+            <a class="nav-link" [routerLink]="['./mapping']">Mapping</a>
           </li>
         </ul>
       </div>
@@ -25,11 +23,5 @@ import {ActivatedRoute, Router} from "@angular/router";
   `
 })
 export class PermissionsPageComponent {
-  activeIdx: number = 0;
-
   constructor(private route: ActivatedRoute, private router: Router) {}
-
-  setActive(idx: number) {
-    this.activeIdx = idx;
-  }
 }

@@ -5,8 +5,8 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
-import tv.v1x1.modules.channel.factoids.FactoidsModule;
 import tv.v1x1.modules.channel.factoids.Factoid;
+import tv.v1x1.modules.channel.factoids.FactoidsModule;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class FactAliasCommand extends Command {
         final String commander = chatMessage.getSender().getDisplayName();
         final String aliasName = args.get(1).toLowerCase();
         String aliasTargetName = args.get(0).toLowerCase();
-        final Factoid aliasTarget = module.getFact(channel.getTenant(), aliasTargetName);
+        final Factoid aliasTarget = module.getFact(channel.getChannelGroup().getTenant(), aliasTargetName);
         if(aliasTarget == null) {
             Chat.i18nMessage(module, channel, "noexist",
                     "commander", commander,
@@ -39,14 +39,14 @@ public class FactAliasCommand extends Command {
             return;
         }
         aliasTargetName = aliasTarget.getId();
-        final Factoid oldFact = module.getFactDirectly(channel.getTenant(), aliasName);
+        final Factoid oldFact = module.getFactDirectly(channel.getChannelGroup().getTenant(), aliasName);
         if(oldFact != null) {
             Chat.i18nMessage(module, channel, "alreadyexists",
                     "commander", commander,
                     "fact", aliasName);
             return;
         }
-        final Factoid fact = module.addFact(channel.getTenant(), aliasName, aliasTargetName, null, true);
+        final Factoid fact = module.addFact(channel.getChannelGroup().getTenant(), aliasName, aliasTargetName, null, true);
         if(fact == null) {
             Chat.i18nMessage(module, channel, "generic.error",
                     "commander", commander,

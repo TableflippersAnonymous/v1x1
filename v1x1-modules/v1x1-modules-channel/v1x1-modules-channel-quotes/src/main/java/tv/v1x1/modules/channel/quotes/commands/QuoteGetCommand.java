@@ -32,7 +32,7 @@ public class QuoteGetCommand extends Command {
         if(args.size() > 0) {
             try {
                 final int quoteId = Integer.parseInt(args.get(0));
-                quote = module.getQuoteById(channel.getTenant(), quoteId);
+                quote = module.getQuoteById(channel.getChannelGroup().getTenant(), quoteId);
                 if(quote == null) {
                     Chat.i18nMessage(module, channel, "invalid.quote",
                             "commander", commander,
@@ -45,7 +45,7 @@ public class QuoteGetCommand extends Command {
                 return;
             }
         } else {
-            quote = module.getRandomQuote(channel.getTenant());
+            quote = module.getRandomQuote(channel.getChannelGroup().getTenant());
             if(quote == null) {
                 Chat.i18nMessage(module, channel, "noquotes",
                         "commander", commander

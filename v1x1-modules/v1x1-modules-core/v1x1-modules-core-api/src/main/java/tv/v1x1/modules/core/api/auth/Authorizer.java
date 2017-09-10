@@ -114,7 +114,7 @@ public class Authorizer {
     public AuthorizationContext tenantContext(final AuthorizationContext authorizationContext, final UUID tenantId) {
         return getContext(authorizationContext.getPrincipal(),
                 principal -> daoTenantGroup.getAllPermissions(
-                        daoTenant.getById(tenantId).toCore(),
+                        daoTenant.getById(tenantId).toCore(daoTenant),
                         principal.getGlobalUser(),
                         Platform.API,
                         "__API__",

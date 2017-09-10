@@ -5,5 +5,5 @@ import tv.v1x1.common.modules.GlobalConfiguration;
 /**
  * @author Josh
  */
-public class LinkPurgerGlobalConfiguration implements GlobalConfiguration {
+public class LinkPurgerGlobalConfiguration extends GlobalConfiguration {
 }

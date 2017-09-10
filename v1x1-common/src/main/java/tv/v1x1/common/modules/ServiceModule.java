@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 /**
  * Created by cobi on 10/8/2016.
  */
-public abstract class ServiceModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> extends DefaultModule<T, U, V, W> {
+public abstract class ServiceModule<T extends GlobalConfiguration, U extends UserConfiguration> extends DefaultModule<T, U> {
     private final Collection<Service> services = new ConcurrentSkipListSet<>();
 
     protected void registerService(final Service service) {

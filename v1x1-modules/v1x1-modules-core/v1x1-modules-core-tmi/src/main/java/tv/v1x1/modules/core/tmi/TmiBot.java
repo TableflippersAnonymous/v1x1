@@ -146,7 +146,7 @@ public class TmiBot implements Runnable {
                 }
                 log("Init: Attempting disconnect");
                 disconnect();
-            } catch (final Exception e) {
+            } catch (final Throwable e) {
                 LOG.error("Exception while parsing TMI line", e);
             } finally {
                 log("Init: Attempting cleanup");
@@ -327,7 +327,7 @@ public class TmiBot implements Runnable {
             return;
         final Set<String> badges = privmsgCommand.getBadges().stream().map(MessageTaggedIrcStanza.Badge::name).collect(Collectors.toSet());
         badges.add("_DEFAULT_");
-        final List<Permission> permissions = tmiModule.getPermissions(channel.getTenant(), user.getGlobalUser(), channel.getId(), badges);
+        final List<Permission> permissions = tmiModule.getPermissions(channel.getChannelGroup().getTenant(), user.getGlobalUser(), channel.getId(), badges);
         final ChatMessage chatMessage = new ChatMessage(channel, user, privmsgCommand.getMessage(), permissions);
         event(new TwitchChatMessageEvent(module, chatMessage, privmsgCommand), parentSpan);
     }
@@ -432,7 +432,7 @@ public class TmiBot implements Runnable {
     }
 
     private TwitchChannel getChannel(final String id, final String displayName) {
-        return new TwitchChannel(id, tmiModule.getTenant(id), displayName);
+        return new TwitchChannel(id, tmiModule.getChannelGroup(id), displayName);
     }
 
     private void connect() throws IOException {

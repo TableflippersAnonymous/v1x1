@@ -111,12 +111,54 @@
   color: rgb(82, 160, 256);
 }
 
+.color-twitch {
+  color: #6441A4;
+}
 .btn-twitch {
   color: #fff;
   background-color: #6441A4;
   border-color: #6441A4;
 }
 a.btn-twitch:hover {
+  color: #fff;
+}
+
+.color-discord {
+  color: #7289DA;
+}
+.btn-discord {
+  color: #fff;
+  background-color: #7289DA;
+  border-color: #7289DA;
+}
+a.btn-discord:hover {
+  color: #fff;
+}
+
+.btn-slack {
+  color: #000;
+  background-color: #fff;
+  border-color: #000;
+}
+a.btn-slack:hover {
+  color: #000;
+}
+
+.btn-youtube {
+  color: #fff;
+  background-color: #ff0000;
+  border-color: #aa0000;
+}
+a.btn-youtube:hover {
+  color: #fff;
+}
+
+.btn-mixer {
+  color: #fff;
+  background-color: #006ac1;
+  border-color: #006ac1;
+}
+a.btn-mixer:hover {
   color: #fff;
 }
 

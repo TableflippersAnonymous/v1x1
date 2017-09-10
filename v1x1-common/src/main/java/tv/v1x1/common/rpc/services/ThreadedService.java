@@ -15,7 +15,7 @@ public abstract class ThreadedService<T extends Request, U extends Response<T>> 
     private final ExecutorService executorService = getModule().getInjector().getInstance(CurrentTraceContext.class)
             .executorService(Executors.newCachedThreadPool());
 
-    public ThreadedService(final Module<?, ?, ?, ?> module, final String serviceName, final Class<T> requestClass) {
+    public ThreadedService(final Module<?, ?> module, final String serviceName, final Class<T> requestClass) {
         super(module, serviceName, requestClass);
     }
 

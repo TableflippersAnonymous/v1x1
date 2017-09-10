@@ -5,7 +5,6 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.dto.db.TenantGroup;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.ops_tool.OpsTool;
 
@@ -53,12 +52,12 @@ public class LinkCommand extends Command {
         final String vgroup = args.get(1);
         final String pgroup = args.get(2);
         final Channel channel = chatMessage.getChannel();
-        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getPlatform(), search);
+        tenant = opsTool.getTenantByChannel(chatMessage.getChannel().getChannelGroup().getPlatform(), search);
         if(tenant == null) {
             opsTool.respond(channel, "I don't know about that channel");
             return;
         }
-        if(opsTool.linkGroup(channel, channel.getPlatform(), vgroup, pgroup)) {
+        if(opsTool.linkGroup(channel, channel.getChannelGroup().getPlatform(), vgroup, pgroup)) {
             opsTool.respond(channel, "Platform mapping created");
         } else {
             opsTool.respond(channel, "Group doesn't exist");

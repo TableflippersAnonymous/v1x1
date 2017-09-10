@@ -1,7 +1,7 @@
 package tv.v1x1.modules.core.cli;
 
 import com.google.inject.AbstractModule;
-import tv.v1x1.modules.core.cli.commands.TwitchIdsCommand;
+import tv.v1x1.modules.core.cli.commands.ChannelGroupsCommand;
 
 /**
  * Created by cobi on 3/4/2017.
@@ -9,6 +9,6 @@ import tv.v1x1.modules.core.cli.commands.TwitchIdsCommand;
 public class GuiceModule extends AbstractModule {
     @Override
     protected void configure() {
-        bind(TwitchIdsCommand.class);
+        bind(ChannelGroupsCommand.class);
     }
 }

@@ -3,7 +3,7 @@ package tv.v1x1.modules.core.api.resources.platform;
 import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
-import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.common.services.state.DiscordDisplayNameService;
 import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.dto.users.User;
@@ -25,12 +25,14 @@ import javax.ws.rs.core.MediaType;
 @Consumes(MediaType.APPLICATION_JSON)
 public class DisplayNameResource {
     private final TwitchDisplayNameService twitchDisplayNameService;
+    private final DiscordDisplayNameService discordDisplayNameService;
     private final DAOGlobalUser daoGlobalUser;
 
     @Inject
-    public DisplayNameResource(final TwitchDisplayNameService twitchDisplayNameService, final DAOManager daoManager) {
+    public DisplayNameResource(final TwitchDisplayNameService twitchDisplayNameService, final DiscordDisplayNameService discordDisplayNameService, final DAOGlobalUser daoGlobalUser) {
         this.twitchDisplayNameService = twitchDisplayNameService;
-        this.daoGlobalUser = daoManager.getDaoGlobalUser();
+        this.discordDisplayNameService = discordDisplayNameService;
+        this.daoGlobalUser = daoGlobalUser;
     }
 
     @Path("/twitch/user/by-username/{username}")
@@ -63,6 +65,36 @@ public class DisplayNameResource {
         }
     }
 
+    @Path("/discord/user/by-username/{username}")
+    @GET
+    public DisplayNameRecord getDiscordUserByUsername(@PathParam("username") final String username) {
+        try {
+            return displayNameRecordFromDiscordUser(discordDisplayNameService.getUserByUsername(username));
+        } catch (final NoSuchUserException e) {
+            throw new NotFoundException();
+        }
+    }
+
+    @Path("/discord/user/by-display-name/{display_name}")
+    @GET
+    public DisplayNameRecord getDiscordUserByDisplayName(@PathParam("display_name") final String displayName) {
+        try {
+            return displayNameRecordFromDiscordUser(discordDisplayNameService.getUserByDisplayName(displayName));
+        } catch (final NoSuchUserException e) {
+            throw new NotFoundException();
+        }
+    }
+
+    @Path("/discord/user/by-id/{id}")
+    @GET
+    public DisplayNameRecord getDiscordUserById(@PathParam("id") final String id) {
+        try {
+            return displayNameRecordFromDiscordUser(discordDisplayNameService.getUserByUserId(id));
+        } catch (final NoSuchUserException e) {
+            throw new NotFoundException();
+        }
+    }
+
     private DisplayNameRecord displayNameRecordFromTwitchUser(final User user) {
         return new DisplayNameRecord(
                 Platform.TWITCH,
@@ -70,6 +102,16 @@ public class DisplayNameResource {
                 user.getName(),
                 user.getDisplayName(),
                 daoGlobalUser.getOrCreate(Platform.TWITCH, String.valueOf(user.getId()), user.getDisplayName()).getId()
+        );
+    }
+
+    private DisplayNameRecord displayNameRecordFromDiscordUser(final tv.v1x1.common.services.discord.dto.user.User user) {
+        return new DisplayNameRecord(
+                Platform.DISCORD,
+                user.getId(),
+                user.getUsername() + "#" + user.getDiscriminator(),
+                user.getUsername(),
+                daoGlobalUser.getOrCreate(Platform.DISCORD, user.getId(), user.getUsername()).getId()
         );
     }
 }

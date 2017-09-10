@@ -17,10 +17,8 @@ import tv.v1x1.common.services.pubsub.TopicName;
 import tv.v1x1.modules.core.api.api.pubsub.events.ChatMessagePubSub;
 import tv.v1x1.modules.core.api.api.rest.Channel;
 import tv.v1x1.modules.core.api.api.rest.User;
-import tv.v1x1.modules.core.api.config.ApiChannelConfiguration;
 import tv.v1x1.modules.core.api.config.ApiGlobalConfiguration;
-import tv.v1x1.modules.core.api.config.ApiSettings;
-import tv.v1x1.modules.core.api.config.ApiTenantConfiguration;
+import tv.v1x1.modules.core.api.config.ApiUserConfiguration;
 
 import java.lang.invoke.MethodHandles;
 import java.util.stream.Collectors;
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 /**
  * Created by cobi on 10/24/2016.
  */
-public class ApiModule extends ServiceModule<ApiSettings, ApiGlobalConfiguration, ApiTenantConfiguration, ApiChannelConfiguration> {
+public class ApiModule extends ServiceModule<ApiGlobalConfiguration, ApiUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final ObjectMapper mapper = new ObjectMapper(new JsonFactory());
 
@@ -96,18 +94,13 @@ public class ApiModule extends ServiceModule<ApiSettings, ApiGlobalConfiguration
     protected void processChatMessageEvent(final ChatMessageEvent chatMessageEvent) {
         final TopicManager topicManager = getInjector().getInstance(TopicManager.class);
         final TopicName topic = new TopicName(
-                chatMessageEvent.getChatMessage().getChannel().getTenant().getId().getValue(),
+                chatMessageEvent.getChatMessage().getChannel().getChannelGroup().getTenant().getId().getValue(),
                 toDto(),
                 "chat");
         final ChatMessagePubSub chatMessagePubSub = new ChatMessagePubSub(
                 chatMessageEvent.getMessageId().getValue(),
                 chatMessageEvent.getFrom().getName(),
-                new Channel(
-                        chatMessageEvent.getChatMessage().getChannel().getTenant().getId().getValue(),
-                        chatMessageEvent.getChatMessage().getChannel().getPlatform(),
-                        chatMessageEvent.getChatMessage().getChannel().getDisplayName(),
-                        chatMessageEvent.getChatMessage().getChannel().getId()
-                ),
+                new Channel(chatMessageEvent.getChatMessage().getChannel()),
                 new User(
                         chatMessageEvent.getChatMessage().getSender().getGlobalUser().getId().getValue(),
                         chatMessageEvent.getChatMessage().getSender().getPlatform(),

@@ -7,18 +7,32 @@ import "Platform.proto";
 
 message Channel {
     required string id = 1;
-    required string displayName = 2;
+    required string display_name = 2;
+    required ChannelGroup channel_group = 3;
+}
+
+message ChannelGroup {
+    required string id = 1;
+    required string display_name = 2;
     required Platform platform = 3;
     required Tenant tenant = 4;
+    repeated ChannelGroupEntry entries = 5;
 }
 
 message Tenant {
     required UUID id = 1;
     repeated TenantEntry entries = 2;
+    required string display_name = 3;
 }
 
 message TenantEntry {
     required string id = 1;
     required Platform platform = 2;
     required string display_name = 3;
+    repeated ChannelGroupEntry entries = 4;
+}
+
+message ChannelGroupEntry {
+    required string id = 1;
+    required string display_name = 2;
 }

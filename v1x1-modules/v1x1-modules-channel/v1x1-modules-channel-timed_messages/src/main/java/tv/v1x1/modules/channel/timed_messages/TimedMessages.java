@@ -1,6 +1,5 @@
 package tv.v1x1.modules.channel.timed_messages;
 
-
 import com.google.common.primitives.Ints;
 import org.redisson.api.RMapCache;
 import org.redisson.client.codec.ByteArrayCodec;
@@ -17,10 +16,8 @@ import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.timed_messages.commands.TimerCommand;
-import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesChannelConfiguration;
 import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesGlobalConfiguration;
-import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesSettings;
-import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesTenantConfiguration;
+import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesUserConfiguration;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -30,8 +27,8 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Josh
  */
-    // TODO: Handle (soft) enable/disable of timers for offline strimmers
-public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSettings, TimedMessagesGlobalConfiguration, TimedMessagesTenantConfiguration, TimedMessagesChannelConfiguration> {
+// TODO: Handle (soft) enable/disable of timers for offline strimmers
+public class TimedMessages extends RegisteredThreadedModule<TimedMessagesGlobalConfiguration, TimedMessagesUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     static {
         Module module = new Module("timed_messages");
@@ -109,12 +106,12 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      * TODO: This should be taking in timer args instead of a Timer
      */
     public boolean createTimer(final Tenant tenant, final String name, final Timer timer) {
-        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesUserConfiguration config = getConfiguration(tenant);
         if(timer.getInterval() < 1000)
             throw new IllegalArgumentException("Refusing to create a timer with sub-second interval");
         final boolean success = config.addTimer(name, timer);
         if(success) {
-            getTenantConfigProvider().save(tenant, config);
+            getUserConfigProvider().save(tenant, config);
             unpauseTimer(tenant, name);
         }
         return success;
@@ -126,7 +123,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      * @return set of timer names
      */
     public Set<String> listTimers(final Tenant tenant) {
-        return getTenantConfiguration(tenant).getTimers().keySet();
+        return getConfiguration(tenant).getTimers().keySet();
     }
 
     /**
@@ -136,7 +133,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      * @return a Timer, or null if not found
      */
     public Timer getTimer(final Tenant tenant, final String timerName) {
-        return getTenantConfiguration(tenant).getTimers().get(timerName);
+        return getConfiguration(tenant).getTimers().get(timerName);
     }
 
     /**
@@ -147,13 +144,13 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      * @return true if successful; false if timer not found
      */
     public boolean rescheduleTimer(final Tenant tenant, final String timerName, final long interval) {
-        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesUserConfiguration config = getConfiguration(tenant);
         final Timer timer = config.getTimer(timerName);
         if(timer == null) return false;
         if(interval < 1000)
             throw new IllegalArgumentException("Refusing to create a timer with sub-second interval");
         timer.setInterval(interval);
-        getTenantConfigProvider().save(tenant, config);
+        getUserConfigProvider().save(tenant, config);
         if(timer.isEnabled()) {
             pauseTimer(new UUID(timer.getActiveTimer()));
             unpauseTimer(tenant, timerName);
@@ -169,12 +166,12 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      * @return true on success; false if timer doesn't exist or is already in state
      */
     public boolean enableTimer(final Tenant tenant, final String timerName, final boolean enabled) {
-        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesUserConfiguration config = getConfiguration(tenant);
         final Timer timer = config.getTimer(timerName);
         if(timer == null) return false;
         if(timer.isEnabled() == enabled) return false;
         timer.setEnabled(enabled);
-        getTenantConfigProvider().save(tenant, config);
+        getUserConfigProvider().save(tenant, config);
         if(enabled) {
             unpauseTimer(tenant, timerName);
         } else {
@@ -191,7 +188,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      * @return true if destroyed; false if it doesn't exist
      */
     public boolean destroyTimer(final Tenant tenant, final String timerName) {
-        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesUserConfiguration config = getConfiguration(tenant);
         final Timer t = config.getTimer(timerName);
         if(t == null) return false;
         final boolean success = config.delTimer(timerName);
@@ -199,23 +196,23 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
             final UUID activeTimer = t.getDtoActiveTimer();
             if(activeTimer.getValue() != null)
                 pauseTimer(activeTimer);
-            getTenantConfigProvider().save(tenant, config);
+            getUserConfigProvider().save(tenant, config);
         }
         return success;
     }
 
     public boolean addTimerEntry(final Tenant tenant, final String timerName, final String message) {
-        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesUserConfiguration config = getConfiguration(tenant);
         final Timer t = config.getTimer(timerName);
         if(t == null) return false;
         final boolean success = t.getEntries().add(new TimerEntry(message));
         if(success)
-            getTenantConfigProvider().save(tenant, config);
+            getUserConfigProvider().save(tenant, config);
         return success;
     }
 
     public int countMatchingTimerEntries(final Tenant tenant, final String timerName, final String message) {
-        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesUserConfiguration config = getConfiguration(tenant);
         final Timer t = config.getTimer(timerName);
         if(t == null) return -1;
         int found = 0;
@@ -230,7 +227,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
     }
 
     public TimerEntry removeTimerEntry(final Tenant tenant, final String timerName, final String message) {
-        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesUserConfiguration config = getConfiguration(tenant);
         final Timer t = config.getTimer(timerName);
         if(t == null) return null;
         boolean found = false;
@@ -245,7 +242,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         }
         if(found) {
             final TimerEntry entry = entries.remove(entryIdx);
-            getTenantConfigProvider().save(tenant, config);
+            getUserConfigProvider().save(tenant, config);
             return entry;
         }
         return null;
@@ -258,7 +255,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
      * @param timerName
      */
     public void unpauseTimer(final Tenant tenant, final String timerName) {
-        final TimedMessagesTenantConfiguration config = getTenantConfiguration(tenant);
+        final TimedMessagesUserConfiguration config = getConfiguration(tenant);
         final Timer t = config.getTimer(timerName);
         if(t == null) {
             LOG.warn("Asked to kick off a non-existing timer.");
@@ -270,7 +267,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
         ssc.scheduleRepeating(t.getInterval(), uuid, payload);
         if(!uuid.getValue().equals(t.getActiveTimer())) {
             t.setActiveTimer(uuid.getValue());
-            getTenantConfigProvider().save(tenant, config);
+            getUserConfigProvider().save(tenant, config);
         }
     }
 
@@ -296,12 +293,12 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesSetting
     }
 
     public boolean isEnabled(final Channel channel) {
-        return getTenantConfiguration(channel.getTenant()).isEnabled();
+        return getConfiguration(channel.getChannelGroup().getTenant()).isEnabled();
     }
 
     public boolean isStreaming(final Channel channel) {
-        if(!channel.getPlatform().equals(Platform.TWITCH))
-            throw new IllegalArgumentException("Requested platform doesn't support streaming: " + channel.getPlatform().name());
+        if(!channel.getChannelGroup().getPlatform().equals(Platform.TWITCH))
+            throw new IllegalArgumentException("Requested platform doesn't support streaming: " + channel.getChannelGroup().getPlatform().name());
         return (getTwitchApi().getStreams().getStream(channel.getId()).getStream() != null);
 
     }

@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component} from '@angular/core';
 import {V1x1Module} from "../../model/v1x1_module";
 import {Permission} from "../../model/v1x1_configuration_definition_field";
 import {V1x1ApiCache} from "../../services/api_cache";
@@ -6,16 +6,13 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
 import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
 import {V1x1Api} from "../../services/api";
 import {Observable} from "rxjs";
-import {V1x1Configuration} from "../../model/v1x1_configuration";
 import {V1x1GlobalState} from "../../services/global_state";
 
 @Component({
   selector: 'configuration-page',
   template: `<ngb-tabset class="tabs-left">
     <div *ngFor="let v1x1Module of v1x1Modules; let i = index">
-      <ngb-tab *ngIf="(v1x1Module.configurationDefinitionSet.global !== null && v1x1Module.configurationDefinitionSet.global.tenantPermission !== permissions.NONE)
-                   || (v1x1Module.configurationDefinitionSet.tenant !== null && v1x1Module.configurationDefinitionSet.tenant.tenantPermission !== permissions.NONE)
-                   || (v1x1Module.configurationDefinitionSet.channel !== null && v1x1Module.configurationDefinitionSet.channel.tenantPermission !== permissions.NONE)"
+      <ngb-tab *ngIf="v1x1Module.configurationDefinitionSet.user !== null && v1x1Module.configurationDefinitionSet.user?.tenantPermission !== permissions.NONE"
                [title]="v1x1Module.displayName + (v1x1Module.dirty(configurationSets[i]) ? '*' : '')">
         <template ngbTabContent>
           <configuration-module [(v1x1Module)]="v1x1Modules[i]" [(configurationSet)]="configurationSets[i]" [activeTenant]="activeTenantValue" *ngIf="configurationSets[i]"></configuration-module>
@@ -48,9 +45,8 @@ export class ConfigurationPageComponent {
     if(this.v1x1Modules === [] || this.activeTenantValue === null)
       return;
     Observable.forkJoin(this.v1x1Modules.map(
-      v1x1Module => this.api.getTenantConfiguration(this.activeTenantValue.id, v1x1Module.name)
-    )).map(configs => configs.map(config => new V1x1ConfigurationSet(new V1x1Configuration({}), config, new V1x1Configuration({}))))
-      .subscribe(configs => this.configurationSets = configs);
+      v1x1Module => this.api.getTenantConfigurationSet(this.activeTenantValue.id, v1x1Module.name)
+    )).subscribe(configs => this.configurationSets = configs);
   }
 
   debugConfig() {

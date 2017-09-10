@@ -3,15 +3,16 @@ package tv.v1x1.modules.core.api.resources.tenant;
 import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOJoinedTwitchChannel;
 import tv.v1x1.common.dao.DAOTenant;
+import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.db.JoinedTwitchChannel;
 import tv.v1x1.common.dto.db.Platform;
-import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.ApiModule;
 import tv.v1x1.modules.core.api.api.rest.ApiList;
 import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.rest.Channel;
+import tv.v1x1.modules.core.api.api.rest.ChannelGroup;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.ClientErrorException;
@@ -28,6 +29,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -64,34 +66,48 @@ public class ChannelsResource {
     @GET
     public ApiList<String> listPlatforms(@HeaderParam("Authorization") final String authorization,
                                          @PathParam("tenant_id") final String tenantId) {
-        final Tenant tenant = getDtoTenant(tenantId);
-        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
-        return new ApiList<>(new ArrayList<>(tenant.getEntries().stream().map(Tenant.Entry::getPlatform)
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.read");
+        return new ApiList<>(new ArrayList<>(daoTenant.getChannelGroups(tenant.toDB()).stream().map(tv.v1x1.common.dto.db.ChannelGroup::getPlatform)
                 .map(Platform::name).map(String::toLowerCase).collect(Collectors.toSet())));
     }
 
     @Path("/{platform}")
     @GET
-    public ApiList<String> listChannels(@HeaderParam("Authorization") final String authorization,
-                                        @PathParam("tenant_id") final String tenantId,
-                                        @PathParam("platform") final String platformStr) {
-        final Tenant tenant = getDtoTenant(tenantId);
-        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
+    public ApiList<String> listChannelGroups(@HeaderParam("Authorization") final String authorization,
+                                             @PathParam("tenant_id") final String tenantId,
+                                             @PathParam("platform") final String platformStr) {
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.read");
         final Platform platform = getDtoPlatform(platformStr);
-        return new ApiList<>(tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
-                .map(Tenant.Entry::getChannelId).collect(Collectors.toList()));
+        return new ApiList<>(daoTenant.getChannelGroups(tenant.toDB()).stream()
+                .filter(channelGroup -> channelGroup.getPlatform().equals(platform))
+                .map(tv.v1x1.common.dto.db.ChannelGroup::getId).collect(Collectors.toList()));
     }
 
-    @Path("/{platform}/{channel_id}")
+    @Path("/{platform}/{channel_group_id}")
+    @GET
+    public ChannelGroup getChannelGroup(@HeaderParam("Authorization") final String authorization,
+                                        @PathParam("tenant_id") final String tenantId,
+                                        @PathParam("platform") final String platformStr,
+                                        @PathParam("channel_group_id") final String channelGroupId) {
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.read");
+        final Platform platform = getDtoPlatform(platformStr);
+        return getDtoChannelGroup(tenant, platform, channelGroupId);
+    }
+
+    @Path("/{platform}/{channel_group_id}/{channel_id}")
     @GET
     public Channel getChannel(@HeaderParam("Authorization") final String authorization,
                               @PathParam("tenant_id") final String tenantId,
                               @PathParam("platform") final String platformStr,
+                              @PathParam("channel_group_id") final String channelGroupId,
                               @PathParam("channel_id") final String channelId) {
-        final Tenant tenant = getDtoTenant(tenantId);
-        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.read");
         final Platform platform = getDtoPlatform(platformStr);
-        return getDtoChannel(tenant, platform, channelId);
+        return getDtoChannel(tenant, platform, channelGroupId, channelId);
     }
 
     @Path("/{platform}/{channel_id}")
@@ -101,8 +117,8 @@ public class ChannelsResource {
                                @PathParam("platform") final String platform,
                                @PathParam("channel_id") final String channelId,
                                final Channel channel) {
-        final Tenant tenant = getDtoTenant(tenantId);
-        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.link");
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.link");
         return null; // TODO I have no idea what I'm doing
     }
 
@@ -113,77 +129,67 @@ public class ChannelsResource {
         return null; //TODO
     }
 
-    @Path("/{platform}/{channel_id}/state")
+    @Path("/{platform}/{channel_group_id}/state")
     @GET
     public ApiPrimitive<String> getState(@HeaderParam("Authorization") final String authorization,
                                          @PathParam("tenant_id") final String tenantId,
                                          @PathParam("platform") final String platformStr,
-                                         @PathParam("channel_id") final String channelId) {
-        final Tenant tenant = getDtoTenant(tenantId);
-        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.read");
+                                         @PathParam("channel_group_id") final String channelGroupId) {
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.read");
         final Platform platform = getDtoPlatform(platformStr);
-        final Channel channel = getDtoChannel(tenant, platform, channelId);
+        final ChannelGroup channelGroup = getDtoChannelGroup(tenant, platform, channelGroupId);
         if(platform != Platform.TWITCH)
             throw new NotFoundException();
-        final JoinedTwitchChannel joinedTwitchChannel = daoJoinedTwitchChannel.get(channel.getChannelId());
+        final JoinedTwitchChannel joinedTwitchChannel = daoJoinedTwitchChannel.get(channelGroup.getId());
         if(joinedTwitchChannel == null)
             return new ApiPrimitive<>("PARTED");
         else
             return new ApiPrimitive<>("JOINED");
     }
 
-    @Path("/{platform}/{channel_id}/state")
+    @Path("/{platform}/{channel_group_id}/state")
     @PUT
     public ApiPrimitive<String> putState(@HeaderParam("Authorization") final String authorization,
                                          @PathParam("tenant_id") final String tenantId,
                                          @PathParam("platform") final String platformStr,
-                                         @PathParam("channel_id") final String channelId,
+                                         @PathParam("channel_group_id") final String channelGroupId,
                                          final ApiPrimitive<String> newState) {
-        final Tenant tenant = getDtoTenant(tenantId);
-        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.write");
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.write");
         final Platform platform = getDtoPlatform(platformStr);
-        final Channel channel = getDtoChannel(tenant, platform, channelId);
+        final ChannelGroup channelGroup = getDtoChannelGroup(tenant, platform, channelGroupId);
         if(platform != Platform.TWITCH)
             throw new NotFoundException();
         if(newState.getValue().equals("JOINED"))
-            daoJoinedTwitchChannel.join(channel.getChannelId());
+            daoJoinedTwitchChannel.join(channelGroup.getId());
         else if(newState.getValue().equals("PARTED"))
-            daoJoinedTwitchChannel.delete(channel.getChannelId());
+            daoJoinedTwitchChannel.delete(channelGroup.getId());
         else
             throw new ClientErrorException(Response.status(422).build());
-        final JoinedTwitchChannel joinedTwitchChannel = daoJoinedTwitchChannel.get(channel.getChannelId());
+        final JoinedTwitchChannel joinedTwitchChannel = daoJoinedTwitchChannel.get(channelGroup.getId());
         if(joinedTwitchChannel == null)
             return new ApiPrimitive<>("PARTED");
         else
             return new ApiPrimitive<>("JOINED");
     }
 
-    @Path("/{platform}/{channel_id}/message")
+    @Path("/{platform}/{channel_group_id}/{channel_id}/message")
     @POST
     public Response postMessage(@HeaderParam("Authorization") final String authorization,
                                 @PathParam("tenant_id") final String tenantId,
                                 @PathParam("platform") final String platformStr,
+                                @PathParam("channel_group_id") final String channelGroupId,
                                 @PathParam("channel_id") final String channelId,
                                 final ApiPrimitive<String> message) {
-        final Tenant tenant = getDtoTenant(tenantId);
-        authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.tenants.message");
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.message");
         final Platform platform = getDtoPlatform(platformStr);
-        final tv.v1x1.common.dto.core.Channel coreChannel = getCoreChannel(tenant, platform, channelId);
-        Chat.message(module, coreChannel, message.getValue());
+        final Optional<tv.v1x1.common.dto.core.Channel> coreChannel = tenant.getChannel(platform, channelGroupId, channelId);
+        if(!coreChannel.isPresent())
+            throw new NotFoundException();
+        Chat.message(module, coreChannel.get(), message.getValue());
         return Response.ok().build();
-    }
-
-    private Tenant getDtoTenant(final String tenantIdStr) {
-        final UUID tenantId;
-        try {
-            tenantId = UUID.fromString(tenantIdStr);
-        } catch (IllegalArgumentException e) {
-            throw new NotFoundException("Tenant ID is invalid");
-        }
-        final Tenant tenant = daoTenant.getById(tenantId);
-        if(tenant == null)
-            throw new NotFoundException("Tenant not found");
-        return tenant;
     }
 
     private Platform getDtoPlatform(final String platformStr) {
@@ -194,17 +200,24 @@ public class ChannelsResource {
         }
     }
 
-    private Channel getDtoChannel(final Tenant tenant, final Platform platform, final String channelId) {
-        final Tenant.Entry channelEntry = tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
-                .filter(entry -> entry.getChannelId().equals(channelId)).findFirst()
-                .orElseThrow(() -> new NotFoundException("Channel not found"));
-        return new Channel(tenant.getId(), channelEntry.getPlatform(), channelEntry.getDisplayName(), channelEntry.getChannelId());
+    private Tenant getTenant(final String tenantId) {
+        final tv.v1x1.common.dto.db.Tenant dbTenant = daoTenant.getById(UUID.fromString(tenantId));
+        if(dbTenant == null)
+            throw new NotFoundException();
+        return dbTenant.toCore(daoTenant);
     }
 
-    private tv.v1x1.common.dto.core.Channel getCoreChannel(final Tenant tenant, final Platform platform, final String channelId) {
-        final Tenant.Entry channelEntry = tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
-                .filter(entry -> entry.getChannelId().equals(channelId)).findFirst()
-                .orElseThrow(() -> new NotFoundException("Channel not found"));
-        return channelEntry.toCore(tenant.toCore());
+    private ChannelGroup getDtoChannelGroup(final Tenant tenant, final Platform platform, final String channelGroupId) {
+        final Optional<tv.v1x1.common.dto.core.ChannelGroup> channelGroup = tenant.getChannelGroup(platform, channelGroupId);
+        if(!channelGroup.isPresent())
+            throw new NotFoundException();
+        return new ChannelGroup(channelGroup.get());
+    }
+
+    private Channel getDtoChannel(final Tenant tenant, final Platform platform, final String channelGroupId, final String channelId) {
+        final Optional<tv.v1x1.common.dto.core.Channel> channel = tenant.getChannel(platform, channelGroupId, channelId);
+        if(!channel.isPresent())
+            throw new NotFoundException();
+        return new Channel(channel.get());
     }
 }

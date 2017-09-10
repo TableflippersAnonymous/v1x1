@@ -21,7 +21,9 @@ import java.util.Map;
 @DisplayName("Twitch Global")
 @Description("Global configuration for TMI")
 @Version(0)
-public class TmiGlobalConfiguration implements GlobalConfiguration {
+public class TmiGlobalConfiguration extends GlobalConfiguration {
+    private int maxConnections = 20;
+
     @DisplayName("Global Bots:")
     @Description("These are the valid global bots and their OAuth tokens")
     @Type(ConfigType.STRING_MAP)
@@ -65,5 +67,15 @@ public class TmiGlobalConfiguration implements GlobalConfiguration {
 
     public void setDefaultUsername(final String defaultUsername) {
         this.defaultUsername = defaultUsername;
+    }
+
+    @JsonProperty("max_connections")
+    public int getMaxConnections() {
+        return maxConnections;
+    }
+
+    @JsonProperty("max_connections")
+    public void setMaxConnections(final int maxConnections) {
+        this.maxConnections = maxConnections;
     }
 }

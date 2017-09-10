@@ -50,7 +50,7 @@ public class OpsToolTenantIdCommand extends Command {
                 channelId = displayNameService.getIdFromDisplayName(chatMessage.getChannel(), args.get(0));
             else
                 channelId = chatMessage.getChannel().getId();
-            final Tenant t = opsTool.getTenantByChannel(chatMessage.getChannel().getPlatform(), channelId);
+            final Tenant t = opsTool.getTenantByChannel(chatMessage.getChannel().getChannelGroup().getPlatform(), channelId);
             if (t == null)
                 opsTool.respond(chatMessage.getChannel(), "I don't know about that channel");
             else

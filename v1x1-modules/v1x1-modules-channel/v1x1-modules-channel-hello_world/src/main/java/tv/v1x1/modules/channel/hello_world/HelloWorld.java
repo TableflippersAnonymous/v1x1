@@ -21,7 +21,7 @@ import java.lang.invoke.MethodHandles;
 /**
  * Created by Josh on 2016-10-06.
  */
-public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlobalConfiguration, HelloWorldTenantConfiguration, HelloWorldChannelConfiguration> {
+public class HelloWorld extends DefaultModule<HelloWorldGlobalConfiguration, HelloWorldUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     static {
         final Module module = new Module("hello_world");
@@ -57,7 +57,7 @@ public class HelloWorld extends DefaultModule<HelloWorldSettings, HelloWorldGlob
     protected void processChatMessageEvent(final ChatMessageEvent chatMessageEvent) {
         super.processChatMessageEvent(chatMessageEvent);
         LOG.debug("Got chat message: {}", chatMessageEvent.getChatMessage().getText());
-        if(!getTenantConfiguration(chatMessageEvent.getChatMessage().getChannel().getTenant()).isEnabled())
+        if(!getConfiguration(chatMessageEvent.getChatMessage().getChannel()).isEnabled())
             return;
         delegator.handleChatMessage(chatMessageEvent);
     }

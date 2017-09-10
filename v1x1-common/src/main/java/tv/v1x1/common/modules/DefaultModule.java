@@ -1,6 +1,32 @@
 package tv.v1x1.common.modules;
 
-import tv.v1x1.common.dto.messages.events.*;
+import tv.v1x1.common.dto.messages.events.ChannelConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.ChatJoinEvent;
+import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
+import tv.v1x1.common.dto.messages.events.ChatPartEvent;
+import tv.v1x1.common.dto.messages.events.ConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.DiscordVoiceStateEvent;
+import tv.v1x1.common.dto.messages.events.GlobalConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.PrivateMessageEvent;
+import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
+import tv.v1x1.common.dto.messages.events.TenantConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotChannelStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotConnectedEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotGlobalStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChannelEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChannelUsersEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatJoinEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatPartEvent;
+import tv.v1x1.common.dto.messages.events.TwitchHostEvent;
+import tv.v1x1.common.dto.messages.events.TwitchPingEvent;
+import tv.v1x1.common.dto.messages.events.TwitchPrivateMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchRawMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchReconnectEvent;
+import tv.v1x1.common.dto.messages.events.TwitchRoomStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchTimeoutEvent;
+import tv.v1x1.common.dto.messages.events.TwitchUserEvent;
+import tv.v1x1.common.dto.messages.events.TwitchUserModChangeEvent;
 import tv.v1x1.common.dto.messages.requests.SendMessageRequest;
 import tv.v1x1.common.dto.messages.responses.ModuleShutdownResponse;
 import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
@@ -8,7 +34,7 @@ import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
 /**
  * Created by cobi on 10/6/16.
  */
-public abstract class DefaultModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> extends EasyThreadedModule<T, U, V, W> {
+public abstract class DefaultModule<T extends GlobalConfiguration, U extends UserConfiguration> extends EasyThreadedModule<T, U> {
     @Override
     protected void processChatMessageEvent(final ChatMessageEvent chatMessageEvent) {
         /* No action */
@@ -157,6 +183,11 @@ public abstract class DefaultModule<T extends ModuleSettings, U extends GlobalCo
 
     @Override
     protected void processChannelConfigChangeEvent(final ChannelConfigChangeEvent event) {
+        /* No action */
+    }
+
+    @Override
+    protected void processDiscordVoiceStateEvent(final DiscordVoiceStateEvent event) {
         /* No action */
     }
 }

@@ -10,7 +10,7 @@ import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.User;
-import tv.v1x1.common.dto.db.ChannelPlatformMapping;
+import tv.v1x1.common.dto.db.ChannelGroupPlatformMapping;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.TenantConfiguration;
 import tv.v1x1.common.dto.db.TenantGroup;
@@ -18,10 +18,8 @@ import tv.v1x1.common.modules.RegisteredThreadedModule;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.modules.channel.ops_tool.commands.OpsToolCommand;
-import tv.v1x1.modules.channel.ops_tool.config.OpsToolChannelConfiguration;
 import tv.v1x1.modules.channel.ops_tool.config.OpsToolGlobalConfiguration;
-import tv.v1x1.modules.channel.ops_tool.config.OpsToolSettings;
-import tv.v1x1.modules.channel.ops_tool.config.OpsToolTenantConfiguration;
+import tv.v1x1.modules.channel.ops_tool.config.OpsToolUserConfiguration;
 
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
@@ -31,7 +29,7 @@ import java.util.UUID;
 /**
  * @author Josh
  */
-public class OpsTool extends RegisteredThreadedModule<OpsToolSettings, OpsToolGlobalConfiguration, OpsToolTenantConfiguration, OpsToolChannelConfiguration> {
+public class OpsTool extends RegisteredThreadedModule<OpsToolGlobalConfiguration, OpsToolUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static Permission GENERAL_PERM = new Permission("opstool.use");
     /*pkg-private*/ CommandDelegator delegator;
@@ -67,7 +65,7 @@ public class OpsTool extends RegisteredThreadedModule<OpsToolSettings, OpsToolGl
         if(search.equals("__GLOBAL_TENANT__"))
             return DAOTenantGroup.GLOBAL_TENANT;
         final tv.v1x1.common.dto.db.Tenant t = getDaoManager().getDaoTenant().getByChannel(platform, search);
-        return (t == null ? null : t.toCore());
+        return (t == null ? null : t.toCore(getDaoManager().getDaoTenant()));
     }
 
     public GlobalUser getUser(final Platform platform, final String id) {
@@ -82,7 +80,7 @@ public class OpsTool extends RegisteredThreadedModule<OpsToolSettings, OpsToolGl
     }
 
     public TenantConfiguration getTenantConfiguration(final String module, final Channel channel) {
-        return getDaoManager().getDaoTenantConfiguration().get(new Module(module), channel.getTenant());
+        return getDaoManager().getDaoTenantConfiguration().get(new Module(module), channel.getChannelGroup().getTenant());
 
     }
 
@@ -141,20 +139,20 @@ public class OpsTool extends RegisteredThreadedModule<OpsToolSettings, OpsToolGl
     }
 
     public boolean linkGroup(final Channel c, final Platform platform, final String vgroup, final String pgroup) {
-        final TenantGroup group = groupByName(c.getTenant(), vgroup);
+        final TenantGroup group = groupByName(c.getChannelGroup().getTenant(), vgroup);
         if(group == null) return false;
-        getDaoManager().getDaoTenantGroup().setChannelPlatformMapping(platform, c.getId(), pgroup, group);
+        getDaoManager().getDaoTenantGroup().setChannelGroupPlatformMapping(platform, c.getId(), pgroup, group);
         return true;
     }
 
     public boolean clearLink(final Channel c, final Platform platform, final String vgroup, final String pgroup) {
-        final TenantGroup group = groupByName(c.getTenant(), vgroup);
+        final TenantGroup group = groupByName(c.getChannelGroup().getTenant(), vgroup);
         if(group == null) return false;
-        getDaoManager().getDaoTenantGroup().clearChannelPlatformMapping(platform, c.getId(), pgroup);
+        getDaoManager().getDaoTenantGroup().clearChannelGroupPlatformMapping(platform, c.getId(), pgroup);
         return true;
     }
 
-    public ChannelPlatformMapping getLink(final Channel c, final String pgroup) {
-        return getDaoManager().getDaoTenantGroup().getChannelPlatformMapping(c.getPlatform(), c.getId(), pgroup);
+    public ChannelGroupPlatformMapping getLink(final Channel c, final String pgroup) {
+        return getDaoManager().getDaoTenantGroup().getChannelGroupPlatformMapping(c.getChannelGroup().getPlatform(), c.getId(), pgroup);
     }
 }

@@ -8,12 +8,14 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tv.v1x1.common.dto.core.*;
+import tv.v1x1.common.dto.core.ChannelGroup;
 import tv.v1x1.common.dto.core.GlobalUser;
+import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
-import tv.v1x1.common.dto.db.*;
+import tv.v1x1.common.dto.db.JoinedTwitchChannel;
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.modules.ServiceModule;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
@@ -28,14 +30,22 @@ import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
  * Created by cobi on 10/8/2016.
  */
-public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration, TmiTenantConfiguration, TmiChannelConfiguration> {
+public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final UUID SCHEDULER_UPDATE_CHANNELS = new UUID(java.util.UUID.nameUUIDFromBytes("Module|TMI|UpdateChannels".getBytes()));
 
@@ -110,7 +120,7 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                     public Tenant load(final String s) throws Exception {
                         try {
                             LOG.debug("Loading tenant for {}", s);
-                            return getDaoManager().getDaoTenant().getOrCreate(Platform.TWITCH, s, null).toCore();
+                            return getDaoManager().getDaoTenant().getOrCreate(Platform.TWITCH, s, s + ":main", null).toCore(getDaoManager().getDaoTenant());
                         } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
@@ -175,10 +185,10 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         channelDistributor = getLoadBalancingDistributor("/v1x1/tmi/channels", getGlobalConfiguration().getConnectionsPerChannel());
         channelDistributor.addListener(new LoadBalancingDistributor.Listener() {
             @Override
-            public void notify(final UUID instanceId, final Set<String> entries) {
+            public void notify(final UUID instanceId, final Map<String, Integer> entries) {
                 if (getInstanceId().equals(instanceId.getValue())) {
                     try {
-                        setChannels(entries);
+                        setChannels(entries.keySet());
                     } catch (IOException | InterruptedException e) {
                         e.printStackTrace();
                         throw new RuntimeException(e);
@@ -267,6 +277,10 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
         }
     }
 
+    ChannelGroup getChannelGroup(final String id) {
+        return getTenant(id).getChannelGroup(Platform.TWITCH, id).get();
+    }
+
     List<Permission> getPermissions(final Tenant tenant, final GlobalUser globalUser, final String channelId, final Set<String> badges) {
         try {
             return permissionCache.get(new PermissionCacheKey(tenant, globalUser, channelId, badges));
@@ -289,8 +303,8 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
             if (bots.containsKey(channelId))
                 return;
             final Tenant tenant = getTenant(channelId);
-            LOG.debug("Getting tenant configuration for {}", channel.getDisplayName());
-            final TmiTenantConfiguration tenantConfiguration = getTenantConfiguration(tenant);
+            LOG.debug("Getting tenant configuration for {}/{}", channel.getDisplayName(), tenant);
+            final TmiUserConfiguration tenantConfiguration = getConfiguration(tenant.getChannel(Platform.TWITCH, channelId, channelId + ":main").get());
             final String oauthToken;
             String username = tenantConfiguration.getBotName();
             if (tenantConfiguration.isCustomBot()) {
@@ -309,10 +323,10 @@ public class TmiModule extends ServiceModule<TmiSettings, TmiGlobalConfiguration
                 if (oldTmiBot != null)
                     oldTmiBot.shutdown();
             } catch (final IOException e) {
-                e.printStackTrace();
+                LOG.warn("IOException", e);
             }
         } catch (final Exception e) {
-            e.printStackTrace();
+            LOG.warn("Exception", e);
             throw new RuntimeException(e);
         }
     }

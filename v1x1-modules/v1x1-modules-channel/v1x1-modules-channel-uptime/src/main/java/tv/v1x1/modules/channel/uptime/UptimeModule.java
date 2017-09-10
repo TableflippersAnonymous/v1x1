@@ -18,7 +18,7 @@ import java.time.Instant;
 /**
  * @author Josh
  */
-public class UptimeModule extends RegisteredThreadedModule<UptimeModuleSettings, UptimeModuleGlobalConfiguration, UptimeModuleTenantConfiguration, UptimeModuleChannelConfiguration> {
+public class UptimeModule extends RegisteredThreadedModule<UptimeModuleGlobalConfiguration, UptimeModuleUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     static {
@@ -32,7 +32,7 @@ public class UptimeModule extends RegisteredThreadedModule<UptimeModuleSettings,
     }
 
     private TwitchApi api;
-    private CommandDelegator delegator = new CommandDelegator("!");
+    private final CommandDelegator delegator = new CommandDelegator("!");
 
     @Override
     public String getName() {
@@ -62,16 +62,12 @@ public class UptimeModule extends RegisteredThreadedModule<UptimeModuleSettings,
     }
 
     private boolean isEnabled(final Channel channel) {
-        if(getChannelConfiguration(channel).isOverridden()) {
-            return getChannelConfiguration(channel).isEnabled();
-        } else {
-            return getTenantConfiguration(channel.getTenant()).isEnabled();
-        }
+        return getConfiguration(channel).isEnabled();
     }
 
     public class UptimeListener implements EventListener {
         @EventHandler
-        public void onChatMessage(ChatMessageEvent ev) {
+        public void onChatMessage(final ChatMessageEvent ev) {
             if(isEnabled(ev.getChatMessage().getChannel()))
                 delegator.handleChatMessage(ev);
         }

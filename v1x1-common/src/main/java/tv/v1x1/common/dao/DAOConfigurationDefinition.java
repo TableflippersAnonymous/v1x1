@@ -7,9 +7,8 @@ import com.datastax.driver.mapping.annotations.Accessor;
 import com.datastax.driver.mapping.annotations.Query;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import tv.v1x1.common.dto.db.ChannelConfigurationDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
-import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
+import tv.v1x1.common.dto.db.UserConfigurationDefinition;
 
 /**
  * Created by cobi on 10/24/2016.
@@ -17,8 +16,7 @@ import tv.v1x1.common.dto.db.TenantConfigurationDefinition;
 @Singleton
 public class DAOConfigurationDefinition {
     private final Mapper<GlobalConfigurationDefinition> globalMapper;
-    private final Mapper<TenantConfigurationDefinition> tenantMapper;
-    private final Mapper<ChannelConfigurationDefinition> channelMapper;
+    private final Mapper<UserConfigurationDefinition> userMapper;
     private final ConfigurationDefinitionAccessor accessor;
 
     @Accessor
@@ -26,18 +24,14 @@ public class DAOConfigurationDefinition {
         @Query("SELECT * FROM global_configuration_definition")
         Result<GlobalConfigurationDefinition> allGlobal();
 
-        @Query("SELECT * FROM tenant_configuration_definition")
-        Result<TenantConfigurationDefinition> allTenant();
-
-        @Query("SELECT * FROM channel_configuration_definition")
-        Result<ChannelConfigurationDefinition> allChannel();
+        @Query("SELECT * FROM user_configuration_definition")
+        Result<UserConfigurationDefinition> allUser();
     }
 
     @Inject
     public DAOConfigurationDefinition(final MappingManager mappingManager) {
         globalMapper = mappingManager.mapper(GlobalConfigurationDefinition.class);
-        tenantMapper = mappingManager.mapper(TenantConfigurationDefinition.class);
-        channelMapper = mappingManager.mapper(ChannelConfigurationDefinition.class);
+        userMapper = mappingManager.mapper(UserConfigurationDefinition.class);
         accessor = mappingManager.createAccessor(ConfigurationDefinitionAccessor.class);
     }
 
@@ -45,24 +39,16 @@ public class DAOConfigurationDefinition {
         return accessor.allGlobal();
     }
 
-    public Iterable<TenantConfigurationDefinition> getAllTenant() {
-        return accessor.allTenant();
-    }
-
-    public Iterable<ChannelConfigurationDefinition> getAllChannel() {
-        return accessor.allChannel();
+    public Iterable<UserConfigurationDefinition> getAllUser() {
+        return accessor.allUser();
     }
 
     public GlobalConfigurationDefinition getGlobal(final String module) {
         return globalMapper.get(module);
     }
 
-    public TenantConfigurationDefinition getTenant(final String module) {
-        return tenantMapper.get(module);
-    }
-
-    public ChannelConfigurationDefinition getChannel(final String module) {
-        return channelMapper.get(module);
+    public UserConfigurationDefinition getUser(final String module) {
+        return userMapper.get(module);
     }
 
     public void put(final GlobalConfigurationDefinition globalConfigurationDefinition) {
@@ -71,15 +57,9 @@ public class DAOConfigurationDefinition {
             globalMapper.save(globalConfigurationDefinition);
     }
 
-    public void put(final TenantConfigurationDefinition tenantConfigurationDefinition) {
-        final TenantConfigurationDefinition oldTenantConfigurationDefinition = getTenant(tenantConfigurationDefinition.getName());
-        if(oldTenantConfigurationDefinition == null || oldTenantConfigurationDefinition.getVersion() <= tenantConfigurationDefinition.getVersion())
-            tenantMapper.save(tenantConfigurationDefinition);
-    }
-
-    public void put(final ChannelConfigurationDefinition channelConfigurationDefinition) {
-        final ChannelConfigurationDefinition oldChannelConfigurationDefinition = getChannel(channelConfigurationDefinition.getName());
-        if(oldChannelConfigurationDefinition == null || oldChannelConfigurationDefinition.getVersion() <= oldChannelConfigurationDefinition.getVersion())
-            channelMapper.save(channelConfigurationDefinition);
+    public void put(final UserConfigurationDefinition userConfigurationDefinition) {
+        final UserConfigurationDefinition oldUserConfigurationDefinition = getUser(userConfigurationDefinition.getName());
+        if(oldUserConfigurationDefinition == null || oldUserConfigurationDefinition.getVersion() <= userConfigurationDefinition.getVersion())
+            userMapper.save(userConfigurationDefinition);
     }
 }

@@ -9,10 +9,8 @@ import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.modules.channel.factoids.commands.FactCommand;
-import tv.v1x1.modules.channel.factoids.config.FactoidsChannelConfiguration;
 import tv.v1x1.modules.channel.factoids.config.FactoidsGlobalConfiguration;
-import tv.v1x1.modules.channel.factoids.config.FactoidsModuleSettings;
-import tv.v1x1.modules.channel.factoids.config.FactoidsTenantConfiguration;
+import tv.v1x1.modules.channel.factoids.config.FactoidsUserConfiguration;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +18,7 @@ import java.util.Set;
 /**
  * @author Josh
  */
-public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSettings, FactoidsGlobalConfiguration, FactoidsTenantConfiguration, FactoidsChannelConfiguration> {
+public class FactoidsModule extends RegisteredThreadedModule<FactoidsGlobalConfiguration, FactoidsUserConfiguration> {
     static {
         final Module module = new Module("factoids");
         I18n.registerDefault(module, "help.blurb", "Factoids are little bits of text you can call upon as a custom command");
@@ -74,11 +72,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
     }
 
     public boolean isEnabled(final Channel channel) {
-        if(getChannelConfiguration(channel).isOverridden()) {
-            return getChannelConfiguration(channel).isEnabled();
-        } else {
-            return getTenantConfiguration(channel.getTenant()).isEnabled();
-        }
+        return getConfiguration(channel).isEnabled();
     }
 
     /**
@@ -122,19 +116,19 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
     }
 
     public Factoid addFact(final Tenant tenant, final String id, final Factoid fact) {
-        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        final FactoidsUserConfiguration config = getConfiguration(tenant);
         config.add(id, fact);
-        getTenantConfigProvider().save(tenant, config);
+        getUserConfigProvider().save(tenant, config);
         return fact;
     }
 
     public boolean hideFact(final Tenant tenant, final String id, final boolean hidden) {
-        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        final FactoidsUserConfiguration config = getConfiguration(tenant);
         final Factoid fact = config.chaseDownById(id);
         if(fact == null)
             return false;
         fact.setHidden(hidden);
-        getTenantConfigProvider().save(tenant, config);
+        getUserConfigProvider().save(tenant, config);
         return true;
     }
 
@@ -145,10 +139,10 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @return
      */
     public Factoid delFact(final Tenant tenant, final String id) {
-        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        final FactoidsUserConfiguration config = getConfiguration(tenant);
         Factoid fact = config.del(id);
         if(fact != null) {
-            getTenantConfigProvider().save(tenant, config);
+            getUserConfigProvider().save(tenant, config);
             pruneAliases(tenant, id);
         }
         return fact;
@@ -161,7 +155,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @return
      */
     public Factoid getFact(final Tenant tenant, final String id) {
-        return getTenantConfiguration(tenant).chaseDownById(id);
+        return getConfiguration(tenant).chaseDownById(id);
     }
 
     /**
@@ -171,7 +165,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @return
      */
     public Factoid getFactDirectly(final Tenant tenant, final String id) {
-        return getTenantConfiguration(tenant).getById(id);
+        return getConfiguration(tenant).getById(id);
     }
 
     /**
@@ -180,7 +174,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @return all facts
      */
     public Set<Map.Entry<String,Factoid>> getFacts(final Tenant tenant) {
-        return getTenantConfiguration(tenant).all();
+        return getConfiguration(tenant).all();
     }
 
     /**
@@ -189,7 +183,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @param id
      */
     public void pruneAliases(final Tenant tenant, final String id) {
-        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        final FactoidsUserConfiguration config = getConfiguration(tenant);
         for(Map.Entry<String,Factoid> fact : config.all()) {
             if(!fact.getValue().isAlias()) continue;
             if(fact.getValue().getData().equals(id)) delFact(tenant, fact.getKey());
@@ -201,7 +195,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @param tenant
      */
     public void pruneAliases(final Tenant tenant) {
-        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        final FactoidsUserConfiguration config = getConfiguration(tenant);
         for(Map.Entry<String, Factoid> fact : config.all()) {
             if(fact.getValue().isAlias()) {
                 final Factoid target = config.getById(fact.getValue().getData());
@@ -216,7 +210,7 @@ public class FactoidsModule extends RegisteredThreadedModule<FactoidsModuleSetti
      * @param tenant
      */
     public void pruneBlanks(final Tenant tenant) {
-        final FactoidsTenantConfiguration config = getTenantConfiguration(tenant);
+        final FactoidsUserConfiguration config = getConfiguration(tenant);
         for(Map.Entry<String, Factoid> fact : config.all()) {
             if(fact.getValue().getData() == null)
                 delFact(tenant, fact.getKey());

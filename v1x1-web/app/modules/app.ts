@@ -44,6 +44,9 @@ import {NavRouterComponent} from "../components/nav/nav_router";
 import {UrlId} from "../services/url_id";
 import {V1x1PubSub} from "../services/pubsub";
 import {V1x1WebInfo} from "../services/web_info";
+import {ConfigurationChannelGroupComponent} from "../components/configuration/channel_group";
+import {PermissionsMappingComponent} from "../components/permissions/mapping";
+import {PermissionsGroupMappingComponent} from "../components/permissions/group_mapping";
 
 /**
  * <welcome-page [loggedIn]="loggedIn"></welcome-page>
@@ -82,6 +85,10 @@ const routes: Routes = [
           {
             path: 'groups',
             component: PermissionsGroupsComponent
+          },
+          {
+            path: 'mapping',
+            component: PermissionsMappingComponent
           }
         ]
       },
@@ -105,7 +112,7 @@ const routes: Routes = [
     RouterModule.forRoot(routes, { useHash: true })
   ],
   declarations: [
-    AppComponent, ConfigurationPageComponent, ConfigurationModuleComponent,
+    AppComponent, ConfigurationPageComponent, ConfigurationModuleComponent, ConfigurationChannelGroupComponent,
     ConfigurationScopeComponent, ConfigurationFieldComponent, ConfigurationFieldValueComponent,
     ConfigurationFieldValueBooleanComponent, ConfigurationFieldValueBotNameComponent, ConfigurationFieldValueComplexComponent,
     ConfigurationFieldValueComplexListComponent, ConfigurationFieldValueComplexStringMapComponent, ConfigurationFieldValueCredentialComponent,
@@ -114,7 +121,7 @@ const routes: Routes = [
     ConfigurationFieldValueUserListComponent,
     TopNavComponent, TopNavEntryComponent, UserDropdownNavComponent, TenantDropdownNavComponent, NavRouterComponent,
     DashboardPageComponent, HelpPageComponent, LogsPageComponent,
-    PermissionsPageComponent, PermissionsGroupsComponent, PermissionsGroupComponent,
+    PermissionsPageComponent, PermissionsGroupsComponent, PermissionsGroupComponent, PermissionsMappingComponent, PermissionsGroupMappingComponent,
     WelcomePageComponent,
     TenantFormatterComponent, UserFormatterComponent
   ],

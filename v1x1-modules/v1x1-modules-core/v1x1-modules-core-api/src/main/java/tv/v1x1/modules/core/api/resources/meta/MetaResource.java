@@ -12,22 +12,28 @@ import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dao.DAOTenantGroup;
 import tv.v1x1.common.dao.DAOTwitchOauthToken;
 import tv.v1x1.common.dto.db.Channel;
+import tv.v1x1.common.dto.db.ChannelGroup;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Permission;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TenantGroup;
 import tv.v1x1.common.dto.db.TwitchOauthToken;
+import tv.v1x1.common.services.discord.DiscordApi;
+import tv.v1x1.common.services.discord.dto.user.Connection;
+import tv.v1x1.common.services.discord.dto.user.User;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
+import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.auth.TokenResponse;
 import tv.v1x1.common.services.twitch.dto.users.PrivateUser;
 import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.rest.AuthTokenResponse;
 import tv.v1x1.modules.core.api.api.rest.LongTermTokenRequest;
+import tv.v1x1.modules.core.api.api.rest.OauthCode;
 import tv.v1x1.modules.core.api.api.rest.StateResponse;
-import tv.v1x1.modules.core.api.api.rest.TwitchOauthCode;
 import tv.v1x1.modules.core.api.auth.AuthorizationContext;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
@@ -43,6 +49,7 @@ import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -66,18 +73,22 @@ public class MetaResource {
     private final DAOTenantGroup daoTenantGroup;
     private final Authorizer authorizer;
     private final TwitchApi twitchApi;
+    private final DiscordApi discordApi;
+    private final TwitchDisplayNameService twitchDisplayNameService;
     private final KeyValueStore stateStore;
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Inject
-    public MetaResource(final DAOManager daoManager, final Authorizer authorizer, final TwitchApi twitchApi, final KeyValueStore stateStore) {
+    public MetaResource(final DAOManager daoManager, final Authorizer authorizer, final TwitchApi twitchApi, final DiscordApi discordApi, final KeyValueStore stateStore, final TwitchDisplayNameService twitchDisplayNameService) {
         this.daoGlobalUser = daoManager.getDaoGlobalUser();
         this.daoTwitchOauthToken = daoManager.getDaoTwitchOauthToken();
         this.daoTenant = daoManager.getDaoTenant();
         this.daoTenantGroup = daoManager.getDaoTenantGroup();
         this.authorizer = authorizer;
         this.twitchApi = twitchApi;
+        this.discordApi = discordApi;
         this.stateStore = stateStore;
+        this.twitchDisplayNameService = twitchDisplayNameService;
     }
 
     @Path("/self")
@@ -88,19 +99,65 @@ public class MetaResource {
 
     @Path("/login/twitch")
     @POST
-    public AuthTokenResponse getAuthToken(final TwitchOauthCode twitchOauthCode) {
-        final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(twitchOauthCode.getOauthCode(), useState(twitchOauthCode.getOauthState()));
+    public AuthTokenResponse getTwitchAuthToken(final OauthCode oauthCode) {
+        final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(oauthCode.getOauthCode(), useState(oauthCode.getOauthState()));
         if(tokenResponse == null)
             throw new BadRequestException();
         final PrivateUser privateUser = twitchApi.withToken(tokenResponse.getAccessToken()).getUsers().getUser();
         final GlobalUser globalUser = daoGlobalUser.getOrCreate(Platform.TWITCH, String.valueOf(privateUser.getId()), privateUser.getDisplayName());
         daoTwitchOauthToken.put(new TwitchOauthToken(globalUser.getId(), privateUser.getName(), tokenResponse.getAccessToken(), tokenResponse.getScope()));
         final Channel channel = daoTenant.getChannel(Platform.TWITCH, String.valueOf(privateUser.getId()));
-        final Tenant tenant = daoTenant.getOrCreate(Platform.TWITCH, String.valueOf(privateUser.getId()), privateUser.getDisplayName());
-        final boolean firstSetup = !daoTenantGroup.getAllGroupsByTenant(tenant.toCore()).iterator().hasNext() || channel == null;
+        final Tenant tenant = daoTenant.getOrCreate(Platform.TWITCH, String.valueOf(privateUser.getId()), String.valueOf(privateUser.getId()) + ":main", privateUser.getDisplayName());
+        final boolean firstSetup = !daoTenantGroup.getAllGroupsByTenant(tenant.toCore(daoTenant)).iterator().hasNext() || channel == null;
         grantOwner(tenant, globalUser);
         if(firstSetup)
-            createStartingGroups(tenant, String.valueOf(privateUser.getId()));
+            createTwitchStartingGroups(tenant, String.valueOf(privateUser.getId()));
+        return authorizer.getAuthorizationFromPrincipal(new Authorizer.Principal(globalUser.toCore(), null));
+    }
+
+    @Path("/login/discord")
+    @POST
+    public AuthTokenResponse getDiscordAuthToken(final OauthCode oauthCode) {
+        final tv.v1x1.common.services.discord.dto.oauth2.TokenResponse tokenResponse = discordApi
+                .getOauth2().getToken(oauthCode.getOauthCode(), useState(oauthCode.getOauthState()));
+        if(tokenResponse == null)
+            throw new BadRequestException();
+        final User user = discordApi.withToken(tokenResponse.getAccessToken(), tokenResponse.getTokenType()).getUsers().getCurrentUser();
+        final List<Connection> connections = discordApi.withToken(tokenResponse.getAccessToken(), tokenResponse.getTokenType()).getUsers().getUserConnections();
+        final Optional<Connection> twitchConnection = connections.stream().filter(connection -> connection.getType().equals("twitch") && !connection.isRevoked()).findFirst();
+        GlobalUser globalUser = daoGlobalUser.getByUser(Platform.DISCORD, user.getId());
+        if(twitchConnection.isPresent()) {
+            final GlobalUser twitchGlobalUser = daoGlobalUser.getByUser(Platform.TWITCH, twitchConnection.get().getId());
+            if(globalUser == null && twitchGlobalUser == null) {
+                // Neither exist, create with Discord, try to add Twitch.
+                globalUser = daoGlobalUser.getOrCreate(Platform.DISCORD, user.getId(), user.getUsername());
+                try {
+                    globalUser = daoGlobalUser.addUser(globalUser, Platform.TWITCH, twitchConnection.get().getId(), twitchDisplayNameService.getDisplayNameFromUserId(twitchConnection.get().getId()));
+                } catch (final NoSuchUserException e) {
+                    LOG.warn("Got exception", e);
+                }
+            } else if(globalUser == null) {
+                // Discord doesn't exist, Twitch does.  Add Discord.
+                globalUser = daoGlobalUser.addUser(twitchGlobalUser, Platform.DISCORD, user.getId(), user.getUsername());
+            } else if(twitchGlobalUser == null) {
+                // Twitch doesn't exist, Discord does.  Add Twitch.
+                try {
+                    globalUser = daoGlobalUser.addUser(globalUser, Platform.TWITCH, twitchConnection.get().getId(), twitchDisplayNameService.getDisplayNameFromUserId(twitchConnection.get().getId()));
+                } catch (final NoSuchUserException e) {
+                    LOG.warn("Got exception", e);
+                }
+            }
+        } else {
+            globalUser = daoGlobalUser.getOrCreate(Platform.DISCORD, user.getId(), user.getUsername());
+        }
+        if(tokenResponse.getGuild() != null) {
+            final ChannelGroup channelGroup = daoTenant.getChannelGroup(Platform.DISCORD, tokenResponse.getGuild().getId());
+            final Tenant tenant = daoTenant.getOrCreate(Platform.DISCORD, tokenResponse.getGuild().getId(), tokenResponse.getGuild().getName());
+            final boolean firstSetup = !daoTenantGroup.getAllGroupsByTenant(tenant.toCore(daoTenant)).iterator().hasNext() || channelGroup == null;
+            grantOwner(tenant, globalUser);
+            if (firstSetup)
+                createDiscordStartingGroups(tenant, tokenResponse.getGuild().getId());
+        }
         return authorizer.getAuthorizationFromPrincipal(new Authorizer.Principal(globalUser.toCore(), null));
     }
 
@@ -135,9 +192,9 @@ public class MetaResource {
     }
 
     private void grantOwner(final Tenant tenant, final GlobalUser globalUser) {
-        final Optional<TenantGroup> optionalTenantGroup = StreamSupport.stream(daoTenantGroup.getAllGroupsByTenant(tenant.toCore()).spliterator(), false)
+        final Optional<TenantGroup> optionalTenantGroup = StreamSupport.stream(daoTenantGroup.getAllGroupsByTenant(tenant.toCore(daoTenant)).spliterator(), false)
                 .filter(tg -> tg.getName().equals("Owner")).findFirst();
-        final TenantGroup tenantGroup = optionalTenantGroup.orElseGet(() -> daoTenantGroup.createGroup(tenant.toCore(), "Owner"));
+        final TenantGroup tenantGroup = optionalTenantGroup.orElseGet(() -> daoTenantGroup.createGroup(tenant.toCore(daoTenant), "Owner"));
         daoTenantGroup.addPermissionsToGroup(tenantGroup, ImmutableSet.of(
                 new Permission("api.permissions.read"), new Permission("api.permissions.write"),
                 new Permission("api.tenants.config.read"), new Permission("api.tenants.config.write"),
@@ -148,31 +205,46 @@ public class MetaResource {
         daoTenantGroup.addUserToGroup(tenantGroup, globalUser.toCore());
     }
 
-    private void createStartingGroups(final Tenant tenant, final String channelId) {
-        createStartingGroup(tenant, channelId, "Broadcaster", ImmutableSet.of("BROADCASTER"),
+    private void createTwitchStartingGroups(final Tenant tenant, final String channelGroupId) {
+        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Broadcaster", ImmutableSet.of("BROADCASTER"),
                 ImmutableSet.of("link_purger.permit", "link_purger.whitelisted", "caster.user", "fact.modify", "quote.use", "timer.modify"));
-        createStartingGroup(tenant, channelId, "Mods", ImmutableSet.of("MODERATOR", "ADMIN", "STAFF", "GLOBAL_MOD"),
+        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Mods", ImmutableSet.of("MODERATOR", "ADMIN", "STAFF", "GLOBAL_MOD"),
                 ImmutableSet.of("link_purger.permit", "link_purger.whitelisted", "caster.user", "fact.modify", "quote.use", "timer.modify"));
-        createStartingGroup(tenant, channelId, "Subs", ImmutableSet.of("SUBSCRIBER"),
+        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Subs", ImmutableSet.of("SUBSCRIBER"),
                 ImmutableSet.of("link_purger.whitelisted"));
-        createStartingGroup(tenant, channelId, "Everyone", ImmutableSet.of("_DEFAULT_"),
+        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Everyone", ImmutableSet.of("_DEFAULT_"),
                 ImmutableSet.of("uptime.use", "quote.use"));
-        createStartingGroup(tenant, channelId, "Web_Read", ImmutableSet.of(),
+        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_Read", ImmutableSet.of(),
                 ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read"));
-        createStartingGroup(tenant, channelId, "Web_Edit", ImmutableSet.of(),
+        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_Edit", ImmutableSet.of(),
                 ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
                         "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
                         "api.tenants.unlink", "api.tenants.message"));
-        createStartingGroup(tenant, channelId, "Web_All", ImmutableSet.of(),
+        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_All", ImmutableSet.of(),
                 ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
                         "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
                         "api.tenants.unlink", "api.tenants.message", "api.permissions.write"));
     }
 
-    private void createStartingGroup(final Tenant tenant, final String channelId, final String name, final Set<String> platformGroups, final Set<String> nodes) {
-        final TenantGroup tenantGroup = daoTenantGroup.createGroup(tenant.toCore(), name);
+    private void createDiscordStartingGroups(final Tenant tenant, final String channelGroupId) {
+        createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Everyone", ImmutableSet.of("_DEFAULT_"),
+                ImmutableSet.of("uptime.use", "quote.use"));
+        createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_Read", ImmutableSet.of(),
+                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read"));
+        createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_Edit", ImmutableSet.of(),
+                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
+                        "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
+                        "api.tenants.unlink", "api.tenants.message"));
+        createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_All", ImmutableSet.of(),
+                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
+                        "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
+                        "api.tenants.unlink", "api.tenants.message", "api.permissions.write"));
+    }
+
+    private void createStartingGroup(final Tenant tenant, final Platform platform, final String channelGroupId, final String name, final Set<String> platformGroups, final Set<String> nodes) {
+        final TenantGroup tenantGroup = daoTenantGroup.createGroup(tenant.toCore(daoTenant), name);
         daoTenantGroup.addPermissionsToGroup(tenantGroup, nodes.stream().map(Permission::new).collect(Collectors.toSet()));
         for(final String platformGroup : platformGroups)
-            daoTenantGroup.setChannelPlatformMapping(Platform.TWITCH, channelId, platformGroup, tenantGroup);
+            daoTenantGroup.setChannelGroupPlatformMapping(platform, channelGroupId, platformGroup, tenantGroup);
     }
 }

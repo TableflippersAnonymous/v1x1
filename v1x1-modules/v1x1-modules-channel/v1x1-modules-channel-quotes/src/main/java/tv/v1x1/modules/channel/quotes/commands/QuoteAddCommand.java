@@ -32,7 +32,7 @@ public class QuoteAddCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         final String game = module.getGame(channel);
         final String quoteText = String.join(" ", args);
-        final Quote quote = module.addQuote(channel.getTenant(), quoteText, game);
+        final Quote quote = module.addQuote(channel.getChannelGroup().getTenant(), quoteText, game);
         if(quote != null) {
             Chat.i18nMessage(module, channel, "added",
                     "commander", commander,

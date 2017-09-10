@@ -7,27 +7,22 @@ import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
-import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.modules.channel.quotes.commands.QuoteCommand;
-import tv.v1x1.modules.channel.quotes.config.QuotesChannelConfiguration;
 import tv.v1x1.modules.channel.quotes.config.QuotesGlobalConfiguration;
-import tv.v1x1.modules.channel.quotes.config.QuotesSettings;
-import tv.v1x1.modules.channel.quotes.config.QuotesTenantConfiguration;
+import tv.v1x1.modules.channel.quotes.config.QuotesUserConfiguration;
 import tv.v1x1.modules.channel.quotes.quote.DAOQuote;
 import tv.v1x1.modules.channel.quotes.quote.Quote;
 
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 
 /**
  * @author Josh
  */
-public class QuotesModule extends RegisteredThreadedModule<QuotesSettings, QuotesGlobalConfiguration, QuotesTenantConfiguration, QuotesChannelConfiguration> {
+public class QuotesModule extends RegisteredThreadedModule<QuotesGlobalConfiguration, QuotesUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     static {
@@ -129,11 +124,7 @@ public class QuotesModule extends RegisteredThreadedModule<QuotesSettings, Quote
     }
 
     public boolean isEnabled(final Channel channel) {
-        if(getChannelConfiguration(channel).isOverridden()) {
-            return getChannelConfiguration(channel).isEnabled();
-        } else {
-            return getTenantConfiguration(channel.getTenant()).isEnabled();
-        }
+        return getConfiguration(channel).isEnabled();
     }
 
     public String getGame(final Channel channel) {

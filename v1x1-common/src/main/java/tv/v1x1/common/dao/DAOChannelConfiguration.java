@@ -21,7 +21,7 @@ public class DAOChannelConfiguration {
     }
 
     public ChannelConfiguration get(final Module module, final Channel channel) {
-        return mapper.get(module.getName(), channel.getTenant().getId().getValue(), channel.getPlatform(), channel.getId());
+        return mapper.get(module.getName(), channel.getChannelGroup().getPlatform(), channel.getChannelGroup().getId(), channel.getId());
     }
 
     public void put(final ChannelConfiguration channelConfiguration) {

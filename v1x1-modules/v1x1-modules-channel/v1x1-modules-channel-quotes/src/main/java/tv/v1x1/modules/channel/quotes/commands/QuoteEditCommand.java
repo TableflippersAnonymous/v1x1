@@ -43,14 +43,14 @@ public class QuoteEditCommand extends Command {
                     "usage", getUsage());
             return;
         }
-        final Quote quote = module.getQuoteById(channel.getTenant(), quoteId);
+        final Quote quote = module.getQuoteById(channel.getChannelGroup().getTenant(), quoteId);
         if(quote == null) {
             Chat.i18nMessage(module, channel, "invalid.quote",
                     "commander", commander,
                     "id", quoteId);
             return;
         }
-        final Quote newQuote = module.editQuote(channel.getTenant(), quoteId, quoteText);
+        final Quote newQuote = module.editQuote(channel.getChannelGroup().getTenant(), quoteId, quoteText);
         if(newQuote == null) {
             Chat.i18nMessage(module, channel, "generic.error",
                     "commander", commander,

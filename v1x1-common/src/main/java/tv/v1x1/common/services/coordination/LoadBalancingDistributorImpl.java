@@ -1,11 +1,15 @@
 package tv.v1x1.common.services.coordination;
 
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableMap;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
 import org.apache.curator.framework.state.ConnectionState;
-import org.apache.curator.x.discovery.*;
+import org.apache.curator.x.discovery.ServiceCache;
+import org.apache.curator.x.discovery.ServiceDiscovery;
+import org.apache.curator.x.discovery.ServiceDiscoveryBuilder;
+import org.apache.curator.x.discovery.ServiceInstance;
+import org.apache.curator.x.discovery.ServiceType;
 import org.apache.curator.x.discovery.details.InstanceSerializer;
 import org.apache.curator.x.discovery.details.ServiceCacheListener;
 import org.apache.zookeeper.CreateMode;
@@ -16,7 +20,13 @@ import tv.v1x1.common.dto.proto.core.UUIDOuterClass;
 
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.NavigableMap;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -75,8 +85,8 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     private final Collection<Listener> listeners = new ConcurrentSkipListSet<>();
     private final ServiceCache<InstanceId> serviceCache;
 
-    private final Map<InstanceId, Set<String>> entriesByInstance = Collections.synchronizedMap(new HashMap<>());
-    private final Map<String, Set<InstanceId>> instancesByEntry = Collections.synchronizedMap(new HashMap<>());
+    private final Map<InstanceId, Map<String, Integer>> entriesByInstance = Collections.synchronizedMap(new HashMap<>());
+    private final Map<String, Map<Integer, InstanceId>> instancesByEntry = Collections.synchronizedMap(new HashMap<>());
     private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     public LoadBalancingDistributorImpl(final CuratorFramework framework, final String path, final int redundancy) {
@@ -128,7 +138,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     }
 
     @Override
-    public void removeEntry(String entry) throws Exception {
+    public void removeEntry(final String entry) throws Exception {
         framework.delete().forPath(path + "/entries/" + entry);
     }
 
@@ -143,7 +153,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     }
 
     @Override
-    public Set<String> getEntriesForInstance(final UUID instanceId) throws Exception {
+    public Map<String, Integer> getEntriesForInstance(final UUID instanceId) throws Exception {
         recalculateEntries();
         return entriesByInstance.get(new InstanceId(instanceId));
     }
@@ -156,9 +166,9 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         final int realisticRedundancy = Math.min(redundancy, instances.size());
         final List<String> entries = listEntries();
         final TreeMap<java.util.UUID, InstanceId> instanceLookupTable = new TreeMap<>();
-        final Map<InstanceId, Set<String>> newEntriesByInstance = new HashMap<>();
+        final Map<InstanceId, Map<String, Integer>> newEntriesByInstance = new HashMap<>();
         for(final InstanceId instanceId : instances) {
-            newEntriesByInstance.put(instanceId, new HashSet<>());
+            newEntriesByInstance.put(instanceId, new HashMap<>());
             java.util.UUID uuid = instanceId.getInstanceId().getValue();
             instanceLookupTable.put(uuid, instanceId);
             for(int i = 1; i < 256; i++) {
@@ -166,7 +176,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
                 instanceLookupTable.put(uuid, instanceId);
             }
         }
-        final Map<String, Set<InstanceId>> newInstancesByEntry = new HashMap<>();
+        final Map<String, Map<Integer, InstanceId>> newInstancesByEntry = new HashMap<>();
         for(final String entry : entries) {
             java.util.UUID key = java.util.UUID.nameUUIDFromBytes(entry.getBytes());
             for(int i = 0; i < realisticRedundancy; i++) {
@@ -174,13 +184,14 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
                 do {
                     key = getNext(instanceLookupTable, key);
                     instanceId = instanceLookupTable.get(key);
-                } while(!newEntriesByInstance.get(instanceId).add(entry));
+                } while(newEntriesByInstance.get(instanceId).containsKey(entry));
+                newEntriesByInstance.get(instanceId).put(entry, i);
                 if(!newInstancesByEntry.containsKey(entry))
-                    newInstancesByEntry.put(entry, new HashSet<>());
-                newInstancesByEntry.get(entry).add(instanceId);
+                    newInstancesByEntry.put(entry, new HashMap<>());
+                newInstancesByEntry.get(entry).put(i, instanceId);
             }
         }
-        final Map<InstanceId, Set<String>> diff = generateDiff(entriesByInstance, newEntriesByInstance);
+        final Map<InstanceId, Map<String, Integer>> diff = generateDiff(entriesByInstance, newEntriesByInstance);
         synchronized(entriesByInstance) {
             synchronized(instancesByEntry) {
                 entriesByInstance.clear();
@@ -192,17 +203,17 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
         notifyListeners(diff);
     }
 
-    private void notifyListeners(final Map<InstanceId, Set<String>> diff) {
-        for(final Map.Entry<InstanceId, Set<String>> entry : diff.entrySet())
+    private void notifyListeners(final Map<InstanceId, Map<String, Integer>> diff) {
+        for(final Map.Entry<InstanceId, Map<String, Integer>> entry : diff.entrySet())
             for(final Listener listener : listeners)
-                listener.notify(entry.getKey().getInstanceId(), ImmutableSet.copyOf(entry.getValue()));
+                listener.notify(entry.getKey().getInstanceId(), ImmutableMap.copyOf(entry.getValue()));
     }
 
-    private Map<InstanceId, Set<String>> generateDiff(final Map<InstanceId, Set<String>> entriesByInstance, final Map<InstanceId, Set<String>> newEntriesByInstance) {
-        final Map<InstanceId, Set<String>> diffMap = new HashMap<>();
+    private Map<InstanceId, Map<String, Integer>> generateDiff(final Map<InstanceId, Map<String, Integer>> entriesByInstance, final Map<InstanceId, Map<String, Integer>> newEntriesByInstance) {
+        final Map<InstanceId, Map<String, Integer>> diffMap = new HashMap<>();
         entriesByInstance.entrySet().stream()
                 .filter(entry -> !newEntriesByInstance.containsKey(entry.getKey()))
-                .forEach(entry -> diffMap.put(entry.getKey(), ImmutableSet.of()));
+                .forEach(entry -> diffMap.put(entry.getKey(), ImmutableMap.of()));
         newEntriesByInstance.entrySet().stream()
                 .filter(entry -> !entriesByInstance.containsKey(entry.getKey()) || !entry.getValue().equals(entriesByInstance.get(entry.getKey())))
                 .forEach(entry -> diffMap.put(entry.getKey(), entry.getValue()));

@@ -2,13 +2,12 @@ package tv.v1x1.modules.core.scheduler;
 
 import tv.v1x1.common.modules.ServiceModule;
 import tv.v1x1.modules.core.scheduler.config.SchedulerGlobalConfiguration;
-import tv.v1x1.modules.core.scheduler.config.SchedulerSettings;
-import tv.v1x1.modules.core.scheduler.config.SchedulerTenantConfiguration;
+import tv.v1x1.modules.core.scheduler.config.SchedulerUserConfiguration;
 
 /**
  * Created by cobi on 10/22/2016.
  */
-public class SchedulerModule extends ServiceModule<SchedulerSettings, SchedulerGlobalConfiguration, SchedulerTenantConfiguration, SchedulerChannelConfiguration> {
+public class SchedulerModule extends ServiceModule<SchedulerGlobalConfiguration, SchedulerUserConfiguration> {
     @Override
     public String getName() {
         return "scheduler";

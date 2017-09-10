@@ -16,7 +16,7 @@ import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.data.CompositeKey;
-import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesTenantConfiguration;
+import tv.v1x1.modules.channel.timed_messages.config.TimedMessagesUserConfiguration;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Map;
@@ -53,13 +53,13 @@ public class TimedMessagesListener implements EventListener {
             }
             MDC.put("tenant", tenant.getId().toString());
             LOG.trace("incoming UUID is {}", uuid.getValue());
-            if(!module.getTenantConfiguration(tenant).isEnabled()) {
+            if(!module.getConfiguration(tenant).isEnabled()) {
                 LOG.debug("Module is disabled, pausing timer...");
                 module.pauseTimer(uuid);
                 MDC.remove("tenant");
                 return;
             }
-            final Timer t = module.getTenantConfiguration(tenant).getTimer(timerName);
+            final Timer t = module.getConfiguration(tenant).getTimer(timerName);
             if(t == null) {
                 LOG.warn("Got a timer payload for a non-existent timer id {}; pausing it...", uuid.getValue().toString());
                 module.pauseTimer(uuid);
@@ -97,7 +97,7 @@ public class TimedMessagesListener implements EventListener {
             final String message = nextEntry.getMessage();
             module.saveCursor(uuid, cursor);
             for(final Channel channel : tenant.getChannels()) {
-                if(channel.getPlatform().equals(Platform.TWITCH)) {
+                if(channel.getChannelGroup().getPlatform().equals(Platform.TWITCH)) {
                     if(t.isAlwaysOn() && !module.isStreaming(channel)) {
                         LOG.trace("Skipping non-streaming channel {}", channel.getDisplayName());
                         continue;
@@ -118,7 +118,7 @@ public class TimedMessagesListener implements EventListener {
 
     @EventHandler
     public void onTenantConfigChange(TenantConfigChangeEvent ev) {
-        final TimedMessagesTenantConfiguration config = module.getTenantConfiguration(ev.getTenant());
+        final TimedMessagesUserConfiguration config = module.getConfiguration(ev.getTenant());
         if(config.getTimers() != null)
             for(final Map.Entry<String, Timer> entry : config.getTimers().entrySet())
                 if(config.isEnabled() && entry.getValue().isEnabled()) {

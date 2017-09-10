@@ -2,9 +2,9 @@ package tv.v1x1.modules.core.api;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
+import tv.v1x1.common.services.discord.DiscordApi;
 import tv.v1x1.common.services.persistence.ConfigurationCacheManager;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
@@ -13,7 +13,6 @@ import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.modules.core.api.auth.Authorizer;
-import tv.v1x1.modules.core.api.resources.ws.PubsubResource;
 
 /**
  * Created by cobi on 10/24/2016.
@@ -48,6 +47,11 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public TwitchApi provideTwitchApi() {
         return apiModule.getTwitchApi();
+    }
+
+    @Provides
+    public DiscordApi provideDiscordApi() {
+        return apiModule.getInjector().getInstance(DiscordApi.class);
     }
 
     @Provides

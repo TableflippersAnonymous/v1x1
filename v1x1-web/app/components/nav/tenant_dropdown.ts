@@ -1,9 +1,10 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Output} from "@angular/core";
 import {V1x1Api} from "../../services/api";
 import {Router} from "@angular/router";
 import {V1x1GlobalState} from "../../services/global_state";
 import {V1x1Tenant} from "../../model/v1x1_tenant";
 import {Observable} from "rxjs";
+
 @Component({
   selector: 'tenant-dropdown-nav-component',
   template: `
@@ -35,6 +36,6 @@ export class TenantDropdownNavComponent {
   }
 
   displayName(): Observable<string> {
-    return this.globalState.activeTenant.get().map(tenant => tenant.channels[0].displayName);
+    return this.globalState.activeTenant.get().map(tenant => tenant.displayName);
   }
 }

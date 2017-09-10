@@ -19,7 +19,7 @@ import java.util.Arrays;
 /**
  * Created by cobi on 3/4/2017.
  */
-public class CliModule extends Module<CliSettings, CliGlobalConfig, CliTenantConfig, CliChannelConfig> {
+public class CliModule extends Module<CliGlobalConfig, CliUserConfig> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final String[] args;
 

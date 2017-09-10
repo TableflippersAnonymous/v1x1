@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
-import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.timed_messages.TimedMessages;
@@ -55,7 +54,7 @@ public class TimerCreateCommand extends Command {
         LOG.debug("Creating timer with interval {}", interval);
         final Timer timer = new Timer(interval);
         final String timerId = args.get(0);
-        if(module.createTimer(channel.getTenant(), timerId, timer)) {
+        if(module.createTimer(channel.getChannelGroup().getTenant(), timerId, timer)) {
             Chat.i18nMessage(module, channel, "create.success",
                     "commander", senderName,
                     "id", timerId

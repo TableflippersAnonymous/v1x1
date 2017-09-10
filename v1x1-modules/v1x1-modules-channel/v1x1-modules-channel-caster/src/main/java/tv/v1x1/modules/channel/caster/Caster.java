@@ -12,7 +12,7 @@ import tv.v1x1.common.util.commands.CommandDelegator;
 /**
  * @author Josh
  */
-public class Caster extends RegisteredThreadedModule<CasterModuleSettings, CasterGlobalConfig, CasterTenantSettings, CasterChannelSettings> implements EventListener {
+public class Caster extends RegisteredThreadedModule<CasterGlobalConfig, CasterUserConfig> implements EventListener {
     static {
         Module module = new Module("caster");
         I18n.registerDefault(module, "notfound", "%commander%, I can't find %target% on Twitch BibleThump");
@@ -40,7 +40,7 @@ public class Caster extends RegisteredThreadedModule<CasterModuleSettings, Caste
 
     @EventHandler
     public void onChatMessage(ChatMessageEvent ev) {
-        if(getTenantConfiguration(ev.getChatMessage().getChannel().getTenant()).isEnabled())
+        if(getConfiguration(ev.getChatMessage().getChannel()).isEnabled())
             delegator.handleChatMessage(ev);
     }
 }

@@ -1,6 +1,7 @@
 package tv.v1x1.common.dto.messages.events;
 
 import tv.v1x1.common.dto.core.Channel;
+import tv.v1x1.common.dto.core.ChannelGroup;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
@@ -15,10 +16,12 @@ public class ConfigChangeEvent extends Event {
     public static ConfigChangeEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.ConfigChangeEvent proto) {
         final Module configModule = Module.fromProto(proto.getModule());
         final Tenant tenant = proto.hasTenant() ? Tenant.fromProto(proto.getTenant()) : null;
+        final ChannelGroup channelGroup = proto.hasChannelGroup() ? ChannelGroup.fromProto(proto.getChannelGroup()) : null;
         final Channel channel = proto.hasChannel() ? Channel.fromProto(proto.getChannel()) : null;
         switch(proto.getConfigType()) {
             case GLOBAL: return new GlobalConfigChangeEvent(module, uuid, timestamp, context, configModule);
             case TENANT: return new TenantConfigChangeEvent(module, uuid, timestamp, context, configModule, tenant);
+            case CHANNEL_GROUP: return new ChannelGroupConfigChangeEvent(module, uuid, timestamp, context, configModule, channelGroup);
             case CHANNEL: return new ChannelConfigChangeEvent(module, uuid, timestamp, context, configModule, channel);
             default: throw new IllegalStateException("Unknown Config type: " + proto.getConfigType());
         }

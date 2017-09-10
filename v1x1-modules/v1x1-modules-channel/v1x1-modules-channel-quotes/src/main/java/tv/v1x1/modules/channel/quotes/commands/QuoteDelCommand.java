@@ -6,9 +6,7 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
-import tv.v1x1.common.util.text.Shorten;
 import tv.v1x1.modules.channel.quotes.QuotesModule;
-import tv.v1x1.modules.channel.quotes.quote.Quote;
 
 import java.util.List;
 
@@ -41,7 +39,7 @@ public class QuoteDelCommand extends Command {
                     "usage", getUsage());
             return;
         }
-        if(module.delQuote(channel.getTenant(), quoteId) == true) {
+        if(module.delQuote(channel.getChannelGroup().getTenant(), quoteId)) {
            Chat.i18nMessage(module, channel, "removed",
                    "commander", commander,
                    "id", quoteId);

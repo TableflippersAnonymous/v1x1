@@ -34,7 +34,7 @@ import java.util.List;
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
         final String senderName = chatMessage.getSender().getDisplayName();
-        if(module.destroyTimer(channel.getTenant(), args.get(0))) {
+        if(module.destroyTimer(channel.getChannelGroup().getTenant(), args.get(0))) {
             Chat.i18nMessage(module, channel, "destroy.success",
                     "commander", senderName,
                     "id", args.get(0)

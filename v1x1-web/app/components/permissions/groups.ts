@@ -1,9 +1,9 @@
-import {Component, Input} from "@angular/core";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
+import {Component} from "@angular/core";
 import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
 import {V1x1GroupMembership} from "../../model/v1x1_group_membership";
 import {V1x1GlobalState} from "../../services/global_state";
+
 @Component({
   selector: 'permissions-groups-page',
   template: `

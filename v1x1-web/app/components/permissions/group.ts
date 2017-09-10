@@ -5,6 +5,7 @@ import {JsonConvert} from "json2typescript";
 import {V1x1GroupMembership} from "../../model/v1x1_group_membership";
 import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
+
 @Component({
   selector: 'permissions-group-page',
   template: `
@@ -33,6 +34,7 @@ export class PermissionsGroupComponent {
   configuration: Object = {};
   configSet: boolean = false;
   configurationDefinition: V1x1ConfigurationDefinition = JsonConvert.deserializeObject({
+    display_name: "Permission Group",
     tenant_permission: "READ_WRITE",
     fields: [
       {

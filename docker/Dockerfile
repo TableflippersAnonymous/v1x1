@@ -6,4 +6,4 @@ ENTRYPOINT ["/usr/bin/java", "-jar"]
 CMD ["module.jar", "config.yml"]
 ARG APP_ENV=dev
 COPY ${APP_ENV}.yml config.yml
-ONBUILD ADD *.jar module.jar
+ONBUILD COPY *.jar module.jar

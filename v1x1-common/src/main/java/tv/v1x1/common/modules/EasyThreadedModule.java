@@ -4,7 +4,33 @@ import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.messages.Message;
 import tv.v1x1.common.dto.messages.Request;
 import tv.v1x1.common.dto.messages.Response;
-import tv.v1x1.common.dto.messages.events.*;
+import tv.v1x1.common.dto.messages.events.ChannelConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.ChatJoinEvent;
+import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
+import tv.v1x1.common.dto.messages.events.ChatPartEvent;
+import tv.v1x1.common.dto.messages.events.ConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.DiscordVoiceStateEvent;
+import tv.v1x1.common.dto.messages.events.GlobalConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.PrivateMessageEvent;
+import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
+import tv.v1x1.common.dto.messages.events.TenantConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotChannelStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotConnectedEvent;
+import tv.v1x1.common.dto.messages.events.TwitchBotGlobalStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChannelEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChannelUsersEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatJoinEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchChatPartEvent;
+import tv.v1x1.common.dto.messages.events.TwitchHostEvent;
+import tv.v1x1.common.dto.messages.events.TwitchPingEvent;
+import tv.v1x1.common.dto.messages.events.TwitchPrivateMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchRawMessageEvent;
+import tv.v1x1.common.dto.messages.events.TwitchReconnectEvent;
+import tv.v1x1.common.dto.messages.events.TwitchRoomStateEvent;
+import tv.v1x1.common.dto.messages.events.TwitchTimeoutEvent;
+import tv.v1x1.common.dto.messages.events.TwitchUserEvent;
+import tv.v1x1.common.dto.messages.events.TwitchUserModChangeEvent;
 import tv.v1x1.common.dto.messages.requests.SendMessageRequest;
 import tv.v1x1.common.dto.messages.responses.ModuleShutdownResponse;
 import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
@@ -12,7 +38,7 @@ import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
 /**
  * Created by cobi on 10/6/16.
  */
-public abstract class EasyThreadedModule<T extends ModuleSettings, U extends GlobalConfiguration, V extends TenantConfiguration, W extends ChannelConfiguration> extends ThreadedModule<T, U, V, W> {
+public abstract class EasyThreadedModule<T extends GlobalConfiguration, U extends UserConfiguration> extends ThreadedModule<T, U> {
 
     @Override
     protected void processMessage(final Message message) {
@@ -79,7 +105,9 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
                 processTenantConfigChangeEvent((TenantConfigChangeEvent) event);
             else if (event instanceof ChannelConfigChangeEvent)
                 processChannelConfigChangeEvent((ChannelConfigChangeEvent) event);
-        } else
+        } else if(event instanceof DiscordVoiceStateEvent)
+            processDiscordVoiceStateEvent((DiscordVoiceStateEvent) event);
+        else
             throw new IllegalStateException("Unknown event type " + event.getClass().getCanonicalName());
     }
 
@@ -134,6 +162,8 @@ public abstract class EasyThreadedModule<T extends ModuleSettings, U extends Glo
     protected abstract void processTenantConfigChangeEvent(TenantConfigChangeEvent event);
 
     protected abstract void processChannelConfigChangeEvent(ChannelConfigChangeEvent event);
+
+    protected abstract void processDiscordVoiceStateEvent(final DiscordVoiceStateEvent event);
 
     protected void processRequest(final Request request) {
         if(request instanceof SendMessageRequest) /* ModuleShutdownRequest is handled elsewhere */

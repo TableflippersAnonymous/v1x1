@@ -19,12 +19,12 @@ import java.util.concurrent.Executors;
  */
 public abstract class Service<T extends Request, U extends Response<T>> implements Comparable<Service<T, U>> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private final Module<?, ?, ?, ?> module;
+    private final Module<?, ?> module;
     private final ExecutorService executorService;
     private final String serviceName;
     private final Class<T> requestClass;
 
-    public Service(final Module<?, ?, ?, ?> module, final String serviceName, final Class<T> requestClass) {
+    public Service(final Module<?, ?> module, final String serviceName, final Class<T> requestClass) {
         this.module = module;
         this.executorService = module.getInjector().getInstance(CurrentTraceContext.class).executorService(Executors.newSingleThreadExecutor());
         this.serviceName = serviceName;
@@ -64,7 +64,7 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
         }
     }
 
-    protected Module<?, ?, ?, ?> getModule() {
+    protected Module<?, ?> getModule() {
         return module;
     }
 

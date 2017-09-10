@@ -5,8 +5,8 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
-import tv.v1x1.modules.channel.factoids.FactoidsModule;
 import tv.v1x1.modules.channel.factoids.Factoid;
+import tv.v1x1.modules.channel.factoids.FactoidsModule;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class FactSetpermCommand extends Command {
         final String commander = chatMessage.getSender().getDisplayName();
         final String factName = args.get(0).toLowerCase();
         final String factPerm = FactoidsModule.CUSTOM_PREM_PREFIX + args.get(1);
-        final Factoid oldFact = module.getFact(channel.getTenant(), factName);
+        final Factoid oldFact = module.getFact(channel.getChannelGroup().getTenant(), factName);
         if(oldFact == null) {
             Chat.i18nMessage(module, channel, "noexist",
             "commander", commander,
@@ -39,7 +39,7 @@ public class FactSetpermCommand extends Command {
             return;
         }
         oldFact.setPermission(new tv.v1x1.common.dto.db.Permission(factPerm));
-        final Factoid fact = module.addFact(channel.getTenant(), factName, oldFact);
+        final Factoid fact = module.addFact(channel.getChannelGroup().getTenant(), factName, oldFact);
         if(fact == null) {
             Chat.i18nMessage(module, channel, "generic.error",
                     "commander", commander,

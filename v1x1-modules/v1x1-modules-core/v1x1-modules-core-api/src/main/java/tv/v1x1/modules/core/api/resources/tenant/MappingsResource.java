@@ -3,14 +3,14 @@ package tv.v1x1.modules.core.api.resources.tenant;
 import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dao.DAOTenantGroup;
-import tv.v1x1.common.dto.db.ChannelPlatformMapping;
+import tv.v1x1.common.dto.db.ChannelGroup;
+import tv.v1x1.common.dto.db.ChannelGroupPlatformMapping;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TenantGroup;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.api.rest.ApiList;
 import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
-import tv.v1x1.modules.core.api.api.rest.Channel;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.BadRequestException;
@@ -37,7 +37,7 @@ import java.util.stream.StreamSupport;
    /mappings - GET: List of mappings
     /{platform_group} - PUT: Set group; DELETE: Unset group
  */
-@Path("/api/v1/tenants/{tenant_id}/channels/{platform}/{channel_id}/mappings")
+@Path("/api/v1/tenants/{tenant_id}/channels/{platform}/{channel_group_id}/mappings")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class MappingsResource {
@@ -53,17 +53,17 @@ public class MappingsResource {
     }
 
     @GET
-    public ApiList<tv.v1x1.modules.core.api.api.rest.ChannelPlatformMapping> listMappings(@HeaderParam("Authorization") final String authorization,
-                                                                                          @PathParam("tenant_id") final String tenantId,
-                                                                                          @PathParam("platform") final String platformString,
-                                                                                          @PathParam("channel_id") final String channelId) {
+    public ApiList<tv.v1x1.modules.core.api.api.rest.ChannelGroupPlatformMapping> listMappings(@HeaderParam("Authorization") final String authorization,
+                                                                                               @PathParam("tenant_id") final String tenantId,
+                                                                                               @PathParam("platform") final String platformString,
+                                                                                               @PathParam("channel_group_id") final String channelGroupId) {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.permissions.read");
         final Platform platform = getDtoPlatform(platformString);
-        final Channel channel = getDtoChannel(tenant, platform, channelId);
-        final Iterable<ChannelPlatformMapping> channelPlatformMappings = daoTenantGroup.getChannelPlatformMappings(platform, channel.getChannelId());
-        return new ApiList<>(StreamSupport.stream(channelPlatformMappings.spliterator(), false)
-                .map(cpm -> new tv.v1x1.modules.core.api.api.rest.ChannelPlatformMapping(cpm.getPlatformGroup(), cpm.getGroupId().toString()))
+        final ChannelGroup channelGroup = getDtoChannelGroup(tenant, platform, channelGroupId);
+        final Iterable<ChannelGroupPlatformMapping> channelGroupPlatformMappings = daoTenantGroup.getChannelGroupPlatformMappings(platform, channelGroup.getId());
+        return new ApiList<>(StreamSupport.stream(channelGroupPlatformMappings.spliterator(), false)
+                .map(cpm -> new tv.v1x1.modules.core.api.api.rest.ChannelGroupPlatformMapping(cpm.getPlatformGroup(), cpm.getGroupId().toString()))
                 .collect(Collectors.toList()));
     }
 
@@ -72,17 +72,17 @@ public class MappingsResource {
     public ApiPrimitive<String> setMapping(@HeaderParam("Authorization") final String authorization,
                                       @PathParam("tenant_id") final String tenantId,
                                       @PathParam("platform") final String platformString,
-                                      @PathParam("channel_id") final String channelId,
+                                      @PathParam("channel_group_id") final String channelGroupId,
                                       @PathParam("platform_group") final String platformGroup,
                                       final ApiPrimitive<String> groupId) {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.permissions.write");
         final Platform platform = getDtoPlatform(platformString);
-        final Channel channel = getDtoChannel(tenant, platform, channelId);
-        final TenantGroup tenantGroup = daoTenantGroup.getTenantGroup(tenant.toCore(), UUID.fromString(groupId.getValue()));
+        final ChannelGroup channelGroup = getDtoChannelGroup(tenant, platform, channelGroupId);
+        final TenantGroup tenantGroup = daoTenantGroup.getTenantGroup(tenant.toCore(daoTenant), UUID.fromString(groupId.getValue()));
         if(tenantGroup == null)
             throw new BadRequestException();
-        daoTenantGroup.setChannelPlatformMapping(platform, channel.getChannelId(), platformGroup, tenantGroup);
+        daoTenantGroup.setChannelGroupPlatformMapping(platform, channelGroup.getId(), platformGroup, tenantGroup);
         return new ApiPrimitive<>(tenantGroup.getGroupId().toString());
     }
 
@@ -91,13 +91,13 @@ public class MappingsResource {
     public Response removeMapping(@HeaderParam("Authorization") final String authorization,
                                   @PathParam("tenant_id") final String tenantId,
                                   @PathParam("platform") final String platformString,
-                                  @PathParam("channel_id") final String channelId,
+                                  @PathParam("channel_group_id") final String channelGroupId,
                                   @PathParam("platform_group") final String platformGroup) {
         final Tenant tenant = getDtoTenant(tenantId);
         authorizer.tenantAuthorization(tenant.getId(), authorization).ensurePermission("api.permissions.write");
         final Platform platform = getDtoPlatform(platformString);
-        final Channel channel = getDtoChannel(tenant, platform, channelId);
-        daoTenantGroup.clearChannelPlatformMapping(platform, channel.getChannelId(), platformGroup);
+        final ChannelGroup channelGroup = getDtoChannelGroup(tenant, platform, channelGroupId);
+        daoTenantGroup.clearChannelGroupPlatformMapping(platform, channelGroup.getId(), platformGroup);
         return Response.noContent().build();
     }
 
@@ -122,10 +122,10 @@ public class MappingsResource {
         }
     }
 
-    private Channel getDtoChannel(final Tenant tenant, final Platform platform, final String channelId) {
-        final Tenant.Entry channelEntry = tenant.getEntries().stream().filter(entry -> entry.getPlatform().equals(platform))
-                .filter(entry -> entry.getChannelId().equals(channelId)).findFirst()
-                .orElseThrow(() -> new NotFoundException("Channel not found"));
-        return new Channel(tenant.getId(), channelEntry.getPlatform(), channelEntry.getDisplayName(), channelEntry.getChannelId());
+    private ChannelGroup getDtoChannelGroup(final Tenant tenant, final Platform platform, final String channelGroupId) {
+        final ChannelGroup channelGroup = daoTenant.getChannelGroup(platform, channelGroupId);
+        if(channelGroup == null || !channelGroup.getTenantId().equals(tenant.getId()))
+            throw new NotFoundException("Channel Group ID is invalid");
+        return channelGroup;
     }
 }

@@ -16,7 +16,6 @@ import java.lang.invoke.MethodHandles;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalUnit;
 import java.util.Calendar;
 import java.util.List;
 
@@ -61,7 +60,7 @@ public class UptimeCommand extends Command {
         final String commander = chatMessage.getSender().getDisplayName();
         final String messageTarget = (args.size() > 0 ? args.get(0) : commander);
         final Channel channel = chatMessage.getChannel();
-        if(! channel.getPlatform().equals(Platform.TWITCH)) {
+        if(! channel.getChannelGroup().getPlatform().equals(Platform.TWITCH)) {
             Chat.i18nMessage(module, channel, "invalid.platform",
                     "commander", commander);
         }

@@ -12,3 +12,6 @@ import 'bytebuffer';
 import 'rxjs-websockets';
 import 'queueing-subject';
 import 'uuid';
+// FontAwesome
+import '@fortawesome/fontawesome';
+import '@fortawesome/fontawesome-free-brands';
