@@ -2,6 +2,7 @@ package tv.v1x1.modules.core.api;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
 import tv.v1x1.common.services.discord.DiscordApi;
@@ -88,6 +89,11 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public DiscordDisplayNameService provideDiscordDisplayNameService() {
         return apiModule.getInjector().getInstance(DiscordDisplayNameService.class);
+    }
+
+    @Provides
+    public DAOGlobalUser provideDaoGlobalUser() {
+        return apiModule.getInjector().getInstance(DAOGlobalUser.class);
     }
 
     @Provides
