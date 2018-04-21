@@ -10,6 +10,7 @@ import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
 import tv.v1x1.common.services.pubsub.TopicManager;
 import tv.v1x1.common.services.queue.MessageQueueManager;
+import tv.v1x1.common.services.state.DiscordDisplayNameService;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.modules.core.api.auth.Authorizer;
@@ -82,6 +83,11 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public TwitchDisplayNameService provideTwitchDisplayNameService() {
         return apiModule.getInjector().getInstance(TwitchDisplayNameService.class);
+    }
+
+    @Provides
+    public DiscordDisplayNameService provideDiscordDisplayNameService() {
+        return apiModule.getInjector().getInstance(DiscordDisplayNameService.class);
     }
 
     @Provides
