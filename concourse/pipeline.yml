@@ -165,6 +165,15 @@ resources:
       ca_certs:
       - domain: registry.tblflp.zone:5443
         cert: {{docker-ca}}
+  - name: v1x1-discord
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-discord
+      username: tblflp
+      password: {{docker-pass}}
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: {{docker-ca}}
 
   # Global Modules:
   - name: v1x1-ops_tool
@@ -765,6 +774,46 @@ jobs:
           image_tag: v1x1-source/.git/refs/heads/master
         get_params:
           resource_name: tmi
+  - name: v1x1-discord
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common, v1x1-base]
+          trigger: true
+        - get: v1x1-base
+          params:
+            save: true
+          passed: [v1x1-base]
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: {{nexus-pass}}
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-core/v1x1-modules-core-discord
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-discord
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+        get_params:
+          skip_download: true
+  - name: v1x1-discord-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-discord]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: discord
+          image_name: registry.tblflp.zone:5443/v1x1-discord
+          image_tag: v1x1-source/.git/refs/heads/master
+        get_params:
+          resource_name: discord
 
   - name: v1x1-ops_tool
     plan:
