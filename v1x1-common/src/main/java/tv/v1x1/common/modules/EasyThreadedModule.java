@@ -5,6 +5,7 @@ import tv.v1x1.common.dto.messages.Message;
 import tv.v1x1.common.dto.messages.Request;
 import tv.v1x1.common.dto.messages.Response;
 import tv.v1x1.common.dto.messages.events.ChannelConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.ChannelGroupConfigChangeEvent;
 import tv.v1x1.common.dto.messages.events.ChatJoinEvent;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.ChatPartEvent;
@@ -103,6 +104,8 @@ public abstract class EasyThreadedModule<T extends GlobalConfiguration, U extend
                 processGlobalConfigChangeEvent((GlobalConfigChangeEvent) event);
             else if (event instanceof TenantConfigChangeEvent)
                 processTenantConfigChangeEvent((TenantConfigChangeEvent) event);
+            else if (event instanceof ChannelGroupConfigChangeEvent)
+                processChannelGroupConfigChangeEvent((ChannelGroupConfigChangeEvent) event);
             else if (event instanceof ChannelConfigChangeEvent)
                 processChannelConfigChangeEvent((ChannelConfigChangeEvent) event);
         } else if(event instanceof DiscordVoiceStateEvent)
@@ -160,6 +163,8 @@ public abstract class EasyThreadedModule<T extends GlobalConfiguration, U extend
     protected abstract void processGlobalConfigChangeEvent(GlobalConfigChangeEvent event);
 
     protected abstract void processTenantConfigChangeEvent(TenantConfigChangeEvent event);
+
+    protected abstract void processChannelGroupConfigChangeEvent(final ChannelGroupConfigChangeEvent event);
 
     protected abstract void processChannelConfigChangeEvent(ChannelConfigChangeEvent event);
 

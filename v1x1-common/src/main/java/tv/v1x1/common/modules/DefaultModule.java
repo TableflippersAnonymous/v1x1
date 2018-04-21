@@ -1,6 +1,7 @@
 package tv.v1x1.common.modules;
 
 import tv.v1x1.common.dto.messages.events.ChannelConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.ChannelGroupConfigChangeEvent;
 import tv.v1x1.common.dto.messages.events.ChatJoinEvent;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.ChatPartEvent;
@@ -178,6 +179,11 @@ public abstract class DefaultModule<T extends GlobalConfiguration, U extends Use
 
     @Override
     protected void processTenantConfigChangeEvent(final TenantConfigChangeEvent event) {
+        /* No action */
+    }
+
+    @Override
+    protected void processChannelGroupConfigChangeEvent(final ChannelGroupConfigChangeEvent event) {
         /* No action */
     }
 
