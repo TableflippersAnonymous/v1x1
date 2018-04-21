@@ -47,11 +47,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.lang.invoke.MethodHandles;
 import java.security.SecureRandom;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -200,7 +200,8 @@ public class MetaResource {
                 new Permission("api.tenants.config.read"), new Permission("api.tenants.config.write"),
                 new Permission("api.tenants.read"), new Permission("api.tenants.write"),
                 new Permission("api.tenants.link"), new Permission("api.tenants.unlink"),
-                new Permission("api.tenants.message")
+                new Permission("api.tenants.message"), new Permission("api.pubsub.read.api.chat"),
+                new Permission("api.pubsub.read.api.config")
         ));
         daoTenantGroup.addUserToGroup(tenantGroup, globalUser.toCore());
     }
@@ -215,13 +216,16 @@ public class MetaResource {
         createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Everyone", ImmutableSet.of("_DEFAULT_"),
                 ImmutableSet.of("uptime.use", "quote.use"));
         createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_Read", ImmutableSet.of(),
-                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read"));
+                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
+                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config"));
         createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_Edit", ImmutableSet.of(),
                 ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
+                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config",
                         "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
                         "api.tenants.unlink", "api.tenants.message"));
         createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_All", ImmutableSet.of(),
                 ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
+                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config",
                         "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
                         "api.tenants.unlink", "api.tenants.message", "api.permissions.write"));
     }
@@ -230,18 +234,22 @@ public class MetaResource {
         createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Everyone", ImmutableSet.of("_DEFAULT_"),
                 ImmutableSet.of("uptime.use", "quote.use"));
         createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_Read", ImmutableSet.of(),
-                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read"));
+                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
+                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config"));
         createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_Edit", ImmutableSet.of(),
                 ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
+                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config",
                         "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
                         "api.tenants.unlink", "api.tenants.message"));
         createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_All", ImmutableSet.of(),
                 ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
+                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config",
                         "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
                         "api.tenants.unlink", "api.tenants.message", "api.permissions.write"));
     }
 
-    private void createStartingGroup(final Tenant tenant, final Platform platform, final String channelGroupId, final String name, final Set<String> platformGroups, final Set<String> nodes) {
+    private void createStartingGroup(final Tenant tenant, final Platform platform, final String channelGroupId,
+                                     final String name, final Iterable<String> platformGroups, final Collection<String> nodes) {
         final TenantGroup tenantGroup = daoTenantGroup.createGroup(tenant.toCore(daoTenant), name);
         daoTenantGroup.addPermissionsToGroup(tenantGroup, nodes.stream().map(Permission::new).collect(Collectors.toSet()));
         for(final String platformGroup : platformGroups)
