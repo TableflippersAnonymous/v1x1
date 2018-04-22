@@ -27,6 +27,7 @@ export class V1x1PubSub {
   public connection: Observable<Connection>;
   private observables: Map<string, Observable<Object>> = new Map<string, Observable<Object>>();
   private authObservable: Observable<V1x1PubSubAuthResponseFrame>;
+  private topics: Set<string> = new Set<string>();
 
   constructor(private webInfo: V1x1WebInfo, private globalState: V1x1GlobalState) {}
 
@@ -41,7 +42,13 @@ export class V1x1PubSub {
       conn.messages.share().retryWhen(errors => errors.delay(1000))
     ).mergeAll().share();
     this.frames = this.messages.map(message => this.parseFrame(message)).share();
-    this.authObservable = this.globalState.authorization.get().map(authorization => this.auth(authorization)).mergeAll().publishReplay(1).refCount();
+    this.frames.filter(frame => frame instanceof V1x1PubSubHelloFrame).subscribe((frame: V1x1PubSubHelloFrame) => {
+      this.authObservable = this.globalState.authorization.get().first().map(authorization => this.auth(authorization)).mergeAll().publishReplay(1).refCount();
+      this.topics.forEach((topic: string) => {
+        this.listen(topic).subscribe();
+      });
+    });
+    this.authObservable = this.globalState.authorization.get().first().map(authorization => this.auth(authorization)).mergeAll().publishReplay(1).refCount();
   }
 
   public topic(topic: string): Observable<Object> {
@@ -49,7 +56,7 @@ export class V1x1PubSub {
     if(this.observables.has(topic))
       return this.observables.get(topic);
     this.connect();
-    let observable = new Observable<Object>(observer => {
+    let observable = Observable.create(observer => {
       let subscription = this.frames.filter(frame => frame instanceof V1x1PubSubTopicMessageFrame).subscribe((frame: V1x1PubSubTopicMessageFrame) => {
         console.log("WS Frame: " + frame.payload);
         observer.next(JSON.parse(frame.payload));
@@ -96,11 +103,15 @@ export class V1x1PubSub {
 
   private listen(topic: string): Observable<V1x1PubSubListenResponseFrame> {
     let requestFrame = new V1x1PubSubListenRequestFrame(topic);
-    return this.authObservable.map(_authed => this.request(requestFrame)).mergeAll();
+    return this.authObservable.first().map(() => this.request(requestFrame).map(r => {
+      this.topics.add(topic);
+      return r;
+    })).mergeAll();
   }
 
   private unlisten(topic: string): Observable<V1x1PubSubUnlistenResponseFrame> {
     let requestFrame = new V1x1PubSubUnlistenRequestFrame(topic);
+    this.topics.delete(topic);
     return this.request(requestFrame);
   }
 
@@ -112,7 +123,7 @@ export class V1x1PubSub {
   private request(request: V1x1PubSubFrame): Observable<V1x1PubSubResponseFrame> {
     this.send(request);
     // Need to handle ErrorFrame separately.
-    return this.frames.find(frame => frame instanceof V1x1PubSubResponseFrame && frame.responseTo == request.id);
+    return this.frames.find(frame => frame instanceof V1x1PubSubResponseFrame && frame.responseTo == request.id).first();
   }
 
   private send(request: V1x1PubSubFrame) {

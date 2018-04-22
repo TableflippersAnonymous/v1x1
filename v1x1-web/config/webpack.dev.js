@@ -26,7 +26,7 @@ module.exports = webpackMerge(commonConfig, {
     stats: 'minimal',
     proxy: {
       '/api': {
-        target: 'http://10.199.1.1:8080',
+        target: 'https://v1x1.tv',
         secure: false,
         changeOrigin: true
       }
