@@ -12,10 +12,7 @@ import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.messages.PubSubMessage;
-import tv.v1x1.common.dto.messages.events.ChannelConfigChangeEvent;
-import tv.v1x1.common.dto.messages.events.ChannelGroupConfigChangeEvent;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
-import tv.v1x1.common.dto.messages.events.TenantConfigChangeEvent;
 import tv.v1x1.common.modules.ServiceModule;
 import tv.v1x1.common.services.pubsub.TopicManager;
 import tv.v1x1.common.services.pubsub.TopicName;
@@ -124,22 +121,7 @@ public class ApiModule extends ServiceModule<ApiGlobalConfiguration, ApiUserConf
         }
     }
 
-    @Override
-    protected void processTenantConfigChangeEvent(final TenantConfigChangeEvent event) {
-        handleConfigChangeEvent(event.getTenant(), event.getConfigModule());
-    }
-
-    @Override
-    protected void processChannelGroupConfigChangeEvent(final ChannelGroupConfigChangeEvent event) {
-        handleConfigChangeEvent(event.getChannelGroup().getTenant(), event.getConfigModule());
-    }
-
-    @Override
-    protected void processChannelConfigChangeEvent(final ChannelConfigChangeEvent event) {
-        handleConfigChangeEvent(event.getChannel().getChannelGroup().getTenant(), event.getConfigModule());
-    }
-
-    private void handleConfigChangeEvent(final Tenant tenant, final Module module) {
+    public void handleConfigChangeEvent(final Tenant tenant, final Module module) {
         final TopicManager topicManager = getInjector().getInstance(TopicManager.class);
         final TopicName topic = new TopicName(tenant.getId().getValue(), toDto(), "config");
         final ConfigChangePubSub configChangePubSub = new ConfigChangePubSub(module.getName());
