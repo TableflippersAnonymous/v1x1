@@ -20,4 +20,14 @@ export class V1x1ConfigurationSet {
         return true;
     return false;
   }
+
+  setOriginal(original: V1x1ConfigurationSet) {
+    this.tenant.setOriginal(original.tenant);
+    this.channelGroups.forEach(channelGroup => {
+      channelGroup.config.setOriginal(original.channelGroups.find(
+        originalWrapper => channelGroup.channelGroup.platform === originalWrapper.channelGroup.platform &&
+          channelGroup.channelGroup.id === originalWrapper.channelGroup.id
+      ));
+    });
+  }
 }
