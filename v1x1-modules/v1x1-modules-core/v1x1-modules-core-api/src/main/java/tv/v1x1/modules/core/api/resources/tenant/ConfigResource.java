@@ -139,7 +139,9 @@ public class ConfigResource {
         } catch (final IOException e) {
             LOG.warn("Uncaught Exception:", e);
         }
-        messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new TenantConfigChangeEvent(apiModule.toDto(), module, tenant.toCore(daoManager.getDaoTenant())));
+        final tv.v1x1.common.dto.core.Tenant coreTenant = tenant.toCore(daoManager.getDaoTenant());
+        messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new TenantConfigChangeEvent(apiModule.toDto(), module, coreTenant));
+        apiModule.handleConfigChangeEvent(coreTenant, module);
         return getConfigurationFromJson(sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), true);
     }
 
@@ -212,6 +214,7 @@ public class ConfigResource {
             LOG.warn("Uncaught Exception:", e);
         }
         messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new ChannelGroupConfigChangeEvent(apiModule.toDto(), module, channelGroup));
+        apiModule.handleConfigChangeEvent(channelGroup.getTenant(), module);
         return getConfigurationFromJson(sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelGroupConfiguration.isEnabled());
     }
 
@@ -285,6 +288,7 @@ public class ConfigResource {
             LOG.warn("Uncaught Exception:", e);
         }
         messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new ChannelConfigChangeEvent(apiModule.toDto(), module, channel));
+        apiModule.handleConfigChangeEvent(channel.getChannelGroup().getTenant(), module);
         return getConfigurationFromJson(sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelConfiguration.isEnabled());
     }
 
