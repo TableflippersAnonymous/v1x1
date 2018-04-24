@@ -15,9 +15,7 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
       <div *ngFor="let channelGroup of configurationSet.channelGroups; let i = index">
         <ngb-tab>
           <template ngbTabTitle>
-            <span [class.color-twitch]="channelGroup.channelGroup.platform === 'TWITCH'" [class.color-discord]="channelGroup.channelGroup.platform === 'DISCORD'">
-              <i [class.fa-twitch]="channelGroup.channelGroup.platform === 'TWITCH'" [class.fa-discord]="channelGroup.channelGroup.platform === 'DISCORD'" [class.fab]="true"></i> {{channelGroup.channelGroup.displayName}}{{channelGroup.config.dirty() ? '*' : ''}}
-            </span>
+            <platform-formatter [platform]="channelGroup.channelGroup.platform">{{channelGroup.channelGroup.displayName}}{{channelGroup.config.dirty() ? '*' : ''}}</platform-formatter>
           </template>
           <template ngbTabContent>
             <configuration-channel-group [(v1x1Module)]="v1x1Module" [(activeTenant)]="activeTenant" [(activeChannelGroup)]="configurationSet.channelGroups[i]"></configuration-channel-group>

@@ -1,6 +1,7 @@
 import {Component, ContentChildren, EventEmitter, Input, OnInit, Output, QueryList} from "@angular/core";
 import {TopNavEntryComponent} from "./top_nav_entry";
 import {ActivatedRoute, Router} from "@angular/router";
+
 @Component({
   selector: 'top-nav',
   template: `
@@ -20,7 +21,7 @@ import {ActivatedRoute, Router} from "@angular/router";
             <a class="nav-link" href="#" (click)="item.navigate();">{{item.title}}</a>
           </li>
           <tenant-dropdown-nav-component *ngIf="loggedIn" (activeTenantChange)="activeTenantChange.emit($event)"></tenant-dropdown-nav-component>
-          <user-dropdown-nav-component *ngIf="loggedIn"></user-dropdown-nav-component>
+          <user-dropdown-nav-component *ngIf="loggedIn" [activeTenantUrl]="activeTenantUrl"></user-dropdown-nav-component>
         </ul>
       </div>
     </nav>
@@ -28,6 +29,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 })
 export class TopNavComponent implements OnInit {
   @Input() loggedIn: boolean;
+  @Input() activeTenantUrl: string;
   @ContentChildren(TopNavEntryComponent) entries: QueryList<TopNavEntryComponent>;
   @Output() public activeTenantChange = new EventEmitter();
 

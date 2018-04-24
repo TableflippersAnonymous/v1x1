@@ -15,3 +15,4 @@ import 'uuid';
 // FontAwesome
 import '@fortawesome/fontawesome';
 import '@fortawesome/fontawesome-free-brands';
+import '@fortawesome/fontawesome-pro-regular';

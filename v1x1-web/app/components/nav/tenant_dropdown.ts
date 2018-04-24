@@ -36,6 +36,6 @@ export class TenantDropdownNavComponent {
   }
 
   displayName(): Observable<string> {
-    return this.globalState.activeTenant.get().map(tenant => tenant.displayName);
+    return this.globalState.activeTenant.get().map(tenant => tenant !== undefined ? tenant.displayName : "???");
   }
 }

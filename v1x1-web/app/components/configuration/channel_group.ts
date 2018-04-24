@@ -18,9 +18,7 @@ import {V1x1ChannelGroupConfigurationWrapper} from "../../model/v1x1_channel_gro
       <div *ngFor="let channel of activeChannelGroup.config.channels; let i = index">
         <ngb-tab>
           <template ngbTabTitle>
-            <span [class.color-twitch]="activeChannelGroup.channelGroup.platform === 'TWITCH'" [class.color-discord]="activeChannelGroup.channelGroup.platform === 'DISCORD'">
-              <i [class.fa-twitch]="activeChannelGroup.channelGroup.platform === 'TWITCH'" [class.fa-discord]="activeChannelGroup.channelGroup.platform === 'DISCORD'" [class.fab]="true"></i> {{channel.channel.displayName}}{{channel.config.dirty() ? '*' : ''}}
-            </span>
+            <platform-formatter [platform]="activeChannelGroup.channelGroup.platform">{{channel.channel.displayName}}{{channel.config.dirty() ? '*' : ''}}</platform-formatter>
           </template>
           <template ngbTabContent>
             <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [(originalConfiguration)]="activeChannelGroup.config.channels[i].config.originalConfiguration" [(configuration)]="activeChannelGroup.config.channels[i].config.configuration" [activeTenant]="activeTenant" [activeChannelGroup]="activeChannelGroup.channelGroup" [activeChannel]="activeChannelGroup.config.channels[i].channel" [(enabled)]="activeChannelGroup.config.channels[i].config.enabled" [(originalEnabled)]="activeChannelGroup.config.channels[i].config.originalEnabled" [scope]="'channel'"></configuration-scope>

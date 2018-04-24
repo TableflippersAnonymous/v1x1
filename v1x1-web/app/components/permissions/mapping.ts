@@ -10,9 +10,7 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_g
     <ngb-tabset class="tabs-left">
       <ngb-tab *ngFor="let channelGroupPlatformMapping of channelGroupPlatformMappings">
         <template ngbTabTitle>
-          <span [class.color-twitch]="channelGroupPlatformMapping.channelGroup.platform === 'TWITCH'" [class.color-discord]="channelGroupPlatformMapping.channelGroup.platform === 'DISCORD'">
-            <i [class.fa-twitch]="channelGroupPlatformMapping.channelGroup.platform === 'TWITCH'" [class.fa-discord]="channelGroupPlatformMapping.channelGroup.platform === 'DISCORD'" [class.fab]="true"></i> {{channelGroupPlatformMapping.channelGroup.displayName}}
-          </span>
+          <platform-formatter [platform]="channelGroupPlatformMapping.channelGroup.platform">{{channelGroupPlatformMapping.channelGroup.displayName}}</platform-formatter>
         </template>
         <template ngbTabContent>
           <permissions-group-mapping-page [channelGroupPlatformMapping]="channelGroupPlatformMapping"></permissions-group-mapping-page>
@@ -30,6 +28,8 @@ export class PermissionsMappingComponent {
 
   recalculate() {
     this.globalState.activeTenant.get().subscribe(tenant => {
+      if(tenant === undefined)
+        return;
       this.api.getTenantPlatformMappings(tenant)
         .subscribe(tenantPlatformMapping => this.channelGroupPlatformMappings = tenantPlatformMapping.channelGroups);
     });
