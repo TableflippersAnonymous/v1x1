@@ -31,7 +31,7 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
   public v1x1Modules: V1x1Module[] = [];
   public permissions = Permission;
   public json = JSON;
-  public activeTenantValue: V1x1Tenant = null;
+  public activeTenantValue: V1x1Tenant = undefined;
   public configurationSets: V1x1ConfigurationSet[] = [];
   private subscriptions: Subscription[] = [];
   private pubsubSubscription: Subscription = null;
@@ -60,7 +60,7 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
   }
 
   recalculateTenantConfiguration() {
-    if(this.v1x1Modules === [] || this.activeTenantValue === null)
+    if(this.v1x1Modules === [] || this.activeTenantValue === undefined)
       return;
     let tenant = this.activeTenantValue;
     this.subscriptions.push(Observable.forkJoin(this.v1x1Modules.map(

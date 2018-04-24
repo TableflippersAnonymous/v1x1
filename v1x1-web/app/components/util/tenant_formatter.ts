@@ -5,7 +5,7 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
   selector: 'tenant-formatter',
   template: `
     <span *ngFor="let channelGroup of tenant.channelGroups; let idx = index">
-      <i [class.fa-twitch]="channelGroup.platform === 'TWITCH'" [class.fa-discord]="channelGroup.platform === 'DISCORD'" [class.fab]="true"></i> {{channelGroup.displayName}}
+      <platform-formatter [platform]="channelGroup.platform">{{channelGroup.displayName}}</platform-formatter>
       <br *ngIf="idx !== tenant.channelGroups.length - 1">
     </span>
   `

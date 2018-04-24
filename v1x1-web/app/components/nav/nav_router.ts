@@ -1,12 +1,14 @@
-import {Component, OnInit} from "@angular/core";
+import {Component, OnDestroy, OnInit} from "@angular/core";
 import {V1x1GlobalState} from "../../services/global_state";
 import {ActivatedRoute} from "@angular/router";
 import {V1x1Tenant} from "../../model/v1x1_tenant";
 import {UrlId} from "../../services/url_id";
+import {Subscription} from "rxjs/Subscription";
+
 @Component({
   selector: 'nav-router',
   template: `
-    <top-nav [loggedIn]="loggedIn" (activeTenantChange)="setActiveTenant($event)">
+    <top-nav [loggedIn]="loggedIn" [activeTenantUrl]="activeTenantId" (activeTenantChange)="setActiveTenant($event)">
       <top-nav-entry [justify]="'brand'" [title]="" [route]="[activeTenantId, 'welcome']"></top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Dashboard'" [route]="[activeTenantId, 'dashboard']" *ngIf="loggedIn && false"></top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Configuration'" [route]="[activeTenantId, 'config']" *ngIf="loggedIn"></top-nav-entry>
@@ -17,22 +19,26 @@ import {UrlId} from "../../services/url_id";
     <router-outlet></router-outlet>
   `
 })
-export class NavRouterComponent implements OnInit {
+export class NavRouterComponent implements OnInit, OnDestroy {
   activeTenantId: string = UrlId.fromApi("00000000-0000-0000-0000-000000000000").toUrl();
   loggedIn: boolean = false;
+  private subscriptions: Subscription[] = [];
 
   constructor(private globalState: V1x1GlobalState,
               private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.globalState.activeTenant.get().subscribe(tenant => {
-      this.activeTenantId = UrlId.fromApi(tenant.id).toUrl();
-    });
-    this.globalState.loggedIn.get().subscribe(loggedIn => {
+    this.subscriptions.push(this.globalState.activeTenant.get().subscribe(tenant => {
+      if(tenant !== undefined)
+        this.activeTenantId = UrlId.fromApi(tenant.id).toUrl();
+      else
+        this.activeTenantId = UrlId.fromApi("00000000-0000-0000-0000-000000000000").toUrl();
+    }));
+    this.subscriptions.push(this.globalState.loggedIn.get().subscribe(loggedIn => {
       this.loggedIn = loggedIn;
-    });
-    this.globalState.tenants.get().subscribe(tenants => {
-      this.route.params.subscribe(params => {
+    }));
+    this.subscriptions.push(this.globalState.tenants.get().subscribe(tenants => {
+      this.subscriptions.push(this.route.params.subscribe(params => {
         if(params['tenant_id']) {
           let currentTenant = tenants.find(tenant => tenant.id === UrlId.fromUrl(params['tenant_id']).toApi());
           if(currentTenant)
@@ -40,8 +46,12 @@ export class NavRouterComponent implements OnInit {
           else if(tenants.length > 0)
             this.setActiveTenant(tenants[0]);
         }
-      });
-    });
+      }));
+    }));
+  }
+
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
   }
 
   setActiveTenant(tenant: V1x1Tenant) {

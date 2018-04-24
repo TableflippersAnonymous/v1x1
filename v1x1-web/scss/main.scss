@@ -167,3 +167,11 @@ a.btn-mixer:hover {
   border-top-color: lightgray;
   border-top-width: 1px;
 }
+
+.dropdown-item.active .color-discord, .dropdown-item.active .color-twitch {
+  color: #fff;
+}
+
+.monospace {
+  font-family: "Lucida Console", Monaco, monospace
+}

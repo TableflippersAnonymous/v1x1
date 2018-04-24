@@ -47,6 +47,8 @@ import {V1x1WebInfo} from "../services/web_info";
 import {ConfigurationChannelGroupComponent} from "../components/configuration/channel_group";
 import {PermissionsMappingComponent} from "../components/permissions/mapping";
 import {PermissionsGroupMappingComponent} from "../components/permissions/group_mapping";
+import {PlatformFormatterComponent} from "../components/util/platform_formatter";
+import {UserPageComponent} from "../components/user/page";
 
 /**
  * <welcome-page [loggedIn]="loggedIn"></welcome-page>
@@ -93,6 +95,7 @@ const routes: Routes = [
         ]
       },
       { path: 'logs', component: LogsPageComponent },
+      { path: 'user', component: UserPageComponent },
       { path: 'help', component: HelpPageComponent }
     ]
   },
@@ -120,10 +123,10 @@ const routes: Routes = [
     ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
     ConfigurationFieldValueUserListComponent,
     TopNavComponent, TopNavEntryComponent, UserDropdownNavComponent, TenantDropdownNavComponent, NavRouterComponent,
-    DashboardPageComponent, HelpPageComponent, LogsPageComponent,
+    DashboardPageComponent, HelpPageComponent, LogsPageComponent, UserPageComponent,
     PermissionsPageComponent, PermissionsGroupsComponent, PermissionsGroupComponent, PermissionsMappingComponent, PermissionsGroupMappingComponent,
     WelcomePageComponent,
-    TenantFormatterComponent, UserFormatterComponent
+    TenantFormatterComponent, UserFormatterComponent, PlatformFormatterComponent
   ],
   providers:    [ V1x1Api, V1x1ApiCache, V1x1GlobalState, V1x1PubSub, V1x1WebInfo ],
   bootstrap:    [ AppComponent ]

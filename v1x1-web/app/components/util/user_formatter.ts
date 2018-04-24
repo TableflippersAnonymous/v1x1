@@ -5,7 +5,7 @@ import {Component, Input} from "@angular/core";
   selector: 'user-formatter',
   template: `
     <span *ngFor="let user of globalUser.users; let idx = index">
-      <i [class.fa-twitch]="user.platform === 'TWITCH'" [class.fa-discord]="user.platform === 'DISCORD'" [class.fab]="true"></i> {{user.displayName}}
+      <platform-formatter [platform]="user.platform">{{user.displayName}}</platform-formatter>
       <br *ngIf="idx !== globalUser.users.length - 1">
     </span>
   `
