@@ -1,6 +1,11 @@
 import {Component, Input} from "@angular/core";
-import {V1x1ConfigurationDefinitionField, ConfigType, Permission} from "../../model/v1x1_configuration_definition_field";
+import {
+  ConfigType,
+  Permission,
+  V1x1ConfigurationDefinitionField
+} from "../../model/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "./configurable";
+
 @Component({
   selector: 'configuration-field',
   template: `
@@ -21,6 +26,6 @@ export class ConfigurationFieldComponent extends ConfigurableComponent {
   public permissions = Permission;
 
   originalConfigPrimitive() {
-    return typeof this.originalConfiguration !== 'object' && typeof this.originalConfiguration !== 'array';
+    return typeof this.originalConfiguration !== 'object';
   }
 }

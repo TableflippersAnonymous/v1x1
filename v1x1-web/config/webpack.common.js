@@ -1,7 +1,5 @@
-var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var helpers = require('./helpers');
 
 module.exports = {
@@ -21,7 +19,7 @@ module.exports = {
   },
 
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.ts$/,
         loaders: ['awesome-typescript-loader', 'angular2-template-loader']
@@ -46,10 +44,7 @@ module.exports = {
       },*/
       {
         test: /\.scss$/,
-        loader: ExtractTextPlugin.extract({
-          fallbackLoader: "style-loader",
-          loader: ["css-loader?sourceMap", "sass-loader?sourceMap"]
-        })
+        loaders: ["css-loader?sourceMap", "sass-loader?sourceMap"]
       }
     ]
   },
@@ -61,12 +56,24 @@ module.exports = {
       helpers.root('app'), // location of your src
       { }
     ),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor', 'polyfills']
-    }),
     new HtmlWebpackPlugin({
       template: 'index.html'
     })
-  ]
+  ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        polyfills: {
+
+        },
+        vendor: {
+
+        },
+        app: {
+
+        }
+      }
+    }
+  }
 
 };

@@ -16,3 +16,5 @@ import 'uuid';
 import '@fortawesome/fontawesome';
 import '@fortawesome/fontawesome-free-brands';
 import '@fortawesome/fontawesome-pro-regular';
+// Bootstrap
+import './scss/bootstrap-dashboard/bootstrap-dashboard.scss';

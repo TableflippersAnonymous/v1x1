@@ -354,7 +354,7 @@ export class V1x1Api {
         .map((r) => JsonConvert.deserializeObject(r.json(), V1x1List))
         .map((l: V1x1List<string>) => l.entries)
         .catch((err, caught) => Observable.of([]))
-        .map(userIds => userIds.map(userId => this.getGlobalUser(userId)))
+        .map((userIds: string[]) => userIds.map(userId => this.getGlobalUser(userId)))
         .map(observableUsers => observableUsers.length === 0 ? Observable.of([]) : Observable.forkJoin(observableUsers))
         .mergeAll()
     ).mergeAll();
