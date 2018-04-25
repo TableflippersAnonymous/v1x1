@@ -1,4 +1,5 @@
-import {EventEmitter, Output, Input} from "@angular/core";
+import {EventEmitter, Input, Output} from "@angular/core";
+
 export class ConfigurableComponent {
   public originalConfigurationValue: any;
   public configurationValue: any;
@@ -8,7 +9,6 @@ export class ConfigurableComponent {
   originalConfigProvided: boolean = false;
 
   public set configuration(val) {
-    //console.log("Setting non-input " + JSON.stringify(val));
     if(val === undefined)
       this.configurationValue = undefined;
     else
@@ -21,7 +21,6 @@ export class ConfigurableComponent {
 
   @Input('configuration')
   set inputConfiguration(val: any) {
-    //console.log("Setting input " + JSON.stringify(val));
     if(val === undefined)
       this.configurationValue = undefined;
     else {
@@ -82,7 +81,6 @@ export class ConfigurableComponent {
   }
 
   configDirty() {
-    //console.log(this.constructor.name + ": " + JSON.stringify(this.configurationValue) + " " + JSON.stringify(this.originalConfigurationValue) + ": " + (JSON.stringify(this.configurationValue) !== JSON.stringify(this.originalConfigurationValue)));
     return JSON.stringify(this.configurationValue) !== JSON.stringify(this.originalConfigurationValue);
   }
 

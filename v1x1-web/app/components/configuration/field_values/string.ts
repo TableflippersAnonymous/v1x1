@@ -5,12 +5,14 @@ import {ConfigurableComponent} from "../configurable";
 @Component({
   selector: 'configuration-field-value-string',
   template: `
-    <div class="input-group">
-      <input type="text" [ngModel]="configuration" (blur)="configuration = $event.target.value" class="form-control" placeholder="{{field.defaultValue}}">
-      <span class="input-group-btn" *ngIf="configDirty() && originalValid()">
-        <button class="btn btn-secondary" (click)="abandonChanges()"><i class="far fa-undo"></i></button>
+    <span>
+      <mat-form-field class="input-group">
+        <input matInput type="text" [ngModel]="configuration" (blur)="configuration = $event.target.value" class="form-control" placeholder="{{field.displayName}}">
+      </mat-form-field>
+      <span class="input-group-append" *ngIf="configDirty() && originalValid()">
+        <button mat-button color="accent" (click)="abandonChanges()"><i class="far fa-undo"></i></button>
       </span>
-    </div>
+    </span>
   `
 })
 export class ConfigurationFieldValueStringComponent extends ConfigurableComponent {

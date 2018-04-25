@@ -1,106 +1,10 @@
-.tabs-left, .tabs-right {
-  display: flex;
-}
-
-.tabs-left > .tab-content,
-.tabs-right > .tab-content {
-  width: 100%;
-}
-
-.v1x1-color {
-  color: #0070a0 !important;
-}
-
-.tabs-right > .nav-tabs,
-.tabs-left > .nav-tabs {
-  border-bottom: 0;
-  min-width: 175px;
-}
-
-.tab-content > .tab-pane,
-.pill-content > .pill-pane {
-  display: none;
-}
-
-.tab-content > .active,
-.pill-content > .active {
-  display: block;
-}
-
-.tabs-left > .nav-tabs > li,
-.tabs-right > .nav-tabs > li {
-  float: none;
-}
-
-.tabs-left > .nav-tabs > li > a,
-.tabs-right > .nav-tabs > li > a {
-  min-width: 74px;
-  margin-right: 0;
-  margin-bottom: 3px;
-}
-
-.tabs-left > .nav-tabs {
-  float: left;
-  margin-right: 19px;
-  border-right: 1px solid #ddd;
-  -webkit-box-orient: vertical !important;
-  -webkit-box-direction: normal !important;
-  -webkit-flex-direction: column !important;
-  -ms-flex-direction: column !important;
-  flex-direction: column !important;
-}
-
-.tabs-left > .nav-tabs > li > a {
-  margin-right: -1px;
-  -webkit-border-radius: 4px 0 0 4px;
-  -moz-border-radius: 4px 0 0 4px;
-  border-radius: 4px 0 0 4px;
-}
-
-.tabs-left > .nav-tabs > li > a:hover,
-.tabs-left > .nav-tabs > li > a:focus {
-  border-color: #eeeeee #dddddd #eeeeee #eeeeee;
-}
-
-.tabs-left > .nav-tabs a.active,
-.tabs-left > .nav-tabs a.active:hover,
-.tabs-left > .nav-tabs a.active:focus {
-  border-color: #ddd transparent #ddd #ddd !important;
-  *border-right-color: #ffffff !important;
-}
-
-.tabs-right > .nav-tabs {
-  float: right;
-  margin-left: 19px;
-  border-left: 1px solid #ddd;
-  -webkit-box-orient: vertical !important;
-  -webkit-box-direction: normal !important;
-  -webkit-flex-direction: column !important;
-  -ms-flex-direction: column !important;
-  flex-direction: column !important;
-}
-
-.tabs-right > .nav-tabs > li > a {
-  margin-left: -1px;
-  -webkit-border-radius: 0 4px 4px 0;
-  -moz-border-radius: 0 4px 4px 0;
-  border-radius: 0 4px 4px 0;
-}
-
-.tabs-right > .nav-tabs > li > a:hover,
-.tabs-right > .nav-tabs > li > a:focus {
-  border-color: #eeeeee #eeeeee #eeeeee #dddddd;
-}
-
-.tabs-right > .nav-tabs a.active,
-.tabs-right > .nav-tabs a.active:hover,
-.tabs-right > .nav-tabs a.active:focus {
-  border-color: #ddd #ddd #ddd transparent !important;
-  *border-left-color: #ffffff !important;
+body {
+  margin: 0;
 }
 
 .config-group {
   border-left: 2px solid rgb(238, 238, 238);
+  padding-left: 10px;
 }
 
 .config-group-dirty {
@@ -115,7 +19,7 @@
   color: #6441A4;
 }
 .btn-twitch {
-  color: #fff;
+  color: #fff !important;
   background-color: #6441A4;
   border-color: #6441A4;
 }
@@ -127,7 +31,7 @@ a.btn-twitch:hover {
   color: #7289DA;
 }
 .btn-discord {
-  color: #fff;
+  color: #fff !important;
   background-color: #7289DA;
   border-color: #7289DA;
 }
@@ -136,7 +40,7 @@ a.btn-discord:hover {
 }
 
 .btn-slack {
-  color: #000;
+  color: #000 !important;
   background-color: #fff;
   border-color: #000;
 }
@@ -162,16 +66,57 @@ a.btn-mixer:hover {
   color: #fff;
 }
 
-.subnav {
-  border-top-style: solid;
-  border-top-color: lightgray;
-  border-top-width: 1px;
+.mat-raised-button.mat-small {
+  min-width: 0px;
 }
 
-.dropdown-item.active .color-discord, .dropdown-item.active .color-twitch {
-  color: #fff;
+.mat-raised-button.mat-tiny {
+  min-width: 0px;
+  line-height: 1rem;
 }
 
-.monospace {
-  font-family: "Lucida Console", Monaco, monospace
+.configuration-scope {
+  margin-left: 30px;
+  margin-top: 15px;
 }
+
+.form-group {
+  margin-bottom: 1rem;
+
+  > label {
+    font-weight: bold;
+  }
+}
+
+.card-container {
+  max-width: 1024px;
+  margin: 5rem auto;
+
+  .card-container {
+    margin: 1rem 0 0;
+    max-width: 100%;
+  }
+
+  .mat-card-header {
+    margin-top: -25px !important;
+    margin-left: -25px;
+    margin-right: -25px;
+    margin-bottom: 1rem;
+    background: rgba(0,0,0,.03);
+
+    .mat-card-header-text {
+      margin-left: 25px;
+      margin-right: 25px;
+    }
+  }
+
+  .mat-card-actions {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+}
+
+welcome-page .card-container {
+  max-width: 800px;
+}
+

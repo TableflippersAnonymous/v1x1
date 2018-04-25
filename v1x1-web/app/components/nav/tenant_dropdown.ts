@@ -8,18 +8,18 @@ import {Observable} from "rxjs";
 @Component({
   selector: 'tenant-dropdown-nav-component',
   template: `
-    <li class="nav-item" ngbDropdown *ngIf="globalState.activeTenant.getCurrent() !== undefined">
-      <a href="#" class="nav-link" id="navbarTenantDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
+    <span *ngIf="globalState.activeTenant.getCurrent() !== undefined">
+      <button mat-button [matMenuTriggerFor]="appMenu">
         Managing: {{displayName() | async}}
-      </a>
-      <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarTenantDropdownMenuLink">
-        <a href="#" *ngFor="let tenant of globalState.tenants.get() | async" class="dropdown-item" [class.active]="tenant.id === globalState.activeTenant.getCurrent()?.id" (click)="setActive(tenant);">
+      </button>
+      <mat-menu #appMenu="matMenu">
+        <button mat-menu-item *ngFor="let tenant of globalState.tenants.get() | async" class="dropdown-item" (click)="setActive(tenant);">
           <tenant-formatter [tenant]="tenant"></tenant-formatter>
-        </a>
+        </button>
         <hr>
-        <a class="dropdown-item">+ Create new</a>
-      </div>
-    </li>
+        <button mat-menu-item>+ Create new</button>
+      </mat-menu>
+    </span>
   `
 })
 export class TenantDropdownNavComponent {
@@ -31,7 +31,6 @@ export class TenantDropdownNavComponent {
 
   setActive(tenant: V1x1Tenant) {
     this.activeTenantChange.emit(tenant);
-    //this.router.navigate(['./', { tenant_id: this.tenants[idx].id }], { relativeTo: this.route });
     return false;
   }
 

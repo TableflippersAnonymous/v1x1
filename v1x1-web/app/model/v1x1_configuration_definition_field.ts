@@ -1,4 +1,5 @@
 import {JsonObject, JsonProperty} from "json2typescript";
+
 export enum ConfigType {
   INTEGER,
   STRING,
@@ -12,14 +13,13 @@ export enum ConfigType {
   COMPLEX,
   COMPLEX_LIST,
   COMPLEX_STRING_MAP,
-  USER_LIST
+  USER_LIST,
+  PERMISSION
 }
 
 export enum Permission {
   READ_WRITE, READ_ONLY, WRITE_ONLY, NONE
 }
-
-var complexConfigTypes = [ConfigType.COMPLEX, ConfigType.COMPLEX_LIST, ConfigType.COMPLEX_STRING_MAP];
 
 @JsonObject
 export class V1x1ConfigurationDefinitionField {

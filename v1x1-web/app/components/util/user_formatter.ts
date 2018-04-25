@@ -4,12 +4,17 @@ import {Component, Input} from "@angular/core";
 @Component({
   selector: 'user-formatter',
   template: `
-    <span *ngFor="let user of globalUser.users; let idx = index">
+    <mat-list *ngIf="!matMenuItem">
+      <mat-list-item *ngFor="let user of globalUser.users; last as last">
+        <platform-formatter [platform]="user.platform">{{user.displayName}}</platform-formatter>
+      </mat-list-item>
+    </mat-list>
+    <span mat-menu-item [disabled]="true" *ngFor="let user of matMenuItem ? globalUser.users : []; let idx = index">
       <platform-formatter [platform]="user.platform">{{user.displayName}}</platform-formatter>
-      <br *ngIf="idx !== globalUser.users.length - 1">
     </span>
   `
 })
 export class UserFormatterComponent {
   @Input() globalUser: V1x1GlobalUser;
+  @Input() matMenuItem: boolean = false;
 }

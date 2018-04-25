@@ -1,4 +1,3 @@
-var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -6,22 +5,15 @@ var helpers = require('./helpers');
 
 module.exports = {
   entry: {
-    'polyfills': './polyfills.ts',
-    'vendor': './vendor.ts',
     'app': './app/main.ts'
   },
 
   resolve: {
-    extensions: ['.ts', '.js'],
-    alias: {
-      '@fortawesome/fontawesome-free-regular$': '@fortawesome/fontawesome-free-regular/shakable.es.js',
-      '@fortawesome/fontawesome-free-brands$': '@fortawesome/fontawesome-free-brands/shakable.es.js',
-      '@fortawesome/fontawesome-pro-regular$': '@fortawesome/fontawesome-pro-regular/shakable.es.js'
-    }
+    extensions: ['.ts', '.js']
   },
 
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.ts$/,
         loaders: ['awesome-typescript-loader', 'angular2-template-loader']
@@ -31,7 +23,7 @@ module.exports = {
         loader: 'html-loader'
       },
       {
-        test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+        test: /\.(png|jpe?g|gif|svg|ico|woff|woff2|eot|ttf)$/,
         loader: 'file-loader?name=assets/[name].[hash].[ext]'
       },
       /*{
@@ -47,8 +39,8 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: ExtractTextPlugin.extract({
-          fallbackLoader: "style-loader",
-          loader: ["css-loader?sourceMap", "sass-loader?sourceMap"]
+          fallback: "style-loader?sourceMap",
+          use: ["css-loader?sourceMap", "sass-loader?sourceMap"]
         })
       }
     ]
@@ -61,12 +53,21 @@ module.exports = {
       helpers.root('app'), // location of your src
       { }
     ),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['app', 'vendor', 'polyfills']
-    }),
     new HtmlWebpackPlugin({
       template: 'index.html'
     })
-  ]
+  ],
+
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules|vendor/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
+  }
 
 };

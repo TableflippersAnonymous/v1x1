@@ -9,21 +9,27 @@ import {V1x1ApiCache} from "../../services/api_cache";
 @Component({
   selector: 'permissions-group-page',
   template: `
-    <div class="jumbotron" style="margin: 1rem;">
-      <h1 class="display-3">{{group.group.name}}</h1>
-      <p class="lead">Group ID: {{group.group.groupId}}</p>
-      <hr class="my-4">
-      <p>Additional help can be found in the help pages.</p>
+    <div class="card-container">
+      <form>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title><h1>{{group.group.name}}</h1></mat-card-title>
+            <mat-card-subtitle>Group ID: {{group.group.groupId}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <configuration-field *ngFor="let field of configurationDefinition.fields"
+                                 [field]="field" [complexFields]="configurationDefinition.complexFields"
+                                 [originalConfiguration]="originalConfiguration[field.jsonField]"
+                                 [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
+            <button mat-raised-button color="accent" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
+            <button mat-raised-button color="warn" (click)="deleteGroup()">Delete Group</button>
+          </mat-card-actions>
+        </mat-card>
+      </form>
     </div>
-    <form>
-      <configuration-field *ngFor="let field of configurationDefinition.fields"
-                           [field]="field" [complexFields]="configurationDefinition.complexFields"
-                           [originalConfiguration]="originalConfiguration[field.jsonField]"
-                           [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
-      <button class="btn btn-primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
-      <button class="btn btn-secondary" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
-      <button class="btn btn-danger" (click)="deleteGroup()">Delete Group</button>
-    </form>
   `
 })
 export class PermissionsGroupComponent {

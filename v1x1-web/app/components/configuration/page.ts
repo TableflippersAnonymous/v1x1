@@ -14,20 +14,16 @@ import {V1x1ConfigChange} from "../../model/v1x1_config_change";
 
 @Component({
   selector: 'configuration-page',
-  template: `<ngb-tabset class="tabs-left">
-    <div *ngFor="let v1x1Module of v1x1Modules; let i = index">
-      <ngb-tab *ngIf="v1x1Module.configurationDefinitionSet.user !== null && v1x1Module.configurationDefinitionSet.user?.tenantPermission !== permissions.NONE"
-               [title]="v1x1Module.displayName + (v1x1Module.dirty(configurationSets[i]) ? '*' : '')">
-        <template ngbTabContent>
-          <configuration-module [(v1x1Module)]="v1x1Modules[i]" [(configurationSet)]="configurationSets[i]" [activeTenant]="activeTenantValue" *ngIf="configurationSets[i]"></configuration-module>
-        </template>
-      </ngb-tab>
-    </div>
-  </ngb-tabset>
-`
+  template: `
+    <mat-tab-group>
+      <mat-tab *ngFor="let v1x1Module of v1x1Modules; let i = index">
+        <ng-template mat-tab-label>{{v1x1Module.displayName + (v1x1Module.dirty(configurationSets[i]) ? '*' : '')}}</ng-template>
+        <configuration-module [(v1x1Module)]="v1x1Modules[i]" [(configurationSet)]="configurationSets[i]" [activeTenant]="activeTenantValue" *ngIf="configurationSets[i]"></configuration-module>
+      </mat-tab>
+    </mat-tab-group>
+  `
 })
 export class ConfigurationPageComponent implements OnInit, OnDestroy {
-  /* This will eventually be pulled from the API. */
   public v1x1Modules: V1x1Module[] = [];
   public permissions = Permission;
   public json = JSON;
@@ -42,7 +38,9 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.subscriptions.push(this.cachedApi.getModules().first().subscribe(modules => {
-      this.v1x1Modules = modules;
+      this.v1x1Modules = modules
+        .filter((v1x1Module: V1x1Module) => v1x1Module.configurationDefinitionSet.user !== null)
+        .filter((v1x1Module: V1x1Module) => v1x1Module.configurationDefinitionSet.user.tenantPermission !== Permission.NONE);
       this.recalculateTenantConfiguration();
     }));
     this.subscriptions.push(this.globalState.activeTenant.get().subscribe(tenant => {
@@ -79,9 +77,5 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
         }
       );
     }));
-  }
-
-  debugConfig() {
-    return JSON.stringify(this.v1x1Modules.map((m, idx) => [m.name, this.configurationSets && this.configurationSets[idx]]));
   }
 }

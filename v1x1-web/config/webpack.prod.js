@@ -9,31 +9,26 @@ const ENV = process.env.NODE_ENV = process.env.ENV = 'production';
 module.exports = webpackMerge(commonConfig, {
   devtool: 'source-map',
 
+  mode: 'production',
+
   output: {
     path: helpers.root('dist'),
     publicPath: '/',
     filename: '[name].[hash].js',
-    chunkFilename: '[id].[hash].chunk.js'
+    chunkFilename: '[name].[hash].js'
   },
 
   plugins: [
     new webpack.LoaderOptionsPlugin({
       options: {
         htmlLoader: {
-          minimize: false
+          minimize: true
         },
         sassLoader: {
           includePaths: [helpers.root('scss')]
         },
         context: '/'
       }
-    }),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.optimize.UglifyJsPlugin({ // https://github.com/angular/angular/issues/10618
-      mangle: {
-        keep_fnames: true
-      },
-      sourceMap: true
     }),
     new ExtractTextPlugin({
       filename: '[name].[hash].css',
@@ -44,5 +39,11 @@ module.exports = webpackMerge(commonConfig, {
         'ENV': JSON.stringify(ENV)
       }
     })
-  ]
+  ],
+  optimization: {
+    minimize: true,
+    namedModules: true,
+    noEmitOnErrors: true,
+    concatenateModules: true
+  }
 });

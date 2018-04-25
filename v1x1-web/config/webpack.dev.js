@@ -31,6 +31,8 @@ module.exports = webpackMerge(commonConfig, {
         changeOrigin: true
       }
     }
-  }
+  },
+
+  mode: 'development'
 
 });
