@@ -20,7 +20,6 @@ export class AppComponent {
   queryString: {[key: string]: string} = {};
   loggingIn: boolean = false;
   activeTenant: V1x1Tenant = null;
-  activeTenantId: string = "";
 
   constructor(private apiCache: V1x1ApiCache, private api: V1x1Api, private globalState: V1x1GlobalState, private router: Router, private webInfo: V1x1WebInfo) {
     this.apiCache.preload();
@@ -69,12 +68,6 @@ export class AppComponent {
         this.postLogin();
       });
     }
-  }
-
-  setActiveTenant(tenant: V1x1Tenant) {
-    this.activeTenant = tenant;
-    this.activeTenantId = tenant.id;
-    this.globalState.activeTenant.set(tenant);
   }
 
   loginFromLocalStorage() {

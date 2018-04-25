@@ -14,24 +14,28 @@ import {JsonConvert} from "json2typescript";
 @Component({
   selector: 'configuration-scope',
   template: `
-    <div class="jumbotron" style="margin: 1rem;">
-      <h1 class="display-3">{{v1x1Module.displayName}}</h1>
-      <p class="lead">{{v1x1Module.description}}</p>
-      <hr class="my-4">
-      <p>Additional help can be found in the help pages.</p>
-    </div>
-    <div class="container-fluid" style="margin-top: 1rem;">
+    <div class="card-container">
       <form>
-        <configuration-field *ngIf="scope !== 'tenant'"
-                             [field]="overrideField" [complexFields]="{}"
-                             [originalConfiguration]="originalEnabled"
-                             [configuration]="enabled" (configurationChange)="setEnabled($event)"></configuration-field>
-        <configuration-field *ngFor="let field of configurationDefinition.fields"
-                             [field]="field" [complexFields]="configurationDefinition.complexFields"
-                             [originalConfiguration]="originalConfiguration[field.jsonField]"
-                             [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
-        <button class="btn btn-primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
-        <button class="btn btn-secondary" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title><h1>{{v1x1Module.displayName}}</h1></mat-card-title>
+            <mat-card-subtitle>{{v1x1Module.description}}</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <configuration-field *ngIf="scope !== 'tenant'"
+                                 [field]="overrideField" [complexFields]="{}"
+                                 [originalConfiguration]="originalEnabled"
+                                 [configuration]="enabled" (configurationChange)="setEnabled($event)"></configuration-field>
+            <configuration-field *ngFor="let field of configurationDefinition.fields"
+                                 [field]="field" [complexFields]="configurationDefinition.complexFields"
+                                 [originalConfiguration]="originalConfiguration[field.jsonField]"
+                                 [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
+          </mat-card-content>
+          <mat-card-actions>
+            <button mat-raised-button color="primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
+            <button mat-raised-button color="accent" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
+          </mat-card-actions>
+        </mat-card>
       </form>
     </div>
   `

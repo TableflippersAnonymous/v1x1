@@ -7,16 +7,14 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_g
 @Component({
   selector: 'permissions-mapping-page',
   template: `
-    <ngb-tabset class="tabs-left">
-      <ngb-tab *ngFor="let channelGroupPlatformMapping of channelGroupPlatformMappings">
-        <template ngbTabTitle>
+    <mat-tab-group>
+      <mat-tab *ngFor="let channelGroupPlatformMapping of channelGroupPlatformMappings">
+        <ng-template mat-tab-label>
           <platform-formatter [platform]="channelGroupPlatformMapping.channelGroup.platform">{{channelGroupPlatformMapping.channelGroup.displayName}}</platform-formatter>
-        </template>
-        <template ngbTabContent>
-          <permissions-group-mapping-page [channelGroupPlatformMapping]="channelGroupPlatformMapping"></permissions-group-mapping-page>
-        </template>
-      </ngb-tab>
-    </ngb-tabset>
+        </ng-template>
+        <permissions-group-mapping-page [channelGroupPlatformMapping]="channelGroupPlatformMapping"></permissions-group-mapping-page>
+      </mat-tab>
+    </mat-tab-group>
   `
 })
 export class PermissionsMappingComponent {

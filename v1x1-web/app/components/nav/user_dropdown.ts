@@ -7,19 +7,17 @@ import {Router} from "@angular/router";
 @Component({
   selector: 'user-dropdown-nav-component',
   template: `
-    <li class="nav-item" ngbDropdown *ngIf="globalUser !== null">
-      <a href="#" class="nav-link" id="navbarUserDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
+    <span *ngIf="globalUser !== null">
+      <button mat-button [matMenuTriggerFor]="appMenu">
         Logged in as: {{displayName()}}
-      </a>
-      <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarUserDropdownMenuLink">
-        <div class="dropdown-item">
-          <user-formatter [globalUser]="globalUser"></user-formatter>
-        </div>
+      </button>
+      <mat-menu #appMenu="matMenu">
+        <user-formatter [globalUser]="globalUser" [matMenuItem]="true"></user-formatter>
         <hr>
-        <a class="dropdown-item" href="#" (click)="navigateToUsers();">Link/Unlink Users</a>
-        <a class="dropdown-item" href="#" (click)="logout();">Switch Users</a>
-      </div>
-    </li>
+        <a mat-menu-item href="#" (click)="navigateToUsers();">Link/Unlink Users</a>
+        <a mat-menu-item href="#" (click)="logout();">Switch Users</a>
+      </mat-menu>
+    </span>
   `
 })
 export class UserDropdownNavComponent {

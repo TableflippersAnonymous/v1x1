@@ -1,6 +1,5 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
-import {NgbModule} from "@ng-bootstrap/ng-bootstrap";
 
 import {AppComponent} from '../components/app';
 import {ConfigurationPageComponent} from '../components/configuration/page';
@@ -28,7 +27,6 @@ import {DashboardPageComponent} from "../components/dashboard/page";
 import {HelpPageComponent} from "../components/help/page";
 import {LogsPageComponent} from "../components/logs/page";
 import {PermissionsPageComponent} from "../components/permissions/page";
-import {HttpModule} from "@angular/http";
 import {V1x1ApiCache} from "../services/api_cache";
 import {WelcomePageComponent} from "../components/welcome/page";
 import {UserDropdownNavComponent} from "../components/nav/user_dropdown";
@@ -49,6 +47,20 @@ import {PermissionsMappingComponent} from "../components/permissions/mapping";
 import {PermissionsGroupMappingComponent} from "../components/permissions/group_mapping";
 import {PlatformFormatterComponent} from "../components/util/platform_formatter";
 import {UserPageComponent} from "../components/user/page";
+import {HttpClientModule} from "@angular/common/http";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatDividerModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
+  MatSelectModule,
+  MatSlideToggleModule,
+  MatTabsModule,
+  MatToolbarModule
+} from "@angular/material";
 
 /**
  * <welcome-page [loggedIn]="loggedIn"></welcome-page>
@@ -108,10 +120,20 @@ const routes: Routes = [
 
 @NgModule({
   imports:      [
-    NgbModule.forRoot(),
     BrowserModule,
+    BrowserAnimationsModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatMenuModule,
+    MatTabsModule,
+    MatCardModule,
+    MatInputModule,
+    MatSlideToggleModule,
+    MatSelectModule,
+    MatListModule,
+    MatDividerModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(routes, { useHash: true })
   ],
   declarations: [

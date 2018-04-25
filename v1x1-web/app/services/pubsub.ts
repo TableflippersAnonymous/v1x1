@@ -98,12 +98,12 @@ export class V1x1PubSub {
 
   private auth(authorization: string): Observable<V1x1PubSubAuthResponseFrame> {
     let requestFrame = new V1x1PubSubAuthRequestFrame(authorization);
-    return this.request(requestFrame);
+    return <Observable<V1x1PubSubAuthResponseFrame>> this.request(requestFrame);
   }
 
   private listen(topic: string): Observable<V1x1PubSubListenResponseFrame> {
     let requestFrame = new V1x1PubSubListenRequestFrame(topic);
-    return this.authObservable.first().map(() => this.request(requestFrame).map(r => {
+    return <Observable<V1x1PubSubListenResponseFrame>> this.authObservable.first().map(() => this.request(requestFrame).map(r => {
       this.topics.add(topic);
       return r;
     })).mergeAll();
@@ -112,18 +112,18 @@ export class V1x1PubSub {
   private unlisten(topic: string): Observable<V1x1PubSubUnlistenResponseFrame> {
     let requestFrame = new V1x1PubSubUnlistenRequestFrame(topic);
     this.topics.delete(topic);
-    return this.request(requestFrame);
+    return <Observable<V1x1PubSubUnlistenResponseFrame>> this.request(requestFrame);
   }
 
   private publish(topic: string, payload: string): Observable<V1x1PubSubPublishResponseFrame> {
     let requestFrame = new V1x1PubSubPublishRequestFrame(topic, payload);
-    return this.request(requestFrame);
+    return <Observable<V1x1PubSubPublishResponseFrame>> this.request(requestFrame);
   }
 
   private request(request: V1x1PubSubFrame): Observable<V1x1PubSubResponseFrame> {
     this.send(request);
     // Need to handle ErrorFrame separately.
-    return this.frames.find(frame => frame instanceof V1x1PubSubResponseFrame && frame.responseTo == request.id).first();
+    return <Observable<V1x1PubSubResponseFrame>> this.frames.find(frame => frame instanceof V1x1PubSubResponseFrame && frame.responseTo == request.id).first();
   }
 
   private send(request: V1x1PubSubFrame) {

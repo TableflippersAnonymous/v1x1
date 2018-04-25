@@ -1,0 +1,10 @@
+@import '~@angular/material/theming';
+
+@include mat-core();
+$v1x1-app-primary: mat-palette($mat-blue);
+$v1x1-app-accent: mat-palette($mat-purple);
+$v1x1-app-warn: mat-palette($mat-orange);
+$v1x1-app-theme: mat-light-theme($v1x1-app-primary, $v1x1-app-accent, $v1x1-app-warn);
+@include angular-material-theme($v1x1-app-theme);
+
+@import "fonts.scss";

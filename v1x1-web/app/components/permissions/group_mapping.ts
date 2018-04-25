@@ -9,21 +9,27 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_g
 @Component({
   selector: 'permissions-group-mapping-page',
   template: `
-    <div class="jumbotron" style="margin: 1rem;">
-      <h1 class="display-3">Group Mappings</h1>
-      <p class="lead">This lets you automatically assign groups to users.</p>
-      <hr class="my-4">
-      <p>Here you can assign v1x1 groups to users with certain Twitch badges or Discord roles.</p>
-      <p>Additional help can be found in the help pages.</p>
+    <div class="card-container">
+      <form>
+        <mat-card>
+          <mat-card-header>
+            <mat-card-title><h1>Group Mappings</h1></mat-card-title>
+            <mat-card-subtitle>This lets you automatically assign groups to users</mat-card-subtitle>
+            <mat-card-subtitle>Here you can assign v1x1 groups to users with certain Twitch badges or Discord roles.</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <configuration-field *ngFor="let field of configurationDefinition.fields"
+                                 [field]="field" [complexFields]="configurationDefinition.complexFields"
+                                 [originalConfiguration]="originalConfiguration[field.jsonField]"
+                                 [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
+          </mat-card-content>
+          <mat-card-actions>
+            <button class="btn btn-primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
+            <button class="btn btn-secondary" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
+          </mat-card-actions>
+        </mat-card>
+      </form>
     </div>
-    <form>
-      <configuration-field *ngFor="let field of configurationDefinition.fields"
-                           [field]="field" [complexFields]="configurationDefinition.complexFields"
-                           [originalConfiguration]="originalConfiguration[field.jsonField]"
-                           [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
-      <button class="btn btn-primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
-      <button class="btn btn-secondary" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
-    </form>
   `
 })
 export class PermissionsGroupMappingComponent {

@@ -1,33 +1,48 @@
 import {Component, Input} from "@angular/core";
 import {V1x1ConfigurationDefinitionField} from "../../../model/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "../configurable";
+
 @Component({
   selector: 'configuration-field-value-complex-string-map',
   template: `
-    <div class="container-fluid">
-      <div class="row" *ngFor="let elem of object.keys(configuration || {})" >
-        <div class="col-2">
-          <div class="input-group">
-            <input type="text" class="form-control" [ngModel]="elem" (blur)="changeKey(elem, $event.target.value);">
-            <span class="input-group-btn">
-              <button class="btn btn-danger" (click)="delKey(elem)">&times;</button>
-            </span>
+    <div class="card-container">
+      <mat-card>
+        <mat-card-header [class.config-group-dirty]="configDirty()">
+          <mat-card-title><h2>{{field.displayName}}</h2></mat-card-title>
+          <mat-card-subtitle *ngIf="field.description !== '<no description>'">{{field.description}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="card-container" *ngFor="let elem of object.keys(configuration || {})">
+            <mat-card>
+              <mat-card-header [class.config-group-dirty]="configFieldDirty(elem)">
+                <mat-card-title style="margin-top: 16px;">
+                  <mat-form-field class="input-group">
+                    <input matInput type="text" [ngModel]="elem" (blur)="changeKey(elem, $event.target.value);">
+                  </mat-form-field>
+                </mat-card-title>
+              </mat-card-header>
+              <mat-card-content>
+                <configuration-field-value-complex [field]="field"
+                                                   [complexFields]="complexFields"
+                                                   [originalConfiguration]="originalConfiguration[elem]"
+                                                   [configuration]="configuration[elem]"
+                                                   (configurationChange)="setConfigField(elem, $event)"></configuration-field-value-complex>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="accent" (click)="delKey(elem)">&times;</button>
+              </mat-card-actions>
+            </mat-card>
           </div>
-        </div>
-        <div class="col config-group" style="margin-bottom: 1rem;" [class.config-group-dirty]="configFieldDirty(elem)">
-          <configuration-field-value-complex [field]="field" [complexFields]="complexFields" [originalConfiguration]="originalConfiguration[elem]" [configuration]="configuration[elem]" (configurationChange)="setConfigField(elem, $event)"></configuration-field-value-complex>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-2">
-          <div class="input-group">
-            <input type="text" class="form-control" [(ngModel)]="nextValue" placeholder="Add an entry ...">
-            <span class="input-group-btn">
-              <button class="btn btn-warning" (click)="addValue(nextValue)">+</button>
-            </span>
-          </div>
-        </div>
-      </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <mat-form-field class="input-group">
+            <input matInput type="text" [(ngModel)]="nextValue" placeholder="Add an entry ...">
+          </mat-form-field>
+          <span class="input-group-append">
+            <button mat-raised-button color="accent" (click)="addValue(nextValue)">+</button>
+          </span>
+        </mat-card-actions>
+      </mat-card>
     </div>
   `
 })

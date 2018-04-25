@@ -6,23 +6,18 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
 @Component({
   selector: 'configuration-module',
   template: `
-    <ngb-tabset class="tabs-left">
-      <ngb-tab [title]="'Everything' + (configurationSet.tenant.dirty() ? '*' : '')">
-        <template ngbTabContent>
-          <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [(originalConfiguration)]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.tenant.configuration" [activeTenant]="activeTenant" [activeChannelGroup]="null" [activeChannel]="null" [enabled]="true" [originalEnabled]="true" [scope]="'tenant'"></configuration-scope>
-        </template>
-      </ngb-tab>
-      <div *ngFor="let channelGroup of configurationSet.channelGroups; let i = index">
-        <ngb-tab>
-          <template ngbTabTitle>
-            <platform-formatter [platform]="channelGroup.channelGroup.platform">{{channelGroup.channelGroup.displayName}}{{channelGroup.config.dirty() ? '*' : ''}}</platform-formatter>
-          </template>
-          <template ngbTabContent>
-            <configuration-channel-group [(v1x1Module)]="v1x1Module" [(activeTenant)]="activeTenant" [(activeChannelGroup)]="configurationSet.channelGroups[i]"></configuration-channel-group>
-          </template>
-        </ngb-tab>
-      </div>
-    </ngb-tabset>
+    <mat-tab-group>
+      <mat-tab>
+        <ng-template mat-tab-label>Everything{{configurationSet.tenant.dirty() ? '*' : ''}}</ng-template>
+        <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [(originalConfiguration)]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.tenant.configuration" [activeTenant]="activeTenant" [activeChannelGroup]="null" [activeChannel]="null" [enabled]="true" [originalEnabled]="true" [scope]="'tenant'"></configuration-scope>
+      </mat-tab>
+      <mat-tab *ngFor="let channelGroup of configurationSet.channelGroups; let i = index">
+        <ng-template mat-tab-label>
+          <platform-formatter [platform]="channelGroup.channelGroup.platform">{{channelGroup.channelGroup.displayName}}{{channelGroup.config.dirty() ? '*' : ''}}</platform-formatter>
+        </ng-template>
+        <configuration-channel-group [(v1x1Module)]="v1x1Module" [(activeTenant)]="activeTenant" [(activeChannelGroup)]="configurationSet.channelGroups[i]"></configuration-channel-group>
+      </mat-tab>
+    </mat-tab-group>
   `
 })
 export class ConfigurationModuleComponent {

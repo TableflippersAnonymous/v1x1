@@ -8,27 +8,30 @@ import {V1x1Api} from "../../../services/api";
   template: `
     <div *ngFor="let elem of configuration; let i = index" style="padding-left: 10px; margin-bottom: 1rem;" class="config-group" [class.config-group-dirty]="configIdxDirty(i)">
       <div class="input-group">
-        <user-formatter [globalUser]="configuration[i]"></user-formatter>
-        <button class="btn btn-danger btn-sm" style="margin-left: 1rem;" (click)="delIdx(i);">&times;</button>
+        <span><user-formatter [globalUser]="configuration[i]"></user-formatter></span>
+        <span><button mat-raised-button color="accent" style="margin-left: 1rem;" (click)="delIdx(i);">&times;</button></span>
       </div>
     </div>
     <div>
       <div class="input-group">
-        <div class="input-group-addon" style="padding: .25rem .75rem;">
-          <div ngbDropdown>
-            <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
-              <span *ngIf="newPlatform === 'TWITCH'" class="color-twitch"><i class="fab fa-twitch"></i></span>
-              <span *ngIf="newPlatform === 'DISCORD'" class="color-discord"><i class="fab fa-discord"></i></span>
-            </a>
-            <div class="dropdown-menu" style="left: auto; right: 0;">
-              <a href="#" class="dropdown-item color-twitch" [class.active]="newPlatform === 'TWITCH'" (click)="newPlatform = 'TWITCH'; false;"><i class="fab fa-twitch"></i> Twitch</a>
-              <a href="#" class="dropdown-item color-discord" [class.active]="newPlatform === 'DISCORD'" (click)="newPlatform = 'DISCORD'; false;"><i class="fab fa-discord"></i> Discord</a>
-            </div>
-          </div>
-        </div>
-        <input type="text" class="form-control" placeholder="Username" [(ngModel)]="newUsername">
-        <span class="input-group-btn">
-          <button class="btn btn-warning" (click)="addList()">+</button>
+        <span style="padding: .25rem .75rem;">
+          <mat-menu #appMenu="matMenu">
+            <button mat-menu-item (click)="newPlatform = 'TWITCH';">
+              <platform-formatter platform="TWITCH">Twitch</platform-formatter>
+            </button>
+            <button mat-menu-item (click)="newPlatform = 'DISCORD';">
+              <platform-formatter platform="DISCORD">Discord</platform-formatter>
+            </button>
+          </mat-menu>
+          <button mat-button color="accent" [matMenuTriggerFor]="appMenu">
+            <platform-formatter [platform]="newPlatform"><i class="far fa-sort-down"></i></platform-formatter>
+          </button>
+        </span>
+        <mat-form-field>
+            <input matInput type="text" placeholder="Username" [(ngModel)]="newUsername">
+        </mat-form-field>
+        <span class="input-group-append">
+          <button mat-button color="accent" (click)="addList()">+</button>
         </span>
       </div>
     </div>

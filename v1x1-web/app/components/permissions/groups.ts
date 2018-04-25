@@ -7,32 +7,33 @@ import {V1x1GlobalState} from "../../services/global_state";
 @Component({
   selector: 'permissions-groups-page',
   template: `
-    <ngb-tabset class="tabs-left">
-      <ngb-tab *ngFor="let group of groups" [title]="group.group.name">
-        <template ngbTabContent>
-          <permissions-group-page [activeTenant]="globalState.activeTenant.get() | async" [group]="group" (update)="recalculateGroups()"></permissions-group-page>
-        </template>
-      </ngb-tab>
-      <ngb-tab [title]="'+ New'">
-        <template ngbTabContent>
-          <div class="jumbotron" style="margin: 1rem;">
-            <h1 class="display-3">New Group</h1>
-            <p class="lead">This lets you create a new group of users.</p>
-            <hr class="my-4">
-            <p>Additional help can be found in the help pages.</p>
-          </div>
+    <mat-tab-group>
+      <mat-tab *ngFor="let group of groups">
+        <ng-template mat-tab-label>{{group.group.name}}</ng-template>
+        <permissions-group-page [activeTenant]="globalState.activeTenant.get() | async" [group]="group" (update)="recalculateGroups()"></permissions-group-page>
+      </mat-tab>
+      <mat-tab>
+        <ng-template mat-tab-label>+ New</ng-template>
+        <div class="card-container">
           <form>
-            <div class="form-group">
-              <label>Group Name</label>
-              <div class="input-group">
-                <input name="groupname" type="text" [(ngModel)]="newGroup" class="form-control" placeholder="New group name">
-              </div>
-            </div>
-            <button class="btn btn-primary" (click)="createGroup();">Create</button>
+            <mat-card>
+              <mat-card-header>
+                <mat-card-title><h1>New Group</h1></mat-card-title>
+                <mat-card-subtitle>This lets you create a new group of users.</mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <mat-form-field>
+                  <input matInput name="groupname" type="text" [(ngModel)]="newGroup" class="form-control" placeholder="New group name">
+                </mat-form-field>
+              </mat-card-content>
+              <mat-card-actions>
+                <button mat-raised-button color="primary" (click)="createGroup();">Create</button>
+              </mat-card-actions>
+            </mat-card>
           </form>
-        </template>
-      </ngb-tab>
-    </ngb-tabset>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
   `
 })
 export class PermissionsGroupsComponent {

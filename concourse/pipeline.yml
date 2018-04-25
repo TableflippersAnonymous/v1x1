@@ -869,15 +869,15 @@ jobs:
             content_type: application/javascript
         - put: v1x1-web
           params:
-            file: v1x1-web-target/polyfills.*.js
-            content_type: application/javascript
-        - put: v1x1-web
-          params:
             file: v1x1-web-target/vendor.*.js
             content_type: application/javascript
         - put: v1x1-web
           params:
-            file: v1x1-web-target/*.css
+            file: v1x1-web-target/app.*.css
+            content_type: text/css
+        - put: v1x1-web
+          params:
+            file: v1x1-web-target/vendor.*.css
             content_type: text/css
         - put: v1x1-web
           params:
