@@ -1,5 +1,5 @@
 import {Injectable} from "@angular/core";
-import {Http} from "@angular/http";
+import {HttpClient} from "@angular/common/http";
 import {V1x1WebConfig} from "../model/v1x1_web_config";
 import {Observable} from "rxjs";
 import {JsonConvert} from "json2typescript";
@@ -8,11 +8,11 @@ import {JsonConvert} from "json2typescript";
 export class V1x1WebInfo {
   private webConfig: Observable<V1x1WebConfig>;
 
-  constructor(private http: Http) {}
+  constructor(private http: HttpClient) {}
 
   fetchWebConfig(): Observable<V1x1WebConfig> {
     return this.http.get("/api/v1/platform/web/config")
-      .map((r) => JsonConvert.deserializeObject(r.json(), V1x1WebConfig));
+      .map((r) => JsonConvert.deserializeObject(r, V1x1WebConfig));
   }
 
   getWebConfig(): Observable<V1x1WebConfig> {

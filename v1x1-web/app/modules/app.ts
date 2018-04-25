@@ -28,7 +28,6 @@ import {DashboardPageComponent} from "../components/dashboard/page";
 import {HelpPageComponent} from "../components/help/page";
 import {LogsPageComponent} from "../components/logs/page";
 import {PermissionsPageComponent} from "../components/permissions/page";
-import {HttpModule} from "@angular/http";
 import {V1x1ApiCache} from "../services/api_cache";
 import {WelcomePageComponent} from "../components/welcome/page";
 import {UserDropdownNavComponent} from "../components/nav/user_dropdown";
@@ -49,6 +48,7 @@ import {PermissionsMappingComponent} from "../components/permissions/mapping";
 import {PermissionsGroupMappingComponent} from "../components/permissions/group_mapping";
 import {PlatformFormatterComponent} from "../components/util/platform_formatter";
 import {UserPageComponent} from "../components/user/page";
+import {HttpClientModule} from "@angular/common/http";
 
 /**
  * <welcome-page [loggedIn]="loggedIn"></welcome-page>
@@ -111,7 +111,7 @@ const routes: Routes = [
     NgbModule.forRoot(),
     BrowserModule,
     FormsModule,
-    HttpModule,
+    HttpClientModule,
     RouterModule.forRoot(routes, { useHash: true })
   ],
   declarations: [

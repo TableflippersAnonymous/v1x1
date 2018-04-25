@@ -9,12 +9,12 @@ import {V1x1GlobalState} from "../../services/global_state";
   template: `
     <ngb-tabset class="tabs-left">
       <ngb-tab *ngFor="let group of groups" [title]="group.group.name">
-        <template ngbTabContent>
+        <ng-template ngbTabContent>
           <permissions-group-page [activeTenant]="globalState.activeTenant.get() | async" [group]="group" (update)="recalculateGroups()"></permissions-group-page>
-        </template>
+        </ng-template>
       </ngb-tab>
       <ngb-tab [title]="'+ New'">
-        <template ngbTabContent>
+        <ng-template ngbTabContent>
           <div class="jumbotron" style="margin: 1rem;">
             <h1 class="display-3">New Group</h1>
             <p class="lead">This lets you create a new group of users.</p>
@@ -30,7 +30,7 @@ import {V1x1GlobalState} from "../../services/global_state";
             </div>
             <button class="btn btn-primary" (click)="createGroup();">Create</button>
           </form>
-        </template>
+        </ng-template>
       </ngb-tab>
     </ngb-tabset>
   `

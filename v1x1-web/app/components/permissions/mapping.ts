@@ -9,12 +9,12 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_g
   template: `
     <ngb-tabset class="tabs-left">
       <ngb-tab *ngFor="let channelGroupPlatformMapping of channelGroupPlatformMappings">
-        <template ngbTabTitle>
+        <ng-template ngbTabTitle>
           <platform-formatter [platform]="channelGroupPlatformMapping.channelGroup.platform">{{channelGroupPlatformMapping.channelGroup.displayName}}</platform-formatter>
-        </template>
-        <template ngbTabContent>
+        </ng-template>
+        <ng-template ngbTabContent>
           <permissions-group-mapping-page [channelGroupPlatformMapping]="channelGroupPlatformMapping"></permissions-group-mapping-page>
-        </template>
+        </ng-template>
       </ngb-tab>
     </ngb-tabset>
   `

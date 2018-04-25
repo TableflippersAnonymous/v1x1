@@ -18,9 +18,9 @@ import {V1x1ConfigChange} from "../../model/v1x1_config_change";
     <div *ngFor="let v1x1Module of v1x1Modules; let i = index">
       <ngb-tab *ngIf="v1x1Module.configurationDefinitionSet.user !== null && v1x1Module.configurationDefinitionSet.user?.tenantPermission !== permissions.NONE"
                [title]="v1x1Module.displayName + (v1x1Module.dirty(configurationSets[i]) ? '*' : '')">
-        <template ngbTabContent>
+        <ng-template ngbTabContent>
           <configuration-module [(v1x1Module)]="v1x1Modules[i]" [(configurationSet)]="configurationSets[i]" [activeTenant]="activeTenantValue" *ngIf="configurationSets[i]"></configuration-module>
-        </template>
+        </ng-template>
       </ngb-tab>
     </div>
   </ngb-tabset>

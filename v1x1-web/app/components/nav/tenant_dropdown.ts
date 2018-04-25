@@ -12,7 +12,7 @@ import {Observable} from "rxjs";
       <a href="#" class="nav-link" id="navbarTenantDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
         Managing: {{displayName() | async}}
       </a>
-      <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarTenantDropdownMenuLink">
+      <div ngbDropdownMenu style="left: auto;" aria-labelledby="navbarTenantDropdownMenuLink">
         <a href="#" *ngFor="let tenant of globalState.tenants.get() | async" class="dropdown-item" [class.active]="tenant.id === globalState.activeTenant.getCurrent()?.id" (click)="setActive(tenant);">
           <tenant-formatter [tenant]="tenant"></tenant-formatter>
         </a>

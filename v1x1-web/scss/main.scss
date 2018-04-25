@@ -8,7 +8,7 @@
 }
 
 .v1x1-color {
-  color: #0070a0 !important;
+  color: #007bff !important;
 }
 
 .tabs-right > .nav-tabs,
@@ -174,4 +174,24 @@ a.btn-mixer:hover {
 
 .monospace {
   font-family: "Lucida Console", Monaco, monospace
+}
+
+.form-check-label {
+  margin-left: 1.25rem;
+}
+
+.dropdown-menu {
+  background-color: #252830;
+}
+
+a.dropdown-item {
+  color: #cfd2da;
+}
+
+a.nav-link {
+  color: #cfd2da;
+}
+
+a.nav-link:hover {
+  color: #fff;
 }

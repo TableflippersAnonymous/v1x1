@@ -11,7 +11,7 @@ import {Router} from "@angular/router";
       <a href="#" class="nav-link" id="navbarUserDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
         Logged in as: {{displayName()}}
       </a>
-      <div class="dropdown-menu" style="left: auto; right: 0;" aria-labelledby="navbarUserDropdownMenuLink">
+      <div ngbDropdownMenu style="left: auto;" aria-labelledby="navbarUserDropdownMenuLink">
         <div class="dropdown-item">
           <user-formatter [globalUser]="globalUser"></user-formatter>
         </div>

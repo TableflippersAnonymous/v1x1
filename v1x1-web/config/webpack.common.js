@@ -1,5 +1,6 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var helpers = require('./helpers');
 
 module.exports = {
@@ -44,7 +45,10 @@ module.exports = {
       },*/
       {
         test: /\.scss$/,
-        loaders: ["css-loader?sourceMap", "sass-loader?sourceMap"]
+        loader: ExtractTextPlugin.extract({
+          fallback: "style-loader?sourceMap",
+          use: ["css-loader?sourceMap", "sass-loader?sourceMap"]
+        })
       }
     ]
   },
@@ -60,20 +64,9 @@ module.exports = {
       template: 'index.html'
     })
   ],
+
   optimization: {
-    splitChunks: {
-      cacheGroups: {
-        polyfills: {
-
-        },
-        vendor: {
-
-        },
-        app: {
-
-        }
-      }
-    }
+    runtimeChunk: 'single'
   }
 
 };

@@ -8,18 +8,18 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
   template: `
     <ngb-tabset class="tabs-left">
       <ngb-tab [title]="'Everything' + (configurationSet.tenant.dirty() ? '*' : '')">
-        <template ngbTabContent>
+        <ng-template ngbTabContent>
           <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [(originalConfiguration)]="configurationSet.tenant.originalConfiguration" [(configuration)]="configurationSet.tenant.configuration" [activeTenant]="activeTenant" [activeChannelGroup]="null" [activeChannel]="null" [enabled]="true" [originalEnabled]="true" [scope]="'tenant'"></configuration-scope>
-        </template>
+        </ng-template>
       </ngb-tab>
       <div *ngFor="let channelGroup of configurationSet.channelGroups; let i = index">
         <ngb-tab>
-          <template ngbTabTitle>
+          <ng-template ngbTabTitle>
             <platform-formatter [platform]="channelGroup.channelGroup.platform">{{channelGroup.channelGroup.displayName}}{{channelGroup.config.dirty() ? '*' : ''}}</platform-formatter>
-          </template>
-          <template ngbTabContent>
+          </ng-template>
+          <ng-template ngbTabContent>
             <configuration-channel-group [(v1x1Module)]="v1x1Module" [(activeTenant)]="activeTenant" [(activeChannelGroup)]="configurationSet.channelGroups[i]"></configuration-channel-group>
-          </template>
+          </ng-template>
         </ngb-tab>
       </div>
     </ngb-tabset>
