@@ -1,20 +1,32 @@
 
 // Colors
 //
-$body-color:             #000;
+$body-color:             #292b2c;
 
 // special light gray for flourishes like hr's
 $gray-subtle:            #eee;
 
 // Brand Scale
 $theme-colors: (
-  primary: #1997c6,
-  success: #1BC98E,
-  info: #9F86FF,
-  warning: #E4D836,
+  primary: #0085FD,
+  success: #5CFE29,
+  info: #833DFC,
+  warning: #FFA629,
   danger: #E64759,
   dark: darken(#252830, 5%)
 );
+
+/*
+$theme-colors: (
+  primary: #1997c6,
+  success: #1BC98E,
+  info: #9F86FF,
+  warning: #E4B806,
+  danger: #E64759,
+  dark: darken(#252830, 5%)
+);
+
+ */
 
 @import "./bootstrap/_functions.scss";
 @import "./bootstrap/_variables.scss";
@@ -29,7 +41,7 @@ $nav-tabs-active-link-hover-bg: $body-bg !default;
 // Custom and override variables for this toolkit.
 
 // icons
-$icon-font-path: "../../assets/fonts/";
+$icon-font-path: "../assets/fonts/";
 $icon-font-name: "toolkit-entypo";
 
 
@@ -58,11 +70,12 @@ $grid-gutter-width: $spacer;
 // Overrides Bootstrap defaults.
 
 // Fonts
-$font-family-sans-serif:  "Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-family-sans-serif:  "pragmatica", sans-serif; //"Roboto", "Helvetica Neue", Helvetica, Arial, sans-serif;
 $font-family-base:        $font-family-sans-serif;
+$headings-font-family:    "nimbus-sans", sans-serif;
 
 // Body
-$font-size-base:          0.9rem;
+$font-size-base:          1.0rem;
 $font-weight-base:        300;
 $letter-spacing-base:     0;
 $line-height-base:        1.5;
@@ -112,7 +125,7 @@ $btn-secondary-color:            $gray-900;
 $btn-secondary-bg:               $gray-100;
 $btn-secondary-border:           darken($btn-secondary-bg, 10%);
 $btn-toolbar-divider-bg:         #eee;
-
+$btn-line-height-sm: 1.3;
 
 // Badges
 //

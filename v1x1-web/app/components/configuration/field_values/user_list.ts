@@ -14,20 +14,20 @@ import {V1x1Api} from "../../../services/api";
     </div>
     <div>
       <div class="input-group">
-        <div class="input-group-addon" style="padding: .25rem .75rem;">
+        <div class="input-group-prepend" style="padding: .25rem .75rem;">
           <div ngbDropdown>
             <a href="#" class="nav-link" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" ngbDropdownToggle (click)="false;">
               <span *ngIf="newPlatform === 'TWITCH'" class="color-twitch"><i class="fab fa-twitch"></i></span>
               <span *ngIf="newPlatform === 'DISCORD'" class="color-discord"><i class="fab fa-discord"></i></span>
             </a>
-            <div class="dropdown-menu" style="left: auto; right: 0;">
+            <div ngbDropdownMenu style="left: auto; right: 0;">
               <a href="#" class="dropdown-item color-twitch" [class.active]="newPlatform === 'TWITCH'" (click)="newPlatform = 'TWITCH'; false;"><i class="fab fa-twitch"></i> Twitch</a>
               <a href="#" class="dropdown-item color-discord" [class.active]="newPlatform === 'DISCORD'" (click)="newPlatform = 'DISCORD'; false;"><i class="fab fa-discord"></i> Discord</a>
             </div>
           </div>
         </div>
         <input type="text" class="form-control" placeholder="Username" [(ngModel)]="newUsername">
-        <span class="input-group-btn">
+        <span class="input-group-append">
           <button class="btn btn-warning" (click)="addList()">+</button>
         </span>
       </div>

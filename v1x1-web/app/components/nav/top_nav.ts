@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 @Component({
   selector: 'top-nav',
   template: `
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-light bg-light">
       <a class="v1x1-color navbar-brand" href="#" (click)="entriesOn('brand')[0].navigate();">v1x1</a>
       <ul class="nav">
         <li *ngFor="let item of entriesOn('left'); let i = index" class="nav-item" [class.active]="item.isActive()">

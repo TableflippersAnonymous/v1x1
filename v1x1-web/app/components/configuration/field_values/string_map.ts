@@ -1,6 +1,7 @@
 import {Component, Input} from "@angular/core";
 import {V1x1ConfigurationDefinitionField} from "../../../model/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "../configurable";
+
 @Component({
   selector: 'configuration-field-value-string-map',
   template: `
@@ -9,7 +10,7 @@ import {ConfigurableComponent} from "../configurable";
         <div class="col-2">
           <div class="input-group">
             <input type="text" class="form-control" [ngModel]="elem" (blur)="changeKey(elem, $event.target.value);">
-            <span class="input-group-btn">
+            <span class="input-group-append">
               <button class="btn btn-danger" (click)="delKey(elem)">&times;</button>
             </span>
           </div>
@@ -22,7 +23,7 @@ import {ConfigurableComponent} from "../configurable";
         <div class="col-2">
           <div class="input-group">
             <input type="text" class="form-control" [(ngModel)]="nextValue" placeholder="Add an entry ...">
-            <span class="input-group-btn">
+            <span class="input-group-append">
               <button class="btn btn-warning" (click)="addValue(nextValue)">+</button>
             </span>
           </div>

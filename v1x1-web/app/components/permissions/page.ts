@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 @Component({
   selector: 'permissions-page',
   template: `
-    <nav class="navbar navbar-dark bg-dark subnav">
+    <nav class="navbar navbar-light bg-light subnav">
       <ul class="nav">
         <li class="nav-item" [class.active]="router.isActive(router.createUrlTree(['./groups'], {relativeTo: route}), false)">
           <a class="nav-link" [routerLink]="['./groups']">Groups</a>

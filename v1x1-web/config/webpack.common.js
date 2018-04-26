@@ -5,8 +5,6 @@ var helpers = require('./helpers');
 
 module.exports = {
   entry: {
-    'polyfills': './polyfills.ts',
-    'vendor': './vendor.ts',
     'app': './app/main.ts'
   },
 
@@ -30,7 +28,7 @@ module.exports = {
         loader: 'html-loader'
       },
       {
-        test: /\.(png|jpe?g|gif|svg|woff|woff2|ttf|eot|ico)$/,
+        test: /\.(png|jpe?g|gif|svg|ico)$/,
         loader: 'file-loader?name=assets/[name].[hash].[ext]'
       },
       /*{
@@ -49,6 +47,48 @@ module.exports = {
           fallback: "style-loader?sourceMap",
           use: ["css-loader?sourceMap", "sass-loader?sourceMap"]
         })
+      },
+      {
+        test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader",
+        options: {
+          // Limit at 50k. Above that it emits separate files
+          limit: 50000,
+
+          // url-loader sets mimetype if it's passed.
+          // Without this it derives it from the file extension
+          mimetype: "application/font-woff",
+
+          // Output below fonts directory
+          name: "./fonts/[name].[ext]"
+        }
+      },
+      {
+        test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader",
+        options: {
+          limit: 50000,
+          mimetype: "font/woff",
+          name: "./fonts/[name].[ext]"
+        }
+      },
+      {
+        test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader",
+        options: {
+          limit: 50000,
+          mimetype: "application/vnd.ms-fontobject",
+          name: "./fonts/[name].[ext]"
+        }
+      },
+      {
+        test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
+        loader: "url-loader",
+        options: {
+          limit: 50000,
+          mimetype: "application/font-sfnt",
+          name: "./fonts/[name].[ext]"
+        }
       }
     ]
   },
@@ -66,7 +106,15 @@ module.exports = {
   ],
 
   optimization: {
-    runtimeChunk: 'single'
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /node_modules|vendor/,
+          name: 'vendor',
+          chunks: 'all'
+        }
+      }
+    }
   }
 
 };
