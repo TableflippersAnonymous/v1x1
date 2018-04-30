@@ -12,6 +12,7 @@ import {V1x1WebInfo} from "../services/web_info";
 @Component({
   selector: 'v1x1-app',
   template: `
+    <div class="v1x1-color-bar"></div>
     <router-outlet></router-outlet>
   `
 })

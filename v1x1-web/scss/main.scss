@@ -49,7 +49,7 @@ a.btn-slack:hover {
 }
 
 .btn-youtube {
-  color: #fff;
+  color: #fff !important;
   background-color: #ff0000;
   border-color: #aa0000;
 }
@@ -58,7 +58,7 @@ a.btn-youtube:hover {
 }
 
 .btn-mixer {
-  color: #fff;
+  color: #fff !important;
   background-color: #006ac1;
   border-color: #006ac1;
 }
@@ -118,5 +118,29 @@ a.btn-mixer:hover {
 
 welcome-page .card-container {
   max-width: 800px;
+  margin-top: 200px;
 }
 
+.v1x1-color-bar {
+  position: fixed;
+  background-color: #2196f3;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  height: 400px;
+  z-index: -1;
+}
+
+body {
+  background-color: #eeeeee;
+}
+
+.mat-tab-header {
+  background: #fff;
+  z-index: 1;
+}
+
+.mat-toolbar {
+  z-index: 2;
+  background: #1976d2 !important;
+}
