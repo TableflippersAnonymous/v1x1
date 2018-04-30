@@ -8,9 +8,28 @@ import tv.v1x1.common.dto.irc.IrcServer;
 import tv.v1x1.common.dto.irc.IrcSource;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.IrcUser;
-import tv.v1x1.common.dto.irc.commands.*;
+import tv.v1x1.common.dto.irc.commands.ClearChatCommand;
+import tv.v1x1.common.dto.irc.commands.GlobalUserStateCommand;
+import tv.v1x1.common.dto.irc.commands.HostTargetCommand;
+import tv.v1x1.common.dto.irc.commands.JoinCommand;
+import tv.v1x1.common.dto.irc.commands.ModeCommand;
+import tv.v1x1.common.dto.irc.commands.NoticeCommand;
+import tv.v1x1.common.dto.irc.commands.PartCommand;
+import tv.v1x1.common.dto.irc.commands.PingCommand;
+import tv.v1x1.common.dto.irc.commands.PrivmsgCommand;
+import tv.v1x1.common.dto.irc.commands.ReconnectCommand;
+import tv.v1x1.common.dto.irc.commands.RoomStateCommand;
+import tv.v1x1.common.dto.irc.commands.RplEndOfMotdCommand;
+import tv.v1x1.common.dto.irc.commands.RplNameReplyCommand;
+import tv.v1x1.common.dto.irc.commands.UserNoticeCommand;
+import tv.v1x1.common.dto.irc.commands.UserStateCommand;
+import tv.v1x1.common.dto.irc.commands.WhisperCommand;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -27,7 +46,7 @@ public class IrcParser {
             final IrcStanza.IrcCommand command = parseCommand(parts[1]);
             if (command == null)
                 return null;
-            final String rawArgs = parts[2];
+            final String rawArgs = parts.length > 2 ? parts[2] : null;
             final List<String> args = parseArgs(rawArgs);
             return buildStanza(line, tagMap, source, command, rawArgs, args.toArray(new String[]{}));
         } finally {
