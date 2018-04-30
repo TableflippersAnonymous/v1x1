@@ -1,4 +1,4 @@
-package tv.v1x1.common.config;
+package tv.v1x1.common.scanners.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.collect.ImmutableList;

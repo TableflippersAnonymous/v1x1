@@ -1,8 +1,8 @@
 package tv.v1x1.modules.core.api.api.rest;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import tv.v1x1.common.config.ConfigType;
-import tv.v1x1.common.config.Permission;
+import tv.v1x1.common.scanners.config.ConfigType;
+import tv.v1x1.common.scanners.config.Permission;
 
 import java.util.List;
 import java.util.Map;

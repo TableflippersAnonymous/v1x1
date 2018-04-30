@@ -1,7 +1,7 @@
 package tv.v1x1.common.dto.db;
 
 import com.datastax.driver.mapping.annotations.Table;
-import tv.v1x1.common.config.Permission;
+import tv.v1x1.common.scanners.config.Permission;
 
 import java.util.List;
 import java.util.Map;

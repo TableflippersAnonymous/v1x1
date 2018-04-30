@@ -1,7 +1,7 @@
 package tv.v1x1.common.dto.core;
 
-import tv.v1x1.common.config.*;
-import tv.v1x1.common.config.Permission;
+import tv.v1x1.common.scanners.config.ConfigType;
+import tv.v1x1.common.scanners.config.Permission;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +14,7 @@ public abstract class ConfigurationDefinition {
     private final String displayName;
     private final String description;
     private final int version;
-    private final tv.v1x1.common.config.Permission tenantPermission;
+    private final tv.v1x1.common.scanners.config.Permission tenantPermission;
     private final List<Field> fields;
     private final Map<String, List<Field>> complexFields;
 
@@ -24,11 +24,11 @@ public abstract class ConfigurationDefinition {
         private final String defaultValue;
         private final ConfigType configType;
         private final List<String> requires;
-        private final tv.v1x1.common.config.Permission tenantPermission;
+        private final tv.v1x1.common.scanners.config.Permission tenantPermission;
         private final String jsonField;
         private final String complexType;
 
-        public Field(final String displayName, final String description, final String defaultValue, final ConfigType configType, final List<String> requires, final tv.v1x1.common.config.Permission tenantPermission, final String jsonField, final String complexType) {
+        public Field(final String displayName, final String description, final String defaultValue, final ConfigType configType, final List<String> requires, final tv.v1x1.common.scanners.config.Permission tenantPermission, final String jsonField, final String complexType) {
             this.displayName = displayName;
             this.description = description;
             this.defaultValue = defaultValue;
@@ -76,7 +76,7 @@ public abstract class ConfigurationDefinition {
         }
     }
 
-    public ConfigurationDefinition(final String name, final String displayName, final String description, final int version, final tv.v1x1.common.config.Permission tenantPermission, final List<Field> fields, final Map<String, List<Field>> complexFields) {
+    public ConfigurationDefinition(final String name, final String displayName, final String description, final int version, final tv.v1x1.common.scanners.config.Permission tenantPermission, final List<Field> fields, final Map<String, List<Field>> complexFields) {
         this.name = name;
         this.displayName = displayName;
         this.description = description;
@@ -102,7 +102,7 @@ public abstract class ConfigurationDefinition {
         return version;
     }
 
-    public tv.v1x1.common.config.Permission getTenantPermission() {
+    public tv.v1x1.common.scanners.config.Permission getTenantPermission() {
         return tenantPermission;
     }
 

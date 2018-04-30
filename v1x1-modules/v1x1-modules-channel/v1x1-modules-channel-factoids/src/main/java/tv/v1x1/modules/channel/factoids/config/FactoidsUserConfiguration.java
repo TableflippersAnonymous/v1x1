@@ -1,14 +1,14 @@
 package tv.v1x1.modules.channel.factoids.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import tv.v1x1.common.config.ComplexType;
-import tv.v1x1.common.config.ConfigType;
-import tv.v1x1.common.config.Description;
-import tv.v1x1.common.config.DisplayName;
-import tv.v1x1.common.config.ModuleConfig;
-import tv.v1x1.common.config.Type;
-import tv.v1x1.common.config.Version;
 import tv.v1x1.common.modules.BasicUserConfiguration;
+import tv.v1x1.common.scanners.config.ComplexType;
+import tv.v1x1.common.scanners.config.ConfigType;
+import tv.v1x1.common.scanners.config.Description;
+import tv.v1x1.common.scanners.config.DisplayName;
+import tv.v1x1.common.scanners.config.ModuleConfig;
+import tv.v1x1.common.scanners.config.Type;
+import tv.v1x1.common.scanners.config.Version;
 import tv.v1x1.modules.channel.factoids.Factoid;
 
 import java.util.HashMap;
