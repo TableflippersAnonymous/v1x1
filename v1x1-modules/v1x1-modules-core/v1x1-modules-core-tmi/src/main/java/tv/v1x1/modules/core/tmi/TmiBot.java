@@ -443,8 +443,10 @@ public class TmiBot implements Runnable {
 
     private void sendLine(final String line) throws IOException {
         log("Write: " + line);
-        outputStream.write((line + "\r\n").getBytes());
-        outputStream.flush();
+        if(outputStream != null) {
+            outputStream.write((line + "\r\n").getBytes());
+            outputStream.flush();
+        }
     }
 
     private void authenticate() throws IOException, InterruptedException {
