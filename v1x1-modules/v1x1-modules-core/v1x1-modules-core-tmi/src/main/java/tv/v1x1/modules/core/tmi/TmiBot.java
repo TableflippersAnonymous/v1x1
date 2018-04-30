@@ -296,7 +296,7 @@ public class TmiBot implements Runnable {
     }
 
     private void event(final HostTargetCommand hostTargetCommand, final Span parentSpan) throws NoSuchUserException {
-        event(new TwitchHostEvent(module, getChannel(hostTargetCommand), getChannelByName(hostTargetCommand.getTargetChannel()), hostTargetCommand), parentSpan);
+        event(new TwitchHostEvent(module, getChannel(hostTargetCommand), hostTargetCommand.getTargetChannel().equals("-") ? null : getChannelByName(hostTargetCommand.getTargetChannel()), hostTargetCommand), parentSpan);
     }
 
     private void event(final JoinCommand joinCommand, final Span parentSpan) throws NoSuchUserException {
