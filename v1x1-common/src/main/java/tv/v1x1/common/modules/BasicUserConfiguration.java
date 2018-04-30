@@ -1,10 +1,10 @@
 package tv.v1x1.common.modules;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import tv.v1x1.common.config.ConfigType;
-import tv.v1x1.common.config.Description;
-import tv.v1x1.common.config.DisplayName;
-import tv.v1x1.common.config.Type;
+import tv.v1x1.common.scanners.config.ConfigType;
+import tv.v1x1.common.scanners.config.Description;
+import tv.v1x1.common.scanners.config.DisplayName;
+import tv.v1x1.common.scanners.config.Type;
 
 /**
  * Created by naomi on 10/5/16.

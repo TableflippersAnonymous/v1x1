@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
  */
 public class GlobalConfigurationDefinition extends ConfigurationDefinition {
     public GlobalConfigurationDefinition(final String name, final String displayName, final String description,
-                                         final int version, final tv.v1x1.common.config.Permission tenantPermission,
+                                         final int version, final tv.v1x1.common.scanners.config.Permission tenantPermission,
                                          final List<Field> fields, final Map<String, List<Field>> complexFields) {
         super(name, displayName, description, version, tenantPermission, fields, complexFields);
     }

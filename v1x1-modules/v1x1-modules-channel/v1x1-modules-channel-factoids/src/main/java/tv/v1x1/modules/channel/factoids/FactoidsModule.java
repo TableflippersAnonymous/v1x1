@@ -7,6 +7,11 @@ import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
+import tv.v1x1.common.scanners.i18n.I18nDefault;
+import tv.v1x1.common.scanners.i18n.I18nDefaults;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
+import tv.v1x1.common.scanners.permission.Permissions;
+import tv.v1x1.common.scanners.permission.RegisteredPermission;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.modules.channel.factoids.commands.FactCommand;
 import tv.v1x1.modules.channel.factoids.config.FactoidsGlobalConfiguration;
@@ -18,6 +23,45 @@ import java.util.Set;
 /**
  * @author Josh
  */
+@Permissions({
+        @RegisteredPermission(
+                node = "factoids.useall",
+                displayName = "Use All Factoids",
+                description = "This gives you the ability to use all factoids.",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
+        ),
+        @RegisteredPermission(
+                node = "fact.modify",
+                displayName = "Modify Factoids",
+                description = "This gives you the ability to modify all factoids.",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
+        ),
+        @RegisteredPermission(
+                node = "fact.user.{custompermission}",
+                displayName = "Custom permissions for factoids",
+                description = "This gives you the ability to use certain factoids."
+        )
+})
+@I18nDefaults({
+        @I18nDefault(
+                key = "help.blurb",
+                message = "Factoids are little bits of text you can call upon as a custom command",
+                displayName = "Help Blurb",
+                description = "Sent in response to !fact help"
+        ),
+        @I18nDefault(
+                key = "invalid.args",
+                message = "%commander%, that command is missing something. Usage: %usage%",
+                displayName = "Invalid Arguments",
+                description = "Sent when the user gives invalid options."
+        ),
+        @I18nDefault(
+                key = "invalid.subcommand",
+                message = "%commander%, what do you want to do with a fact? Type !fact help for a list",
+                displayName = "Invalid Command",
+                description = "Sent when the user gives an invalid command."
+        )
+})
 public class FactoidsModule extends RegisteredThreadedModule<FactoidsGlobalConfiguration, FactoidsUserConfiguration> {
     static {
         final Module module = new Module("factoids");

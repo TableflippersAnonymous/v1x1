@@ -1,4 +1,4 @@
-package tv.v1x1.common.config;
+package tv.v1x1.common.scanners.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface DefaultString {
-    String value();
+public @interface Requires {
+    String[] value();
 }

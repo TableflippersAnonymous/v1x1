@@ -1,13 +1,12 @@
 package tv.v1x1.common.dto.db;
 
 import com.datastax.driver.mapping.annotations.Column;
-import com.datastax.driver.mapping.annotations.Field;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.UDT;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
-import tv.v1x1.common.config.ConfigType;
-import tv.v1x1.common.config.Permission;
+import tv.v1x1.common.scanners.config.ConfigType;
+import tv.v1x1.common.scanners.config.Permission;
 
 import java.util.List;
 import java.util.Map;

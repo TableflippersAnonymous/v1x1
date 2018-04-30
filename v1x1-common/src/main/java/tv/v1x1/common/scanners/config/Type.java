@@ -1,4 +1,4 @@
-package tv.v1x1.common.config;
+package tv.v1x1.common.scanners.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
  * Created by naomi on 10/24/2016.
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface ModuleConfig {
-    String value();
+@Target(ElementType.FIELD)
+public @interface Type {
+    ConfigType value();
 }

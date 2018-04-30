@@ -2,13 +2,13 @@ package tv.v1x1.modules.channel.factoids;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import tv.v1x1.common.config.ConfigType;
-import tv.v1x1.common.config.Description;
-import tv.v1x1.common.config.DisplayName;
-import tv.v1x1.common.config.TenantPermission;
-import tv.v1x1.common.config.Type;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.db.Permission;
+import tv.v1x1.common.scanners.config.ConfigType;
+import tv.v1x1.common.scanners.config.Description;
+import tv.v1x1.common.scanners.config.DisplayName;
+import tv.v1x1.common.scanners.config.TenantPermission;
+import tv.v1x1.common.scanners.config.Type;
 
 /**
  * @author Josh
@@ -16,7 +16,7 @@ import tv.v1x1.common.dto.db.Permission;
 public class Factoid {
     // Kludge to know what we called this fact by
     @JsonIgnore
-    @TenantPermission(tv.v1x1.common.config.Permission.NONE)
+    @TenantPermission(tv.v1x1.common.scanners.config.Permission.NONE)
     private String id;
     @JsonProperty("hidden")
     @DisplayName("Hidden?")

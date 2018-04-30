@@ -1,15 +1,15 @@
-package tv.v1x1.common.config;
+package tv.v1x1.common.scanners.i18n;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-/**
- * Created by naomi on 11/6/2016.
- */
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface ComplexType {
-    Class<?> value();
+@Target(ElementType.TYPE)
+public @interface I18nDefault {
+    String key();
+    String message();
+    String displayName();
+    String description();
 }

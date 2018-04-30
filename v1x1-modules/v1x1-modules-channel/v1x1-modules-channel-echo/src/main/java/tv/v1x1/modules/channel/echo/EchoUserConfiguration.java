@@ -1,12 +1,12 @@
 package tv.v1x1.modules.channel.echo;
 
-import tv.v1x1.common.config.Description;
-import tv.v1x1.common.config.DisplayName;
-import tv.v1x1.common.config.ModuleConfig;
-import tv.v1x1.common.config.Permission;
-import tv.v1x1.common.config.TenantPermission;
-import tv.v1x1.common.config.Version;
 import tv.v1x1.common.modules.BasicUserConfiguration;
+import tv.v1x1.common.scanners.config.Description;
+import tv.v1x1.common.scanners.config.DisplayName;
+import tv.v1x1.common.scanners.config.ModuleConfig;
+import tv.v1x1.common.scanners.config.Permission;
+import tv.v1x1.common.scanners.config.TenantPermission;
+import tv.v1x1.common.scanners.config.Version;
 
 /**
  * @author Josh
