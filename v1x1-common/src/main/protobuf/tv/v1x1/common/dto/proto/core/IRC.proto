@@ -292,6 +292,7 @@ message UserNoticeCommand {
     enum MessageId {
         UNKNOWN = 0;
         RESUB = 1;
+        SUB = 2;
     }
 
     required string channel = 1;
