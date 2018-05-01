@@ -131,7 +131,7 @@ public class TmiBot implements Runnable {
                 requestCaps();
                 log("Init: Attempting join");
                 joinChannels();
-                for(;;) {
+                for (; ; ) {
                     final String line = getLine();
                     final Span span = tracer.newTrace()
                             .name("TMI recv")
@@ -146,6 +146,8 @@ public class TmiBot implements Runnable {
                 }
                 log("Init: Attempting disconnect");
                 disconnect();
+            } catch (final IOException e) {
+                LOG.info("IOException", e);
             } catch (final Throwable e) {
                 LOG.error("Exception while parsing TMI line", e);
             } finally {
