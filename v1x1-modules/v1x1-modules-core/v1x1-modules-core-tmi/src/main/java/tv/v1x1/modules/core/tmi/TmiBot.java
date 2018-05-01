@@ -162,7 +162,8 @@ public class TmiBot implements Runnable {
     private void disconnect() throws IOException {
         unregisterService();
         quit();
-        socket.close();
+        if(socket != null)
+            socket.close();
     }
 
     private void requestCaps() throws IOException {
