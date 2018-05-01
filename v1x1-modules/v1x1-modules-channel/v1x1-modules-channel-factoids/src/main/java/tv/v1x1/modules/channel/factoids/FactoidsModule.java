@@ -60,6 +60,96 @@ import java.util.Set;
                 message = "%commander%, what do you want to do with a fact? Type !fact help for a list",
                 displayName = "Invalid Command",
                 description = "Sent when the user gives an invalid command."
+        ),
+        @I18nDefault(
+                key = "noexist",
+                message = "%commander%, fact \"%id%\" doesn't exist",
+                displayName = "No Such Factoid",
+                description = "Sent when the user attempts to modify a non-existent factoid."
+        ),
+        @I18nDefault(
+                key = "alreadyexists",
+                message = "%commander%, the fact \"%fact%\" already exists",
+                displayName = "Factoid Already Exists",
+                description = "Sent when the user attempts to create a factoid that already exists."
+        ),
+        @I18nDefault(
+                key = "toomany.aliases",
+                message = "%commander%, \"%alias%\" is an alias to an alias to an alias... And so on. Consider aliasing \"%alias%\" to a fact directly.",
+                displayName = "Too Many Aliases",
+                description = "Sent when the user attempts to alias a factoid to an alias."
+        ),
+        @I18nDefault(
+                key = "add.success",
+                message = "%commander%, \"%id%\" has been added as \"%fact%\"",
+                displayName = "Add Success",
+                description = "Sent when the user successfully adds a factoid."
+        ),
+        @I18nDefault(
+                key = "alias.success",
+                message = "%commander%, \"%id%\" is now aliased to \"%alias%\"",
+                displayName = "Alias Success",
+                description = "Sent when the user successfully creates a factoid."
+        ),
+        @I18nDefault(
+                key = "setperm.success",
+                message = "%commander%, \"%id%\" is now available only to those with %perm%",
+                displayName = "Set Permission Success",
+                description = "Sent when the user successfully restricts a factoid to a specific permission."
+        ),
+        @I18nDefault(
+                key = "edit.success",
+                message = "%commander%, \"%id%\" has been modified to say \"%fact%\"",
+                displayName = "Edit Success",
+                description = "Sent when the user successfully edits a factoid."
+        ),
+        @I18nDefault(
+                key = "remove.fact.success",
+                message = "%commander%, \"%id%\" has been deleted. It said: %fact%",
+                displayName = "Remove Success",
+                description = "Sent when the user successfully removes a factoid."
+        ),
+        @I18nDefault(
+                key = "remove.alias.success",
+                message = "%commander%, \"%id%\" is no longer aliased to \"%alias%\"",
+                displayName = "Remove Alias Success",
+                description = "Sent when the user successfully removes an alias."
+        ),
+        @I18nDefault(
+                key = "list",
+                message = "%commander%, here's a list of all the facts: %list%",
+                displayName = "List Factoids",
+                description = "Sent when the user lists all of the factoids."
+        ),
+        @I18nDefault(
+                key = "list.nofacts",
+                message = "%commander%, there are no facts set up... Add one with !fact add",
+                displayName = "No Factoids",
+                description = "Sent when the user lists factoids but none exist."
+        ),
+        @I18nDefault(
+                key = "info.standard",
+                message = "%commander%, \"%id%\" is %enabled%. It has the permission %perm%. It looks like this: %fact%",
+                displayName = "Info (Permissions)",
+                description = "Sent when the user gets info on the factoid, and the factoid is restricted by permissions."
+        ),
+        @I18nDefault(
+                key = "info.noperm",
+                message = "%commander%, \"%id%\" is %enabled%. It looks like this: %fact%",
+                displayName = "Info (No Permissions)",
+                description = "Sent when the user gets info on the factoid, and the factoid has no permission restrictions."
+        ),
+        @I18nDefault(
+                key = "info.alias",
+                message = "%commander%, \"%id%\" is an alias for \"%to%\"",
+                displayName = "Info (Alias)",
+                description = "Sent when the user gets info on the factoid, and the factoid is an alias."
+        ),
+        @I18nDefault(
+                key = "toggle.success",
+                message = "%commander%, \"%id%\" is now %status%",
+                displayName = "Toggle Success",
+                description = "Sent when the user successfully toggles the state of a factoid."
         )
 })
 public class FactoidsModule extends RegisteredThreadedModule<FactoidsGlobalConfiguration, FactoidsUserConfiguration> {
