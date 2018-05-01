@@ -1,24 +1,49 @@
 package tv.v1x1.modules.channel.caster;
 
-import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
-import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
+import tv.v1x1.common.scanners.i18n.I18nDefault;
+import tv.v1x1.common.scanners.i18n.I18nDefaults;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
+import tv.v1x1.common.scanners.permission.Permissions;
+import tv.v1x1.common.scanners.permission.RegisteredPermission;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.util.commands.CommandDelegator;
 
 /**
  * @author Josh
  */
+@Permissions({
+        @RegisteredPermission(
+                node = "caster.use",
+                displayName = "Use Caster",
+                description = "This allows you to use the !caster command",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
+        )
+})
+@I18nDefaults({
+        @I18nDefault(
+                key = "notfound",
+                message = "%commander%, I can't find %target% on Twitch BibleThump",
+                displayName = "Not Found",
+                description = "Sent when !caster is used on an invalid Twitch user"
+        ),
+        @I18nDefault(
+                key = "nogame",
+                message = "Everyone give %target% a follow! https://twitch.tv/%target%",
+                displayName = "No Game",
+                description = "Sent when !caster is used on a broadcaster who is not playing a specific game"
+        ),
+        @I18nDefault(
+                key = "response",
+                message = "Everyone give %target% a follow! They were last seen %summary%. Check them out at https://twitch.tv/%targetId%",
+                displayName = "Response",
+                description = "Normal response to !caster command"
+        )
+})
 public class Caster extends RegisteredThreadedModule<CasterGlobalConfig, CasterUserConfig> implements EventListener {
-    static {
-        Module module = new Module("caster");
-        I18n.registerDefault(module, "notfound", "%commander%, I can't find %target% on Twitch BibleThump");
-        I18n.registerDefault(module, "nogame", "Everyone give %target% a follow! https://twitch.tv/%target%");
-        I18n.registerDefault(module, "response", "Everyone give %target% a follow! They were last seen %summary%. Check them out at https://twitch.tv/%targetId%");
-    }
     private CommandDelegator delegator;
 
     @Override

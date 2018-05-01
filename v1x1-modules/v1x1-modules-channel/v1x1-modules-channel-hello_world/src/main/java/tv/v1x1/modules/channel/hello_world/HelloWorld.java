@@ -4,15 +4,18 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
-import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.i18n.Language;
 import tv.v1x1.common.modules.DefaultModule;
 import tv.v1x1.common.rpc.client.ChatRouterServiceClient;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
+import tv.v1x1.common.scanners.i18n.I18nDefault;
+import tv.v1x1.common.scanners.i18n.I18nDefaults;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
+import tv.v1x1.common.scanners.permission.Permissions;
+import tv.v1x1.common.scanners.permission.RegisteredPermission;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.common.util.data.CompositeKey;
 
@@ -21,12 +24,24 @@ import java.lang.invoke.MethodHandles;
 /**
  * Created by Josh on 2016-10-06.
  */
+@Permissions({
+        @RegisteredPermission(
+                node = "hello.use",
+                displayName = "Use Hello",
+                description = "This allows you to use the !hello and !lorem commands",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
+        )
+})
+@I18nDefaults({
+        @I18nDefault(
+                key = "hello",
+                message = "Hi there, %user%!",
+                displayName = "Hello Message",
+                description = "Sent in response to !hello"
+        )
+})
 public class HelloWorld extends DefaultModule<HelloWorldGlobalConfiguration, HelloWorldUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    static {
-        final Module module = new Module("hello_world");
-        I18n.registerDefault(module, "hello", "Hi there, %user%!");
-    }
 
     CommandDelegator delegator;
     ChatRouterServiceClient crsc;

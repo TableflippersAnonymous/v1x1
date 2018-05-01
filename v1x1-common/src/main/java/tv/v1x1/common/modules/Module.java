@@ -52,6 +52,7 @@ import tv.v1x1.common.guice.TemporaryModule;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.rpc.client.ServiceClient;
 import tv.v1x1.common.scanners.config.ConfigScanner;
+import tv.v1x1.common.scanners.i18n.I18nScanner;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributorImpl;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
@@ -136,6 +137,7 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
     private void initializeInternal() {
         getModuleRegistry();
         registerGlobalMessages();
+        registerModuleMessages();
         updateConfigurationDefinitions();
     }
 
@@ -447,7 +449,7 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
 
     /* ******************************* LANGUAGE ******************************* */
     private void registerGlobalMessages() {
-        tv.v1x1.common.dto.core.Module module = new tv.v1x1.common.dto.core.Module("_GLOBAL_");
+        final tv.v1x1.common.dto.core.Module module = new tv.v1x1.common.dto.core.Module("_GLOBAL_");
         I18n.registerDefault(module, "generic.error",
                 "Sorry %commander%, I've run into an internal problem... BibleThump My Bot Operators have been " +
                         "alerted. If you need help, please contact them with the time, date, your timezone, what happene" +
@@ -459,5 +461,9 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
                         "tact the Bot Operators");
         I18n.registerDefault(module, "generic.invalid.user",
                 "%commander%, \"%input%\" is not a valid username here");
+    }
+
+    private void registerModuleMessages() {
+        I18nScanner.scanClass(this);
     }
 }

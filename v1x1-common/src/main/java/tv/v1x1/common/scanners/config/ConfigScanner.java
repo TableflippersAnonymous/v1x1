@@ -12,8 +12,8 @@ import tv.v1x1.common.dto.core.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.core.UserConfigurationDefinition;
 import tv.v1x1.common.modules.GlobalConfiguration;
 import tv.v1x1.common.modules.UserConfiguration;
+import tv.v1x1.common.scanners.ClassScanner;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,7 +24,7 @@ import java.util.Map;
 /**
  * Created by naomi on 10/24/2016.
  */
-public class ConfigScanner {
+public class ConfigScanner extends ClassScanner {
     private static final Gson GSON = new GsonBuilder().create();
 
     private ConfigScanner() {
@@ -91,16 +91,6 @@ public class ConfigScanner {
         return permission.value();
     }
 
-    private static <T extends Annotation> T getAnnotation(final Class<?> clazz, final Class<T> annotation) {
-        final T annotationValue = clazz.getAnnotation(annotation);
-        if(annotationValue != null)
-            return annotationValue;
-        final Class<?> superClass = clazz.getSuperclass();
-        if(superClass != null)
-            return getAnnotation(superClass, annotation);
-        return null;
-    }
-
     private static List<ConfigurationDefinition.Field> scanFields(final Class<?> clazz, final Map<String, List<ConfigurationDefinition.Field>> complexFields) {
         final List<ConfigurationDefinition.Field> fields = new ArrayList<>();
         final Class<?> superClass = clazz.getSuperclass();
@@ -114,8 +104,7 @@ public class ConfigScanner {
         final List<ConfigurationDefinition.Field> fields = new ArrayList<>();
         for(final Field field : clazz.getDeclaredFields()) {
             final ConfigurationDefinition.Field scannedField = scanField(field, complexFields);
-            if(scannedField != null)
-                fields.add(scannedField);
+            fields.add(scannedField);
         }
         return fields;
     }

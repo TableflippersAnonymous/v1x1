@@ -1,11 +1,9 @@
 package tv.v1x1.modules.channel.factoids;
 
 import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
-import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
 import tv.v1x1.common.scanners.i18n.I18nDefault;
 import tv.v1x1.common.scanners.i18n.I18nDefaults;
@@ -37,7 +35,7 @@ import java.util.Set;
                 defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
         ),
         @RegisteredPermission(
-                node = "fact.user.{custompermission}",
+                node = "factoids.use.{custompermission}",
                 displayName = "Custom permissions for factoids",
                 description = "This gives you the ability to use certain factoids."
         )
@@ -49,6 +47,7 @@ import java.util.Set;
                 displayName = "Help Blurb",
                 description = "Sent in response to !fact help"
         ),
+        /* generic failures */
         @I18nDefault(
                 key = "invalid.args",
                 message = "%commander%, that command is missing something. Usage: %usage%",
@@ -79,6 +78,7 @@ import java.util.Set;
                 displayName = "Too Many Aliases",
                 description = "Sent when the user attempts to alias a factoid to an alias."
         ),
+        /* success */
         @I18nDefault(
                 key = "add.success",
                 message = "%commander%, \"%id%\" has been added as \"%fact%\"",
@@ -153,30 +153,6 @@ import java.util.Set;
         )
 })
 public class FactoidsModule extends RegisteredThreadedModule<FactoidsGlobalConfiguration, FactoidsUserConfiguration> {
-    static {
-        final Module module = new Module("factoids");
-        I18n.registerDefault(module, "help.blurb", "Factoids are little bits of text you can call upon as a custom command");
-        /* generic failures */
-        I18n.registerDefault(module, "invalid.args", "%commander%, that command is missing something. Usage: %usage%");
-        I18n.registerDefault(module, "invalid.subcommand", "%commander%, what do you want to do with a fact? Type !fact help for a list");
-        I18n.registerDefault(module, "noexist", "%commander%, fact \"%id%\" doesn't exist");
-        I18n.registerDefault(module, "alreadyexists", "%commander%, the fact \"%fact%\" already exists");
-        I18n.registerDefault(module, "toomany.aliases", "%commander%, \"%alias%\" is an alias to an alias to an alias... And so on. Consider aliasing \"%alias%\" to a fact directly.");
-        /* success */
-        I18n.registerDefault(module, "add.success", "%commander%, \"%id%\" has been added as \"%fact%\"");
-        I18n.registerDefault(module, "alias.success", "%commander%, \"%id%\" is now aliased to \"%alias%\"");
-        I18n.registerDefault(module, "setperm.success", "%commander%, \"%id%\" is now available only to those with %perm%");
-        I18n.registerDefault(module, "edit.success", "%commander%, \"%id%\" has been modified to say \"%fact%\"");
-        I18n.registerDefault(module, "remove.fact.success", "%commander%, \"%id%\" has been deleted. It said: %fact%");
-        I18n.registerDefault(module, "remove.alias.success", "%commander%, \"%id%\" is no longer aliased to \"%alias%\"");
-        I18n.registerDefault(module, "list", "%commander%, here's a list of all the facts: %list%");
-        I18n.registerDefault(module, "list.nofacts", "%commander%, there are no facts set up... Add one with !fact add");
-        I18n.registerDefault(module, "info.standard", "%commander%, \"%id%\" is %enabled%. It has the permission %perm%. It looks like this: %fact%");
-        I18n.registerDefault(module, "info.noperm", "%commander%, \"%id%\" is %enabled%. It looks like this: %fact%");
-        I18n.registerDefault(module, "info.alias", "%commander%, \"%id%\" is an alias for \"%to%\"");
-        I18n.registerDefault(module, "toggle.success", "%commander%, \"%id%\" is now %status%");
-    }
-
     public static final String CUSTOM_PREM_PREFIX = "factoids.use.";
 
     @Override

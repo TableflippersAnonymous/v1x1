@@ -8,11 +8,14 @@ import org.redisson.client.codec.ByteArrayCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.User;
-import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.i18n.Language;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
+import tv.v1x1.common.scanners.i18n.I18nDefault;
+import tv.v1x1.common.scanners.i18n.I18nDefaults;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
+import tv.v1x1.common.scanners.permission.Permissions;
+import tv.v1x1.common.scanners.permission.RegisteredPermission;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.common.util.data.CompositeKey;
 
@@ -22,17 +25,54 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Josh
  */
+@Permissions({
+        @RegisteredPermission(
+                node = "link_purger.permit",
+                displayName = "Permit Links",
+                description = "This allows you to use the !permit command",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
+        ),
+        @RegisteredPermission(
+                node = "link_purger.whitelisted",
+                displayName = "Exempt from Link Purging",
+                description = "This makes you immune to being purged by the Link Purger",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS, DefaultGroup.SUBS}
+        )
+})
+@I18nDefaults({
+        @I18nDefault(
+                key = "purged",
+                message = "Hey %user%, please ask before posting a link! I've purged your messages; feel free to keep chatting!",
+                displayName = "Purged",
+                description = "Sent when a user is purged"
+        ),
+        @I18nDefault(
+                key = "timeout",
+                message = "Hey %user%, I said ask before posting a link! I've timed you out for now; see you soon.",
+                displayName = "Timed Out",
+                description = "Sent when a user is timed out"
+        ),
+        @I18nDefault(
+                key = "permit",
+                message = "Hey %target%, you can post one link now!",
+                displayName = "Permitted",
+                description = "Sent when a user is permitted"
+        ),
+        @I18nDefault(
+                key = "permitfailed",
+                message = "%commander%, %target% is already allowed to post a link.",
+                displayName = "Permit Failed",
+                description = "Sent when a user is already permitted"
+        ),
+        @I18nDefault(
+                key = "notarget",
+                message = "%commander%, I don't see %target% in the channel. I can't add the permit.",
+                displayName = "Invalid Target",
+                description = "Sent when an invalid user is specified with !permit"
+        )
+})
 public class LinkPurger extends RegisteredThreadedModule<LinkPurgerGlobalConfiguration, LinkPurgerUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    static {
-        final Module module = new Module("link_purger");
-        I18n.registerDefault(module, "purged", "Hey %user%, please ask before posting a link! I've purged your messages; feel free to keep chatting!");
-        I18n.registerDefault(module, "timeout", "Hey %user%, I said ask before posting a link! I've timed you out for now; see you soon.");
-        I18n.registerDefault(module, "permit", "Hey %target%, you can post one link now!");
-        I18n.registerDefault(module, "permitfailed", "%commander%, %target% is already allowed to post a link.");
-        I18n.registerDefault(module, "notarget", "%commander%, I don't see %target% in the channel. I can't add the permit.");
-    }
 
     private RMapCache<byte[], byte[]> offenses;
     private RSetCache<byte[]> permits;

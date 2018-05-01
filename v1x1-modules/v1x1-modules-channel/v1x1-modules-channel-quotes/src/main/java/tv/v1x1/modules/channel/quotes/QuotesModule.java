@@ -3,10 +3,13 @@ package tv.v1x1.modules.channel.quotes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
+import tv.v1x1.common.scanners.i18n.I18nDefault;
+import tv.v1x1.common.scanners.i18n.I18nDefaults;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
+import tv.v1x1.common.scanners.permission.Permissions;
+import tv.v1x1.common.scanners.permission.RegisteredPermission;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.modules.channel.quotes.commands.QuoteCommand;
 import tv.v1x1.modules.channel.quotes.config.QuotesGlobalConfiguration;
@@ -22,24 +25,91 @@ import java.util.Random;
 /**
  * @author Josh
  */
+@Permissions({
+        @RegisteredPermission(
+                node = "quote.use",
+                displayName = "Use Quotes",
+                description = "This allows you to use and display quotes",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS, DefaultGroup.EVERYONE}
+        ),
+        @RegisteredPermission(
+                node = "quote.edit",
+                displayName = "Edit Quotes",
+                description = "This allows you to add, edit, and remove quotes",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
+        )
+})
+@I18nDefaults({
+        @I18nDefault(
+                key = "invalid.quote",
+                message = "%commander%, quote #%id% doesn't exist!",
+                displayName = "Invalid Quote",
+                description = "Sent when a quote does not exist"
+        ),
+        @I18nDefault(
+                key = "invalid.id",
+                message = "%commander%, that doesn't look like a valid quote number.",
+                displayName = "Invalid ID",
+                description = "Sent when an ID is not a number"
+        ),
+        @I18nDefault(
+                key = "invalid.subcommand",
+                message = "%commander%, I don't know that command. Need some !quote help?",
+                displayName = "Invalid Command",
+                description = "Sent when an invalid command is used with !quote"
+        ),
+        @I18nDefault(
+                key = "added",
+                message = "%commander%, quote #%id% added! \"%quote%\"",
+                displayName = "Added",
+                description = "Sent when a quote is successfully added"
+        ),
+        @I18nDefault(
+                key = "removed",
+                message = "%commander%, quote #%id% removed.",
+                displayName = "Removed",
+                description = "Sent when a quote is successfully removed"
+        ),
+        @I18nDefault(
+                key = "noquotes",
+                message = "%commander%, there don't seem to be any quotes.",
+                displayName = "No Quotes",
+                description = "Sent when there are no quotes"
+        ),
+        @I18nDefault(
+                key = "respond.standard",
+                message = "Quote #%id%: %quote% [%game%] [%date%]",
+                displayName = "Response (Complete)",
+                description = "Format for a quote with both game and date data"
+        ),
+        @I18nDefault(
+                key = "respond.dateonly",
+                message = "Quote: #%id%: %quote% [%date%]",
+                displayName = "Response (Date)",
+                description = "Format for a quote with only date data"
+        ),
+        @I18nDefault(
+                key = "respond.gameonly",
+                message = "Quote: #%id%: %quote% [%game%]",
+                displayName = "Response (Game)",
+                description = "Format for a quote with only game data"
+        ),
+        @I18nDefault(
+                key = "modified",
+                message = "%commander%, quote #%id% was modified to say: %quote%",
+                displayName = "Modified",
+                description = "Sent when a quote is modified"
+        ),
+        @I18nDefault(
+                key = "help.blurb",
+                message = "The quote command can be used alone to get a random quote, with a number to get a specific" +
+                        " one, or with the add/del/edit commands to modify them.",
+                displayName = "Help Blurb",
+                description = "Sent with !quote help"
+        )
+})
 public class QuotesModule extends RegisteredThreadedModule<QuotesGlobalConfiguration, QuotesUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    static {
-        Module module = new Module("quotes");
-        I18n.registerDefault(module, "invalid.quote", "%commander%, quote #%id% doesn't exist!");
-        I18n.registerDefault(module, "invalid.id", "%commander%, that doesn't look like a valid quote number.");
-        I18n.registerDefault(module, "invalid.subcommand", "%commander%, I don't know that command. Need some !quote help?");
-        I18n.registerDefault(module, "added", "%commander%, quote #%id% added! \"%quote%\"");
-        I18n.registerDefault(module, "removed", "%commander%, quote #%id% removed.");
-        I18n.registerDefault(module, "noquotes", "%commander%, there don't seem to be any quotes.");
-        I18n.registerDefault(module, "respond.standard", "Quote #%id%: %quote% [%game%] [%date%]");
-        I18n.registerDefault(module, "respond.dateonly", "Quote: #%id%: %quote% [%date%]");
-        I18n.registerDefault(module, "respond.gameonly", "Quote: #%id%: %quote% [%game%]");
-        I18n.registerDefault(module, "modified", "%commander%, quote #%id% was modified to say: %quote%");
-        I18n.registerDefault(module, "help.blurb", "The quote command can be used alone to get a random qu" +
-                "ote, with a number to get a specific one, or with the add/del/edit commands to modify them.");
-    }
 
     CommandDelegator delegator;
     private DAOQuote daoQuote;

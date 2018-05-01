@@ -1,4 +1,7 @@
 package tv.v1x1.common.scanners.permission;
 
-public class PermissionScanner {
+import tv.v1x1.common.scanners.ClassScanner;
+
+public class PermissionScanner extends ClassScanner {
+
 }

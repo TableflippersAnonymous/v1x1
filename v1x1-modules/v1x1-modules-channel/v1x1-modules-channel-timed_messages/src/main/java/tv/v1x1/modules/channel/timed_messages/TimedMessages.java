@@ -6,13 +6,16 @@ import org.redisson.client.codec.ByteArrayCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.db.Platform;
-import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
+import tv.v1x1.common.scanners.i18n.I18nDefault;
+import tv.v1x1.common.scanners.i18n.I18nDefaults;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
+import tv.v1x1.common.scanners.permission.Permissions;
+import tv.v1x1.common.scanners.permission.RegisteredPermission;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.timed_messages.commands.TimerCommand;
@@ -27,52 +30,213 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Josh
  */
+@Permissions({
+        @RegisteredPermission(
+                node = "timer.modify",
+                displayName = "Manage Timers",
+                description = "This allows you to use the !timers command",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
+        )
+})
+@I18nDefaults({
+        // base/shared
+        @I18nDefault(
+                key = "invalid.subcommand",
+                message = "%commander%, I don't know that subcommand. Usage: %usage%",
+                displayName = "Invalid Command",
+                description = "Sent when an invalid command is used with !timers"
+        ),
+        @I18nDefault(
+                key = "help",
+                message = "(Hint: You can get a list of commands with !timer help)",
+                displayName = "Help Hint",
+                description = "Sent with !timers help"
+        ),
+        @I18nDefault(
+                key = "invalid.timer",
+                message = "%commander%, I can't find a timer called \"%id%\".",
+                displayName = "Invalid Timer",
+                description = "Sent when a non-existent timer is requested"
+        ),
+        @I18nDefault(
+                key = "invalid.interval",
+                message = "%commander%, that interval doesn't look right. Try a number, greater than ten, in seconds.",
+                displayName = "Invalid Interval",
+                description = "Sent when an invalid interval is specified"
+        ),
+        @I18nDefault(
+                key = "toomanyargs",
+                message = "Whoa settle down there, %commander%. There's too many things there. Usage: %usage%",
+                displayName = "Too Many Parameters",
+                description = "Sent when too many parameters are given"
+        ),
+        // subcmd success
+        @I18nDefault(
+                key = "create.success",
+                message = "%commander%, I've created a timer named \"%id%\". Now add stuff to it!",
+                displayName = "Created",
+                description = "Sent when a timer is created"
+        ),
+        @I18nDefault(
+                key = "add.success",
+                message = "%commander%, I've added your entry (\"%preview%\") to the rotation.",
+                displayName = "Added",
+                description = "Sent when an entry is added to a timer"
+        ),
+        @I18nDefault(
+                key = "remove.success",
+                message = "%commander%, I've removed the following entry from the rotation: %preview%",
+                displayName = "Removed",
+                description = "Sent when an entry is removed from a timer"
+        ),
+        @I18nDefault(
+                key = "destroy.success",
+                message = "%commander%, I've destroyed the rotation named \"%id%\". It will no longer message the chat.",
+                displayName = "Destroyed",
+                description = "Sent when a timer is destroyed"
+        ),
+        @I18nDefault(
+                key = "enable.success",
+                message = "%commander%, I've re-enabled the \"%id%\" rotation.",
+                displayName = "Enabled",
+                description = "Sent when a timer is enabled"
+        ),
+        @I18nDefault(
+                key = "disable.success",
+                message = "%commander%, I've disabled the \"%id%\" rotation.",
+                displayName = "Disabled",
+                description = "Sent when a timer is disabled"
+        ),
+        @I18nDefault(
+                key = "list.success",
+                message = "%commander%, here's the list of timers: %timers%",
+                displayName = "List",
+                description = "Format for listing timers"
+        ),
+        @I18nDefault(
+                key = "list.empty",
+                message = "%commander%, there are no timers set up.",
+                displayName = "List (Empty)",
+                description = "Sent when no timers exist"
+        ),
+        @I18nDefault(
+                key = "info.noentries",
+                message = "%commander%, \"%id%\" is set up to message every %interval% seconds, but there's no timer " +
+                        "entries in the rotation",
+                displayName = "Info (No Entries)",
+                description = "Format for describing a timer with no entries"
+        ),
+        @I18nDefault(
+                key = "info.success",
+                message = "%commander%, \"%id%\" is set up to message every %interval% seconds. It's currently %enabled%. " +
+                        "Here's a list of timer entries: %entries%",
+                displayName = "Info",
+                description = "Format for describing a timer with entries"
+        ),
+        @I18nDefault(
+                key = "reschedule.success",
+                message = "%commander%, \"%id%\" will now message every %interval% seconds.",
+                displayName = "Rescheduled",
+                description = "Sent when a timer is rescheduled"
+        ),
+        @I18nDefault(
+                key = "help.blurb",
+                message = "Timers send messages to the channel at set intervals. Timers have two parts: Rotations and a " +
+                        "list messages which you add to a rotation. First, create a rotation with \"create,\" then add " +
+                        "stuff to it using \"add\"",
+                displayName = "Help Blurb",
+                description = "Sent with !timers help"
+        ),
+        // subcmd failure
+        @I18nDefault(
+                key = "create.alreadyexists",
+                message = "%commander%, there's already a timer named \"%id%\". Do you wanna to add entries with !timer add?",
+                displayName = "Create Failure (Already Exists)",
+                description = "Sent when trying to create a timer that already exists"
+        ),
+        @I18nDefault(
+                key = "create.notarget",
+                message = "%commander%, what's the name of the timer we're creating? Usage: %usage%",
+                displayName = "Create Failure (No Target)",
+                description = "Sent when trying to create a timer without a target"
+        ),
+        @I18nDefault(
+                key = "add.nomessage",
+                message = "%commander%, I'd love to add a timer, but what should it say? Usage: %usage%",
+                displayName = "Create Failure (No Message)",
+                description = "Sent when trying to add a message to a timer without a message"
+        ),
+        @I18nDefault(
+                key = "add.notarget",
+                message = "%commander%, add to what timer? Also, what message? Usage: %usage%",
+                displayName = "Add Failure (No Target)",
+                description = "Sent when trying to add a message to a timer without a timer"
+        ),
+        @I18nDefault(
+                key = "remove.notarget",
+                message = "%commander%, remove from what timer? Also, what message? Usage: %usage%",
+                displayName = "Remove Failure (No Target)",
+                description = "Sent when trying to remove a message from a timer without a timer"
+        ),
+        @I18nDefault(
+                key = "remove.nomessage",
+                message = "%commander%, what are we deleting from the timer? Usage: %usage%",
+                displayName = "Remove Failure (No Message)",
+                description = "Sent when trying to remove a message from a timer without a message"
+        ),
+        @I18nDefault(
+                key = "remove.nomatch",
+                message = "%commander%, I can't find a timer entry that starts with \"%preview%\"",
+                displayName = "Remove Failure (No Match)",
+                description = "Sent when trying to remove a message from a timer when there is no matching message"
+        ),
+        @I18nDefault(
+                key = "remove.toomanymatches",
+                message = "%commander%, there's %count% things that start with \"%preview%\" in \"%id%\". Can you be " +
+                        "more specific?",
+                displayName = "Remove Failure (Multiple Matches)",
+                description = "Sent when trying to remove a message from a timer when there are multiple matching messages"
+        ),
+        @I18nDefault(
+                key = "destroy.notarget",
+                message = "%commander%, destroy what timer? Also, what message? Usage: %usage%",
+                displayName = "Destroy Failure (No Target)",
+                description = "Sent when trying to destroy a timer without a timer"
+        ),
+        @I18nDefault(
+                key = "enable.notarget",
+                message = "%commander%, what timer should I enable?",
+                displayName = "Enable Failure (No Target)",
+                description = "Sent when trying to enable a timer without a timer"
+        ),
+        @I18nDefault(
+                key = "disable.notarget",
+                message = "%commander%, what timer should I disable?",
+                displayName = "Disable Failure (No Target)",
+                description = "Sent when trying to disable a timer without a timer"
+        ),
+        @I18nDefault(
+                key = "reschedule.notarget",
+                message = "%commander%, what timer should I reschedule? Usage: %usage%",
+                displayName = "Reschedule Failure (No Target)",
+                description = "Sent when trying to reschedule a timer without a timer"
+        ),
+        @I18nDefault(
+                key = "info.notarget",
+                message = "%commander%, what timer are you curious about? Usage: %usage%",
+                displayName = "Info Failure (No Target)",
+                description = "Sent when trying to get info on a timer without a timer"
+        ),
+        @I18nDefault(
+                key = "alreadytoggled",
+                message = "%commander%, the \"%id%\" timer is already %state%",
+                displayName = "Enable/Disable Failure (Not Changed)",
+                description = "Sent when trying to enable or disable a timer when the timer was already enabled or disabled"
+        )
+})
 // TODO: Handle (soft) enable/disable of timers for offline strimmers
 public class TimedMessages extends RegisteredThreadedModule<TimedMessagesGlobalConfiguration, TimedMessagesUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    static {
-        Module module = new Module("timed_messages");
-        // base/shared
-        I18n.registerDefault(module, "invalid.subcommand", "%commander%, I don't know that subcommand. Usage: %usage%");
-        I18n.registerDefault(module, "help", "(Hint: You can get a list of commands with !timer help)");
-        I18n.registerDefault(module, "invalid.timer", "%commander%, I can't find a timer called \"%id%\".");
-        I18n.registerDefault(module, "invalid.interval", "%commander%, that interval doesn't look right. Try a number, greater than ten, in seconds.");
-        I18n.registerDefault(module, "toomanyargs", "Whoa settle down there, %commander%. There's too many things there. Usage: %usage%");
-
-        // subcmd success
-        I18n.registerDefault(module, "create.success", "%commander%, I've created a timer named \"%id%\". Now add stuff to it!");
-        I18n.registerDefault(module, "add.success", "%commander%, I've added your entry (\"%preview%\") to the rotation.");
-        I18n.registerDefault(module, "remove.success", "%commander%, I've removed the following entry from the rotation: %preview%");
-        I18n.registerDefault(module, "destroy.success", "%commander%, I've destroyed the rotation named \"%id%\". It will no longer message the chat.");
-        I18n.registerDefault(module, "enable.success", "%commander%, I've re-enabled the \"%id%\" rotation.");
-        I18n.registerDefault(module, "disable.success", "%commander%, I've disabled the \"%id%\" rotation.");
-        I18n.registerDefault(module, "list.success", "%commander%, here's the list of timers: %timers%");
-        I18n.registerDefault(module, "list.empty", "%commander%, there are no timers set up.");
-        I18n.registerDefault(module, "info.noentries", "%commander%, \"%id%\" is set up to message every %" +
-                "interval% seconds, but there's no timer entries in the rotation");
-        I18n.registerDefault(module, "info.success", "%commander%, \"%id%\" is set up to message every %in" +
-                "terval% seconds. It's currently %enabled%. Here's a list of timer entries: %entries%");
-        I18n.registerDefault(module, "reschedule.success", "%commander%, \"%id%\" will now message every %interval% seconds.");
-        I18n.registerDefault(module, "help.blurb", "Timers send messages to the channel at set intervals. " +
-                "Timers have two parts: Rotations and a list messages which you add to a rotation. First, create a rotat" +
-                "ion with \"create,\" then add stuff to it using \"add\"");
-
-        // subcmd failure
-        I18n.registerDefault(module, "create.alreadyexists", "%commander%, there's already a timer named \"%id%\". Do you wanna to add entries with !timer add?");
-        I18n.registerDefault(module, "create.notarget", "%commander%, what's the name of the timer we're creating? Usage: %usage%");
-        I18n.registerDefault(module, "add.nomessage", "%commander%, I'd love to add a timer, but what should it say? Usage: %usage%");
-        I18n.registerDefault(module, "add.notarget", "%commander%, add to what timer? Also, what message? Usage: %usage%");
-        I18n.registerDefault(module, "remove.notarget", "%commander%, remove from what timer? Also, what message? Usage: %usage%");
-        I18n.registerDefault(module, "remove.nomessage", "%commander%, what are we deleting from the timer? Usage: %usage%");
-        I18n.registerDefault(module, "remove.nomatch", "%commander%, I can't find a timer entry that starts with \"%preview%\"");
-        I18n.registerDefault(module, "remove.toomanymatches", "%commander%, there's %count% things that start with \"%preview%\" in \"%id%\". Can you be more specific?");
-        I18n.registerDefault(module, "destroy.notarget", "%commander%, destroy what timer? Also, what message? Usage: %usage%");
-        I18n.registerDefault(module, "enable.notarget", "%commander%, what timer should I enable?");
-        I18n.registerDefault(module, "disable.notarget", "%commander%, what timer should I disable?");
-        I18n.registerDefault(module, "reschedule.notarget", "%commander%, what timer should I reschedule? Usage: %usage%");
-        I18n.registerDefault(module, "info.notarget", "%commander%, what timer are you curious about? Usage: %usage%");
-        I18n.registerDefault(module, "alreadytoggled", "%commander%, the \"%id%\" timer is already %state%");
-    }
 
     CommandDelegator delegator;
     private SchedulerServiceClient ssc;
