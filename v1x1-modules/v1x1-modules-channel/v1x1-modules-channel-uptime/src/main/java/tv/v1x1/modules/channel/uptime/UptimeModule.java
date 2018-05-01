@@ -3,12 +3,15 @@ package tv.v1x1.modules.channel.uptime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
-import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.modules.RegisteredThreadedModule;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
+import tv.v1x1.common.scanners.i18n.I18nDefault;
+import tv.v1x1.common.scanners.i18n.I18nDefaults;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
+import tv.v1x1.common.scanners.permission.Permissions;
+import tv.v1x1.common.scanners.permission.RegisteredPermission;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.util.commands.CommandDelegator;
 
@@ -18,14 +21,30 @@ import java.time.Instant;
 /**
  * @author Josh
  */
+@Permissions({
+        @RegisteredPermission(
+                node = "uptime.use",
+                displayName = "Use Uptime",
+                description = "This gives you the permission to use the !uptime command",
+                defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS, DefaultGroup.SUBS, DefaultGroup.EVERYONE}
+        )
+})
+@I18nDefaults({
+        @I18nDefault(
+                key = "online",
+                message = "%target%: The stream has been live for %uptime%",
+                displayName = "Online",
+                description = "Response when the stream is live."
+        ),
+        @I18nDefault(
+                key = "offline",
+                message = "%target%: The stream isn't online! ResidentSleeper",
+                displayName = "Offline",
+                description = "Response when the stream is not live."
+        )
+})
 public class UptimeModule extends RegisteredThreadedModule<UptimeModuleGlobalConfiguration, UptimeModuleUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-
-    static {
-        final Module module = new Module("uptime");
-        I18n.registerDefault(module, "online", "%target%: The stream has been live for %uptime%");
-        I18n.registerDefault(module, "offline", "%target%: The stream isn't online! ResidentSleeper");
-    }
 
     public static void main(final String[] args) throws Exception {
         new UptimeModule().entryPoint(args);
