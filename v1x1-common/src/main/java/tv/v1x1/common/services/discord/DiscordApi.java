@@ -1,7 +1,6 @@
 package tv.v1x1.common.services.discord;
 
 import org.glassfish.jersey.jackson.JacksonFeature;
-import org.glassfish.jersey.logging.LoggingFeature;
 import tv.v1x1.common.services.discord.resources.AuditLogsResource;
 import tv.v1x1.common.services.discord.resources.ChannelsResource;
 import tv.v1x1.common.services.discord.resources.EmojisResource;
@@ -16,7 +15,6 @@ import tv.v1x1.common.services.discord.resources.WebhooksResource;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
-import java.util.logging.Level;
 
 /**
  * Created by cobi on 9/10/2017.
@@ -56,7 +54,7 @@ public class DiscordApi {
         final Client client = ClientBuilder.newClient();
         client.register(JacksonFeature.class);
         client.register(discordApiRequestFilter);
-        client.register(new LoggingFeature(null, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, null));
+        //client.register(new LoggingFeature(null, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, null));
         final WebTarget api = client.target(BASE_URL);
         this.auditLogs = new AuditLogsResource(api.path("guilds"));
         this.channels = new ChannelsResource(api.path("channels"));
