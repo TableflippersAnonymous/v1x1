@@ -130,7 +130,9 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
 
         configFile = filename;
         final String settingsString = new String(Files.readAllBytes(Paths.get(filename)));
-        final String fixedSettings = settingsString.replace("{{module_name}}", getClass().getCanonicalName());
+        String fixedSettings = settingsString.replace("{{module_name}}", getClass().getCanonicalName());
+        for(final Map.Entry<String, String> entry : System.getenv().entrySet())
+            fixedSettings = fixedSettings.replace("{{ENV:" + entry.getKey() + "}}", entry.getValue());
         settings = mapper.readValue(fixedSettings, getGlobalConfigurationClass());
     }
 
