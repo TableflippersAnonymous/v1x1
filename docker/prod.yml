@@ -26,7 +26,7 @@ cassandra:
   - k8s-w04.tblflp.zone
   authenticated: true
   username: v1x1
-  password: {{ENV:CASSANDRA_PASSWORD}}
+  password: "{{ENV:CASSANDRA_PASSWORD}}"
 zookeeper_connection_string: zk-0.zk-headless.v1x1.svc.cluster.local:2181,zk-1.zk-headless.v1x1.svc.cluster.local:2181,zk-2.zk-headless.v1x1.svc.cluster.local:2181
 server:
   applicationConnectors:
