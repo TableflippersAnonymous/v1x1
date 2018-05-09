@@ -2,40 +2,21 @@ package tv.v1x1.common.services.slack.dto.channels;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.services.slack.dto.Response;
+import tv.v1x1.common.services.slack.dto.misc.ResponseMetadata;
 
 import java.util.List;
 
 public class ChannelListResponse extends Response {
-    public static class Metadata {
-        @JsonProperty("next_cursor")
-        private String nextCursor;
-
-        public Metadata() {
-        }
-
-        public Metadata(final String nextCursor) {
-            this.nextCursor = nextCursor;
-        }
-
-        public String getNextCursor() {
-            return nextCursor;
-        }
-
-        public void setNextCursor(final String nextCursor) {
-            this.nextCursor = nextCursor;
-        }
-    }
-
     @JsonProperty
     private List<Channel> channels;
     @JsonProperty("response_metadata")
-    private Metadata responseMetadata;
+    private ResponseMetadata responseMetadata;
 
     public ChannelListResponse() {
         super(true);
     }
 
-    public ChannelListResponse(final List<Channel> channels, final Metadata responseMetadata) {
+    public ChannelListResponse(final List<Channel> channels, final ResponseMetadata responseMetadata) {
         super(true);
         this.channels = channels;
         this.responseMetadata = responseMetadata;
@@ -49,11 +30,11 @@ public class ChannelListResponse extends Response {
         this.channels = channels;
     }
 
-    public Metadata getResponseMetadata() {
+    public ResponseMetadata getResponseMetadata() {
         return responseMetadata;
     }
 
-    public void setResponseMetadata(final Metadata responseMetadata) {
+    public void setResponseMetadata(final ResponseMetadata responseMetadata) {
         this.responseMetadata = responseMetadata;
     }
 }
