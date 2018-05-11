@@ -432,7 +432,7 @@ public class DiscordClientHandler implements MessageHandler.Whole<String> {
     }
 
     private void updateUser(final User user) {
-        discordModule.getDaoManager().getDaoGlobalUser().addUser(discordModule.getGlobalUser(user.getId()).toDB(), Platform.DISCORD, user.getId(), user.getUsername());
+        discordModule.getDaoManager().getDaoGlobalUser().addUser(discordModule.getGlobalUser(user.getId(), user.getUsername()).toDB(), Platform.DISCORD, user.getId(), user.getUsername());
         discordModule.getInjector().getInstance(DiscordDisplayNameService.class).cacheUser(user);
     }
 
@@ -495,6 +495,6 @@ public class DiscordClientHandler implements MessageHandler.Whole<String> {
     }
 
     private DiscordUser getUser(final User user) {
-        return (DiscordUser) discordModule.getGlobalUser(user.getId()).getUser(Platform.DISCORD, user.getId()).get();
+        return (DiscordUser) discordModule.getGlobalUser(user.getId(), user.getUsername()).getUser(Platform.DISCORD, user.getId()).get();
     }
 }

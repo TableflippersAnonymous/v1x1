@@ -169,8 +169,11 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
                     @Override
                     public GlobalUser load(final String s) throws Exception {
                         try {
+                            final String[] parts = s.split(":", 2);
+                            if(parts.length != 2)
+                                throw new IllegalArgumentException("Expected 2 parts but got " + parts.length);
                             LOG.debug("Loading global user for {}", s);
-                            return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.DISCORD, s, null).toCore();
+                            return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.DISCORD, parts[0], parts[1]).toCore();
                         } catch(final Exception e) {
                             LOG.error("Exception getting global user", e);
                             throw e;
@@ -387,9 +390,9 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
         eventRouter.add(event);
     }
 
-    GlobalUser getGlobalUser(final String id) {
+    GlobalUser getGlobalUser(final String id, final String username) {
         try {
-            return globalUserCache.get(id);
+            return globalUserCache.get(id + ":" + username);
         } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
