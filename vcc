@@ -4,7 +4,7 @@ getBoolAnswer() {
    read -p "$@ [y/n] " -n1
    printf "\n" >&2
    REPLY=$(echo $REPLY|tr [A-Z] [a-z])
-   if [ $REPLY == "y" ] || [ $REPLY == "n" ]; then
+   if [ $REPLY == "y" -o $REPLY == "n" ]; then
       echo $REPLY
       return
     fi
@@ -41,10 +41,12 @@ function cleanAll() {
 function buildOne() {
   local target=v1x1-modules/v1x1-modules-$2/v1x1-modules-$2-$1
   V1X1_MAKE_TARGET="-pl v1x1-common,$target" V1X1_MAKE_ENV=dev make mvn-clean mvn-package
+  return $?
 }
 
 function buildAll() {
   V1X1_MAKE_ENV=dev make mvn-clean mvn-package
+  return $?
 }
 
 function usage() {
@@ -57,12 +59,12 @@ $(usage)
 
 Control the v1x1 dev environment
 
-    start [service]         - start a service. Default: all of them
-    status                  - alias to docker-compose ps
-    stop [service]          - stop a service. Default: all of them
-    build [service [type]]  - build a service; type is core/channel/global. Default: channel
-    web <subcmd>            - not yet implemented
-    help                    - new command, what dis
+    start [service[, service2...]]  - start a service. Default: all of them
+    status                          - alias to docker-compose ps
+    stop [service][, service2...]]  - stop a service. Default: all of them
+    build [service [type]]          - build a service; type is core/channel/global. Default: channel
+    cqlsh                           - gives you a cql prompt on your Cassandra container
+    help                            - new command, what dis
 EOM
 }
 
@@ -74,14 +76,6 @@ function checkCoreServices() {
   fi
 }
 
-function webStart() {
-  echo Noop
-}
-
-function webStop() {
-  echo Noop
-}
-
 function cmdBuild() {
   if [ $# -eq 0 ]; then
     if [ "$(getBoolAnswer "Stop and rebuild the entire dev environment?")" == "n" ]; then
@@ -90,6 +84,10 @@ function cmdBuild() {
     fi
     cleanAll
     buildAll
+    if [ $? -gt 0 ]; then
+        echo "Build failed :["
+        exit 1
+    fi
     if [ "$(getBoolAnswer "Start new dev environment?")" == "y" ]; then
       cmdStart
     else
@@ -104,6 +102,10 @@ function cmdBuild() {
     stop $1
     clean v1x1-common $1
     buildOne $1 $TYPE
+    if [ $? -gt 0 ]; then
+        echo "Build failed :["
+        exit 1
+    fi
     start $1
   fi
 }
@@ -135,6 +137,15 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 
+function cmdCqlsh() {
+  local ID=$(docker ps -qf name=v1x1_cass_1 2> /dev/null)
+  if [ "x$ID" == "x" ]; then
+    echo "Cassandra container doesn't seem to be running"
+  else
+    docker exec -it v1x1_cass_1 cqlsh
+  fi
+}
+
 echo "Finding services..."
 while read module; do
   MODULES="$MODULES $module"
@@ -147,6 +158,7 @@ if [ $# -eq 0 ]; then
 else
   ARGS=$@
 fi
+export COMPOSE_HTTP_TIMEOUT=120
 case $CMD in
   start)
     cmdStart $@
@@ -160,8 +172,8 @@ case $CMD in
   build)
     cmdBuild $@
     ;;
-  web)
-    echo "Not yet supported"
+  cqlsh)
+    cmdCqlsh
     ;;
   help)
     help
