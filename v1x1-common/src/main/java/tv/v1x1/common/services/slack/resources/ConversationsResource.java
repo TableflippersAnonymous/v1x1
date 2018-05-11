@@ -4,6 +4,7 @@ import tv.v1x1.common.services.slack.SlackApi;
 import tv.v1x1.common.services.slack.dto.conversations.ConversationCloseRequest;
 import tv.v1x1.common.services.slack.dto.conversations.ConversationCloseResponse;
 import tv.v1x1.common.services.slack.dto.conversations.ConversationHistoryResponse;
+import tv.v1x1.common.services.slack.dto.conversations.ConversationInfoResponse;
 import tv.v1x1.common.services.slack.exceptions.ChannelNotFoundException;
 import tv.v1x1.common.services.slack.exceptions.SlackApiException;
 
@@ -54,5 +55,21 @@ public class ConversationsResource {
         if(Objects.equals(conversationHistoryResponse.getError(), "channel_not_found"))
             throw new ChannelNotFoundException();
         throw new SlackApiException(conversationHistoryResponse.getError());
+    }
+
+    public ConversationInfoResponse getInfo(final String channelId, final Boolean includeLocale) throws ChannelNotFoundException {
+        final ConversationInfoResponse conversationInfoResponse = this.api.path("conversations.info")
+                .request(SlackApi.ACCEPT)
+                .post(Entity.form(new Form()
+                        .param("token", token)
+                        .param("channel", channelId)
+                        .param("include_locale", includeLocale == null ? null : includeLocale.toString())
+                ))
+                .readEntity(ConversationInfoResponse.class);
+        if(conversationInfoResponse.isOk())
+            return conversationInfoResponse;
+        if(Objects.equals(conversationInfoResponse.getError(), "channel_not_found"))
+            throw new ChannelNotFoundException();
+        throw new SlackApiException(conversationInfoResponse.getError());
     }
 }
