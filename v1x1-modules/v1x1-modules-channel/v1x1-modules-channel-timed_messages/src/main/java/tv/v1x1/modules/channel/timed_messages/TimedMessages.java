@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Josh
  */
-@Permissions({
+@Permissions(version = 1, value = {
         @RegisteredPermission(
                 node = "timer.modify",
                 displayName = "Manage Timers",
@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
                 defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
         )
 })
-@I18nDefaults({
+@I18nDefaults(version = 1, value = {
         // base/shared
         @I18nDefault(
                 key = "invalid.subcommand",

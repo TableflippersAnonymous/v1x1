@@ -21,7 +21,7 @@ import java.time.Instant;
 /**
  * @author Josh
  */
-@Permissions({
+@Permissions(version = 1, value = {
         @RegisteredPermission(
                 node = "uptime.use",
                 displayName = "Use Uptime",
@@ -29,7 +29,7 @@ import java.time.Instant;
                 defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS, DefaultGroup.SUBS, DefaultGroup.EVERYONE}
         )
 })
-@I18nDefaults({
+@I18nDefaults(version = 1, value = {
         @I18nDefault(
                 key = "online",
                 message = "%target%: The stream has been live for %uptime%",

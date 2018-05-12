@@ -53,6 +53,7 @@ import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.rpc.client.ServiceClient;
 import tv.v1x1.common.scanners.config.ConfigScanner;
 import tv.v1x1.common.scanners.i18n.I18nScanner;
+import tv.v1x1.common.scanners.permission.PermissionScanner;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributorImpl;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
@@ -140,6 +141,7 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         getModuleRegistry();
         registerGlobalMessages();
         registerModuleMessages();
+        registerModulePermissions();
         updateConfigurationDefinitions();
     }
 
@@ -447,6 +449,10 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         final UserConfigurationDefinition userConfigurationDefinition = ConfigScanner.scanUser(getUserConfigurationClass());
         if(userConfigurationDefinition != null)
             daoConfigurationDefinition.put(userConfigurationDefinition.toDB());
+    }
+
+    private void registerModulePermissions() {
+        PermissionScanner.scanClass(this);
     }
 
     /* ******************************* LANGUAGE ******************************* */

@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Josh
  */
-@Permissions({
+@Permissions(version = 1, value = {
         @RegisteredPermission(
                 node = "link_purger.permit",
                 displayName = "Permit Links",
@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
                 defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS, DefaultGroup.SUBS}
         )
 })
-@I18nDefaults({
+@I18nDefaults(version = 1, value = {
         @I18nDefault(
                 key = "purged",
                 message = "Hey %user%, please ask before posting a link! I've purged your messages; feel free to keep chatting!",

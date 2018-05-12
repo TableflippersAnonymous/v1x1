@@ -24,7 +24,7 @@ import java.lang.invoke.MethodHandles;
 /**
  * Created by Josh on 2016-10-06.
  */
-@Permissions({
+@Permissions(version = 1, value = {
         @RegisteredPermission(
                 node = "hello.use",
                 displayName = "Use Hello",
@@ -32,7 +32,7 @@ import java.lang.invoke.MethodHandles;
                 defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
         )
 })
-@I18nDefaults({
+@I18nDefaults(version = 1, value = {
         @I18nDefault(
                 key = "hello",
                 message = "Hi there, %user%!",
