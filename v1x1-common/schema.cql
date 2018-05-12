@@ -441,3 +441,41 @@ DROP TABLE twitch_channel;
 DROP TABLE discord_channel;
 DROP TABLE channel_configuration;
 DROP TABLE channel_platform_mapping;
+
+/* Version 10 */
+CREATE TYPE i18n_entry (
+    key text,
+    message text,
+    display_name text,
+    description text
+);
+
+CREATE TABLE i18n_module_definition (
+    name text,
+    version int,
+    "entries" list<frozen<i18n_entry>>,
+    PRIMARY KEY (name)
+);
+
+CREATE TYPE permission_entry (
+    node text,
+    display_name text,
+    description text,
+    default_groups list<text>
+);
+
+CREATE TABLE permission_module_definition (
+    name text,
+    version int,
+    "entries" list<frozen<permission_entry>>,
+    PRIMARY KEY (name)
+);
+
+CREATE TABLE migrations (
+    version int,
+    name text,
+    migrated_at timeuuid,
+    PRIMARY KEY (version)
+);
+
+INSERT INTO migrations (version, name, migrated_at) VALUES (10, 'i18n_module_definition, permission_module_definition, and migrations', NOW());

@@ -15,7 +15,7 @@ import tv.v1x1.common.util.commands.CommandDelegator;
 /**
  * @author Josh
  */
-@Permissions({
+@Permissions(version = 1, value = {
         @RegisteredPermission(
                 node = "caster.use",
                 displayName = "Use Caster",
@@ -23,7 +23,7 @@ import tv.v1x1.common.util.commands.CommandDelegator;
                 defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
         )
 })
-@I18nDefaults({
+@I18nDefaults(version = 1, value = {
         @I18nDefault(
                 key = "notfound",
                 message = "%commander%, I can't find %target% on Twitch BibleThump",

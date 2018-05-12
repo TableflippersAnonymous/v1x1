@@ -20,6 +20,7 @@ import com.datastax.driver.core.policies.LatencyAwarePolicy;
 import com.datastax.driver.core.policies.LoggingRetryPolicy;
 import com.datastax.driver.core.policies.PercentileSpeculativeExecutionPolicy;
 import com.datastax.driver.core.policies.TokenAwarePolicy;
+import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
 import com.datastax.driver.extras.codecs.enums.EnumOrdinalCodec;
 import com.datastax.driver.mapping.MappingManager;
 import com.google.inject.AbstractModule;
@@ -38,9 +39,11 @@ import tv.v1x1.common.dao.DAOChannelGroupConfiguration;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
 import tv.v1x1.common.dao.DAOGlobalConfiguration;
 import tv.v1x1.common.dao.DAOGlobalUser;
+import tv.v1x1.common.dao.DAOI18nDefinition;
 import tv.v1x1.common.dao.DAOJoinedTwitchChannel;
 import tv.v1x1.common.dao.DAOKeyValueEntry;
 import tv.v1x1.common.dao.DAOLanguage;
+import tv.v1x1.common.dao.DAOPermissionDefinition;
 import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dao.DAOTenantConfiguration;
 import tv.v1x1.common.dao.DAOTenantGroup;
@@ -56,6 +59,7 @@ import tv.v1x1.common.modules.UserConfiguration;
 import tv.v1x1.common.modules.ZipkinConfig;
 import tv.v1x1.common.scanners.config.ConfigType;
 import tv.v1x1.common.scanners.config.Permission;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.LockManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
@@ -106,9 +110,11 @@ public class GuiceModule<T extends GlobalConfiguration, U extends UserConfigurat
         bind(DAOConfigurationDefinition.class);
         bind(DAOGlobalConfiguration.class);
         bind(DAOGlobalUser.class);
+        bind(DAOI18nDefinition.class);
         bind(DAOJoinedTwitchChannel.class);
         bind(DAOKeyValueEntry.class);
         bind(DAOLanguage.class);
+        bind(DAOPermissionDefinition.class);
         bind(DAOTenant.class);
         bind(DAOTenantConfiguration.class);
         bind(DAOTenantGroup.class);
@@ -238,6 +244,7 @@ public class GuiceModule<T extends GlobalConfiguration, U extends UserConfigurat
                         .register(new EnumOrdinalCodec<>(Platform.class))
                         .register(new EnumOrdinalCodec<>(Permission.class))
                         .register(new EnumOrdinalCodec<>(ConfigType.class))
+                        .register(new EnumNameCodec<>(DefaultGroup.class))
                 )
                 .build();
     }

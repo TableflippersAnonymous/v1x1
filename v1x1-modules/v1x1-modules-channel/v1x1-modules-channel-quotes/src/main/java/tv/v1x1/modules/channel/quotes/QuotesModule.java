@@ -25,7 +25,7 @@ import java.util.Random;
 /**
  * @author Josh
  */
-@Permissions({
+@Permissions(version = 1, value = {
         @RegisteredPermission(
                 node = "quote.use",
                 displayName = "Use Quotes",
@@ -39,7 +39,7 @@ import java.util.Random;
                 defaultGroups = {DefaultGroup.OWNER, DefaultGroup.BROADCASTER, DefaultGroup.MODS}
         )
 })
-@I18nDefaults({
+@I18nDefaults(version = 1, value = {
         @I18nDefault(
                 key = "invalid.quote",
                 message = "%commander%, quote #%id% doesn't exist!",

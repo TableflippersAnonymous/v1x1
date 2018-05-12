@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * @author Josh
  */
-@Permissions({
+@Permissions(version = 1, value = {
         @RegisteredPermission(
                 node = "factoids.useall",
                 displayName = "Use All Factoids",
@@ -40,7 +40,7 @@ import java.util.Set;
                 description = "This gives you the ability to use certain factoids."
         )
 })
-@I18nDefaults({
+@I18nDefaults(version = 1, value = {
         @I18nDefault(
                 key = "help.blurb",
                 message = "Factoids are little bits of text you can call upon as a custom command",
