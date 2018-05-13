@@ -8,6 +8,7 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dao.DAOGlobalUser;
+import tv.v1x1.common.dao.DAOPermissionDefinition;
 import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dao.DAOTenantGroup;
 import tv.v1x1.common.dao.DAOTwitchOauthToken;
@@ -15,10 +16,12 @@ import tv.v1x1.common.dto.db.Channel;
 import tv.v1x1.common.dto.db.ChannelGroup;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.Permission;
+import tv.v1x1.common.dto.db.PermissionDefinition;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TenantGroup;
 import tv.v1x1.common.dto.db.TwitchOauthToken;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
 import tv.v1x1.common.services.discord.DiscordApi;
 import tv.v1x1.common.services.discord.dto.user.Connection;
 import tv.v1x1.common.services.discord.dto.user.User;
@@ -52,6 +55,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -71,6 +75,7 @@ public class MetaResource {
     private final DAOTwitchOauthToken daoTwitchOauthToken;
     private final DAOTenant daoTenant;
     private final DAOTenantGroup daoTenantGroup;
+    private final DAOPermissionDefinition daoPermissionDefinition;
     private final Authorizer authorizer;
     private final TwitchApi twitchApi;
     private final DiscordApi discordApi;
@@ -84,6 +89,7 @@ public class MetaResource {
         this.daoTwitchOauthToken = daoManager.getDaoTwitchOauthToken();
         this.daoTenant = daoManager.getDaoTenant();
         this.daoTenantGroup = daoManager.getDaoTenantGroup();
+        this.daoPermissionDefinition = daoManager.getDaoPermissionDefinition();
         this.authorizer = authorizer;
         this.twitchApi = twitchApi;
         this.discordApi = discordApi;
@@ -109,9 +115,7 @@ public class MetaResource {
         final Channel channel = daoTenant.getChannel(Platform.TWITCH, String.valueOf(privateUser.getId()) + ":main");
         final Tenant tenant = daoTenant.getOrCreate(Platform.TWITCH, String.valueOf(privateUser.getId()), String.valueOf(privateUser.getId()) + ":main", privateUser.getDisplayName());
         final boolean firstSetup = !daoTenantGroup.getAllGroupsByTenant(tenant.toCore(daoTenant)).iterator().hasNext() || channel == null;
-        grantOwner(tenant, globalUser);
-        if(firstSetup)
-            createTwitchStartingGroups(tenant, String.valueOf(privateUser.getId()));
+        createStartingGroups(firstSetup, tenant, Platform.TWITCH, String.valueOf(privateUser.getId()), globalUser);
         return authorizer.getAuthorizationFromPrincipal(new Authorizer.Principal(globalUser.toCore(), null));
     }
 
@@ -154,9 +158,7 @@ public class MetaResource {
             final ChannelGroup channelGroup = daoTenant.getChannelGroup(Platform.DISCORD, tokenResponse.getGuild().getId());
             final Tenant tenant = daoTenant.getOrCreate(Platform.DISCORD, tokenResponse.getGuild().getId(), tokenResponse.getGuild().getName());
             final boolean firstSetup = !daoTenantGroup.getAllGroupsByTenant(tenant.toCore(daoTenant)).iterator().hasNext() || channelGroup == null;
-            grantOwner(tenant, globalUser);
-            if (firstSetup)
-                createDiscordStartingGroups(tenant, tokenResponse.getGuild().getId());
+            createStartingGroups(firstSetup, tenant, Platform.DISCORD, tokenResponse.getGuild().getId(), globalUser);
         }
         return authorizer.getAuthorizationFromPrincipal(new Authorizer.Principal(globalUser.toCore(), null));
     }
@@ -191,68 +193,46 @@ public class MetaResource {
         return stateStr;
     }
 
-    private void grantOwner(final Tenant tenant, final GlobalUser globalUser) {
+    private void createStartingGroups(final boolean firstSetup, final Tenant tenant, final Platform platform, final String channelGroupId, final GlobalUser globalUser) {
+        if(firstSetup)
+            for(final DefaultGroup defaultGroup : DefaultGroup.values())
+                createStartingGroup(tenant, platform, channelGroupId, globalUser, defaultGroup);
+        else
+            createStartingGroup(tenant, platform, channelGroupId, globalUser, DefaultGroup.OWNER);
+    }
+
+    private void createStartingGroup(final Tenant tenant, final Platform platform, final String channelGroupId, final GlobalUser globalUser, final DefaultGroup defaultGroup) {
+        if(!defaultGroup.getPlatforms().contains(platform))
+            return;
+        final TenantGroup tenantGroup = createStartingGroup(
+                tenant,
+                platform,
+                channelGroupId,
+                defaultGroup.getGroupName(),
+                defaultGroup.getPlatformMap().getOrDefault(platform, ImmutableSet.of()),
+                getPermissionNodes(defaultGroup)
+        );
+        if(defaultGroup.equals(DefaultGroup.OWNER))
+            daoTenantGroup.addUserToGroup(tenantGroup, globalUser.toCore());
+    }
+
+    private Set<String> getPermissionNodes(final DefaultGroup defaultGroup) {
+        return ImmutableSet.copyOf(StreamSupport.stream(daoPermissionDefinition.getAll().spliterator(), false)
+                .map(PermissionDefinition::getEntries)
+                .flatMap(Collection::stream)
+                .filter(permissionEntry -> permissionEntry.getDefaultGroups().contains(defaultGroup))
+                .map(PermissionDefinition.PermissionEntry::getNode)
+                .collect(Collectors.toSet()));
+    }
+
+    private TenantGroup createStartingGroup(final Tenant tenant, final Platform platform, final String channelGroupId,
+                                            final String name, final Iterable<String> platformGroups, final Collection<String> nodes) {
         final Optional<TenantGroup> optionalTenantGroup = StreamSupport.stream(daoTenantGroup.getAllGroupsByTenant(tenant.toCore(daoTenant)).spliterator(), false)
-                .filter(tg -> tg.getName().equals("Owner")).findFirst();
-        final TenantGroup tenantGroup = optionalTenantGroup.orElseGet(() -> daoTenantGroup.createGroup(tenant.toCore(daoTenant), "Owner"));
-        daoTenantGroup.addPermissionsToGroup(tenantGroup, ImmutableSet.of(
-                new Permission("api.permissions.read"), new Permission("api.permissions.write"),
-                new Permission("api.tenants.config.read"), new Permission("api.tenants.config.write"),
-                new Permission("api.tenants.read"), new Permission("api.tenants.write"),
-                new Permission("api.tenants.link"), new Permission("api.tenants.unlink"),
-                new Permission("api.tenants.message"), new Permission("api.pubsub.read.api.chat"),
-                new Permission("api.pubsub.read.api.config")
-        ));
-        daoTenantGroup.addUserToGroup(tenantGroup, globalUser.toCore());
-    }
-
-    private void createTwitchStartingGroups(final Tenant tenant, final String channelGroupId) {
-        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Broadcaster", ImmutableSet.of("BROADCASTER"),
-                ImmutableSet.of("link_purger.permit", "link_purger.whitelisted", "caster.user", "fact.modify", "quote.use", "timer.modify"));
-        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Mods", ImmutableSet.of("MODERATOR", "ADMIN", "STAFF", "GLOBAL_MOD"),
-                ImmutableSet.of("link_purger.permit", "link_purger.whitelisted", "caster.user", "fact.modify", "quote.use", "timer.modify"));
-        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Subs", ImmutableSet.of("SUBSCRIBER"),
-                ImmutableSet.of("link_purger.whitelisted"));
-        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Everyone", ImmutableSet.of("_DEFAULT_"),
-                ImmutableSet.of("uptime.use", "quote.use"));
-        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_Read", ImmutableSet.of(),
-                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
-                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config"));
-        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_Edit", ImmutableSet.of(),
-                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
-                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config",
-                        "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
-                        "api.tenants.unlink", "api.tenants.message"));
-        createStartingGroup(tenant, Platform.TWITCH, channelGroupId, "Web_All", ImmutableSet.of(),
-                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
-                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config",
-                        "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
-                        "api.tenants.unlink", "api.tenants.message", "api.permissions.write"));
-    }
-
-    private void createDiscordStartingGroups(final Tenant tenant, final String channelGroupId) {
-        createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Everyone", ImmutableSet.of("_DEFAULT_"),
-                ImmutableSet.of("uptime.use", "quote.use"));
-        createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_Read", ImmutableSet.of(),
-                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
-                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config"));
-        createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_Edit", ImmutableSet.of(),
-                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
-                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config",
-                        "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
-                        "api.tenants.unlink", "api.tenants.message"));
-        createStartingGroup(tenant, Platform.DISCORD, channelGroupId, "Web_All", ImmutableSet.of(),
-                ImmutableSet.of("api.permissions.read", "api.tenants.config.read", "api.tenants.read",
-                        "api.pubsub.read.api.chat", "api.pubsub.read.api.config",
-                        "api.tenants.config.write", "api.tenants.write", "api.tenants.link",
-                        "api.tenants.unlink", "api.tenants.message", "api.permissions.write"));
-    }
-
-    private void createStartingGroup(final Tenant tenant, final Platform platform, final String channelGroupId,
-                                     final String name, final Iterable<String> platformGroups, final Collection<String> nodes) {
-        final TenantGroup tenantGroup = daoTenantGroup.createGroup(tenant.toCore(daoTenant), name);
+                .filter(tg -> tg.getName().equals(name)).findFirst();
+        final TenantGroup tenantGroup = optionalTenantGroup.orElseGet(() -> daoTenantGroup.createGroup(tenant.toCore(daoTenant), name));
         daoTenantGroup.addPermissionsToGroup(tenantGroup, nodes.stream().map(Permission::new).collect(Collectors.toSet()));
         for(final String platformGroup : platformGroups)
             daoTenantGroup.setChannelGroupPlatformMapping(platform, channelGroupId, platformGroup, tenantGroup);
+        return tenantGroup;
     }
 }
