@@ -2,8 +2,6 @@ package tv.v1x1.modules.core.api.resources.platform;
 
 import com.google.inject.Inject;
 import io.dropwizard.jersey.caching.CacheControl;
-import tv.v1x1.common.dao.DAOI18nDefinition;
-import tv.v1x1.common.dao.DAOPermissionDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.UserConfigurationDefinition;
 import tv.v1x1.common.scanners.permission.DefaultGroup;
@@ -40,14 +38,10 @@ import java.util.stream.StreamSupport;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ConfigDefinitionResource {
     private final DAOManager daoManager;
-    private final DAOI18nDefinition daoI18nDefinition;
-    private final DAOPermissionDefinition daoPermissionDefinition;
 
     @Inject
-    public ConfigDefinitionResource(final DAOManager daoManager, final DAOI18nDefinition daoI18nDefinition, final DAOPermissionDefinition daoPermissionDefinition) {
+    public ConfigDefinitionResource(final DAOManager daoManager) {
         this.daoManager = daoManager;
-        this.daoI18nDefinition = daoI18nDefinition;
-        this.daoPermissionDefinition = daoPermissionDefinition;
     }
 
     @Path("/user")
@@ -94,7 +88,7 @@ public class ConfigDefinitionResource {
     @GET
     @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
     public ApiList<PermissionDefinition> listPermissionDefinitions() {
-        return new ApiList<>(StreamSupport.stream(daoPermissionDefinition.getAll().spliterator(), false).map(
+        return new ApiList<>(StreamSupport.stream(daoManager.getDaoPermissionDefinition().getAll().spliterator(), false).map(
                 permissionDefinition -> new PermissionDefinition(
                         permissionDefinition.getName(),
                         permissionDefinition.getVersion(),
@@ -114,7 +108,7 @@ public class ConfigDefinitionResource {
     @GET
     @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
     public ApiList<I18nDefinition> listI18nDefinitions() {
-        return new ApiList<>(StreamSupport.stream(daoI18nDefinition.getAll().spliterator(), false).map(
+        return new ApiList<>(StreamSupport.stream(daoManager.getDaoI18nDefinition().getAll().spliterator(), false).map(
                 i18nDefinition -> new I18nDefinition(
                         i18nDefinition.getName(),
                         i18nDefinition.getVersion(),
