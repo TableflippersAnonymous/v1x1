@@ -95,7 +95,7 @@ import java.util.stream.Collectors;
         ),
         @RegisteredPermission(
                 node = "api.pubsub.read.api.config",
-                displayName = "Web Read Chat",
+                displayName = "Web Live Config Changes",
                 description = "This allows you to see instantaneous config updates on the website.",
                 defaultGroups = {DefaultGroup.OWNER, DefaultGroup.WEB_ALL, DefaultGroup.WEB_EDIT, DefaultGroup.WEB_READ}
         )
