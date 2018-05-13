@@ -20,6 +20,8 @@ public class TwitchChannel extends Channel {
         return new TwitchChannel(id, channelGroup, displayName);
     }
 
+    public static final TwitchChannel EMPTY = new TwitchChannel(null, null, null);
+
     public TwitchChannel(final String id, final ChannelGroup channelGroup, final String displayName) {
         super(id, channelGroup, displayName);
     }

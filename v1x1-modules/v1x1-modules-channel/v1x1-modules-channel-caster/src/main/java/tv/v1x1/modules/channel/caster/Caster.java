@@ -32,18 +32,35 @@ import tv.v1x1.common.util.commands.CommandDelegator;
         ),
         @I18nDefault(
                 key = "nogame",
-                message = "Everyone give %target% a follow! https://twitch.tv/%target%",
+                message = "Everyone give %target% a follow! Check them out at %url%",
                 displayName = "No Game",
                 description = "Sent when !caster is used on a broadcaster who is not playing a specific game"
         ),
         @I18nDefault(
                 key = "response",
-                message = "Everyone give %target% a follow! They were last seen %summary%. Check them out at https://twitch.tv/%targetId%",
+                message = "Everyone give %target% a follow! They were last seen %summary%. Check them out at %url%",
                 displayName = "Response",
                 description = "Normal response to !caster command"
+        ),
+        @I18nDefault(
+                key = "nostreams",
+                message = "%commander%, %platform% doesn't support streaming",
+                displayName = "No Stream Support",
+                description = "Sent when !caster is used on a platform that doesn't support streaming"
+        ),
+        @I18nDefault(
+                key = "invalidplatform",
+                message = "%commander%, I don't support %platform%!",
+                displayName = "No Platform Support",
+                description = "Sent when !caster is used on a platform that v1x1 does not support"
         )
 })
 public class Caster extends RegisteredThreadedModule<CasterGlobalConfig, CasterUserConfig> implements EventListener {
+    private static Caster instance;
+    public static Caster getInstance() {
+        return instance;
+    }
+
     private CommandDelegator delegator;
 
     @Override
@@ -57,6 +74,7 @@ public class Caster extends RegisteredThreadedModule<CasterGlobalConfig, CasterU
     @Override
     protected void initialize() {
         super.initialize();
+        instance = this;
         TwitchApi api = getTwitchApi();
         delegator = new CommandDelegator("!");
         delegator.registerCommand(new CasterCommand(this));

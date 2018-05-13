@@ -1,6 +1,7 @@
 package tv.v1x1.common.dto.db;
 
 import tv.v1x1.common.dto.proto.core.PlatformOuterClass;
+import tv.v1x1.common.util.text.CaseChanger;
 
 /**
  * Created by naomi on 10/16/2016.
@@ -19,5 +20,16 @@ public enum Platform {
 
     public PlatformOuterClass.Platform toProto() {
         return protobuf;
+    }
+
+    public String stylize() {
+        switch(this) {
+            case API:
+                return this.toString();
+            case YOUTUBE:
+                return "YouTube";
+            default:
+                return CaseChanger.titlecase(this.toString());
+        }
     }
 }

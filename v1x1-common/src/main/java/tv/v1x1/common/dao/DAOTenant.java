@@ -11,6 +11,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
+import tv.v1x1.common.dto.core.TwitchChannel;
 import tv.v1x1.common.dto.db.Channel;
 import tv.v1x1.common.dto.db.ChannelGroup;
 import tv.v1x1.common.dto.db.ChannelGroupsByTenant;
@@ -143,7 +144,7 @@ public class DAOTenant {
         }
         if(displayName == null && platform == Platform.TWITCH)
             try {
-                displayName = displayNameService.getDisplayNameFromId(new tv.v1x1.common.dto.core.TwitchChannel(null, null, null), channelGroupId);
+                displayName = displayNameService.getDisplayNameFromId(TwitchChannel.EMPTY, channelGroupId);
             } catch (NoSuchUserException e) {
                 throw new RuntimeException(e);
             }

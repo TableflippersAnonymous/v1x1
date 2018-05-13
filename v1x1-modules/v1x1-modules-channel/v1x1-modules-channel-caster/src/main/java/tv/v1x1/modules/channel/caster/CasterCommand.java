@@ -1,19 +1,26 @@
 package tv.v1x1.modules.channel.caster;
 
 import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.services.twitch.dto.videos.TotalledVideoList;
 import tv.v1x1.common.services.twitch.dto.videos.Video;
 import tv.v1x1.common.util.commands.Command;
+import tv.v1x1.common.util.text.CaseChanger;
 import tv.v1x1.common.util.validation.TwitchValidator;
+import tv.v1x1.modules.channel.caster.streaminfo.IStreamInfo;
+import tv.v1x1.modules.channel.caster.streaminfo.StreamInfoFactory;
 
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 /**
@@ -28,7 +35,7 @@ class CasterCommand extends Command {
 
     @Override
     public List<String> getCommands() {
-        return ImmutableList.of("caster", "follow", "shoutout");
+        return ImmutableList.of("caster", "follow", "shoutout", "twitch", "mixer");
     }
 
     @Override
@@ -58,46 +65,60 @@ class CasterCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final DisplayNameService displayNameService = caster.getInjector().getInstance(DisplayNameService.class);
         final Channel channel = chatMessage.getChannel();
+        String targetStreamer = args.get(0);
+        Platform targetPlatform = channel.getPlatform();
+        final String commander = chatMessage.getSender().getDisplayName();
         try {
-            final String targetId = displayNameService.getIdFromDisplayName(channel, args.get(0));
-            final String targetDisplayName = displayNameService.getDisplayNameFromId(channel, targetId);
-            final tv.v1x1.common.services.twitch.dto.channels.Channel videoChannel;
+            targetPlatform = Platform.valueOf(command.toUpperCase());
+        } catch(IllegalArgumentException ex) {
+            // This space intentionally left blank
+        }
+        if(targetStreamer.contains("/")) {
+            final String[] targetAndPlatform = targetStreamer.split("/");
+            targetStreamer = targetAndPlatform[0];
+            final String targetPlatformStr = targetAndPlatform[1];
             try {
-                videoChannel = caster.getTwitchApi().getChannels().getChannel(targetId);
-            } catch (NotFoundException ex) {
-                Chat.i18nMessage(caster, channel, "notfound",
-                        "commander", chatMessage.getSender().getDisplayName(),
-                        "target", targetDisplayName);
-                return;
-            } catch (WebApplicationException ex) {
-                Chat.i18nMessage(caster, channel, "nogame",
-                        "target", targetId,
-                        "targetId", targetDisplayName);
-                throw ex;
-            }
-            final String targetCaster = videoChannel.getDisplayName();
-            final String lastGame = videoChannel.getGame();
-            if (lastGame == null) {
-                Chat.i18nMessage(caster, channel, "nogame",
-                        "target", targetCaster,
-                        "targetId", targetDisplayName);
+                targetPlatform = Platform.valueOf(targetPlatformStr.toUpperCase());
+            } catch (IllegalArgumentException ex) {
+                Chat.i18nMessage(caster, channel, "invalidplatform",
+                        "commander", commander,
+                        "platform", CaseChanger.titlecase(targetPlatformStr));
                 return;
             }
-            final String verb;
-            if (lastGame.equals("Creative"))
-                verb = GameVerb.getCreativeVerb(videoChannel.getStatus());
-            else
-                verb = GameVerb.getVerb(lastGame);
-            Chat.i18nMessage(caster, channel, "response",
-                    "target", targetCaster,
-                    "targetId", targetDisplayName,
-                    "summary", verb);
-        } catch (final NoSuchUserException e) {
-            Chat.i18nMessage(caster, channel, "generic.invalid.user",
-                    "commander", chatMessage.getSender().getDisplayName(),
-                    "input", args.get(0));
+        }
+        try {
+            final IStreamInfo info = StreamInfoFactory.getInfo(targetPlatform).setTarget(targetStreamer);
+            if(info.getGame() == null) {
+                Chat.i18nMessage(caster, channel, "nogame",
+                        "target", info.getDisplayName(),
+                        "url", info.getUrl());
+            } else {
+                Chat.i18nMessage(caster, channel, "response",
+                        "target", info.getDisplayName(),
+                        "url", info.getUrl(),
+                        "summary", info.getActivity(),
+                        "game", info.getGame(),
+                        "platform", targetPlatform.stylize());
+            }
+        } catch(NoSuchUserException ex) {
+            Chat.i18nMessage(caster, channel, "notfound",
+                    "commander", commander,
+                    "target", targetStreamer,
+                    "platform", targetPlatform.stylize());
+        } catch(WebApplicationException ex) {
+            // Problem with upstream APIs; just fake it 'till you make it
+            Chat.i18nMessage(caster, channel, "nogame",
+                    "target", targetStreamer,
+                    "targetId", targetPlatform.stylize());
+        } catch(IllegalArgumentException ex) {
+            Chat.i18nMessage(caster, channel, "nostreams",
+                    "commander", commander,
+                    "platform", targetPlatform.stylize());
+        } catch(UnsupportedOperationException ex) {
+            Chat.i18nMessage(caster, channel, "invalidplatform",
+                    "commander", commander,
+                    "platform", targetPlatform.stylize());
         }
     }
 }
