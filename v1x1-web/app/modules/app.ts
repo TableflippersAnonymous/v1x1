@@ -61,6 +61,8 @@ import {
   MatTabsModule,
   MatToolbarModule
 } from "@angular/material";
+import {PermissionFormatterComponent} from "../components/util/permission_formatter";
+import {ConfigurationFieldValuePermissionListComponent} from "../components/configuration/field_values/permission_list";
 
 /**
  * <welcome-page [loggedIn]="loggedIn"></welcome-page>
@@ -143,12 +145,12 @@ const routes: Routes = [
     ConfigurationFieldValueComplexListComponent, ConfigurationFieldValueComplexStringMapComponent, ConfigurationFieldValueCredentialComponent,
     ConfigurationFieldValueIntegerComponent, ConfigurationFieldValueMasterEnableComponent, ConfigurationFieldValueStringComponent,
     ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
-    ConfigurationFieldValueUserListComponent,
+    ConfigurationFieldValueUserListComponent, ConfigurationFieldValuePermissionListComponent,
     TopNavComponent, TopNavEntryComponent, UserDropdownNavComponent, TenantDropdownNavComponent, NavRouterComponent,
     DashboardPageComponent, HelpPageComponent, LogsPageComponent, UserPageComponent,
     PermissionsPageComponent, PermissionsGroupsComponent, PermissionsGroupComponent, PermissionsMappingComponent, PermissionsGroupMappingComponent,
     WelcomePageComponent,
-    TenantFormatterComponent, UserFormatterComponent, PlatformFormatterComponent
+    TenantFormatterComponent, UserFormatterComponent, PlatformFormatterComponent, PermissionFormatterComponent
   ],
   providers:    [ V1x1Api, V1x1ApiCache, V1x1GlobalState, V1x1PubSub, V1x1WebInfo ],
   bootstrap:    [ AppComponent ]

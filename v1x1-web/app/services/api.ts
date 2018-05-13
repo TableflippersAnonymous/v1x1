@@ -28,6 +28,7 @@ import {V1x1ChannelGroupPlatformMapping} from "../model/v1x1_channel_group_platf
 import {V1x1TenantPlatformMapping} from "../model/v1x1_tenant_platform_mapping";
 import {V1x1ChannelGroupPlatformMappingWrapper} from "../model/v1x1_channel_group_platform_mapping_wrapper";
 import {HttpClient} from "@angular/common/http";
+import {V1x1PermissionDefinition} from "../model/v1x1_permission_definition";
 
 @Injectable()
 export class V1x1Api {
@@ -456,5 +457,14 @@ export class V1x1Api {
         channelGroup => this.getChannelGroupPlatformMappingWrapper(tenant.id, channelGroup)
       )
     ).map(r => new V1x1TenantPlatformMapping(r));
+  }
+
+  getPermissionDefinitions(): Observable<V1x1PermissionDefinition[]> {
+    return this.webInfo.getWebConfig().map((wc) =>
+      this.http.get(wc.apiBase + '/platform/config-definitions/permission')
+        .map(r => JsonConvert.deserializeObject(r, V1x1List))
+        .map((r: V1x1List<any>) => r.entries.map(e => JsonConvert.deserializeObject(e, V1x1PermissionDefinition)))
+        .catch((err, caught) => {console.log(err, caught); return Observable.of([]);})
+    ).mergeAll();
   }
 }
