@@ -83,7 +83,7 @@ public class Chat {
             final DisplayNameService dns = module.getDisplayNameService();
             String username;
             try {
-                username = dns.getUserFromId(channel, user.getId());
+                username = dns.getUsernameFromId(channel, user.getId());
             } catch(NoSuchUserException e) {
                 LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
@@ -111,7 +111,7 @@ public class Chat {
             final DisplayNameService dns = module.getDisplayNameService();
             String username;
             try {
-                username = dns.getUserFromId(channel, user.getId());
+                username = dns.getUsernameFromId(channel, user.getId());
             } catch(NoSuchUserException e) {
                 LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
@@ -137,7 +137,7 @@ public class Chat {
             final DisplayNameService dns = module.getDisplayNameService();
             String username;
             try {
-                username = dns.getUserFromId(channel, user.getId());
+                username = dns.getUsernameFromId(channel, user.getId());
             } catch(NoSuchUserException e) {
                 LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
@@ -183,7 +183,7 @@ public class Chat {
             final DisplayNameService dns = module.getDisplayNameService();
             String username;
             try {
-                username = dns.getUserFromId(channel, user.getId());
+                username = dns.getUsernameFromId(channel, user.getId());
             } catch(NoSuchUserException e) {
                 LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
