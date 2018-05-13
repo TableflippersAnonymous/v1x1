@@ -1,26 +1,19 @@
 package tv.v1x1.modules.channel.caster;
 
 import com.google.common.collect.ImmutableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.chat.Chat;
-import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.NoSuchUserException;
-import tv.v1x1.common.services.twitch.dto.videos.TotalledVideoList;
-import tv.v1x1.common.services.twitch.dto.videos.Video;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.common.util.text.CaseChanger;
-import tv.v1x1.common.util.validation.TwitchValidator;
-import tv.v1x1.modules.channel.caster.streaminfo.IStreamInfo;
+import tv.v1x1.modules.channel.caster.streaminfo.StreamInfo;
 import tv.v1x1.modules.channel.caster.streaminfo.StreamInfoFactory;
 
-import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 /**
@@ -80,7 +73,7 @@ class CasterCommand extends Command {
             final String targetPlatformStr = targetAndPlatform[1];
             try {
                 targetPlatform = Platform.valueOf(targetPlatformStr.toUpperCase());
-            } catch (IllegalArgumentException ex) {
+            } catch(IllegalArgumentException ex) {
                 Chat.i18nMessage(caster, channel, "invalidplatform",
                         "commander", commander,
                         "platform", CaseChanger.titlecase(targetPlatformStr));
@@ -88,7 +81,7 @@ class CasterCommand extends Command {
             }
         }
         try {
-            final IStreamInfo info = StreamInfoFactory.getInfo(targetPlatform).setTarget(targetStreamer);
+            final StreamInfo info = StreamInfoFactory.getInfo(targetStreamer, targetPlatform);
             if(info.getGame() == null) {
                 Chat.i18nMessage(caster, channel, "nogame",
                         "target", info.getDisplayName(),

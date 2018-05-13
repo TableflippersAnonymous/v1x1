@@ -7,15 +7,20 @@ import tv.v1x1.common.util.text.CaseChanger;
  * Created by cobi on 10/16/2016.
  */
 public enum Platform {
-    TWITCH(PlatformOuterClass.Platform.TWITCH), DISCORD(PlatformOuterClass.Platform.DISCORD),
-    API(PlatformOuterClass.Platform.API), SLACK(PlatformOuterClass.Platform.SLACK),
-    MIXER(PlatformOuterClass.Platform.MIXER), YOUTUBE(PlatformOuterClass.Platform.YOUTUBE),
-    CURSE(PlatformOuterClass.Platform.CURSE);
+    TWITCH(PlatformOuterClass.Platform.TWITCH, "Twitch"),
+    DISCORD(PlatformOuterClass.Platform.DISCORD, "Discord"),
+    API(PlatformOuterClass.Platform.API, "API"),
+    SLACK(PlatformOuterClass.Platform.SLACK, "Slack"),
+    MIXER(PlatformOuterClass.Platform.MIXER, "Mixer"),
+    YOUTUBE(PlatformOuterClass.Platform.YOUTUBE, "YouTube"),
+    CURSE(PlatformOuterClass.Platform.CURSE, "Curse");
 
     private final PlatformOuterClass.Platform protobuf;
+    private final String stylizedName;
 
-    Platform(final PlatformOuterClass.Platform protobuf) {
+    Platform(final PlatformOuterClass.Platform protobuf, final String stylizedName) {
         this.protobuf = protobuf;
+        this.stylizedName = stylizedName;
     }
 
     public PlatformOuterClass.Platform toProto() {
@@ -23,13 +28,6 @@ public enum Platform {
     }
 
     public String stylize() {
-        switch(this) {
-            case API:
-                return this.toString();
-            case YOUTUBE:
-                return "YouTube";
-            default:
-                return CaseChanger.titlecase(this.toString());
-        }
+        return stylizedName;
     }
 }

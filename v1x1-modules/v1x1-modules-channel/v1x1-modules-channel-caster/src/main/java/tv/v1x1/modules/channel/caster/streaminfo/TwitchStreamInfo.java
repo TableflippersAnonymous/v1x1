@@ -6,21 +6,14 @@ import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.modules.channel.caster.Caster;
 import tv.v1x1.modules.channel.caster.StreamActivity;
 
-import javax.ws.rs.WebApplicationException;
-
-public class TwitchStreamInfo implements IStreamInfo {
-    String target;
-    final private DisplayNameService displayNameService;
+public class TwitchStreamInfo implements StreamInfo {
+    private final String target;
+    private final DisplayNameService displayNameService;
     private tv.v1x1.common.services.twitch.dto.channels.Channel videoChannel;
 
-    TwitchStreamInfo() {
-        this.displayNameService = Caster.getInstance().getInjector().getInstance(DisplayNameService.class);
-    }
-
-    @Override
-    public IStreamInfo setTarget(final String target) {
+    TwitchStreamInfo(final String target) {
         this.target = target;
-        return this;
+        this.displayNameService = Caster.getInstance().getInjector().getInstance(DisplayNameService.class);
     }
 
     @Override

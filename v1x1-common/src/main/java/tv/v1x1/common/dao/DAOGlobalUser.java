@@ -7,7 +7,6 @@ import com.datastax.driver.mapping.MappingManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
-import tv.v1x1.common.dto.core.TwitchChannel;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.InverseGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
