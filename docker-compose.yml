@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
   redis:
     image: redis:alpine
@@ -8,14 +8,14 @@ services:
       ZOO_MY_ID: 1
       ZOO_SERVERS: server.1=zoo:2888:3888
     volumes:
-      - ./docker-data/zoo/data:/data
-      - ./docker-data/zoo/datalog:/datalog
+      - ${V1X1_DOCKER_DATA:-.}/docker-data/zoo/data:/data
+      - ${V1X1_DOCKER_DATA:-.}/docker-data/zoo/datalog:/datalog
   cass:
     image: cassandra:3.9
     environment:
       CASSANDRA_CLUSTER_NAME: v1x1_dev
     volumes:
-      - ./docker-data/cassandra:/var/lib/cassandra
+      - ${V1X1_DOCKER_DATA:-.}/docker-data/cassandra:/var/lib/cassandra
   chat_router:
     image: v1x1-chat_router:latest
     depends_on:
