@@ -14,7 +14,7 @@ import java.util.List;
  * @author Josh
  */
 /* pkg-private */ class TimerDestroyCommand extends Command {
-    private TimedMessages module;
+    private final TimedMessages module;
 
     /* pkg-private */ TimerDestroyCommand(final TimedMessages module) {
         this.module = module;

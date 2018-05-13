@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class TimerEnableCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private TimedMessages module;
+    private final TimedMessages module;
 
     public TimerEnableCommand(final TimedMessages module) {
         this.module = module;
@@ -46,10 +46,7 @@ public class TimerEnableCommand extends Command {
             return;
         }
         final boolean enabled;
-        if(command.equals("enable"))
-            enabled = true;
-        else
-            enabled = false;
+        enabled = command.equals("enable");
         try {
             if(module.enableTimer(channel.getChannelGroup().getTenant(), timerStr, enabled)) {
                 Chat.i18nMessage(module, channel, command + ".success",

@@ -31,7 +31,7 @@ public class ModuleRegistry {
                     .client(framework)
                     .serializer(new InstanceSerializer<ModuleInstance>() {
                         @Override
-                        public byte[] serialize(final ServiceInstance<ModuleInstance> serviceInstance) throws Exception {
+                        public byte[] serialize(final ServiceInstance<ModuleInstance> serviceInstance) {
                             return serviceInstance.getPayload().toProto().toByteArray();
                         }
 

@@ -28,7 +28,7 @@ public class FactoidsUserConfiguration extends BasicUserConfiguration {
     @JsonProperty("factoids")
     @Type(ConfigType.COMPLEX_STRING_MAP)
     @ComplexType(Factoid.class)
-    private HashMap<String, Factoid> factoids = new HashMap<>();
+    private final HashMap<String, Factoid> factoids = new HashMap<>();
 
     /**
      * get the factoid for tenant

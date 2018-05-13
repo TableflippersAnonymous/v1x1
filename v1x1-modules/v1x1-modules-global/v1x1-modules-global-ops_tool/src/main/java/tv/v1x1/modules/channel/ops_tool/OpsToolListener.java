@@ -8,7 +8,7 @@ import tv.v1x1.common.modules.eventhandler.EventListener;
  * @author Josh
  */
 public class OpsToolListener implements EventListener {
-    private OpsTool opsTool;
+    private final OpsTool opsTool;
     public OpsToolListener(final OpsTool opsTool) {
         this.opsTool = opsTool;
     }

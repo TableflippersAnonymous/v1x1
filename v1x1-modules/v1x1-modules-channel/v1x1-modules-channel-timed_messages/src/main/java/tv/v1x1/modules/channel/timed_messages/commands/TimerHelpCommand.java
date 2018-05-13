@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class TimerHelpCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private TimedMessages module;
-    private CommandDelegator masterDelegator;
+    private final TimedMessages module;
+    private final CommandDelegator masterDelegator;
 
     public TimerHelpCommand(final TimedMessages module, final CommandDelegator delegator) {
         this.module = module;

@@ -8,7 +8,7 @@ import com.google.inject.Inject;
  * Created by cobi on 4/15/2017.
  */
 public class ZipkinStatsCollector extends NoopStatsCollector {
-    private Tracer tracer;
+    private final Tracer tracer;
 
     @Inject
     public ZipkinStatsCollector(final Tracer tracer) {

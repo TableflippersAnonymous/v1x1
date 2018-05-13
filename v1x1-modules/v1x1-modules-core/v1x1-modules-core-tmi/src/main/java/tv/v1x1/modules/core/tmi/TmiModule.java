@@ -117,7 +117,7 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, Tenant>() {
                     @Override
-                    public Tenant load(final String s) throws Exception {
+                    public Tenant load(final String s) {
                         try {
                             LOG.debug("Loading tenant for {}", s);
                             return getDaoManager().getDaoTenant().getOrCreate(Platform.TWITCH, s, s + ":main", null).toCore(getDaoManager().getDaoTenant());
@@ -131,7 +131,7 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, GlobalUser>() {
                     @Override
-                    public GlobalUser load(final String s) throws Exception {
+                    public GlobalUser load(final String s) {
                         try {
                             LOG.debug("Loading global user for {}", s);
                             return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.TWITCH, s, null).toCore();
@@ -145,7 +145,7 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<PermissionCacheKey, List<Permission>>() {
                     @Override
-                    public List<Permission> load(final PermissionCacheKey permissionCacheKey) throws Exception {
+                    public List<Permission> load(final PermissionCacheKey permissionCacheKey) {
                         try {
                             LOG.debug("Loading tenant permissions for tenant={} globalUser={} channelGroups={}",
                                     permissionCacheKey.getTenant().getId(), permissionCacheKey.getGlobalUser().getId(),
@@ -289,7 +289,7 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
         }
     }
 
-    private void setChannels(final Collection<String> channelIds) throws IOException, InterruptedException {
+    private void setChannels(final Collection<String> channelIds) {
         LOG.info("Channels: {}", Joiner.on(", ").join(channelIds));
         LOG.info("this.channels: {}", Joiner.on(", ").join(bots.keySet()));
         bots.keySet().stream().filter(channelId -> !channelIds.contains(channelId)).forEach(this::part);

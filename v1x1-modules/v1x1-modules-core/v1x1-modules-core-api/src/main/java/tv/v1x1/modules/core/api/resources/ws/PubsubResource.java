@@ -3,7 +3,6 @@ package tv.v1x1.modules.core.api.resources.ws;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Module;
@@ -50,7 +49,7 @@ public class PubsubResource {
     private static TopicManager topicManager;
     private static Authorizer authorizer;
 
-    private Map<String, Integer> topics = new HashMap<>();
+    private final Map<String, Integer> topics = new HashMap<>();
     private AuthorizationContext authContext = null;
 
     public static void initialize(final TopicManager topicManager, final Authorizer authorizer) {

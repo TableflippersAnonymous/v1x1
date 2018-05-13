@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class TimerRescheduleCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private TimedMessages module;
+    private final TimedMessages module;
 
     public TimerRescheduleCommand(final TimedMessages module) {
         this.module = module;

@@ -1,7 +1,6 @@
 package tv.v1x1.modules.core.discord.gateway;
 
 import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
@@ -50,7 +49,7 @@ public class DispatchDeserializer extends StdDeserializer<DispatchPayload> {
     }
 
     @Override
-    public DispatchPayload deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException, JsonProcessingException {
+    public DispatchPayload deserialize(final JsonParser p, final DeserializationContext ctxt) throws IOException {
         final JsonNode node = p.getCodec().readTree(p);
 
         switch(node.get("t").asText()) {

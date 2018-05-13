@@ -31,7 +31,7 @@ import java.util.UUID;
  */
 public class OpsTool extends RegisteredThreadedModule<OpsToolGlobalConfiguration, OpsToolUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private static Permission GENERAL_PERM = new Permission("opstool.use");
+    private static final Permission GENERAL_PERM = new Permission("opstool.use");
     /*pkg-private*/ CommandDelegator delegator;
     @Override
     public String getName() {

@@ -40,7 +40,7 @@ public class DelayScheduler implements Runnable {
     }
 
     public void schedule(final long timestamp, final Module module, final UUID id, final byte[] payload) {
-        set.add(timestamp, CompositeKey.makeKey(new byte[][] { module.toProto().toByteArray(), id.toProto().toByteArray(), payload, Longs.toByteArray(timestamp) }));
+        set.add(timestamp, CompositeKey.makeKey(module.toProto().toByteArray(), id.toProto().toByteArray(), payload, Longs.toByteArray(timestamp)));
     }
 
     public long cancel(final UUID id) {

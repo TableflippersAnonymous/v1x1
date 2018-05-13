@@ -12,7 +12,7 @@ import java.util.List;
  * @author Josh
  */
 public class LorumCommand extends Command {
-    private static String LORUM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam bibendum feugiat" +
+    private static final String LORUM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam bibendum feugiat" +
             " enim et venenatis. Pellentesque blandit porta condimentum. Cras facilisis vel libero ut dictum. Fusce aliq" +
             "uet ligula sit amet metus pharetra, eu auctor nibh sodales. Nunc non porttitor magna. Aenean molestie purus" +
             " nibh, et porttitor mi venenatis sit amet. Duis sit amet faucibus magna. Nulla facilisi. Duis et tortor dap" +
@@ -31,7 +31,7 @@ public class LorumCommand extends Command {
             "ttis. Donec eleifend sodales urna, non varius tortor auctor eget. Curabitur arcu justo, mollis vitae erat q" +
             "uis, ultricies fermentum dui. Maecenas non magna in tortor pretium tristique. Quisque iaculis tempus interd" +
             "um. Nunc condimentum odio sed viverra rhoncus. Sed suscipit nisl mollis, placerat elit ac, iaculis metus.";
-    private HelloWorld module;
+    private final HelloWorld module;
     LorumCommand(final HelloWorld module) {
         this.module = module;
     }

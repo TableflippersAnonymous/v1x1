@@ -14,7 +14,7 @@ import java.util.List;
  * Created by cobi on 10/29/2016.
  */
 public class ChatResource {
-    private WebTarget chat;
+    private final WebTarget chat;
 
     public ChatResource(final WebTarget chat) {
         this.chat = chat;

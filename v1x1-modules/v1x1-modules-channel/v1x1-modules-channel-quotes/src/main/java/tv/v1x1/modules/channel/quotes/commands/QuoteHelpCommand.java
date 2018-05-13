@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class QuoteHelpCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private QuotesModule module;
-    private CommandDelegator masterDelegator;
+    private final QuotesModule module;
+    private final CommandDelegator masterDelegator;
 
     public QuoteHelpCommand(final QuotesModule module, final CommandDelegator delegator) {
         this.module = module;

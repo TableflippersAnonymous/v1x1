@@ -452,7 +452,7 @@ public class TmiBot implements Runnable {
         }
     }
 
-    private void authenticate() throws IOException, InterruptedException {
+    private void authenticate() throws InterruptedException {
         joinLimiter.submitAndWait(() -> {
             try {
                 sendLine("PASS :" + oauthToken);
@@ -468,7 +468,7 @@ public class TmiBot implements Runnable {
         join("#" + channel.getName());
     }
 
-    private void join(final String channel) throws IOException, InterruptedException {
+    private void join(final String channel) throws InterruptedException {
         joinLimiter.submitAndWait(() -> {
             try {
                 sendLine("JOIN " + channel);
@@ -497,7 +497,7 @@ public class TmiBot implements Runnable {
             thread.interrupt();
     }
 
-    public void sendMessage(final String channelId, final String text) throws IOException, InterruptedException {
+    public void sendMessage(final String channelId, final String text) throws InterruptedException {
         messageLimiter.submitAndWait(() -> {
             try {
                 sendLine("PRIVMSG #" + twitchDisplayNameService.getChannelNameFromChannelId(channelId) + " :" + text);

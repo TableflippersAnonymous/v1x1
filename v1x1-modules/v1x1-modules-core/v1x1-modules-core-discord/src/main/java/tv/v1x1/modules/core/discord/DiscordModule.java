@@ -136,7 +136,7 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, Tenant>() {
                     @Override
-                    public Tenant load(final String s) throws Exception {
+                    public Tenant load(final String s) {
                         try {
                             LOG.debug("Loading tenant for guild {}", s);
                             return getDaoManager().getDaoTenant().getOrCreate(Platform.DISCORD, s, null).toCore(getDaoManager().getDaoTenant());
@@ -150,7 +150,7 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, Tenant>() {
                     @Override
-                    public Tenant load(final String s) throws Exception {
+                    public Tenant load(final String s) {
                         try {
                             final String[] parts = s.split(":", 2);
                             if(parts.length != 2)
@@ -167,7 +167,7 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<String, GlobalUser>() {
                     @Override
-                    public GlobalUser load(final String s) throws Exception {
+                    public GlobalUser load(final String s) {
                         try {
                             final String[] parts = s.split(":", 2);
                             if(parts.length != 2)
@@ -184,7 +184,7 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
                 .expireAfterWrite(30, TimeUnit.SECONDS)
                 .build(new CacheLoader<PermissionCacheKey, List<Permission>>() {
                     @Override
-                    public List<Permission> load(final PermissionCacheKey permissionCacheKey) throws Exception {
+                    public List<Permission> load(final PermissionCacheKey permissionCacheKey) {
                         try {
                             LOG.debug("Loading tenant permissions for tenant={} globalUser={} platformGroups={}",
                                     permissionCacheKey.getTenant().getId(), permissionCacheKey.getGlobalUser().getId(),

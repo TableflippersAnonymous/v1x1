@@ -33,7 +33,7 @@ public class GlobalRateLimiter implements RateLimiter {
     }
 
     @Override
-    public void submitAndWait(final Runnable task) throws InterruptedException {
+    public void submitAndWait(final Runnable task) {
         final Lease lease;
         try {
             lease = semaphore.acquire();

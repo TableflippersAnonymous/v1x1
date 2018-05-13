@@ -20,8 +20,8 @@ import java.util.List;
  */
 public class FactHelpCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private FactoidsModule module;
-    private CommandDelegator masterDelegator;
+    private final FactoidsModule module;
+    private final CommandDelegator masterDelegator;
 
     public FactHelpCommand(final FactoidsModule module, final CommandDelegator delegator) {
         this.module = module;
