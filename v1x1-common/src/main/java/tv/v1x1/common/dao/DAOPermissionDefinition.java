@@ -14,7 +14,7 @@ public class DAOPermissionDefinition {
 
     @Accessor
     public interface PermissionDefinitionAccessor {
-        @Query("SELECT * FROM i18n_module_definition")
+        @Query("SELECT * FROM permission_module_definition")
         Result<PermissionDefinition> all();
     }
 

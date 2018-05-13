@@ -2,11 +2,16 @@ package tv.v1x1.modules.core.api.resources.platform;
 
 import com.google.inject.Inject;
 import io.dropwizard.jersey.caching.CacheControl;
+import tv.v1x1.common.dao.DAOI18nDefinition;
+import tv.v1x1.common.dao.DAOPermissionDefinition;
 import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.UserConfigurationDefinition;
+import tv.v1x1.common.scanners.permission.DefaultGroup;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.modules.core.api.api.rest.ApiList;
 import tv.v1x1.modules.core.api.api.rest.ConfigurationDefinition;
+import tv.v1x1.modules.core.api.api.rest.I18nDefinition;
+import tv.v1x1.modules.core.api.api.rest.PermissionDefinition;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -15,9 +20,9 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * Created by naomi on 10/24/2016.
@@ -35,21 +40,24 @@ import java.util.concurrent.TimeUnit;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ConfigDefinitionResource {
     private final DAOManager daoManager;
+    private final DAOI18nDefinition daoI18nDefinition;
+    private final DAOPermissionDefinition daoPermissionDefinition;
 
     @Inject
-    public ConfigDefinitionResource(final DAOManager daoManager) {
+    public ConfigDefinitionResource(final DAOManager daoManager, final DAOI18nDefinition daoI18nDefinition, final DAOPermissionDefinition daoPermissionDefinition) {
         this.daoManager = daoManager;
+        this.daoI18nDefinition = daoI18nDefinition;
+        this.daoPermissionDefinition = daoPermissionDefinition;
     }
 
     @Path("/user")
     @GET
     @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
     public ApiList<ConfigurationDefinition> listUserConfigDefinitions() {
-        final List<ConfigurationDefinition> ret = new ArrayList<>();
-        for(final UserConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllUser()) {
-            ret.add(ConfigurationDefinition.fromCore(def.toCore()));
-        }
-        return new ApiList<>(ret);
+        return new ApiList<>(StreamSupport.stream(daoManager.getDaoConfigurationDefinition().getAllUser().spliterator(), false)
+                .map(UserConfigurationDefinition::toCore)
+                .map(ConfigurationDefinition::fromCore)
+                .collect(Collectors.toList()));
     }
 
     @Path("/user/{name}")
@@ -66,11 +74,10 @@ public class ConfigDefinitionResource {
     @GET
     @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
     public ApiList<ConfigurationDefinition> listGlobalConfigDefinitions() {
-        final List<ConfigurationDefinition> ret = new ArrayList<>();
-        for(final GlobalConfigurationDefinition def : daoManager.getDaoConfigurationDefinition().getAllGlobal()) {
-            ret.add(ConfigurationDefinition.fromCore(def.toCore()));
-        }
-        return new ApiList<>(ret);
+        return new ApiList<>(StreamSupport.stream(daoManager.getDaoConfigurationDefinition().getAllGlobal().spliterator(), false)
+                .map(GlobalConfigurationDefinition::toCore)
+                .map(ConfigurationDefinition::fromCore)
+                .collect(Collectors.toList()));
     }
 
     @Path("/global/{name}")
@@ -81,5 +88,45 @@ public class ConfigDefinitionResource {
         if(definition == null)
             throw new NotFoundException();
         return ConfigurationDefinition.fromCore(definition.toCore());
+    }
+
+    @Path("/permission")
+    @GET
+    @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
+    public ApiList<PermissionDefinition> listPermissionDefinitions() {
+        return new ApiList<>(StreamSupport.stream(daoPermissionDefinition.getAll().spliterator(), false).map(
+                permissionDefinition -> new PermissionDefinition(
+                        permissionDefinition.getName(),
+                        permissionDefinition.getVersion(),
+                        permissionDefinition.getEntries().stream().map(
+                                permissionEntry -> new PermissionDefinition.Entry(
+                                        permissionEntry.getNode(),
+                                        permissionEntry.getDisplayName(),
+                                        permissionEntry.getDescription(),
+                                        permissionEntry.getDefaultGroups().stream().map(DefaultGroup::getGroupName).collect(Collectors.toList())
+                                )
+                        ).collect(Collectors.toList())
+                )
+        ).collect(Collectors.toList()));
+    }
+
+    @Path("/i18n")
+    @GET
+    @CacheControl(maxAge = 1, maxAgeUnit = TimeUnit.HOURS)
+    public ApiList<I18nDefinition> listI18nDefinitions() {
+        return new ApiList<>(StreamSupport.stream(daoI18nDefinition.getAll().spliterator(), false).map(
+                i18nDefinition -> new I18nDefinition(
+                        i18nDefinition.getName(),
+                        i18nDefinition.getVersion(),
+                        i18nDefinition.getEntries().stream().map(
+                                i18nEntry -> new I18nDefinition.Entry(
+                                        i18nEntry.getKey(),
+                                        i18nEntry.getMessage(),
+                                        i18nEntry.getDisplayName(),
+                                        i18nEntry.getDescription()
+                                )
+                        ).collect(Collectors.toList())
+                )
+        ).collect(Collectors.toList()));
     }
 }
