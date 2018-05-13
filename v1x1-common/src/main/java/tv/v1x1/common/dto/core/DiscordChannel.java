@@ -20,6 +20,8 @@ public class DiscordChannel extends Channel {
         return new DiscordChannel(id, guild, displayName);
     }
 
+    public static final DiscordChannel EMPTY = new DiscordChannel(null, null, null);
+
     public DiscordChannel(final String id, final ChannelGroup guild, final String displayName) {
         super(id, guild, displayName);
     }

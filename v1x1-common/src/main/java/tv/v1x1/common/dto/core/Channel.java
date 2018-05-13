@@ -1,6 +1,7 @@
 package tv.v1x1.common.dto.core;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
 import tv.v1x1.common.services.cache.CodecCache;
 import tv.v1x1.common.services.cache.LambdaCodec;
@@ -44,6 +45,14 @@ public abstract class Channel {
             case TWITCH: return TwitchChannel.fromProto(channelGroup, tenantEntry);
             case DISCORD: return DiscordChannel.fromProto(channelGroup, tenantEntry);
             default: throw new IllegalStateException("Unknown channel platform " + channelGroup.getPlatform().name());
+        }
+    }
+
+    public static Channel emptyFromPlatform(final Platform platform) {
+        switch(platform) {
+            case TWITCH: return TwitchChannel.EMPTY;
+            case DISCORD: return DiscordChannel.EMPTY;
+            default: throw new IllegalStateException("Unknown channel platform " + platform.name());
         }
     }
 
@@ -91,5 +100,9 @@ public abstract class Channel {
 
     public tv.v1x1.common.dto.db.Channel toDB() {
         return new tv.v1x1.common.dto.db.Channel(channelGroup.getPlatform(), id, displayName, channelGroup.getId());
+    }
+
+    public Platform getPlatform() {
+        return channelGroup.getPlatform();
     }
 }

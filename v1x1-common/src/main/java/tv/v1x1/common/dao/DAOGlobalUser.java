@@ -80,9 +80,9 @@ public class DAOGlobalUser {
         try {
             globalUser.getEntries().add(new GlobalUser.Entry(
                     platform,
-                    (displayName == null && platform == Platform.TWITCH)
-                            ? displayNameService.getDisplayNameFromId(new TwitchChannel(null, null, null), userId)
-                            : displayName,
+                    (displayName == null
+                            ? displayNameService.getIdFromDisplayName(platform, userId)
+                            : displayName),
                     userId));
         } catch (NoSuchUserException e) {
             throw new RuntimeException(e);
