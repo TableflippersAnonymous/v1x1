@@ -4,7 +4,21 @@ import com.datastax.driver.mapping.MappingManager;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
-import tv.v1x1.common.dao.*;
+import tv.v1x1.common.dao.DAOChannelConfiguration;
+import tv.v1x1.common.dao.DAOChannelGroupConfiguration;
+import tv.v1x1.common.dao.DAOConfigurationDefinition;
+import tv.v1x1.common.dao.DAOGlobalConfiguration;
+import tv.v1x1.common.dao.DAOGlobalUser;
+import tv.v1x1.common.dao.DAOI18nDefinition;
+import tv.v1x1.common.dao.DAOJoinedTwitchChannel;
+import tv.v1x1.common.dao.DAOKeyValueEntry;
+import tv.v1x1.common.dao.DAOLanguage;
+import tv.v1x1.common.dao.DAOPermissionDefinition;
+import tv.v1x1.common.dao.DAOTenant;
+import tv.v1x1.common.dao.DAOTenantConfiguration;
+import tv.v1x1.common.dao.DAOTenantGroup;
+import tv.v1x1.common.dao.DAOThirdPartyCredential;
+import tv.v1x1.common.dao.DAOTwitchOauthToken;
 import tv.v1x1.common.services.state.DisplayNameService;
 
 /**
@@ -26,6 +40,8 @@ public class DAOManager {
     private final DAOThirdPartyCredential daoThirdPartyCredential;
     private final DAOTwitchOauthToken daoTwitchOauthToken;
     private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
+    private final DAOI18nDefinition daoI18nDefinition;
+    private final DAOPermissionDefinition daoPermissionDefinition;
 
     @Inject
     public DAOManager(final RedissonClient redissonClient, final MappingManager mappingManager, final DisplayNameService displayNameService) {
@@ -42,6 +58,8 @@ public class DAOManager {
         daoThirdPartyCredential = new DAOThirdPartyCredential(mappingManager);
         daoTwitchOauthToken = new DAOTwitchOauthToken(mappingManager);
         daoJoinedTwitchChannel = new DAOJoinedTwitchChannel(mappingManager);
+        daoI18nDefinition = new DAOI18nDefinition(mappingManager);
+        daoPermissionDefinition = new DAOPermissionDefinition(mappingManager);
     }
 
     public DAOTenant getDaoTenant() {
@@ -94,5 +112,13 @@ public class DAOManager {
 
     public DAOChannelGroupConfiguration getDaoChannelGroupConfiguration() {
         return daoChannelGroupConfiguration;
+    }
+
+    public DAOI18nDefinition getDaoI18nDefinition() {
+        return daoI18nDefinition;
+    }
+
+    public DAOPermissionDefinition getDaoPermissionDefinition() {
+        return daoPermissionDefinition;
     }
 }
