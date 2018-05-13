@@ -20,6 +20,7 @@ import {ConfigurableComponent} from "./configurable";
       <configuration-field-value-complex-list *ngIf="field.configType === configTypes.COMPLEX_LIST" [field]="field" [complexFields]="complexFields" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration"></configuration-field-value-complex-list>
       <configuration-field-value-complex-string-map *ngIf="field.configType === configTypes.COMPLEX_STRING_MAP" [field]="field" [complexFields]="complexFields" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration"></configuration-field-value-complex-string-map>
       <configuration-field-value-user-list *ngIf="field.configType === configTypes.USER_LIST" [field]="field" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration"></configuration-field-value-user-list>
+      <configuration-field-value-permission-list *ngIf="field.configType === configTypes.PERMISSION_LIST" [field]="field" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration"></configuration-field-value-permission-list>
     </div>
   `
 })

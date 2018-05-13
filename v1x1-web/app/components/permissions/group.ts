@@ -47,7 +47,7 @@ export class PermissionsGroupComponent {
         display_name: "Permissions",
         description: "List of permissions this group has",
         default_value: "null",
-        config_type: "STRING_LIST",
+        config_type: "PERMISSION_LIST",
         requires: [],
         tenant_permission: "READ_WRITE",
         json_field: "permissions",

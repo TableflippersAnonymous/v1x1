@@ -14,7 +14,8 @@ export enum ConfigType {
   COMPLEX_LIST,
   COMPLEX_STRING_MAP,
   USER_LIST,
-  PERMISSION
+  PERMISSION,
+  PERMISSION_LIST
 }
 
 export enum Permission {
