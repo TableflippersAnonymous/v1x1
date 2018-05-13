@@ -2,7 +2,6 @@ package tv.v1x1.common.services.cache;
 
 import com.google.common.cache.LoadingCache;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -31,7 +30,7 @@ public class LocalCache<K, V> implements SharedCache<K, V> {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
 
     }
 }

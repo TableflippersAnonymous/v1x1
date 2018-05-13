@@ -32,7 +32,7 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
     }
 
     public void start() {
-        executorService.submit((Runnable) () -> {
+        executorService.submit(() -> {
             final MessageQueue messageQueue = module.getMessageQueueManager().forName(getServiceQueue());
             for(;;) {
                 try {

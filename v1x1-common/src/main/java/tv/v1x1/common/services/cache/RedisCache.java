@@ -9,7 +9,6 @@ import tv.v1x1.common.services.coordination.LockManager;
 import tv.v1x1.common.util.data.FixedRMapCache;
 
 import javax.cache.integration.CacheLoaderException;
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -65,7 +64,7 @@ public class RedisCache implements SharedCache<byte[], byte[]> {
     }
 
     @Override
-    public void close() throws IOException {
+    public void close() {
 
     }
 }

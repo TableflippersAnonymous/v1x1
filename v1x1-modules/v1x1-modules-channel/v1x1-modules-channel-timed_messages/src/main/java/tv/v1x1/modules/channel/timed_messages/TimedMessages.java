@@ -427,7 +427,7 @@ public class TimedMessages extends RegisteredThreadedModule<TimedMessagesGlobalC
         }
         final UUID uuid = new UUID(java.util.UUID.nameUUIDFromBytes(CompositeKey.makeKey("timed_messages", tenant.toString(), timerName)));
         cursors.fastPut(uuid.toProto().toByteArray(), Ints.toByteArray(0)); // , t.getInterval() + (t.getInterval() / 2), TimeUnit.MILLISECONDS
-        final byte[] payload = CompositeKey.makeKey(new byte[][]{timerName.getBytes(), "tenant".getBytes(), tenant.toProto().toByteArray()});
+        final byte[] payload = CompositeKey.makeKey(timerName.getBytes(), "tenant".getBytes(), tenant.toProto().toByteArray());
         ssc.scheduleRepeating(t.getInterval(), uuid, payload);
         if(!uuid.getValue().equals(t.getActiveTimer())) {
             t.setActiveTimer(uuid.getValue());

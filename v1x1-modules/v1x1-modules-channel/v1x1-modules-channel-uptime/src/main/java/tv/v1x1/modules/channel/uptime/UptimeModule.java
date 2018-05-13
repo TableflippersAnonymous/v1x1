@@ -66,7 +66,7 @@ public class UptimeModule extends RegisteredThreadedModule<UptimeModuleGlobalCon
         registerListener(new UptimeListener());
     }
 
-    /*pkg-private*/ Instant getUptime(final String targetId) throws Exception {
+    /*pkg-private*/ Instant getUptime(final String targetId) {
         final tv.v1x1.common.services.twitch.dto.streams.Stream videoChannel;
         videoChannel = api.getStreams().getStream(targetId).getStream();
         if(videoChannel == null) {

@@ -21,10 +21,10 @@ public class Splitter {
             int end = pos + length;
             if(end > input.length()) end = input.length();
             if(input.length() - end <= separator.length()) {
-                sb.append(input.substring(pos, input.length()));
+                sb.append(input, pos, input.length());
                 end = input.length();
             } else {
-                sb.append(input.substring(pos, end));
+                sb.append(input, pos, end);
                 sb.append(separator);
             }
             ret.add(sb.toString());

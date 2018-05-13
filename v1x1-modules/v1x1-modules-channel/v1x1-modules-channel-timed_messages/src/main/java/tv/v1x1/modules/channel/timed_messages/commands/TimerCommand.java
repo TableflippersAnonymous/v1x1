@@ -15,8 +15,8 @@ import java.util.List;
  * @author Josh
  */
 public class TimerCommand extends Command {
-    private TimedMessages module;
-    private CommandDelegator delegator;
+    private final TimedMessages module;
+    private final CommandDelegator delegator;
 
     public TimerCommand(TimedMessages module) {
         this.module = module;

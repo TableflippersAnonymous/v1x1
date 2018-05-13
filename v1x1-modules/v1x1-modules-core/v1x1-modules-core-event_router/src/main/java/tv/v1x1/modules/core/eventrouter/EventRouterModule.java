@@ -20,7 +20,7 @@ public class EventRouterModule extends ThreadedModule<EventRouterGlobalConfigura
             .expireAfterWrite(2, TimeUnit.SECONDS)
             .build(new CacheLoader<String, Set<Module>>() {
                 @Override
-                public Set<Module> load(final String s) throws Exception {
+                public Set<Module> load(final String s) {
                     return getModuleRegistry().liveModules();
                 }
             });

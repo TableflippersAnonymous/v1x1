@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class UptimeCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private UptimeModule module;
+    private final UptimeModule module;
 
     public UptimeCommand(final UptimeModule module) {
         this.module = module;

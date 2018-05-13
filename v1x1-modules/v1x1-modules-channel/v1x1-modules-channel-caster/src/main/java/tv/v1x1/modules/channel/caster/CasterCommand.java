@@ -20,7 +20,7 @@ import java.util.List;
  * @author Josh
  */
 class CasterCommand extends Command {
-    private Caster caster;
+    private final Caster caster;
 
     public CasterCommand(final Caster caster) {
         this.caster = caster;

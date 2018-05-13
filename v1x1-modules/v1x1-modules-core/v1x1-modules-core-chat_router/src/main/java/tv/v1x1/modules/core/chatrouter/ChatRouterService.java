@@ -32,7 +32,7 @@ public class ChatRouterService extends ThreadedService<SendMessageRequest, SendM
                 .removalListener((RemovalListener<String, TmiServiceClient>) removalNotification -> removalNotification.getValue().shutdown())
                 .build(new CacheLoader<String, TmiServiceClient>() {
                     @Override
-                    public TmiServiceClient load(final String s) throws Exception {
+                    public TmiServiceClient load(final String s) {
                         return new TmiServiceClient(module, s);
                     }
                 });

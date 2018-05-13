@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class TimerCreateCommand extends Command {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private TimedMessages module;
+    private final TimedMessages module;
 
     public TimerCreateCommand(final TimedMessages module) {
         this.module = module;

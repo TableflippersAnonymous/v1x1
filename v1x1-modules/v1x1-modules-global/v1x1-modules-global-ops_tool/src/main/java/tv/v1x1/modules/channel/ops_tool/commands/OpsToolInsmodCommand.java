@@ -3,8 +3,6 @@ package tv.v1x1.modules.channel.ops_tool.commands;
 import com.google.common.collect.ImmutableList;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
-import tv.v1x1.common.dto.db.Tenant;
-import tv.v1x1.common.dto.db.TenantConfiguration;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.ops_tool.OpsTool;
 
@@ -14,7 +12,7 @@ import java.util.List;
  * @author Josh
  */
 public class OpsToolInsmodCommand extends Command {
-    private OpsTool opsTool;
+    private final OpsTool opsTool;
     public OpsToolInsmodCommand(final OpsTool opsTool) {
         this.opsTool = opsTool;
     }

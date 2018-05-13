@@ -26,7 +26,7 @@ import java.util.Map;
  */
 public class TimedMessagesListener implements EventListener {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
-    private TimedMessages module;
+    private final TimedMessages module;
 
     TimedMessagesListener(final TimedMessages module) {
         this.module = module;

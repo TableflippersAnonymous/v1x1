@@ -23,7 +23,7 @@ public class LockManager {
                 .expireAfterAccess(10, TimeUnit.MINUTES)
                 .build(new CacheLoader<String, Lock>() {
                     @Override
-                    public Lock load(final String key) throws Exception {
+                    public Lock load(final String key) {
                         return new Lock(curator, key);
                     }
                 });

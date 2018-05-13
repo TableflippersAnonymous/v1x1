@@ -16,7 +16,7 @@ import java.util.List;
  * @author Josh
  */
 public class TimerRemoveCommand extends Command {
-    private TimedMessages module;
+    private final TimedMessages module;
 
     public TimerRemoveCommand(final TimedMessages module) {
         this.module = module;

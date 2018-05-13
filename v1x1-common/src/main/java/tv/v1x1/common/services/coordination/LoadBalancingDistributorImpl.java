@@ -143,7 +143,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
     }
 
     @Override
-    public List<String> listEntries() throws Exception {
+    public List<String> listEntries() {
         return entryCache.getCurrentData().stream().map(ChildData::getData).map(String::new).collect(Collectors.toList());
     }
 
@@ -276,7 +276,7 @@ public class LoadBalancingDistributorImpl implements LoadBalancingDistributor {
 
     private class InstanceIdInstanceSerializer implements InstanceSerializer<InstanceId> {
         @Override
-        public byte[] serialize(final ServiceInstance<InstanceId> serviceInstance) throws Exception {
+        public byte[] serialize(final ServiceInstance<InstanceId> serviceInstance) {
             return serviceInstance.getPayload().getInstanceId().toProto().toByteArray();
         }
 

@@ -18,16 +18,16 @@ public class TenantKeyValueStoreImpl implements KeyValueStore {
 
     @Override
     public void put(final byte[] key, final byte[] value) {
-        keyValueStore.put(CompositeKey.makeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}), value);
+        keyValueStore.put(CompositeKey.makeKey(tenant.getId().getValue().toString().getBytes(), key), value);
     }
 
     @Override
     public byte[] get(final byte[] key) {
-        return keyValueStore.get(CompositeKey.makeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}));
+        return keyValueStore.get(CompositeKey.makeKey(tenant.getId().getValue().toString().getBytes(), key));
     }
 
     @Override
     public void delete(final byte[] key) {
-        keyValueStore.delete(CompositeKey.makeKey(new byte[][]{tenant.getId().getValue().toString().getBytes(), key}));
+        keyValueStore.delete(CompositeKey.makeKey(tenant.getId().getValue().toString().getBytes(), key));
     }
 }

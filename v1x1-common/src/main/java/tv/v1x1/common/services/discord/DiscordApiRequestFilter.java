@@ -2,7 +2,6 @@ package tv.v1x1.common.services.discord;
 
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.client.ClientRequestFilter;
-import java.io.IOException;
 
 /**
  * Created by naomi on 9/10/2017.
@@ -15,7 +14,7 @@ public class DiscordApiRequestFilter implements ClientRequestFilter {
     }
 
     @Override
-    public void filter(final ClientRequestContext requestContext) throws IOException {
+    public void filter(final ClientRequestContext requestContext) {
         requestContext.getHeaders().add("Authorization", authorization);
         requestContext.getHeaders().add("User-Agent", "v1x1 (https://v1x1.tv, 1)");
     }

@@ -8,8 +8,8 @@ import com.google.inject.Singleton;
  */
 @Singleton
 public class StateManager {
-    private DisplayNameService displayNameService;
-    private MembershipService membershipService;
+    private final DisplayNameService displayNameService;
+    private final MembershipService membershipService;
 
     @Inject
     public StateManager(final DisplayNameService displayNameService, final MembershipService membershipService) {

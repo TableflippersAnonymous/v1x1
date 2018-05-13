@@ -15,8 +15,8 @@ import java.util.List;
  * @author Josh
  */
 public class FactCommand extends Command {
-    private FactoidsModule module;
-    private CommandDelegator delegator;
+    private final FactoidsModule module;
+    private final CommandDelegator delegator;
 
     public FactCommand(FactoidsModule module) {
         this.module = module;

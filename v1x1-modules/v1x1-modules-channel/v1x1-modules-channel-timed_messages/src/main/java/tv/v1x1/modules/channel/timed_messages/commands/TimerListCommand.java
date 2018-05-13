@@ -15,7 +15,7 @@ import java.util.Set;
  * @author Josh
  */
 /* pkg-private */ class TimerListCommand extends Command {
-    private TimedMessages module;
+    private final TimedMessages module;
 
     TimerListCommand(final TimedMessages module) {
         this.module = module;

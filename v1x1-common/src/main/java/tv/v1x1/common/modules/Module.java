@@ -146,7 +146,7 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
     }
 
     /* ******************************* CALL THIS FROM main() ******************************* */
-    protected void entryPoint(final String[] args) throws Exception {
+    protected void entryPoint(final String[] args) {
         try {
             parseArgs(args);
             if (settings.getWaitStartMs() > 0) {
