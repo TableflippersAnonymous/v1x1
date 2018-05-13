@@ -64,6 +64,7 @@ Control the v1x1 dev environment
     stop [service][, service2...]]  - stop a service. Default: all of them
     build [service [type]]          - build a service; type is core/channel/global. Default: channel
     cqlsh                           - gives you a cql prompt on your Cassandra container
+    encode [string]                 - encodes strings into a C* blob
     help                            - new command, what dis
 EOM
 }
@@ -146,6 +147,11 @@ function cmdCqlsh() {
   fi
 }
 
+function cmdEncode() {
+  echo -n "0x"
+  echo -n "$@" | xxd -ps | xargs | sed -r 's/ //g'
+}
+
 echo "Finding services..."
 while read module; do
   MODULES="$MODULES $module"
@@ -173,7 +179,10 @@ case $CMD in
     cmdBuild $@
     ;;
   cqlsh)
-    cmdCqlsh
+    cmdCqlsh $@
+    ;;
+  encode)
+    cmdEncode $@
     ;;
   help)
     help
