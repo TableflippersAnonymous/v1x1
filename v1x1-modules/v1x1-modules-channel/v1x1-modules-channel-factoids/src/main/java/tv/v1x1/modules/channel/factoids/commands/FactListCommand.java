@@ -37,7 +37,7 @@ public class FactListCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String commander = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final Set<Map.Entry<String, Factoid>> facts = module.getFacts(channel.getChannelGroup().getTenant());
         if(facts == null || facts.isEmpty()) {
             Chat.i18nMessage(module, channel, "list.nofacts",
@@ -110,7 +110,7 @@ public class FactListCommand extends Command {
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         if(args.size() < 1) {
             Chat.i18nMessage(module, chatMessage.getChannel(), "invalid.args",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "usage", getUsage());
         }
     }

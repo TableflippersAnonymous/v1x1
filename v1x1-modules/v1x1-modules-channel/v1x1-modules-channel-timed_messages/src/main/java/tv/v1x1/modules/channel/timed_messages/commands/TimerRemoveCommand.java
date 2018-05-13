@@ -35,18 +35,18 @@ public class TimerRemoveCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String senderName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final String timerName = args.remove(0);
         final String message = String.join(" ", args);
         final int matches = module.countMatchingTimerEntries(channel.getChannelGroup().getTenant(), timerName, message);
         if(matches == -1) {
             Chat.i18nMessage(module, channel, "invalid.timer",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", timerName);
             return;
         } else if(matches > 1) {
             Chat.i18nMessage(module, channel, "remove.toomanymatches",
-                    "commander", senderName,
+                    "commander", commander,
                     "preview", Shorten.genPreview(message),
                     "count", matches,
                     "id", timerName);
@@ -55,13 +55,13 @@ public class TimerRemoveCommand extends Command {
         TimerEntry entry = module.removeTimerEntry(channel.getChannelGroup().getTenant(), timerName, message);
         if(entry == null) {
             Chat.i18nMessage(module, channel, "remove.nomatch",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", timerName,
                     "preview", Shorten.genPreview(message)
             );
         } else {
             Chat.i18nMessage(module, channel, "remove.success",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", timerName,
                     "preview", Shorten.genPreview(entry.getMessage(), 128)
             );
@@ -97,12 +97,12 @@ public class TimerRemoveCommand extends Command {
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         switch(args.size()) {
             case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "remove.notarget",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "usage", getUsage()
                 );
                 break;
             case 1: Chat.i18nMessage(module, chatMessage.getChannel(), "remove.nomessage",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "usage", getUsage()
                 );
                 break;

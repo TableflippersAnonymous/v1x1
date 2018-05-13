@@ -24,7 +24,7 @@ public class FactoidCommandProvider implements CommandProvider {
             }
         } catch(RuntimeException ex) {
             Chat.i18nMessage(module, chatMessage.getChannel(), "toomany.aliases",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "alias", command);
         }
         return null;

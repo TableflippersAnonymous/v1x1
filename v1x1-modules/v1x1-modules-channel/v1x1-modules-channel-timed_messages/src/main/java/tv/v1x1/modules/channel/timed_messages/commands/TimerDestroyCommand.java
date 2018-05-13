@@ -33,15 +33,15 @@ import java.util.List;
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String senderName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         if(module.destroyTimer(channel.getChannelGroup().getTenant(), args.get(0))) {
             Chat.i18nMessage(module, channel, "destroy.success",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", args.get(0)
                     );
         } else {
             Chat.i18nMessage(module, channel, "invalid.timer",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", args.get(0)
             );
         }
@@ -71,12 +71,12 @@ import java.util.List;
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         switch(args.size()) {
             case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "destroy.notarget",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "usage", getUsage());
                 break;
             default:
                 Chat.i18nMessage(module, chatMessage.getChannel(), "toomanyargs",
-                        "commander", chatMessage.getSender().getDisplayName(),
+                        "commander", chatMessage.getSender().getMention(),
                         "usage", getUsage()
                 );
         }

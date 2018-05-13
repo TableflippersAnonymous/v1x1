@@ -34,7 +34,7 @@ public class TimerEnableCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String senderName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final String timerStr = args.get(0);
         final Timer t = module.getTimer(channel.getChannelGroup().getTenant(), timerStr);
         if(t == null) {
@@ -46,11 +46,11 @@ public class TimerEnableCommand extends Command {
         try {
             if(module.enableTimer(channel.getChannelGroup().getTenant(), timerStr, enabled)) {
                 Chat.i18nMessage(module, channel, command + ".success",
-                        "commander", senderName,
+                        "commander", commander,
                         "id", timerStr);
             } else {
                 Chat.i18nMessage(module, channel, "alreadytoggled",
-                        "commander", senderName,
+                        "commander", commander,
                         "id", timerStr,
                         "state", (enabled ? "enabled" : "disabled"));
             }
@@ -83,17 +83,17 @@ public class TimerEnableCommand extends Command {
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String displayName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         switch (args.size()) {
             case 0:
                 Chat.i18nMessage(module, channel, command + ".notarget",
-                        "commander", displayName,
+                        "commander", commander,
                         "usage", getUsage()
                 );
                 break;
             default:
                 Chat.i18nMessage(module, channel, "toomanyargs",
-                        "commander", displayName
+                        "commander", commander
                 );
                 break;
         }
