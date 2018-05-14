@@ -27,7 +27,7 @@ public class TimedMessagesUserConfiguration extends BasicUserConfiguration {
     @Type(ConfigType.COMPLEX_STRING_MAP)
     @ComplexType(Timer.class)
     @JsonProperty("timers")
-    private Map<String, Timer> timers = new HashMap<>();
+    private final Map<String, Timer> timers = new HashMap<>();
 
     public Map<String, Timer> getTimers() {
         return timers;

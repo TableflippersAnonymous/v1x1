@@ -23,13 +23,7 @@ public class GlobalRateLimiter implements RateLimiter {
 
     @Override
     public void submit(final Runnable task) {
-        scheduledExecutorService.submit(() -> {
-            try {
-                submitAndWait(task);
-            } catch (final InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+        scheduledExecutorService.submit(() -> submitAndWait(task));
     }
 
     @Override
