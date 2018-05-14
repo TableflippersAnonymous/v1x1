@@ -1,0 +1,8 @@
+exclude:
+- /v1x1-common/src/main/compiledproto/.*
+languages:
+- java
+- javascript
+- typescript
+- script
+component_depth: 8
