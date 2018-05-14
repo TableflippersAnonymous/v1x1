@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 public class BotsResource {
     public static class TmiUserConfiguration implements UserConfiguration {
         @JsonProperty("custom_bot")
-        private boolean customBot = false;
+        private final boolean customBot = false;
 
         @JsonProperty("bot_name")
         private String botName;
@@ -62,7 +62,7 @@ public class BotsResource {
 
     public static class TmiGlobalConfiguration extends GlobalConfiguration {
         @JsonProperty("default_username")
-        private String defaultUsername = "v1x1";
+        private final String defaultUsername = "v1x1";
 
         public String getDefaultUsername() {
             return defaultUsername;

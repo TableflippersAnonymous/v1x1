@@ -187,12 +187,7 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
             @Override
             public void notify(final UUID instanceId, final Map<String, Integer> entries) {
                 if (getInstanceId().equals(instanceId.getValue())) {
-                    try {
-                        setChannels(entries.keySet());
-                    } catch (IOException | InterruptedException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
+                    setChannels(entries.keySet());
                 }
             }
 

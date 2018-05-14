@@ -7,7 +7,6 @@ import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
 import tv.v1x1.common.modules.Module;
 import tv.v1x1.common.rpc.services.Service;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 /**
@@ -28,7 +27,7 @@ public class TmiService extends Service<SendMessageRequest, SendMessageResponse>
             LOG.info("SendMessageRequest: {}: {}", request.getDestination().getId(), request.getText());
             bot.sendMessage(request.getDestination().getId(), request.getText());
             return new SendMessageResponse(getModule().toDto(), request.getMessageId());
-        } catch (final IOException | InterruptedException e) {
+        } catch (final InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
