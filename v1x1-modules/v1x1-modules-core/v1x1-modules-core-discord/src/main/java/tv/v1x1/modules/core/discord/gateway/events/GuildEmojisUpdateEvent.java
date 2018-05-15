@@ -13,6 +13,9 @@ import java.util.List;
  */
 @JsonDeserialize
 public class GuildEmojisUpdateEvent extends DispatchPayload {
+    @JsonProperty("d")
+    private Data data;
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Data {
         @JsonProperty("guild_id")
@@ -44,9 +47,6 @@ public class GuildEmojisUpdateEvent extends DispatchPayload {
             this.emojis = emojis;
         }
     }
-
-    @JsonProperty("d")
-    private Data data;
 
     public GuildEmojisUpdateEvent() {
     }

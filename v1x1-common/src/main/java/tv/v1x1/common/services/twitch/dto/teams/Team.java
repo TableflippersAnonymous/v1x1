@@ -14,9 +14,6 @@ public class Team extends ShortTeam {
     @JsonProperty
     private List<User> users;
 
-    public Team() {
-    }
-
     public List<User> getUsers() {
         return users;
     }

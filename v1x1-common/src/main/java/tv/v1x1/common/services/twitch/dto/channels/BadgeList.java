@@ -23,9 +23,6 @@ public class BadgeList {
     @JsonProperty
     private Badge subscriber;
 
-    public BadgeList() {
-    }
-
     public Badge getGlobalMod() {
         return globalMod;
     }

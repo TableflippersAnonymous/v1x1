@@ -17,9 +17,6 @@ public class Authorization {
     @JsonProperty("updated_at")
     private String updatedAt;
 
-    public Authorization() {
-    }
-
     public List<String> getScopes() {
         return scopes;
     }

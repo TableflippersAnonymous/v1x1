@@ -15,9 +15,6 @@ public class CommunityPermissions {
     @JsonProperty
     private boolean edit;
 
-    public CommunityPermissions() {
-    }
-
     public boolean isBan() {
         return ban;
     }

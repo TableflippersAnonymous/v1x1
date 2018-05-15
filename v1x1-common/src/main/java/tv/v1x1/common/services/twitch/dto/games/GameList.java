@@ -13,9 +13,6 @@ public class GameList {
     @JsonProperty
     private List<Game> games;
 
-    public GameList() {
-    }
-
     public List<Game> getGames() {
         return games;
     }

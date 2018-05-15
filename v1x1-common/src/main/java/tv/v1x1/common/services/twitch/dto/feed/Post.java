@@ -31,9 +31,6 @@ public class Post {
     @JsonProperty
     private Permissions permissions;
 
-    public Post() {
-    }
-
     public String getId() {
         return id;
     }

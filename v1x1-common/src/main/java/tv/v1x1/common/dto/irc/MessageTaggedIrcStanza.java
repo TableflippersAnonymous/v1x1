@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -14,7 +15,14 @@ import java.util.stream.Collectors;
  * Created by cobi on 10/9/2016.
  */
 public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
+    private Set<Badge> badges = new HashSet<>();
+    private List<Emote> emotes = new ArrayList<>();
+    private int roomId, userId;
+
     public static class Emote {
+        private final String id;
+        private final Range[] ranges;
+
         public static class Range{
             private final int beginIndex;
             private final int endIndex;
@@ -46,14 +54,11 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
             }
         }
 
-        private final String id;
-        private final Range[] ranges;
-
         public Emote(final String encoded) {
             final String[] parts = encoded.split(":");
             id = parts[0];
             final String encodedRanges = parts[1];
-            ranges = Arrays.asList(encodedRanges.split(",")).stream().map(Range::new).collect(Collectors.toList()).toArray(new Range[] {});
+            ranges = Arrays.stream(encodedRanges.split(",")).map(Range::new).collect(Collectors.toList()).toArray(new Range[] {});
         }
 
         public Emote(final String id, final Range[] ranges) {
@@ -64,7 +69,7 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
         public IRC.MessageTaggedIrcStanza.Emote toProto() {
             return IRC.MessageTaggedIrcStanza.Emote.newBuilder()
                     .setId(id)
-                    .addAllRanges(Arrays.asList(ranges).stream().map(Range::toProto).collect(Collectors.toList()))
+                    .addAllRanges(Arrays.stream(ranges).map(Range::toProto).collect(Collectors.toList()))
                     .build();
         }
     }
@@ -91,23 +96,19 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
         }
     }
 
-    private Set<Badge> badges = new HashSet<>();
-    private List<Emote> emotes = new ArrayList<>();
-    private int roomId, userId;
-
     public MessageTaggedIrcStanza(final String rawLine, final Map<String, String> tags, final IrcSource source, final IrcCommand command, final String rawArgs, final String[] args) {
         super(rawLine, tags, source, command, rawArgs, args);
         if(tags.containsKey("badges") && !tags.get("badges").isEmpty())
-            badges = Arrays.asList(tags.get("badges").split(",")).stream().map(String::toUpperCase).map(s -> s.split("/")[0]).map(s -> {
+            badges = Arrays.stream(tags.get("badges").split(",")).map(String::toUpperCase).map(s -> s.split("/")[0]).map(s -> {
                 try {
                     return Badge.valueOf(s);
                 } catch(IllegalArgumentException e) {
                     e.printStackTrace();
                     return null;
                 }
-            }).filter(badge -> badge != null).collect(Collectors.toSet());
+            }).filter(Objects::nonNull).collect(Collectors.toSet());
         if(tags.containsKey("emotes") && !tags.get("emotes").isEmpty())
-            emotes = Arrays.asList(tags.get("emotes").split("/")).stream().map(Emote::new).collect(Collectors.toList());
+            emotes = Arrays.stream(tags.get("emotes").split("/")).map(Emote::new).collect(Collectors.toList());
         if(tags.containsKey("room-id") && !tags.get("room-id").isEmpty())
             roomId = Integer.valueOf(tags.get("room-id"));
         if(tags.containsKey("user-id") && !tags.get("user-id").isEmpty())

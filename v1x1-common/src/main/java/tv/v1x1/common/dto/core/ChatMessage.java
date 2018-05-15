@@ -10,6 +10,11 @@ import java.util.stream.Collectors;
  * @author Cobi
  */
 public class ChatMessage {
+    private final Channel channel;
+    private final User sender;
+    private final String text;
+    private final List<Permission> permissions;
+
     public static ChatMessage fromProto(final ChatMessageOuterClass.ChatMessage message) {
         final Channel channel = Channel.fromProto(message.getChannel());
         final User sender = User.fromProto(message.getSender());
@@ -17,11 +22,6 @@ public class ChatMessage {
         final List<Permission> permissions = message.getPermissionsList().stream().map(Permission::fromProto).collect(Collectors.toList());
         return new ChatMessage(channel, sender, text, permissions);
     }
-
-    private final Channel channel;
-    private final User sender;
-    private final String text;
-    private final List<Permission> permissions;
 
     public ChatMessage(final Channel channel, final User sender, final String text, final List<Permission> permissions) {
         this.channel = channel;

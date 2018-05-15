@@ -15,9 +15,6 @@ public class ShortUser {
     @JsonProperty
     private String name;
 
-    public ShortUser() {
-    }
-
     public String getDisplayName() {
         return displayName;
     }
