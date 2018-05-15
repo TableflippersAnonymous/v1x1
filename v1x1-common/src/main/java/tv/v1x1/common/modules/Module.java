@@ -16,14 +16,11 @@ import org.apache.curator.framework.CuratorFramework;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.RedissonNodeInitializer;
 import org.redisson.client.codec.Codec;
-import org.redisson.codec.CodecProvider;
 import org.redisson.config.Config;
 import org.redisson.config.ConfigSupport;
 import org.redisson.config.MasterSlaveServersConfig;
 import org.redisson.config.SingleServerConfig;
 import org.redisson.connection.balancer.LoadBalancer;
-import org.redisson.liveobject.provider.ResolverProvider;
-import org.redisson.misc.URLBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -119,15 +116,12 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         mapper.addMixIn(MasterSlaveServersConfig.class, ConfigSupport.MasterSlaveServersConfigMixIn.class);
         mapper.addMixIn(SingleServerConfig.class, ConfigSupport.SingleSeverConfigMixIn.class);
         mapper.addMixIn(Config.class, ConfigSupport.ConfigMixIn.class);
-        mapper.addMixIn(CodecProvider.class, ConfigSupport.ClassMixIn.class);
-        mapper.addMixIn(ResolverProvider.class, ConfigSupport.ClassMixIn.class);
         mapper.addMixIn(Codec.class, ConfigSupport.ClassMixIn.class);
         mapper.addMixIn(RedissonNodeInitializer.class, ConfigSupport.ClassMixIn.class);
         mapper.addMixIn(LoadBalancer.class, ConfigSupport.ClassMixIn.class);
         final FilterProvider filterProvider = new SimpleFilterProvider()
                 .addFilter("classFilter", SimpleBeanPropertyFilter.filterOutAllExcept());
         mapper.setFilterProvider(filterProvider);
-        URLBuilder.init();
 
         configFile = filename;
         final String settingsString = new String(Files.readAllBytes(Paths.get(filename)));
