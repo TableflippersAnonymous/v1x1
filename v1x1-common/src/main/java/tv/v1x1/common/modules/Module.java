@@ -12,6 +12,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import io.dropwizard.util.Generics;
+import io.sentry.Sentry;
 import org.apache.curator.framework.CuratorFramework;
 import org.redisson.api.RedissonClient;
 import org.redisson.api.RedissonNodeInitializer;
@@ -132,6 +133,8 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
     }
 
     private void initializeInternal() {
+        if(System.getenv("SENTRY_URL") != null)
+            Sentry.init(System.getenv("SENTRY_URL"));
         getModuleRegistry();
         registerGlobalMessages();
         registerModuleMessages();
