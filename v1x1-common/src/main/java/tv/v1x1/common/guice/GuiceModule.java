@@ -14,10 +14,8 @@ import com.datastax.driver.core.Session;
 import com.datastax.driver.core.SimpleStatement;
 import com.datastax.driver.core.SocketOptions;
 import com.datastax.driver.core.policies.DCAwareRoundRobinPolicy;
-import com.datastax.driver.core.policies.DowngradingConsistencyRetryPolicy;
 import com.datastax.driver.core.policies.ExponentialReconnectionPolicy;
 import com.datastax.driver.core.policies.LatencyAwarePolicy;
-import com.datastax.driver.core.policies.LoggingRetryPolicy;
 import com.datastax.driver.core.policies.PercentileSpeculativeExecutionPolicy;
 import com.datastax.driver.core.policies.TokenAwarePolicy;
 import com.datastax.driver.extras.codecs.enums.EnumNameCodec;
@@ -230,7 +228,6 @@ public class GuiceModule<T extends GlobalConfiguration, U extends UserConfigurat
                         .setFetchSize(cassandraConfig.getFetchSize())
                 )
                 .withReconnectionPolicy(new ExponentialReconnectionPolicy(cassandraConfig.getReconnectBaseDelayMs(), cassandraConfig.getReconnectMaxDelayMs()))
-                .withRetryPolicy(new LoggingRetryPolicy(DowngradingConsistencyRetryPolicy.INSTANCE))
                 .withSocketOptions(new SocketOptions()
                         .setConnectTimeoutMillis(cassandraConfig.getConnectTimeoutMs())
                         .setKeepAlive(cassandraConfig.isTcpKeepAlive())
@@ -246,6 +243,7 @@ public class GuiceModule<T extends GlobalConfiguration, U extends UserConfigurat
                         .register(new EnumOrdinalCodec<>(ConfigType.class))
                         .register(new EnumNameCodec<>(DefaultGroup.class))
                 )
+                .withoutMetrics() // FIXME: Needed for dependency issues with Dropwizard.
                 .build();
     }
 
