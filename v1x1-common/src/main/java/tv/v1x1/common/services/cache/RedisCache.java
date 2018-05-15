@@ -6,7 +6,6 @@ import org.redisson.api.RMapCache;
 import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.ByteArrayCodec;
 import tv.v1x1.common.services.coordination.LockManager;
-import tv.v1x1.common.util.data.FixedRMapCache;
 
 import javax.cache.integration.CacheLoaderException;
 import java.util.concurrent.ExecutionException;
@@ -24,7 +23,7 @@ public class RedisCache implements SharedCache<byte[], byte[]> {
     private final String name;
 
     public RedisCache(final RedissonClient redisson, final String name, final long ttl, final TimeUnit timeUnit, final CacheLoader<byte[], byte[]> cacheLoader, final LockManager lockManager) {
-        this.cache = new FixedRMapCache(redisson.getMapCache("Common|RedisCache|" + name, ByteArrayCodec.INSTANCE));
+        this.cache = redisson.getMapCache("Common|RedisCache|" + name, ByteArrayCodec.INSTANCE);
         this.ttl = ttl;
         this.timeUnit = timeUnit;
         this.cacheLoader = cacheLoader;

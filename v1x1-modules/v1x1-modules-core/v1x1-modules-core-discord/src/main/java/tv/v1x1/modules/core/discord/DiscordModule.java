@@ -31,7 +31,6 @@ import tv.v1x1.common.services.discord.dto.gateway.BotGateway;
 import tv.v1x1.common.services.discord.dto.voice.VoiceState;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.util.data.CompositeKey;
-import tv.v1x1.common.util.data.FixedRMapCache;
 import tv.v1x1.common.util.ratelimiter.GlobalRateLimiter;
 import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
@@ -221,8 +220,8 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
         identifyDailyLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "discord/identify/daily", 900, 86400);
         lastSeen = getRedisson().getMapCache("Modules|Core|Discord|lastSeen", ByteArrayCodec.INSTANCE);
         sessionIds = getRedisson().getMapCache("Modules|Core|Discord|sessionIds", ByteArrayCodec.INSTANCE);
-        roles = new FixedRMapCache(getRedisson().getMapCache("Modules|Core|Discord|roles", ByteArrayCodec.INSTANCE));
-        voiceStates = new FixedRMapCache(getRedisson().getMapCache("Modules|Core|Discord|voiceStates", ByteArrayCodec.INSTANCE));
+        roles = getRedisson().getMapCache("Modules|Core|Discord|roles", ByteArrayCodec.INSTANCE);
+        voiceStates = getRedisson().getMapCache("Modules|Core|Discord|voiceStates", ByteArrayCodec.INSTANCE);
         eventRouter = getMessageQueueManager().forName(getMainQueueForModule(new Module("event_router")));
         shardDistributor = getLoadBalancingDistributor("/v1x1/discord/shards", 3);
         shardDistributor.addListener(new LoadBalancingDistributor.Listener() {
