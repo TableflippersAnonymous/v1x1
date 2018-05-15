@@ -40,7 +40,7 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "v1x1-web/package.json" }}
-      - run: (cd v1x1-web; npm build)
+      - run: (cd v1x1-web; npm run build)
 
 workflows:
   version: 2
