@@ -17,9 +17,6 @@ public class Image {
     @JsonProperty
     private String template;
 
-    public Image() {
-    }
-
     public String getLarge() {
         return large;
     }

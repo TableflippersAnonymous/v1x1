@@ -15,9 +15,6 @@ public class ClipThumbnails {
     @JsonProperty
     private String tiny;
 
-    public ClipThumbnails() {
-    }
-
     public String getMedium() {
         return medium;
     }

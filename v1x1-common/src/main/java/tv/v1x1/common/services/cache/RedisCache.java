@@ -65,6 +65,6 @@ public class RedisCache implements SharedCache<byte[], byte[]> {
 
     @Override
     public void close() {
-
+        /* No action */
     }
 }

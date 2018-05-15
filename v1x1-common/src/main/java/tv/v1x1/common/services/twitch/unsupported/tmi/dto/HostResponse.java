@@ -13,9 +13,6 @@ public class HostResponse {
     @JsonProperty
     private List<Host> hosts;
 
-    public HostResponse() {
-    }
-
     public List<Host> getHosts() {
         return hosts;
     }

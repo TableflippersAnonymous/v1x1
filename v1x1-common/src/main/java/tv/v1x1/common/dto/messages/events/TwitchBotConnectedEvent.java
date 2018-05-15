@@ -1,6 +1,9 @@
 package tv.v1x1.common.dto.messages.events;
 
-import tv.v1x1.common.dto.core.*;
+import tv.v1x1.common.dto.core.Bot;
+import tv.v1x1.common.dto.core.Module;
+import tv.v1x1.common.dto.core.TwitchBot;
+import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.RplEndOfMotdCommand;
 import tv.v1x1.common.dto.messages.Context;
@@ -12,15 +15,15 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Naomi
  */
 public class TwitchBotConnectedEvent extends Event {
+    private final TwitchBot bot;
+
+    private final RplEndOfMotdCommand rplEndOfMotdCommand;
+
     public static TwitchBotConnectedEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchBotConnectedEvent twitchBotConnectedEvent) {
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotConnectedEvent.getBot());
         final RplEndOfMotdCommand rplEndOfMotdCommand = (RplEndOfMotdCommand) IrcStanza.fromProto(twitchBotConnectedEvent.getRplEndOfMotdCommand());
         return new TwitchBotConnectedEvent(module, uuid, timestamp, context, bot, rplEndOfMotdCommand);
     }
-
-    private final TwitchBot bot;
-
-    private final RplEndOfMotdCommand rplEndOfMotdCommand;
 
     public TwitchBotConnectedEvent(final Module from, final TwitchBot bot, final RplEndOfMotdCommand rplEndOfMotdCommand) {
         super(from);

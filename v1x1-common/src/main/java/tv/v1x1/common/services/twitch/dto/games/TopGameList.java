@@ -15,9 +15,6 @@ public class TopGameList {
     @JsonProperty
     private List<TopGame> top;
 
-    public TopGameList() {
-    }
-
     public long getTotal() {
         return total;
     }

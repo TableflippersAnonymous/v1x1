@@ -11,9 +11,6 @@ public class RootResponse {
     @JsonProperty
     private Token token;
 
-    public RootResponse() {
-    }
-
     public Token getToken() {
         return token;
     }

@@ -2,7 +2,6 @@ package tv.v1x1.common.services.twitch.dto.channels;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import tv.v1x1.common.services.twitch.dto.channels.Channel;
 
 /**
  * Created by naomi on 10/29/2016.
@@ -13,9 +12,6 @@ public class PrivateChannel extends Channel {
     private String email;
     @JsonProperty("stream_key")
     private String streamKey;
-
-    public PrivateChannel() {
-    }
 
     public String getEmail() {
         return email;

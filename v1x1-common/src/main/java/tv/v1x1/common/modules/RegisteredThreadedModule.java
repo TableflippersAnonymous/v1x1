@@ -26,11 +26,9 @@ public abstract class RegisteredThreadedModule<T extends GlobalConfiguration, U 
         this.listener = listener;
         handlers.clear();
         for(final Method m : listener.getClass().getDeclaredMethods()) {
-            if(m.isAnnotationPresent(EventHandler.class)) {
-                if(m.getParameterCount() == 1 && Event.class.isAssignableFrom(m.getParameters()[0].getType())) {
-                    handlers.add(m);
-                    LOG.debug("Added event handler: {} in {}", m.getName(), listener.getClass().getCanonicalName());
-                }
+            if(m.isAnnotationPresent(EventHandler.class) && m.getParameterCount() == 1 && Event.class.isAssignableFrom(m.getParameters()[0].getType())) {
+                handlers.add(m);
+                LOG.debug("Added event handler: {} in {}", m.getName(), listener.getClass().getCanonicalName());
             }
         }
     }

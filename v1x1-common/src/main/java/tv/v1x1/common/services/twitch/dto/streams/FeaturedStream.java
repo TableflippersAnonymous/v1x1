@@ -23,9 +23,6 @@ public class FeaturedStream {
     @JsonProperty
     private String title;
 
-    public FeaturedStream() {
-    }
-
     public String getImage() {
         return image;
     }

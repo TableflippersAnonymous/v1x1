@@ -83,7 +83,7 @@ public class DAOGlobalUser {
                             ? displayNameService.getIdFromDisplayName(platform, userId)
                             : displayName),
                     userId));
-        } catch (NoSuchUserException e) {
+        } catch (final NoSuchUserException e) {
             throw new RuntimeException(e);
         }
         final InverseGlobalUser inverseGlobalUser = new InverseGlobalUser(platform, userId, globalUser.getId());

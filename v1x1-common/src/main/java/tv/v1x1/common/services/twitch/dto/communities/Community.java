@@ -29,9 +29,6 @@ public class Community extends CommunityId {
     @JsonProperty
     private String summary;
 
-    public Community() {
-    }
-
     public String getAvatarImageUrl() {
         return avatarImageUrl;
     }

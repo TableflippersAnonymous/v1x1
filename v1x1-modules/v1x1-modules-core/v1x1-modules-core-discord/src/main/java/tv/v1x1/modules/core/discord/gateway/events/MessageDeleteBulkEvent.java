@@ -13,6 +13,9 @@ import java.util.List;
  */
 @JsonDeserialize
 public class MessageDeleteBulkEvent extends DispatchPayload {
+    @JsonProperty("d")
+    private MessageIds messageIds;
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class MessageIds extends ChannelId {
         @JsonProperty
@@ -34,9 +37,6 @@ public class MessageDeleteBulkEvent extends DispatchPayload {
             this.ids = ids;
         }
     }
-
-    @JsonProperty("d")
-    private MessageIds messageIds;
 
     public MessageDeleteBulkEvent() {
     }

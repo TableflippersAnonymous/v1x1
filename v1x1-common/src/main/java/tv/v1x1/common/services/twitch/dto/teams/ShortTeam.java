@@ -27,9 +27,6 @@ public class ShortTeam {
     @JsonProperty("updated_at")
     private String updatedAt;
 
-    public ShortTeam() {
-    }
-
     public long getId() {
         return id;
     }

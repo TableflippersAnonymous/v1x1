@@ -14,6 +14,9 @@ import java.util.List;
  */
 @JsonDeserialize
 public class GuildMemberUpdateEvent extends DispatchPayload {
+    @JsonProperty("d")
+    private Data data;
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Data extends GuildId {
         @JsonProperty("roles")
@@ -57,9 +60,6 @@ public class GuildMemberUpdateEvent extends DispatchPayload {
             this.nick = nick;
         }
     }
-
-    @JsonProperty("d")
-    private Data data;
 
     public GuildMemberUpdateEvent() {
     }

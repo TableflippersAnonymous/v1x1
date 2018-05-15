@@ -13,9 +13,6 @@ public class PostResponse {
     @JsonProperty
     private String tweet;
 
-    public PostResponse() {
-    }
-
     public Post getPost() {
         return post;
     }

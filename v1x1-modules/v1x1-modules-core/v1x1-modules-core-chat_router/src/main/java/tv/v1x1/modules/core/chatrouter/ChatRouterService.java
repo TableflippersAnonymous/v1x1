@@ -53,6 +53,7 @@ public class ChatRouterService extends ThreadedService<SendMessageRequest, SendM
                     break;
                 default:
                     LOG.warn("Unknown platform type: {}", request.getDestination().getChannelGroup().getPlatform().name());
+                    break;
             }
             return new SendMessageResponse(getModule().toDto(), request.getMessageId());
         } catch (final Exception e) {
