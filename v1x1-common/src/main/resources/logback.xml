@@ -6,13 +6,10 @@
         </layout>
     </appender>
 
-    <appender name="Sentry" class="com.getsentry.raven.logback.SentryAppender">
+    <appender name="Sentry" class="io.sentry.logback.SentryAppender">
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>WARN</level>
         </filter>
-        <dsn>${SENTRY_URL}</dsn>
-        <!-- Optional, allows to select the ravenFactory -->
-        <!--<ravenFactory>com.getsentry.raven.DefaultRavenFactory</ravenFactory>-->
     </appender>
 
     <logger name="tv.v1x1" level="trace" />
