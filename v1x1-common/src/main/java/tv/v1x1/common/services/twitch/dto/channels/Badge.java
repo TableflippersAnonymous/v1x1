@@ -15,9 +15,6 @@ public class Badge {
     @JsonProperty
     private String svg;
 
-    public Badge() {
-    }
-
     public String getAlpha() {
         return alpha;
     }

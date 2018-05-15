@@ -3,7 +3,6 @@ package tv.v1x1.common.services.twitch.resources;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.misc.Period;
 import tv.v1x1.common.services.twitch.dto.streams.BroadcastType;
-import tv.v1x1.common.services.twitch.dto.videos.TotalledVideoList;
 import tv.v1x1.common.services.twitch.dto.videos.Video;
 import tv.v1x1.common.services.twitch.dto.videos.VideoList;
 import tv.v1x1.common.services.twitch.dto.videos.VodList;

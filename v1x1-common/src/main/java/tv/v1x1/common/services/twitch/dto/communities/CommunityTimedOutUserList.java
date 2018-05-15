@@ -15,9 +15,6 @@ public class CommunityTimedOutUserList {
     @JsonProperty("timed_out_users")
     private List<CommunityTimedOutUser> timedOutUsers;
 
-    public CommunityTimedOutUserList() {
-    }
-
     public String getCursor() {
         return cursor;
     }

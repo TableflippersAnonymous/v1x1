@@ -7,6 +7,8 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * Created by cobi on 9/10/2017.
  */
 public class VoiceState extends PartialVoiceState {
+    private String guildId;
+
     public static VoiceState fromProto(final EventOuterClass.DiscordVoiceStateEvent.VoiceState proto) {
         return new VoiceState(
                 proto.hasChannelId() ? proto.getChannelId() : null,
@@ -20,8 +22,6 @@ public class VoiceState extends PartialVoiceState {
                 proto.hasGuildId() ? proto.getGuildId() : null
         );
     }
-
-    private String guildId;
 
     public VoiceState() {
     }

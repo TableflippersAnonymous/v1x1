@@ -11,6 +11,9 @@ import tv.v1x1.modules.core.discord.gateway.DispatchPayload;
  */
 @JsonDeserialize
 public class TypingStartEvent extends DispatchPayload {
+    @JsonProperty("d")
+    private Data data;
+
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Data extends ChannelId {
         @JsonProperty("user_id")
@@ -43,9 +46,6 @@ public class TypingStartEvent extends DispatchPayload {
             this.timestamp = timestamp;
         }
     }
-
-    @JsonProperty("d")
-    private Data data;
 
     public TypingStartEvent() {
     }

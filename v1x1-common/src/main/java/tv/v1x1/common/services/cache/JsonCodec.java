@@ -13,6 +13,12 @@ public class JsonCodec<T> implements CodecCache.Codec<T> {
     private final ObjectMapper mapper = new ObjectMapper(new JsonFactory());
     private final Class<T> clazz;
 
+    public static class JsonCodecException extends RuntimeException {
+        public JsonCodecException(final Throwable cause) {
+            super(cause);
+        }
+    }
+
     public JsonCodec(final Class<T> clazz) {
         this.clazz = clazz;
     }
@@ -22,7 +28,7 @@ public class JsonCodec<T> implements CodecCache.Codec<T> {
         try {
             return mapper.writeValueAsBytes(value);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            throw new JsonCodecException(e);
         }
     }
 
@@ -31,7 +37,7 @@ public class JsonCodec<T> implements CodecCache.Codec<T> {
         try {
             return mapper.readValue(value, clazz);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new JsonCodecException(e);
         }
     }
 }

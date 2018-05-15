@@ -19,6 +19,9 @@ import java.util.stream.Collectors;
  * @author Cobi
  */
 public class GlobalUser {
+    private final UUID id;
+    private final List<User> entries;
+
     public static final CodecCache.Codec<GlobalUser> KEY_CODEC = new LambdaCodec<>(u -> u.getId().toProto().toByteArray(), b -> {
         try {
             return new GlobalUser(UUID.fromProto(UUIDOuterClass.UUID.parseFrom(b)), ImmutableList.of());
@@ -41,9 +44,6 @@ public class GlobalUser {
         list.addAll(proto.getEntriesList().stream().map(entry -> User.fromProto(globalUser, entry)).collect(Collectors.toList()));
         return globalUser;
     }
-
-    private final UUID id;
-    private final List<User> entries;
 
     public GlobalUser(final UUID id, final List<User> entries) {
         this.id = id;

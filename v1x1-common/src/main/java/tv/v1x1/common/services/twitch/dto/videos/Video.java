@@ -54,9 +54,6 @@ public class Video {
     @JsonProperty
     private long views;
 
-    public Video() {
-    }
-
     public String getTitle() {
         return title;
     }

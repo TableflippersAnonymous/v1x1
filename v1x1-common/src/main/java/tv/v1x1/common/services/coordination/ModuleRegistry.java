@@ -23,6 +23,12 @@ import java.util.stream.Collectors;
 public class ModuleRegistry {
     private final ServiceDiscovery<ModuleInstance> serviceDiscovery;
 
+    public static class ModuleRegistryException extends RuntimeException {
+        public ModuleRegistryException(final Throwable cause) {
+            super(cause);
+        }
+    }
+
     @Inject
     public ModuleRegistry(final CuratorFramework framework, final ModuleInstance moduleInstance) {
         try {
@@ -45,7 +51,7 @@ public class ModuleRegistry {
                     .build();
             serviceDiscovery.start();
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new ModuleRegistryException(e);
         }
     }
 
@@ -63,7 +69,7 @@ public class ModuleRegistry {
         try {
             return ImmutableSet.copyOf(serviceDiscovery.queryForNames().stream().map(Module::new).collect(Collectors.toList()));
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new ModuleRegistryException(e);
         }
     }
 
@@ -71,7 +77,7 @@ public class ModuleRegistry {
         try {
             return ImmutableSet.copyOf(serviceDiscovery.queryForInstances(module.getName()).stream().map(ServiceInstance::getPayload).collect(Collectors.toList()));
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new ModuleRegistryException(e);
         }
     }
 
@@ -79,7 +85,7 @@ public class ModuleRegistry {
         try {
             return modules().stream().filter(module -> !getInstances(module).isEmpty()).collect(Collectors.toSet());
         } catch (final Exception e) {
-            throw new RuntimeException(e);
+            throw new ModuleRegistryException(e);
         }
     }
 

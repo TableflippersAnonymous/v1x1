@@ -9,14 +9,14 @@ import tv.v1x1.common.dto.proto.messages.PubSub;
  * Created by cobi on 5/26/2017.
  */
 public class PubSubMessage extends Message {
+    private String topic;
+    private String json;
+
     public static PubSubMessage fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final PubSub.PubSubMessage pubSubMessage) {
         final String topic = pubSubMessage.getTopic();
         final String json = pubSubMessage.getJson();
         return new PubSubMessage(module, uuid, timestamp, context, topic, json);
     }
-
-    private String topic;
-    private String json;
 
     public PubSubMessage(final Module from, final String topic, final String json) {
         super(from);

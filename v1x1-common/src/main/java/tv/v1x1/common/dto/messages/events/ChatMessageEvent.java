@@ -12,6 +12,8 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @author Cobi
  */
 public abstract class ChatMessageEvent extends Event {
+    private final ChatMessage chatMessage;
+
     public static ChatMessageEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.ChatMessageEvent chatMessageEvent) {
         final ChatMessage chatMessage = ChatMessage.fromProto(chatMessageEvent.getChatMessage());
         switch(chatMessageEvent.getType()) {
@@ -20,8 +22,6 @@ public abstract class ChatMessageEvent extends Event {
             default: throw new IllegalStateException("Unknown ChatMessageEvent type: " + chatMessageEvent.getType());
         }
     }
-
-    private final ChatMessage chatMessage;
 
     public ChatMessageEvent(final Module from, final ChatMessage chatMessage) {
         super(from);
