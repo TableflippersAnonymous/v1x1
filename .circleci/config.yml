@@ -4,34 +4,47 @@
 #
 version: 2
 jobs:
-  build:
+  build-java:
     docker:
-      # specify the version you desire here
       - image: circleci/openjdk:8-jdk
-
     working_directory: ~/repo
-
     environment:
-      # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
-
     steps:
       - checkout
       - setup_remote_docker
-
-      # Download and cache dependencies
       - restore_cache:
           keys:
           - v1-dependencies-{{ checksum "pom.xml" }}
           # fallback to using the latest cache if no exact match is found
           - v1-dependencies-
-
       - run: mvn dependency:go-offline || true
-
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
-
-      # run tests!
       - run: mvn integration-test
+  build-web:
+    docker:
+      - image: circleci/node:7.10
+    working_directory: ~/repo
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+      - run: (cd v1x1-web; npm install)
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: (cd v1x1-web; npm build)
+
+workflows:
+  version: 2
+  build:
+    jobs:
+    - build-java
+    - build-web
