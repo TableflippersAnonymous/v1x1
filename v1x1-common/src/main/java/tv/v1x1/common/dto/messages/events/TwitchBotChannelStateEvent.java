@@ -1,6 +1,11 @@
 package tv.v1x1.common.dto.messages.events;
 
-import tv.v1x1.common.dto.core.*;
+import tv.v1x1.common.dto.core.Bot;
+import tv.v1x1.common.dto.core.Channel;
+import tv.v1x1.common.dto.core.Module;
+import tv.v1x1.common.dto.core.TwitchBot;
+import tv.v1x1.common.dto.core.TwitchChannel;
+import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.UserStateCommand;
 import tv.v1x1.common.dto.messages.Context;
@@ -13,17 +18,17 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#userstate-1">Twitch-API documentation</a>
  */
 public class TwitchBotChannelStateEvent extends Event {
+    private final TwitchChannel channel;
+    private final TwitchBot bot;
+
+    private final UserStateCommand userStateCommand;
+
     public static TwitchBotChannelStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchBotChannelStateEvent twitchBotChannelStateEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchBotChannelStateEvent.getChannel());
         final TwitchBot bot = (TwitchBot) Bot.fromProto(twitchBotChannelStateEvent.getBot());
         final UserStateCommand userStateCommand = (UserStateCommand) IrcStanza.fromProto(twitchBotChannelStateEvent.getUserStateCommand());
         return new TwitchBotChannelStateEvent(module, uuid, timestamp, context, channel, bot, userStateCommand);
     }
-
-    private final TwitchChannel channel;
-    private final TwitchBot bot;
-
-    private final UserStateCommand userStateCommand;
 
     public TwitchBotChannelStateEvent(final Module from, final TwitchChannel channel, final TwitchBot bot, final UserStateCommand userStateCommand) {
         super(from);

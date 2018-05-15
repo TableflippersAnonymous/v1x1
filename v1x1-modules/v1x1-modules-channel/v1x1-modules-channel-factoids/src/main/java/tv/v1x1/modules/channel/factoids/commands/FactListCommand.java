@@ -60,19 +60,19 @@ public class FactListCommand extends Command {
         LOG.debug("handleAlias() {} -> {}", factoid.getKey(), factoid.getValue().getData());
         final String aliasName = factoid.getKey();
         final String aliasTarget = factoid.getValue().getData();
-        aliasMap.putIfAbsent(aliasTarget, new ArrayList<String>());
+        aliasMap.putIfAbsent(aliasTarget, new ArrayList<>());
         final List<String> factEntry = aliasMap.get(aliasTarget);
         factEntry.add(aliasName);
     }
 
     private void handleFact(final Map.Entry<String, Factoid> factoid, final HashMap<String, List<String>> aliasMap) {
-        aliasMap.putIfAbsent(factoid.getKey(), new ArrayList<String>());
+        aliasMap.putIfAbsent(factoid.getKey(), new ArrayList<>());
     }
 
     private String formatAliasMap(final HashMap<String, List<String>> aliasMap) {
         final StringBuilder sb = new StringBuilder();
         boolean firstFact = true;
-        for(java.util.Map.Entry entry : aliasMap.entrySet()) {
+        for(Map.Entry entry : aliasMap.entrySet()) {
             final List<String> aliases = ((List<String>)entry.getValue());
             if(!firstFact) sb.append(", ");
             firstFact = false;

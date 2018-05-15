@@ -7,6 +7,8 @@ import tv.v1x1.common.dto.proto.core.ChannelOuterClass;
  * @author Naomi
  */
 public class TwitchChannel extends Channel {
+    public static final TwitchChannel EMPTY = new TwitchChannel(null, null, null);
+
     public static TwitchChannel fromProto(final ChannelOuterClass.Channel channel) {
         final String id = channel.getId();
         final ChannelGroup channelGroup = ChannelGroup.fromProto(channel.getChannelGroup());
@@ -19,8 +21,6 @@ public class TwitchChannel extends Channel {
         final String displayName = channelGroupEntry.getDisplayName();
         return new TwitchChannel(id, channelGroup, displayName);
     }
-
-    public static final TwitchChannel EMPTY = new TwitchChannel(null, null, null);
 
     public TwitchChannel(final String id, final ChannelGroup channelGroup, final String displayName) {
         super(id, channelGroup, displayName);

@@ -35,9 +35,6 @@ public class Clip {
     @JsonProperty
     private ClipVod vod;
 
-    public Clip() {
-    }
-
     public ClipChannel getBroadcaster() {
         return broadcaster;
     }

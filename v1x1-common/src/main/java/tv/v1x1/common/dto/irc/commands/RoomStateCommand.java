@@ -10,16 +10,16 @@ import java.util.Map;
  * Created by naomi on 10/8/2016.
  */
 public class RoomStateCommand extends IrcStanza {
-    public static RoomStateCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.RoomStateCommand roomStateCommand) {
-        final String channel = roomStateCommand.getChannel();
-        return new RoomStateCommand(rawLine, tags, source, rawArgs, args, channel);
-    }
-
     private final String channel;
 
     private String broadcasterLanguage;
     private boolean r9k, subsOnly;
     private int slow;
+
+    public static RoomStateCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.RoomStateCommand roomStateCommand) {
+        final String channel = roomStateCommand.getChannel();
+        return new RoomStateCommand(rawLine, tags, source, rawArgs, args, channel);
+    }
 
     public RoomStateCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel) {
         super(rawLine, tags, source, IrcCommand.ROOMSTATE, rawArgs, args);

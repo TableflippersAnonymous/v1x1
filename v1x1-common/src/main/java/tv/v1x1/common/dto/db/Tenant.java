@@ -1,12 +1,9 @@
 package tv.v1x1.common.dto.db;
 
-import com.datastax.driver.mapping.annotations.*;
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
 import tv.v1x1.common.dao.DAOTenant;
-import tv.v1x1.common.dto.core.*;
-import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.DiscordChannel;
-import tv.v1x1.common.dto.core.DiscordGuild;
-import tv.v1x1.common.dto.core.TwitchChannel;
 
 import java.util.ArrayList;
 import java.util.List;

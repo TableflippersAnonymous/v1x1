@@ -10,6 +10,14 @@ import java.util.Map;
  * Created by naomi on 10/8/2016.
  */
 public class UserNoticeCommand extends MessageTaggedIrcStanza {
+    private final String channel;
+    private final String message;
+
+    private MessageId messageId;
+    private int months;
+    private String systemMessage;
+    private String login;
+
     public static UserNoticeCommand fromProto(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final IRC.UserNoticeCommand userNoticeCommand) {
         final String channel = userNoticeCommand.getChannel();
         final String message = userNoticeCommand.getMessage();
@@ -28,14 +36,6 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
             }
         }
     }
-
-    private final String channel;
-    private final String message;
-
-    private MessageId messageId;
-    private int months;
-    private String systemMessage;
-    private String login;
 
     public UserNoticeCommand(final String rawLine, final Map<String, String> tags, final IrcSource source, final String rawArgs, final String[] args, final String channel, final String message) {
         super(rawLine, tags, source, IrcCommand.USERNOTICE, rawArgs, args);
