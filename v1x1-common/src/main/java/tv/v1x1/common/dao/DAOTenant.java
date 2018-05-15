@@ -33,6 +33,13 @@ import java.util.stream.Collectors;
  */
 @Singleton
 public class DAOTenant {
+    private final Deduplicator createDeduplicator;
+    private final Session session;
+    private final Mapper<Tenant> tenantMapper;
+    private final Mapper<ChannelGroup> channelGroupMapper;
+    private final Mapper<Channel> channelMapper;
+    private final TenantAccessor tenantAccessor;
+    private final DisplayNameService displayNameService;
 
     @Accessor
     public interface TenantAccessor {
@@ -42,14 +49,6 @@ public class DAOTenant {
         @Query("SELECT * FROM channel_groups_by_tenant WHERE tenant_id = ?")
         Result<ChannelGroupsByTenant> getChannelGroupsByTenant(UUID tenantId);
     }
-
-    private final Deduplicator createDeduplicator;
-    private final Session session;
-    private final Mapper<Tenant> tenantMapper;
-    private final Mapper<ChannelGroup> channelGroupMapper;
-    private final Mapper<Channel> channelMapper;
-    private final TenantAccessor tenantAccessor;
-    private final DisplayNameService displayNameService;
 
     @Inject
     public DAOTenant(final RedissonClient redissonClient, final MappingManager mappingManager, final DisplayNameService displayNameService) {

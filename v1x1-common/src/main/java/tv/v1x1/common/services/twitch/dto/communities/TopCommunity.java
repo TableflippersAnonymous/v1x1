@@ -17,9 +17,6 @@ public class TopCommunity extends CommunityId {
     @JsonProperty
     private long viewers;
 
-    public TopCommunity() {
-    }
-
     public String getAvatarImageUrl() {
         return avatarImageUrl;
     }

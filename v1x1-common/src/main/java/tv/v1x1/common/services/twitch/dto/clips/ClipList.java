@@ -15,9 +15,6 @@ public class ClipList {
     @JsonProperty
     private List<Clip> clips;
 
-    public ClipList() {
-    }
-
     public String getCursor() {
         return cursor;
     }

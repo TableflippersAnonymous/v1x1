@@ -2,7 +2,6 @@ package tv.v1x1.common.services.twitch.dto.streams;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import tv.v1x1.common.services.twitch.dto.streams.FeaturedStream;
 
 import java.util.List;
 
@@ -13,9 +12,6 @@ import java.util.List;
 public class FeaturedStreamList {
     @JsonProperty
     private List<FeaturedStream> featured;
-
-    public FeaturedStreamList() {
-    }
 
     public List<FeaturedStream> getFeatured() {
         return featured;

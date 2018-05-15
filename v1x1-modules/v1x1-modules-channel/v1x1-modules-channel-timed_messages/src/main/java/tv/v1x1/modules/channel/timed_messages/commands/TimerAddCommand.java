@@ -34,14 +34,17 @@ import java.util.List;
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         switch (args.size()) {
-            case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "add.notarget",
+            case 0:
+                Chat.i18nMessage(module, chatMessage.getChannel(), "add.notarget",
                     "commander", chatMessage.getSender().getDisplayName(),
                     "usage", getUsage()
-            );
+                );
                 break;
-            case 1: Chat.i18nMessage(module, chatMessage.getChannel(), "add.nomessage",
+            case 1:
+                Chat.i18nMessage(module, chatMessage.getChannel(), "add.nomessage",
                     "commander", chatMessage.getSender().getDisplayName(),
-                    "usage", getUsage());
+                    "usage", getUsage()
+                );
                 break;
         }
     }

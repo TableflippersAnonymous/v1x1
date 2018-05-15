@@ -1,8 +1,6 @@
 package tv.v1x1.modules.channel.timed_messages.commands;
 
 import com.google.common.collect.ImmutableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
@@ -10,14 +8,12 @@ import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.timed_messages.TimedMessages;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 /**
  * @author Josh
  */
 public class TimerRescheduleCommand extends Command {
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final TimedMessages module;
 
     public TimerRescheduleCommand(final TimedMessages module) {

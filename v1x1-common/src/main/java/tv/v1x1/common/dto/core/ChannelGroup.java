@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
  * Created by naomi on 10/26/2017.
  */
 public abstract class ChannelGroup {
+    protected String id;
+    protected Tenant tenant;
+    protected String displayName;
+    protected List<Channel> channels;
+
     public static final CodecCache.Codec<ChannelGroup> KEY_CODEC = new LambdaCodec<>(c -> CompositeKey.makeKey(
             Tenant.KEY_CODEC.encode(c.getTenant()), Ints.toByteArray(c.getPlatform().ordinal()), c.getId().getBytes(),
             c.getDisplayName().getBytes()
@@ -57,11 +62,6 @@ public abstract class ChannelGroup {
             default: throw new IllegalStateException("Unknown channel platform " + tenantEntry.getPlatform().name());
         }
     }
-
-    protected String id;
-    protected Tenant tenant;
-    protected String displayName;
-    protected List<Channel> channels;
 
     public ChannelGroup(final String id, final Tenant tenant, final String displayName, final List<Channel> channels) {
         this.id = id;
