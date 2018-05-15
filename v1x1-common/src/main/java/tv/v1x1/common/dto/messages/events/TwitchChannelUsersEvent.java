@@ -1,6 +1,11 @@
 package tv.v1x1.common.dto.messages.events;
 
-import tv.v1x1.common.dto.core.*;
+import tv.v1x1.common.dto.core.Channel;
+import tv.v1x1.common.dto.core.Module;
+import tv.v1x1.common.dto.core.TwitchChannel;
+import tv.v1x1.common.dto.core.TwitchUser;
+import tv.v1x1.common.dto.core.UUID;
+import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.RplNameReplyCommand;
 import tv.v1x1.common.dto.messages.Context;
@@ -16,6 +21,11 @@ import java.util.stream.Collectors;
  * @see <a href="https://github.com/justintv/Twitch-API/blob/master/IRC.md#names">Twitch-API Documentation</a>
  */
 public class TwitchChannelUsersEvent extends Event {
+    private final TwitchChannel channel;
+    private final List<TwitchUser> users;
+
+    private final RplNameReplyCommand rplNameReplyCommand;
+
     @SuppressWarnings("unchecked")
     public static TwitchChannelUsersEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.TwitchChannelUsersEvent twitchChannelUsersEvent) {
         final TwitchChannel channel = (TwitchChannel) Channel.fromProto(twitchChannelUsersEvent.getChannel());
@@ -23,11 +33,6 @@ public class TwitchChannelUsersEvent extends Event {
         final RplNameReplyCommand rplNameReplyCommand = (RplNameReplyCommand) IrcStanza.fromProto(twitchChannelUsersEvent.getRplNameReplyCommand());
         return new TwitchChannelUsersEvent(module, uuid, timestamp, context, channel, users, rplNameReplyCommand);
     }
-
-    private final TwitchChannel channel;
-    private final List<TwitchUser> users;
-
-    private final RplNameReplyCommand rplNameReplyCommand;
 
     public TwitchChannelUsersEvent(final Module from, final TwitchChannel channel, final List<TwitchUser> users, final RplNameReplyCommand rplNameReplyCommand) {
         super(from);

@@ -15,9 +15,6 @@ public class Reaction {
     @JsonProperty("user_ids")
     private List<Long> userIds;
 
-    public Reaction() {
-    }
-
     public long getCount() {
         return count;
     }

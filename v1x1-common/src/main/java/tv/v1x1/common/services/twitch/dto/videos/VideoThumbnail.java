@@ -13,9 +13,6 @@ public class VideoThumbnail {
     @JsonProperty
     private String url;
 
-    public VideoThumbnail() {
-    }
-
     public String getType() {
         return type;
     }

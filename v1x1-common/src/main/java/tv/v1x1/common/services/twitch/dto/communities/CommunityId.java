@@ -11,9 +11,6 @@ public class CommunityId {
     @JsonProperty("_id")
     private String id;
 
-    public CommunityId() {
-    }
-
     public String getId() {
         return id;
     }

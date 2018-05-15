@@ -39,9 +39,6 @@ public class Channel extends ShortChannel {
     @JsonProperty
     private long views;
 
-    public Channel() {
-    }
-
     public boolean isMature() {
         return mature;
     }

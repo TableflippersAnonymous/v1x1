@@ -1,6 +1,21 @@
 package tv.v1x1.common.dto.irc;
 
-import tv.v1x1.common.dto.irc.commands.*;
+import tv.v1x1.common.dto.irc.commands.ClearChatCommand;
+import tv.v1x1.common.dto.irc.commands.GlobalUserStateCommand;
+import tv.v1x1.common.dto.irc.commands.HostTargetCommand;
+import tv.v1x1.common.dto.irc.commands.JoinCommand;
+import tv.v1x1.common.dto.irc.commands.ModeCommand;
+import tv.v1x1.common.dto.irc.commands.NoticeCommand;
+import tv.v1x1.common.dto.irc.commands.PartCommand;
+import tv.v1x1.common.dto.irc.commands.PingCommand;
+import tv.v1x1.common.dto.irc.commands.PrivmsgCommand;
+import tv.v1x1.common.dto.irc.commands.ReconnectCommand;
+import tv.v1x1.common.dto.irc.commands.RoomStateCommand;
+import tv.v1x1.common.dto.irc.commands.RplEndOfMotdCommand;
+import tv.v1x1.common.dto.irc.commands.RplNameReplyCommand;
+import tv.v1x1.common.dto.irc.commands.UserNoticeCommand;
+import tv.v1x1.common.dto.irc.commands.UserStateCommand;
+import tv.v1x1.common.dto.irc.commands.WhisperCommand;
 import tv.v1x1.common.dto.proto.core.IRC;
 
 import java.util.Arrays;
@@ -10,6 +25,13 @@ import java.util.Map;
  * Created by cobi on 10/8/2016.
  */
 public abstract class IrcStanza {
+    private final String rawLine;
+    private final Map<String, String> tags;
+    private final IrcSource source;
+    private final IrcCommand command;
+    private final String rawArgs;
+    private final String[] args;
+
     public static IrcStanza fromProto(final IRC.IrcStanza stanza) {
         final String rawLine = stanza.getRawLine();
         final Map<String, String> tags = stanza.getTagsMap();
@@ -46,13 +68,6 @@ public abstract class IrcStanza {
         USERNOTICE, GLOBALUSERSTATE,
         PING, WHISPER
     }
-
-    private final String rawLine;
-    private final Map<String, String> tags;
-    private final IrcSource source;
-    private final IrcCommand command;
-    private final String rawArgs;
-    private final String[] args;
 
     public IrcStanza(final String rawLine, final Map<String, String> tags, final IrcSource source, final IrcCommand command, final String rawArgs, final String[] args) {
         this.rawLine = rawLine;
