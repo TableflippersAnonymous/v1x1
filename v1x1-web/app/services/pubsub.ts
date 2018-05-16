@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {V1x1WebInfo} from "./web_info";
-import websocketConnect, {Connection, IWebSocket} from "rxjs-websockets";
+import websocketConnect, {Connection} from "rxjs-websockets";
 import {QueueingSubject} from "queueing-subject";
 import {Observable} from "rxjs";
 import {V1x1PubSubFrame} from "../model/v1x1_pub_sub_frame";
@@ -22,7 +22,7 @@ import {V1x1GlobalState} from "./global_state";
 @Injectable()
 export class V1x1PubSub {
   private inputStream: QueueingSubject<any> = new QueueingSubject();
-  public messages: Observable<Object>;
+  public messages: Observable<string>;
   public frames: Observable<V1x1PubSubFrame>;
   public connection: Observable<Connection>;
   private observables: Map<string, Observable<Object>> = new Map<string, Observable<Object>>();
@@ -36,7 +36,7 @@ export class V1x1PubSub {
       return;
     }
     this.connection = this.webInfo.getWebConfig().map(wc =>
-      websocketConnect(wc.pubsubBase + "/pubsub", this.inputStream, (url: string): IWebSocket => new WebSocket(url))
+      websocketConnect(wc.pubsubBase + "/pubsub", this.inputStream)
     );
     this.messages = this.connection.map(conn =>
       conn.messages.share().retryWhen(errors => errors.delay(1000))
@@ -78,20 +78,20 @@ export class V1x1PubSub {
     return observable;
   }
 
-  private parseFrame(message: Object): V1x1PubSubFrame {
-    let baseFrame = JsonConvert.deserializeObject(message, V1x1PubSubFrame);
+  private parseFrame(message: string): V1x1PubSubFrame {
+    let baseFrame = JsonConvert.deserializeString(message, V1x1PubSubFrame);
     switch(baseFrame.type) {
-      case "HELLO": return JsonConvert.deserializeObject(message, V1x1PubSubHelloFrame);
-      case "ERROR": return JsonConvert.deserializeObject(message, V1x1PubSubErrorFrame);
-      case "AUTH_REQUEST": return JsonConvert.deserializeObject(message, V1x1PubSubAuthRequestFrame);
-      case "AUTH_RESPONSE": return JsonConvert.deserializeObject(message, V1x1PubSubAuthResponseFrame);
-      case "LISTEN_REQUEST": return JsonConvert.deserializeObject(message, V1x1PubSubListenRequestFrame);
-      case "LISTEN_RESPONSE": return JsonConvert.deserializeObject(message, V1x1PubSubListenResponseFrame);
-      case "UNLISTEN_REQUEST": return JsonConvert.deserializeObject(message, V1x1PubSubUnlistenRequestFrame);
-      case "UNLISTEN_RESPONSE": return JsonConvert.deserializeObject(message, V1x1PubSubUnlistenResponseFrame);
-      case "PUBLISH_REQUEST": return JsonConvert.deserializeObject(message, V1x1PubSubPublishRequestFrame);
-      case "PUBLISH_RESPONSE": return JsonConvert.deserializeObject(message, V1x1PubSubPublishResponseFrame);
-      case "TOPIC_MESSAGE": return JsonConvert.deserializeObject(message, V1x1PubSubTopicMessageFrame);
+      case "HELLO": return JsonConvert.deserializeString(message, V1x1PubSubHelloFrame);
+      case "ERROR": return JsonConvert.deserializeString(message, V1x1PubSubErrorFrame);
+      case "AUTH_REQUEST": return JsonConvert.deserializeString(message, V1x1PubSubAuthRequestFrame);
+      case "AUTH_RESPONSE": return JsonConvert.deserializeString(message, V1x1PubSubAuthResponseFrame);
+      case "LISTEN_REQUEST": return JsonConvert.deserializeString(message, V1x1PubSubListenRequestFrame);
+      case "LISTEN_RESPONSE": return JsonConvert.deserializeString(message, V1x1PubSubListenResponseFrame);
+      case "UNLISTEN_REQUEST": return JsonConvert.deserializeString(message, V1x1PubSubUnlistenRequestFrame);
+      case "UNLISTEN_RESPONSE": return JsonConvert.deserializeString(message, V1x1PubSubUnlistenResponseFrame);
+      case "PUBLISH_REQUEST": return JsonConvert.deserializeString(message, V1x1PubSubPublishRequestFrame);
+      case "PUBLISH_RESPONSE": return JsonConvert.deserializeString(message, V1x1PubSubPublishResponseFrame);
+      case "TOPIC_MESSAGE": return JsonConvert.deserializeString(message, V1x1PubSubTopicMessageFrame);
     }
     return baseFrame;
   }
@@ -128,6 +128,6 @@ export class V1x1PubSub {
 
   private send(request: V1x1PubSubFrame) {
     console.log("WS Send: " + JSON.stringify(request));
-    this.inputStream.next(request);
+    this.inputStream.next(JSON.stringify(request));
   }
 }

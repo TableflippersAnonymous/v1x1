@@ -9,17 +9,17 @@ import 'rxjs/add/operator/first';
 import 'rxjs/add/operator/filter';
 import 'rxjs/add/operator/find';
 import 'rxjs/add/operator/retryWhen';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/observable/forkJoin';
+import 'rxjs/add/observable/of';
+import 'rxjs/add/observable/zip';
 import 'hammerjs';
 import './scss/vendor.scss';
 // Font Awesome
 import fontawesome from '@fortawesome/fontawesome';
-import faTwitch from '@fortawesome/fontawesome-free-brands/faTwitch';
-import faDiscord from '@fortawesome/fontawesome-free-brands/faDiscord';
-import faSlack from '@fortawesome/fontawesome-free-brands/faSlack';
-import faYoutube from '@fortawesome/fontawesome-free-brands/faYoutube';
-import faUndo from '@fortawesome/fontawesome-pro-regular/faUndo';
-import faSortDown from '@fortawesome/fontawesome-pro-regular/faSortDown';
+import {faDiscord, faSlack, faTwitch, faYoutube} from "@fortawesome/fontawesome-free-brands";
+import {faSortDown, faUndo} from "@fortawesome/fontawesome-pro-regular";
 
 fontawesome.library.add(faTwitch, faDiscord, faSlack, faYoutube);
 fontawesome.library.add(faUndo, faSortDown);
-fontawesome.dom.i2svg();
+fontawesome.dom.i2svg(undefined);
