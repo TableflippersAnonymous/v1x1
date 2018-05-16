@@ -41,6 +41,7 @@ jobs:
           - v1x1-web/node_modules
           key: v1-dependencies-{{ checksum "v1x1-web/package.json" }}
       - run: (cd v1x1-web; npm run build)
+        no_output_timeout: 1200
 
 workflows:
   version: 2

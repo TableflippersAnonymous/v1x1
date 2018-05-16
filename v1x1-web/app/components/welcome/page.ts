@@ -2,10 +2,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {V1x1Api} from "../../services/api";
 import {V1x1State} from "../../model/v1x1_state";
 import {V1x1WebInfo} from "../../services/web_info";
-import {Observable} from "rxjs";
+import {Observable, of, zip} from "rxjs";
 import {Subscription} from "rxjs/Subscription";
 import {V1x1GlobalState} from "../../services/global_state";
 import {V1x1GlobalUser} from "../../model/v1x1_global_user";
+import {first, map, share} from "rxjs/operators";
 
 @Component({
   selector: 'welcome-page',
@@ -65,7 +66,7 @@ export class WelcomePageComponent implements OnInit, OnDestroy {
   }
 
   renewState() {
-    this.subscriptions.push(this.api.getState().first().subscribe(state => {
+    this.subscriptions.push(this.api.getState().pipe(first()).subscribe(state => {
       this.state = state;
       this.expires = new Date().getTime() + this.state.ttl * 0.75;
     }));
@@ -73,14 +74,14 @@ export class WelcomePageComponent implements OnInit, OnDestroy {
 
   getState(): Observable<string> {
     if(this.expires < new Date().getTime())
-      return this.api.getState().map(s => s.state);
+      return this.api.getState().pipe(map(s => s.state));
     else
-      return Observable.of(this.state.state);
+      return of(this.state.state);
   }
 
   doTwitchLogin() {
     localStorage.setItem("auth_in_progress", "twitch");
-    this.subscriptions.push(Observable.zip(
+    this.subscriptions.push(zip(
       this.webInfo.getWebConfig(),
       this.getState()
     ).subscribe(
@@ -99,7 +100,7 @@ export class WelcomePageComponent implements OnInit, OnDestroy {
 
   doDiscordLogin(bot: boolean) {
     localStorage.setItem("auth_in_progress", "discord");
-    this.subscriptions.push(Observable.zip(
+    this.subscriptions.push(zip(
       this.webInfo.getWebConfig(),
       this.getState()
     ).subscribe(
@@ -117,6 +118,6 @@ export class WelcomePageComponent implements OnInit, OnDestroy {
   }
 
   getDisplayName(): Observable<string> {
-    return this.api.getSelf().map((user: V1x1GlobalUser) => user.users[0].displayName).share();
+    return this.api.getSelf().pipe(map((user: V1x1GlobalUser) => user.users[0].displayName), share());
   }
 }

@@ -18,6 +18,7 @@ import {V1x1PubSubPublishResponseFrame} from "../model/v1x1_pub_sub_publish_resp
 import {V1x1PubSubTopicMessageFrame} from "../model/v1x1_pub_sub_topic_message_frame";
 import {V1x1PubSubResponseFrame} from "../model/v1x1_pub_sub_response_frame";
 import {V1x1GlobalState} from "./global_state";
+import {delay, filter, find, first, map, mergeAll, publishReplay, refCount, retryWhen, share} from "rxjs/operators";
 
 @Injectable()
 export class V1x1PubSub {
@@ -35,20 +36,20 @@ export class V1x1PubSub {
     if(this.connection) {
       return;
     }
-    this.connection = this.webInfo.getWebConfig().map(wc =>
+    this.connection = this.webInfo.getWebConfig().pipe(map(wc =>
       websocketConnect(wc.pubsubBase + "/pubsub", this.inputStream)
-    );
-    this.messages = this.connection.map(conn =>
-      conn.messages.share().retryWhen(errors => errors.delay(1000))
-    ).mergeAll().share();
-    this.frames = this.messages.map(message => this.parseFrame(message)).share();
-    this.frames.filter(frame => frame instanceof V1x1PubSubHelloFrame).subscribe((frame: V1x1PubSubHelloFrame) => {
-      this.authObservable = this.globalState.authorization.get().first().map(authorization => this.auth(authorization)).mergeAll().publishReplay(1).refCount();
+    ));
+    this.messages = this.connection.pipe(map(conn =>
+      conn.messages.pipe(share(), retryWhen(errors => errors.pipe(delay(1000))))
+    ), mergeAll(), share());
+    this.frames = this.messages.pipe(map(message => this.parseFrame(message)), share());
+    this.frames.pipe(filter(frame => frame instanceof V1x1PubSubHelloFrame)).subscribe((frame: V1x1PubSubHelloFrame) => {
+      this.authObservable = this.globalState.authorization.get().pipe(first(), map(authorization => this.auth(authorization)), mergeAll(), publishReplay(1), refCount());
       this.topics.forEach((topic: string) => {
         this.listen(topic).subscribe();
       });
     });
-    this.authObservable = this.globalState.authorization.get().first().map(authorization => this.auth(authorization)).mergeAll().publishReplay(1).refCount();
+    this.authObservable = this.globalState.authorization.get().pipe(first(), map(authorization => this.auth(authorization)), mergeAll(), publishReplay(1), refCount());
   }
 
   public topic(topic: string): Observable<Object> {
@@ -57,7 +58,7 @@ export class V1x1PubSub {
       return this.observables.get(topic);
     this.connect();
     let observable = Observable.create(observer => {
-      let subscription = this.frames.filter(frame => frame instanceof V1x1PubSubTopicMessageFrame).subscribe((frame: V1x1PubSubTopicMessageFrame) => {
+      let subscription = this.frames.pipe(filter(frame => frame instanceof V1x1PubSubTopicMessageFrame)).subscribe((frame: V1x1PubSubTopicMessageFrame) => {
         console.log("WS Frame: " + frame.payload);
         observer.next(JSON.parse(frame.payload));
       }, error => {
@@ -73,7 +74,7 @@ export class V1x1PubSub {
         this.unlisten(topic).subscribe();
         subscription.unsubscribe();
       };
-    }).share();
+    }).pipe(share());
     this.observables.set(topic, observable);
     return observable;
   }
@@ -103,10 +104,10 @@ export class V1x1PubSub {
 
   private listen(topic: string): Observable<V1x1PubSubListenResponseFrame> {
     let requestFrame = new V1x1PubSubListenRequestFrame(topic);
-    return <Observable<V1x1PubSubListenResponseFrame>> this.authObservable.first().map(() => this.request(requestFrame).map(r => {
+    return <Observable<V1x1PubSubListenResponseFrame>> this.authObservable.pipe(first(), map(() => this.request(requestFrame).pipe(map(r => {
       this.topics.add(topic);
       return r;
-    })).mergeAll();
+    }))), mergeAll());
   }
 
   private unlisten(topic: string): Observable<V1x1PubSubUnlistenResponseFrame> {
@@ -123,7 +124,7 @@ export class V1x1PubSub {
   private request(request: V1x1PubSubFrame): Observable<V1x1PubSubResponseFrame> {
     this.send(request);
     // Need to handle ErrorFrame separately.
-    return <Observable<V1x1PubSubResponseFrame>> this.frames.find(frame => frame instanceof V1x1PubSubResponseFrame && frame.responseTo == request.id).first();
+    return <Observable<V1x1PubSubResponseFrame>> this.frames.pipe(find(frame => frame instanceof V1x1PubSubResponseFrame && frame.responseTo == request.id), first());
   }
 
   private send(request: V1x1PubSubFrame) {

@@ -2,12 +2,13 @@ import {Component} from '@angular/core';
 import {V1x1ApiCache} from "../services/api_cache";
 import {V1x1OauthCode} from "../model/v1x1_oauth_code";
 import {V1x1Api} from "../services/api";
-import {Observable} from "rxjs";
 import {V1x1Tenant} from "../model/v1x1_tenant";
 import {V1x1GlobalState} from "../services/global_state";
 import {Router} from "@angular/router";
 import {UrlId} from "../services/url_id";
 import {V1x1WebInfo} from "../services/web_info";
+import {catchError} from "rxjs/operators";
+import {of} from "rxjs";
 
 @Component({
   selector: 'v1x1-app',
@@ -41,10 +42,10 @@ export class AppComponent {
   handleLogin(oauthCode: V1x1OauthCode) {
     this.loggingIn = true;
     if(localStorage.getItem("auth_in_progress") === "twitch") {
-      this.api.loginTwitch(oauthCode).catch((_err, _caught) => {
+      this.api.loginTwitch(oauthCode).pipe(catchError((_err, _caught) => {
         this.loggingIn = false;
-        return Observable.of(null);
-      }).subscribe(authToken => {
+        return of(null);
+      })).subscribe(authToken => {
         if (authToken === null)
           return;
         localStorage.setItem("authorization", authToken.authorization);
@@ -55,10 +56,10 @@ export class AppComponent {
         this.postLogin();
       });
     } else if(localStorage.getItem("auth_in_progress") === "discord") {
-      this.api.loginDiscord(oauthCode).catch((_err, _caught) => {
+      this.api.loginDiscord(oauthCode).pipe(catchError((_err, _caught) => {
         this.loggingIn = false;
-        return Observable.of(null);
-      }).subscribe(authToken => {
+        return of(null);
+      })).subscribe(authToken => {
         if (authToken === null)
           return;
         localStorage.setItem("authorization", authToken.authorization);

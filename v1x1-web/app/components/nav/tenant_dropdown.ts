@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 import {V1x1GlobalState} from "../../services/global_state";
 import {V1x1Tenant} from "../../model/v1x1_tenant";
 import {Observable} from "rxjs";
+import {map} from "rxjs/operators";
 
 @Component({
   selector: 'tenant-dropdown-nav-component',
@@ -35,6 +36,6 @@ export class TenantDropdownNavComponent {
   }
 
   displayName(): Observable<string> {
-    return this.globalState.activeTenant.get().map(tenant => tenant !== undefined ? tenant.displayName : "???");
+    return this.globalState.activeTenant.get().pipe(map(tenant => tenant !== undefined ? tenant.displayName : "???"));
   }
 }
