@@ -5,7 +5,7 @@ import {V1x1ApiCache} from "../../services/api_cache";
 import {V1x1GlobalState} from "../../services/global_state";
 import {V1x1ChatMessage} from "../../model/v1x1_chat_message";
 import {JsonConvert} from "json2typescript";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'dashboard-page',

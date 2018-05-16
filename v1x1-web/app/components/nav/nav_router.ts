@@ -3,7 +3,7 @@ import {V1x1GlobalState} from "../../services/global_state";
 import {ActivatedRoute} from "@angular/router";
 import {V1x1Tenant} from "../../model/v1x1_tenant";
 import {UrlId} from "../../services/url_id";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'nav-router',

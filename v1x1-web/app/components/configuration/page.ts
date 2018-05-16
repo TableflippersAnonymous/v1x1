@@ -7,11 +7,10 @@ import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
 import {V1x1Api} from "../../services/api";
 import {JsonConvert} from "json2typescript";
 import {V1x1GlobalState} from "../../services/global_state";
-import {Subscription} from "rxjs/Subscription";
 import {V1x1PubSub} from "../../services/pubsub";
 import {V1x1ConfigChange} from "../../model/v1x1_config_change";
 import {first, map} from "rxjs/operators";
-import {forkJoin} from "rxjs";
+import {forkJoin, Subscription} from "rxjs";
 
 @Component({
   selector: 'configuration-page',
