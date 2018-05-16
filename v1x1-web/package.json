@@ -26,7 +26,7 @@
     "@angular/platform-browser-dynamic": "5.2.10",
     "@angular/router": "5.2.10",
     "@fortawesome/fontawesome": "1.1.0",
-    "@fortawesome/fontawesome-free-brands": "5.0.2",
+    "@fortawesome/fontawesome-free-brands": "5.0.13",
     "@fortawesome/fontawesome-free-regular": "5.0.13",
     "@fortawesome/fontawesome-pro-regular": "5.0.2",
     "@ng-bootstrap/ng-bootstrap": "1.1.2",
