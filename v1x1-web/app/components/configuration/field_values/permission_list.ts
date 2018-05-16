@@ -4,7 +4,7 @@ import {ConfigurableComponent} from "../configurable";
 import {V1x1Api} from "../../../services/api";
 import {V1x1ApiCache} from "../../../services/api_cache";
 import {V1x1PermissionDefinition} from "../../../model/v1x1_permission_definition";
-import {Subscription} from "rxjs/Subscription";
+import {Subscription} from "rxjs";
 import {V1x1PermissionDefinitionEntry} from "../../../model/v1x1_permission_definition_entry";
 
 @Component({
