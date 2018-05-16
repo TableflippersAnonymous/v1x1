@@ -3,6 +3,7 @@ import {V1x1Api} from "../../services/api";
 import {V1x1GlobalState} from "../../services/global_state";
 import {Subscription} from "rxjs/Subscription";
 import {V1x1GlobalUser} from "../../model/v1x1_global_user";
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'user-page',
@@ -50,7 +51,7 @@ export class UserPageComponent implements OnInit, OnDestroy {
   constructor(private api: V1x1Api, private globalState: V1x1GlobalState) {}
 
   ngOnInit() {
-    this.subscriptions.push(this.api.getSelf().first().subscribe(
+    this.subscriptions.push(this.api.getSelf().pipe(first()).subscribe(
       (globalUser: V1x1GlobalUser) => {
         this.globalUser = globalUser;
       }

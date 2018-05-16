@@ -1,4 +1,6 @@
 import {Observable, Observer} from "rxjs";
+import {publishReplay, refCount} from "rxjs/operators";
+
 export class ObservableVariable<T> {
   private value: T;
   private observers: Observer<T>[] = [];
@@ -9,7 +11,7 @@ export class ObservableVariable<T> {
     return () => {
       delete this.observers[this.observers.indexOf(obs)];
     };
-  }).publishReplay(1).refCount();
+  }).pipe(publishReplay(1), refCount());
 
   constructor(value: T) {
     this.value = value;
