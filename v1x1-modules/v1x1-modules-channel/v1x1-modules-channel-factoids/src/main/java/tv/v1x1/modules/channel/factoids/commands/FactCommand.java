@@ -66,7 +66,7 @@ public class FactCommand extends Command {
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         Chat.i18nMessage(module, chatMessage.getChannel(), "invalid.subcommand",
-                "commander", chatMessage.getSender().getDisplayName(),
+                "commander", chatMessage.getSender().getMention(),
                 "usage", getUsage()
         );
     }

@@ -69,8 +69,7 @@ public class QuoteCommand extends Command {
 
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final String senderName = chatMessage.getSender().getDisplayName();
         Chat.i18nMessage(module, chatMessage.getChannel(), "invalid.subcommand",
-                "commander", senderName);
+                "commander", chatMessage.getSender().getMention());
     }
 }

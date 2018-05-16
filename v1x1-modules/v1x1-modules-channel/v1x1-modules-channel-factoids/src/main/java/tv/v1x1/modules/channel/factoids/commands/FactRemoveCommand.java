@@ -29,7 +29,7 @@ public class FactRemoveCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String commander = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final String factName = args.remove(0).toLowerCase();
         final Factoid fact = module.delFact(channel.getChannelGroup().getTenant(), factName);
         if(fact == null) {
@@ -70,7 +70,7 @@ public class FactRemoveCommand extends Command {
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         if(args.size() < 1) {
             Chat.i18nMessage(module, chatMessage.getChannel(), "invalid.args",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "usage", getUsage());
         }
     }

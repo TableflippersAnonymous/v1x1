@@ -36,18 +36,18 @@ import java.util.List;
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String senderName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final String timerStr = args.get(0);
         final Timer t = module.getTimer(channel.getChannelGroup().getTenant(), timerStr);
         if(t == null) {
             Chat.i18nMessage(module, channel, "invalid.timer",
-                    "commander", senderName,
+                    "commander", commander,
             "id", timerStr);
         } else {
             final StringBuilder sb = new StringBuilder();
             if(t.getEntries().size() < 1) {
                 Chat.i18nMessage(module, channel, "info.noentries",
-                        "commander", senderName,
+                        "commander", commander,
                         "id", timerStr,
                         "interval", t.getInterval() / 1000);
             } else {
@@ -61,7 +61,7 @@ import java.util.List;
                     sb.append("\"");
                 }
                 Chat.i18nMessage(module, channel, "info.success",
-                        "commander", senderName,
+                        "commander", commander,
                         "id", timerStr,
                         "interval", t.getInterval() / 1000,
                         "enabled", (t.isEnabled() ? "enabled" : "disabled"),
@@ -89,9 +89,9 @@ import java.util.List;
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String displayName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         Chat.i18nMessage(module, channel, "info.notarget",
-                "commander", displayName,
+                "commander", commander,
                 "usage", getUsage());
     }
 }

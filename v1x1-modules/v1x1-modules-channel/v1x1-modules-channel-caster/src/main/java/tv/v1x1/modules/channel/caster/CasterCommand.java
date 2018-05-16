@@ -61,7 +61,7 @@ class CasterCommand extends Command {
         final Channel channel = chatMessage.getChannel();
         String targetStreamer = args.get(0);
         Platform targetPlatform = channel.getPlatform();
-        final String commander = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         try {
             targetPlatform = Platform.valueOf(command.toUpperCase());
         } catch(IllegalArgumentException ex) {

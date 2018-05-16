@@ -34,17 +34,14 @@ import java.util.List;
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         switch (args.size()) {
-            case 0:
-                Chat.i18nMessage(module, chatMessage.getChannel(), "add.notarget",
-                    "commander", chatMessage.getSender().getDisplayName(),
+            case 0: Chat.i18nMessage(module, chatMessage.getChannel(), "add.notarget",
+                    "commander", chatMessage.getSender().getMention(),
                     "usage", getUsage()
                 );
                 break;
-            case 1:
-                Chat.i18nMessage(module, chatMessage.getChannel(), "add.nomessage",
-                    "commander", chatMessage.getSender().getDisplayName(),
-                    "usage", getUsage()
-                );
+            case 1: Chat.i18nMessage(module, chatMessage.getChannel(), "add.nomessage",
+                    "commander", chatMessage.getSender().getMention(),
+                    "usage", getUsage());
                 break;
         }
     }
@@ -52,18 +49,18 @@ import java.util.List;
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String senderName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final String timerName = args.remove(0);
         final String message = String.join(" ", args);
         if(module.addTimerEntry(channel.getChannelGroup().getTenant(), timerName, message))
             Chat.i18nMessage(module, channel, "add.success",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", timerName,
                     "preview", Shorten.genPreview(message)
             );
         else
             Chat.i18nMessage(module, channel, "invalid.timer",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", timerName
             );
     }

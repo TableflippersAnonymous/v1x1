@@ -37,18 +37,18 @@ public class TimerCreateCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String senderName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final long interval;
         try {
             interval = Long.parseLong(args.get(1)) * 1000;
         } catch (NumberFormatException e) {
             Chat.i18nMessage(module, channel, "invalid.interval",
-                    "commander", senderName);
+                    "commander", commander);
             return;
         }
         if(interval < (10*1000)) {
             Chat.i18nMessage(module, channel, "invalid.interval",
-                    "commander", senderName);
+                    "commander", commander);
             return;
         }
         LOG.debug("Creating timer with interval {}", interval);
@@ -56,12 +56,12 @@ public class TimerCreateCommand extends Command {
         final String timerId = args.get(0);
         if(module.createTimer(channel.getChannelGroup().getTenant(), timerId, timer)) {
             Chat.i18nMessage(module, channel, "create.success",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", timerId
             );
         } else {
             Chat.i18nMessage(module, channel, "create.alreadyexists",
-                    "commander", senderName,
+                    "commander", commander,
                     "id", timerId);
         }
     }
@@ -94,22 +94,22 @@ public class TimerCreateCommand extends Command {
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String displayName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         switch (args.size()) {
             case 0:
                 Chat.i18nMessage(module, channel, "create.notarget",
-                        "commander", displayName,
+                        "commander", commander,
                         "usage", getUsage()
                 );
                 break;
             case 1:
                 Chat.i18nMessage(module, channel, "invalid.interval",
-                        "commander", displayName
+                        "commander", commander
                 );
                 break;
             default:
                 Chat.i18nMessage(module, channel, "toomanyargs",
-                        "commander", displayName,
+                        "commander", commander,
                         "usage", getUsage()
                 );
                 break;

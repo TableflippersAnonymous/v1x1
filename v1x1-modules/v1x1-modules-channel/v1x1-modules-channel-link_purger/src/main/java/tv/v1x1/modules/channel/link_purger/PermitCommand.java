@@ -1,7 +1,6 @@
 package tv.v1x1.modules.channel.link_purger;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
@@ -53,8 +52,9 @@ public class PermitCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String commanderName = chatMessage.getSender().getDisplayName();
+        final String commanderName = chatMessage.getSender().getMention();
         try {
+            // TODO: Create and use a target-finding service, then convert !permit to use it
             final String targetId = module.getStateManager()
                     .getDisplayNameService()
                     .getIdFromDisplayName(channel, args.get(0));

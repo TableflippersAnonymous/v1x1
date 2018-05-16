@@ -28,7 +28,7 @@ public class FactAliasCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String commander = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final String aliasName = args.get(1).toLowerCase();
         String aliasTargetName = args.get(0).toLowerCase();
         final Factoid aliasTarget = module.getFact(channel.getChannelGroup().getTenant(), aliasTargetName);
@@ -83,7 +83,7 @@ public class FactAliasCommand extends Command {
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         if(args.size() < 2) {
             Chat.i18nMessage(module, chatMessage.getChannel(), "invalid.args",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "usage", getUsage());
         }
     }

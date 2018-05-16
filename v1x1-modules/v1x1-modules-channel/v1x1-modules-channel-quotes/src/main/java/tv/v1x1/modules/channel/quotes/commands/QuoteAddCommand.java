@@ -28,7 +28,7 @@ public class QuoteAddCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final String commander = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final Channel channel = chatMessage.getChannel();
         final String game = module.getGame(channel);
         final String quoteText = String.join(" ", args);
@@ -68,7 +68,7 @@ public class QuoteAddCommand extends Command {
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         Chat.i18nMessage(module, chatMessage.getChannel(), "generic.invalid.args",
-                "commander", chatMessage.getSender().getDisplayName(),
+                "commander", chatMessage.getSender().getMention(),
                 "command", toString(),
                 "usage", getUsage());
     }

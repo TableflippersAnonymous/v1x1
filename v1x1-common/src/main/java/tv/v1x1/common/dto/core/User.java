@@ -49,6 +49,12 @@ public abstract class User {
 
     public abstract Platform getPlatform();
 
+    /**
+     * Get the string that the User's {@link Platform} uses to highlight/mention a user
+     * @return String
+     */
+    public abstract String getMention();
+
     @Override
     public boolean equals(final Object o) {
         if (this == o) return true;
