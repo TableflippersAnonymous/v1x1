@@ -27,7 +27,7 @@ public class QuoteGetCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String commander = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final Quote quote;
         if(args.size() > 0) {
             try {

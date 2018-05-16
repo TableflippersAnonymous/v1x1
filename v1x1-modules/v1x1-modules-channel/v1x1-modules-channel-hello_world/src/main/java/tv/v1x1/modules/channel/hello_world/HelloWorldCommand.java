@@ -36,20 +36,20 @@ public class HelloWorldCommand extends Command {
     @Override
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         Chat.i18nMessage(module, chatMessage.getChannel(), "hello.badargs",
-                "commander", chatMessage.getSender().getDisplayName(),
+                "commander", chatMessage.getSender().getMention(),
                 "usage", getUsage());
     }
 
     @Override
     public void handleNoPermissions(final ChatMessage chatMessage, final String command, final List<String> args) {
         Chat.i18nMessage(module, chatMessage.getChannel(), "hello.noperms",
-                "commander", chatMessage.getSender().getDisplayName(),
+                "commander", chatMessage.getSender().getMention(),
                 "perm", "hello.use");
     }
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final String resp = module.language.message(module.toDto(), "hello", ImmutableMap.of("user", chatMessage.getSender().getDisplayName()));
+        final String resp = module.language.message(module.toDto(), "hello", ImmutableMap.of("user", chatMessage.getSender().getMention()));
         module.crsc.sendMessage(chatMessage.getChannel(), resp);
     }
 }

@@ -57,7 +57,7 @@ public class UptimeCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final String commander = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final String messageTarget = (args.size() > 0 ? args.get(0) : commander);
         final Channel channel = chatMessage.getChannel();
         if(! channel.getChannelGroup().getPlatform().equals(Platform.TWITCH)) {

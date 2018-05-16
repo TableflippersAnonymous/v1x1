@@ -34,14 +34,14 @@ import java.util.Set;
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String senderName = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final Set<String> timers = module.listTimers(channel.getChannelGroup().getTenant());
         if(timers.size() < 1) {
             Chat.i18nMessage(module, channel, "list.empty",
-                    "commander", senderName);
+                    "commander", commander);
         } else {
             Chat.i18nMessage(module, channel, "list.success",
-                    "commander", senderName,
+                    "commander", commander,
                     "timers", String.join(", ", timers)
             );
         }

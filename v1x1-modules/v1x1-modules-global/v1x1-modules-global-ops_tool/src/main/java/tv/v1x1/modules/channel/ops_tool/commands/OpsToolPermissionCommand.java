@@ -91,7 +91,7 @@ public class OpsToolPermissionCommand extends Command {
                 handleArgMismatch(chatMessage, command, args);
         } catch(Exception ex) {
             Chat.i18nMessage(opsTool, chatMessage.getChannel(), "generic.error",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "message", ex.getClass().getSimpleName());
             LOG.info("OpsTool broke...", ex);
         }

@@ -69,12 +69,12 @@ public class LinkPurgerListener implements EventListener {
         if(offenseNumber < 2) {
             Chat.purge(module, channel, sender, 1, "Unpermitted link");
             Chat.i18nMessage(module, channel, "purged",
-                    "user", sender.getDisplayName()
+                    "user", sender.getMention()
             );
         } else {
             Chat.punish(module, channel, sender, 600, "Unpermitted link");
             Chat.i18nMessage(module, channel, "timeout",
-                    "user", sender.getDisplayName()
+                    "user", sender.getMention()
             );
         }
     }

@@ -27,7 +27,7 @@ public class FactEnableCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
-        final String commander = chatMessage.getSender().getDisplayName();
+        final String commander = chatMessage.getSender().getMention();
         final String factName = args.remove(0).toLowerCase();
         final boolean result = module.hideFact(channel.getChannelGroup().getTenant(), factName, false);
         if(!result) {
@@ -61,7 +61,7 @@ public class FactEnableCommand extends Command {
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         if(args.size() < 1) {
             Chat.i18nMessage(module, chatMessage.getChannel(), "invalid.args",
-                    "commander", chatMessage.getSender().getDisplayName(),
+                    "commander", chatMessage.getSender().getMention(),
                     "usage", getUsage());
         }
     }
