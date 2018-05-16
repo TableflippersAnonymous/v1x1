@@ -29,7 +29,7 @@
     "@fortawesome/fontawesome-free-brands": "5.0.2",
     "@fortawesome/fontawesome-free-regular": "5.0.13",
     "@fortawesome/fontawesome-pro-regular": "5.0.2",
-    "@ng-bootstrap/ng-bootstrap": "1.1.2",
+    "@ng-bootstrap/ng-bootstrap": "2.0.0",
     "@types/bytebuffer": "5.0.37",
     "ajv": "6.4.0",
     "bytebuffer": "5.0.1",
