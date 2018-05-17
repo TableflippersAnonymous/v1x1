@@ -1,6 +1,8 @@
 # v1x1
 I make your chat better!
 
+[Website](https://v1x1.tv/)
+
 # Badges
 
 | Purpose  | Badge |
