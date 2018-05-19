@@ -419,7 +419,7 @@ public class DiscordClientHandler implements MessageHandler.Whole<String> {
     private void send(final Payload payload) {
         try {
             final String s = mapper.writeValueAsString(payload);
-            LOG.debug("[{}] WS Write: {}", shardKey, s);
+            LOG.debug("[{}] WS Write: {}", shardKey, s.replace(discordModule.getInjector().getInstance(DiscordApi.class).getOauthToken(), "<oauth token remove>"));
             session.getAsyncRemote().sendText(s);
         } catch (final JsonProcessingException e) {
             LOG.error("[{}] Error processing JSON", shardKey, e);
