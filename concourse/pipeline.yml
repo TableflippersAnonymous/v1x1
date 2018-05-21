@@ -10,20 +10,20 @@ resources:
     source:
       uri: git@github.com:LegionServers/v1x1.git
       branch: master
-      private_key: {{v1x1-deploy-key}}
+      private_key: ((v1x1.v1x1-deploy-key))
   - name: kubernetes
     type: kubernetes
     source:
       cluster_url: https://k8s-master.tblflp.zone
       namespace: v1x1
       username: circleci
-      password: {{kube-pass}}
+      password: ((v1x1.kube-pass))
   - name: v1x1-web
     type: s3
     source:
       bucket: v1x1-web
-      access_key_id: {{aws-access-key}}
-      secret_access_key: {{aws-secret-key}}
+      access_key_id: ((v1x1.aws-access-key))
+      secret_access_key: ((v1x1.aws-secret-key))
       regexp: (.*)
 
   - name: v1x1-base
@@ -31,10 +31,10 @@ resources:
     source:
       repository: registry.tblflp.zone:5443/v1x1-base
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
 
   # Channel Modules:
   - name: v1x1-caster
@@ -42,73 +42,73 @@ resources:
     source:
       repository: registry.tblflp.zone:5443/v1x1-caster
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-echo
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-echo
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-factoids
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-factoids
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-hello_world
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-hello_world
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-link_purger
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-link_purger
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-quotes
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-quotes
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-timed_messages
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-timed_messages
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-uptime
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-uptime
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
 
   # Core Modules:
   - name: v1x1-api
@@ -116,64 +116,64 @@ resources:
     source:
       repository: registry.tblflp.zone:5443/v1x1-api
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-chat_router
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-chat_router
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-cli
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-cli
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-event_router
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-event_router
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-scheduler
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-scheduler
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-tmi
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-tmi
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
   - name: v1x1-discord
     type: docker-image
     source:
       repository: registry.tblflp.zone:5443/v1x1-discord
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
 
   # Global Modules:
   - name: v1x1-ops_tool
@@ -181,10 +181,10 @@ resources:
     source:
       repository: registry.tblflp.zone:5443/v1x1-ops_tool
       username: tblflp
-      password: {{docker-pass}}
+      password: ((v1x1.docker-pass))
       ca_certs:
       - domain: registry.tblflp.zone:5443
-        cert: {{docker-ca}}
+        cert: ((v1x1.docker-ca))
 
 
 jobs:
@@ -195,7 +195,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-common.yml
 
@@ -226,7 +226,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -267,7 +267,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -308,7 +308,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -349,7 +349,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -390,7 +390,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -431,7 +431,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -472,7 +472,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -513,7 +513,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -554,7 +554,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -595,7 +595,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -636,7 +636,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -665,7 +665,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -706,7 +706,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -747,7 +747,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -787,7 +787,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -828,7 +828,7 @@ jobs:
       - task: prep-maven
         file: v1x1-source/concourse/prep-maven.yml
         params:
-          NEXUS_PASSWORD: {{nexus-pass}}
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
       - task: build
         file: v1x1-source/concourse/build-module.yml
         params:
@@ -886,5 +886,5 @@ jobs:
       - task: invalidate
         file: v1x1-source/concourse/invalidate-cloudfront.yml
         params:
-          AWS_ACCESS_KEY_ID: {{aws-access-key}}
-          AWS_SECRET_ACCESS_KEY: {{aws-secret-key}}
+          AWS_ACCESS_KEY_ID: ((v1x1.aws-access-key))
+          AWS_SECRET_ACCESS_KEY: ((v1x1.aws-secret-key))
