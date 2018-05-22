@@ -22,7 +22,8 @@ import {ConfigurableComponent} from "../configurable";
                                                    [complexFields]="complexFields"
                                                    [originalConfiguration]="originalConfiguration[i]"
                                                    [configuration]="configuration[i]"
-                                                   (configurationChange)="configuration[i] = $event; configChanged()"></configuration-field-value-complex>
+                                                   (configurationChange)="configuration[i] = $event; configChanged()"
+                                                   [activeTenant]="activeTenant"></configuration-field-value-complex>
               </mat-card-content>
               <mat-card-actions>
                 <button mat-raised-button color="accent" (click)="delIdx(i);">&times;</button>

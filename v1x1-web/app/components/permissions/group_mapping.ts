@@ -5,6 +5,7 @@ import {V1x1GlobalState} from "../../services/global_state";
 import {V1x1ConfigurationDefinition} from "../../model/v1x1_configuration_definition";
 import {JsonConvert} from "json2typescript/index";
 import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_group_platform_mapping_wrapper";
+import {V1x1Tenant} from "../../model/v1x1_tenant";
 
 @Component({
   selector: 'permissions-group-mapping-page',
@@ -20,7 +21,7 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_g
           <mat-card-content>
             <configuration-field *ngFor="let field of configurationDefinition.fields"
                                  [field]="field" [complexFields]="configurationDefinition.complexFields"
-                                 [originalConfiguration]="originalConfiguration[field.jsonField]"
+                                 [originalConfiguration]="originalConfiguration[field.jsonField]" [activeTenant]="activeTenant"
                                  [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
           </mat-card-content>
           <mat-card-actions>
@@ -33,6 +34,7 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_g
   `
 })
 export class PermissionsGroupMappingComponent {
+  @Input() activeTenant: V1x1Tenant;
   channelGroupPlatformMappingValue: V1x1ChannelGroupPlatformMappingWrapper;
   originalConfiguration: Object = {};
   configuration: Object = {};
@@ -66,9 +68,9 @@ export class PermissionsGroupMappingComponent {
         },
         {
           display_name: "Group ID",
-          description: "This is the v1x1 group ID.",
+          description: "This is the v1x1 group.",
           default_value: "null",
-          config_type: "STRING",
+          config_type: "GROUP",
           requires: [],
           tenant_permission: "READ_WRITE",
           json_field: "groupId",

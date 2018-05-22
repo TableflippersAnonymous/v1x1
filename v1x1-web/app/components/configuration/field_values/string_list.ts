@@ -7,7 +7,7 @@ import {ConfigurableComponent} from "../configurable";
   template: `
     <div *ngFor="let elem of configuration; let i = index" style="padding-left: 10px; margin-bottom: 1rem;" class="config-group" [class.config-group-dirty]="configIdxDirty(i)">
       <div class="input-group">
-        <configuration-field-value-string [field]="field" [originalConfiguration]="originalConfiguration[i]" [configuration]="configuration[i]" (configurationChange)="configuration[i] = $event; configChanged()"></configuration-field-value-string>
+        <configuration-field-value-string [field]="field" [originalConfiguration]="originalConfiguration[i]" [configuration]="configuration[i]" (configurationChange)="configuration[i] = $event; configChanged()" [activeTenant]="activeTenant"></configuration-field-value-string>
         <span class="input-group-append">
           <button mat-button color="accent" (click)="delIdx(i);">&times;</button>
         </span>

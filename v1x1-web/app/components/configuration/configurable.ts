@@ -1,8 +1,10 @@
 import {EventEmitter, Input, Output} from "@angular/core";
+import {V1x1Tenant} from "../../model/v1x1_tenant";
 
 export class ConfigurableComponent {
   public originalConfigurationValue: any;
   public configurationValue: any;
+  @Input() public activeTenant: V1x1Tenant;
   @Output() public configurationChange = new EventEmitter();
   @Output() public configDirtyChange = new EventEmitter();
   @Output() public originalConfigurationChange = new EventEmitter();
