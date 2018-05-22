@@ -240,7 +240,8 @@ public class DiscordClientHandler implements MessageHandler.Whole<String> {
     }
 
     private void handleEvent(final GuildDeleteEvent payload) {
-        deleteChannelGroup(payload.getGuild());
+        if(!payload.getGuild().isUnavailable())
+            deleteChannelGroup(payload.getGuild());
     }
 
     private void handleEvent(final GuildBanAddEvent payload) {
