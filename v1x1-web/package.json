@@ -14,7 +14,7 @@
     "prebuild": "npm run clean:dist"
   },
   "dependencies": {
-    "@angular/animations": "6.0.2",
+    "@angular/animations": "6.0.3",
     "@angular/cdk": "6.1.0",
     "@angular/common": "6.0.2",
     "@angular/compiler": "6.0.2",
