@@ -30,6 +30,7 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../model/v1x1_channel_grou
 import {HttpClient} from "@angular/common/http";
 import {V1x1PermissionDefinition} from "../model/v1x1_permission_definition";
 import {catchError, map, mergeAll} from 'rxjs/operators';
+import {V1x1ChannelGroupPlatformGroup} from "../model/v1x1_channel_group_platform_group";
 
 @Injectable()
 export class V1x1Api {
@@ -461,12 +462,56 @@ export class V1x1Api {
     ).pipe(map(r => new V1x1TenantPlatformMapping(r)));
   }
 
+  putChannelGroupPlatformMapping(tenantId: string, platform: string, channelGroupId: string, platformGroup: string, groupId: string): Observable<string> {
+    return this.webInfo.getWebConfig().pipe(map((wc) =>
+      this.http.put(
+        wc.apiBase + '/tenants/' + tenantId + '/channels/' + platform + '/' + channelGroupId + '/mappings/' + platformGroup,
+        JsonConvert.serializeObject({
+          'value': groupId
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: this.globalState.authorization.getCurrent()
+          }
+        }
+      )
+        .pipe(
+          map(r => JsonConvert.deserializeObject(r, V1x1ApiString)),
+          map((r: V1x1ApiString) => r.value)
+        )
+    ), mergeAll());
+  }
+
+  deleteChannelGroupPlatformMapping(tenantId: string, platform: string, channelGroupId: string, platformGroup: string): Observable<boolean> {
+    return this.webInfo.getWebConfig().pipe(map((wc) =>
+      this.http.delete(
+        wc.apiBase + '/tenants/' + tenantId + '/channels/' + platform + '/' + channelGroupId + '/mappings/' + platformGroup,
+        this.getAuthorization()
+      )
+        .pipe(map(r => true))
+    ), mergeAll());
+  }
+
   getPermissionDefinitions(): Observable<V1x1PermissionDefinition[]> {
     return this.webInfo.getWebConfig().pipe(map((wc) =>
       this.http.get(wc.apiBase + '/platform/config-definitions/permission').pipe(
         map(r => JsonConvert.deserializeObject(r, V1x1List)),
         map((r: V1x1List<any>) => r.entries.map(e => JsonConvert.deserializeObject(e, V1x1PermissionDefinition))),
         catchError((err, caught) => {console.log(err, caught); return of([]);}))
+    ), mergeAll());
+  }
+
+  getChannelGroupPlatformGroups(tenantId: string, platform: string, channelGroupId: string): Observable<V1x1ChannelGroupPlatformGroup[]> {
+    return this.webInfo.getWebConfig().pipe(map((wc) =>
+      this.http.get(
+        wc.apiBase + '/tenants/' + tenantId + '/channels/' + platform + '/' + channelGroupId + '/platform-groups',
+        this.getAuthorization()
+      ).pipe(
+        map(r => JsonConvert.deserializeObject(r, V1x1List)),
+        map((r: V1x1List<any>) => r.entries.map(e => JsonConvert.deserializeObject(e, V1x1ChannelGroupPlatformGroup))),
+        catchError((err, caught) => of([]))
+      )
     ), mergeAll());
   }
 }

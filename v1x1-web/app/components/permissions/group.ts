@@ -19,7 +19,7 @@ import {V1x1ApiCache} from "../../services/api_cache";
           <mat-card-content>
             <configuration-field *ngFor="let field of configurationDefinition.fields"
                                  [field]="field" [complexFields]="configurationDefinition.complexFields"
-                                 [originalConfiguration]="originalConfiguration[field.jsonField]"
+                                 [originalConfiguration]="originalConfiguration[field.jsonField]" [activeTenant]="activeTenant"
                                  [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
           </mat-card-content>
           <mat-card-actions>
@@ -177,6 +177,7 @@ export class PermissionsGroupComponent {
 
   deleteGroup() {
     this.api.deleteGroup(this.group.group.tenantId, this.group.group.groupId).subscribe(s => {
+      this.cachedApi.clearGroupsCache();
       this.update.emit(true);
     });
   }

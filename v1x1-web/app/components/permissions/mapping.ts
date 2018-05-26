@@ -12,7 +12,7 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_g
         <ng-template mat-tab-label>
           <platform-formatter [platform]="channelGroupPlatformMapping.channelGroup.platform">{{channelGroupPlatformMapping.channelGroup.displayName}}</platform-formatter>
         </ng-template>
-        <permissions-group-mapping-page [channelGroupPlatformMapping]="channelGroupPlatformMapping"></permissions-group-mapping-page>
+        <permissions-group-mapping-page [channelGroupPlatformMapping]="channelGroupPlatformMapping" [activeTenant]="globalState.activeTenant.get() | async"></permissions-group-mapping-page>
       </mat-tab>
     </mat-tab-group>
   `
