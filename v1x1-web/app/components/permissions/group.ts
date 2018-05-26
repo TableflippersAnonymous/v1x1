@@ -177,6 +177,7 @@ export class PermissionsGroupComponent {
 
   deleteGroup() {
     this.api.deleteGroup(this.group.group.tenantId, this.group.group.groupId).subscribe(s => {
+      this.cachedApi.clearGroupsCache();
       this.update.emit(true);
     });
   }

@@ -4,11 +4,13 @@ import {V1x1Module} from "../model/v1x1_module";
 import {Observable} from "rxjs";
 import {V1x1PermissionDefinition} from "../model/v1x1_permission_definition";
 import {publishReplay, refCount} from "rxjs/operators";
+import {V1x1GroupMembership} from "../model/v1x1_group_membership";
 
 @Injectable()
 export class V1x1ApiCache {
   private modules: Observable<V1x1Module[]>;
   private permissions: Observable<V1x1PermissionDefinition[]>;
+  private groups: {[key: string]: Observable<V1x1GroupMembership[]>} = {};
 
   constructor(private api: V1x1Api) {}
 
@@ -27,5 +29,15 @@ export class V1x1ApiCache {
     if(!this.permissions)
       this.permissions = this.api.getPermissionDefinitions().pipe(publishReplay(1), refCount());
     return this.permissions;
+  }
+
+  getGroups(tenantId: string): Observable<V1x1GroupMembership[]> {
+    if(!this.groups[tenantId])
+      this.groups[tenantId] = this.api.getTenantGroupWithMemberships(tenantId).pipe(publishReplay(1), refCount());
+    return this.groups[tenantId];
+  }
+
+  clearGroupsCache(): void {
+    this.groups = {};
   }
 }

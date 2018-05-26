@@ -18,6 +18,9 @@ import {map, mergeAll} from "rxjs/operators";
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <span class="input-group-append" *ngIf="configDirty()">
+      <button mat-button color="accent" (click)="abandonChanges()"><i class="far fa-undo"></i></button>
+    </span>
 `
 })
 export class ConfigurationFieldValueGroupComponent extends ConfigurableComponent implements OnInit, OnDestroy, OnChanges {
@@ -45,7 +48,7 @@ export class ConfigurationFieldValueGroupComponent extends ConfigurableComponent
   reconfigure(): void {
     if(this.subscription != null)
       this.subscription.unsubscribe();
-    this.subscription = this.globalState.activeTenant.get().pipe(map(activeTenant => this.api.getTenantGroupWithMemberships(activeTenant.id)), mergeAll()).subscribe(
+    this.subscription = this.globalState.activeTenant.get().pipe(map(activeTenant => this.apiCache.getGroups(activeTenant.id)), mergeAll()).subscribe(
       groups => {
         this.groups = groups;
       }

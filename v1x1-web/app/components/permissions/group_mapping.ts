@@ -25,8 +25,8 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
                                  [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
           </mat-card-content>
           <mat-card-actions>
-            <button class="btn btn-primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
-            <button class="btn btn-secondary" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
+            <button mat-raised-button color="primary" *ngIf="configDirty()" (click)="saveChanges()">Save Changes</button>
+            <button mat-raised-button color="accent" *ngIf="configDirty()" (click)="abandonChanges()">Abandon Changes</button>
           </mat-card-actions>
         </mat-card>
       </form>
