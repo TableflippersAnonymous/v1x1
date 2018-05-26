@@ -5,7 +5,6 @@ import {ConfigurableComponent} from "./configurable";
 import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
 import {V1x1Configuration} from "../../model/v1x1_configuration";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
 import {V1x1ChannelGroup} from "../../model/v1x1_channel_group";
 import {V1x1Channel} from "../../model/v1x1_channel";
 import {V1x1ConfigurationDefinitionField} from "../../model/v1x1_configuration_definition_field";
@@ -44,7 +43,6 @@ export class ConfigurationScopeComponent extends ConfigurableComponent {
   @Input() public v1x1Module: V1x1Module;
   @Input() public configurationDefinition: V1x1ConfigurationDefinition;
   @Input() public scope: string;
-  @Input() public activeTenant: V1x1Tenant;
   @Input() public activeChannelGroup: V1x1ChannelGroup;
   @Input() public activeChannel: V1x1Channel;
   @Input() public enabled: boolean;

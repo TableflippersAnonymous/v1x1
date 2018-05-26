@@ -46,7 +46,7 @@ export class PermissionsGroupsComponent {
 
   recalculateGroups() {
     this.globalState.activeTenant.get().subscribe(tenant => {
-      this.api.getTenantGroupWithMemberships(tenant.id)
+      this.cachedApi.getGroups(tenant.id)
         .subscribe(groups => this.groups = groups);
     });
   }
@@ -55,6 +55,7 @@ export class PermissionsGroupsComponent {
     let newGroupName = this.newGroup;
     this.newGroup = "";
     this.api.createGroup(this.globalState.activeTenant.getCurrent().id, newGroupName).subscribe(newGroup => {
+      this.cachedApi.clearGroupsCache();
       this.recalculateGroups();
     });
   }

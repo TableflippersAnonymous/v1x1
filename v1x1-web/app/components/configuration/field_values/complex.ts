@@ -8,7 +8,8 @@ import {ConfigurableComponent} from "../configurable";
     <configuration-field *ngFor="let complexField of complexFields[field.complexType]"
                          [field]="complexField" [complexFields]="complexFields"
                          [originalConfiguration]="originalConfiguration[complexField.jsonField]"
-                         [configuration]="configuration[complexField.jsonField]" (configurationChange)="setConfigField(complexField.jsonField, $event)"></configuration-field>
+                         [configuration]="configuration[complexField.jsonField]" (configurationChange)="setConfigField(complexField.jsonField, $event)"
+                         [activeTenant]="activeTenant" [channelGroup]="channelGroup"></configuration-field>
   `
 })
 export class ConfigurationFieldValueComplexComponent extends ConfigurableComponent {
