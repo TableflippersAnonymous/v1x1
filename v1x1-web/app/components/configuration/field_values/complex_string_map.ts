@@ -27,7 +27,7 @@ import {ConfigurableComponent} from "../configurable";
                                                    [originalConfiguration]="originalConfiguration[elem]"
                                                    [configuration]="configuration[elem]"
                                                    (configurationChange)="setConfigField(elem, $event)"
-                                                   [activeTenant]="activeTenant"></configuration-field-value-complex>
+                                                   [activeTenant]="activeTenant" [channelGroup]="channelGroup"></configuration-field-value-complex>
               </mat-card-content>
               <mat-card-actions>
                 <button mat-raised-button color="accent" (click)="delKey(elem)">&times;</button>

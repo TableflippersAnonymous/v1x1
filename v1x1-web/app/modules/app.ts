@@ -64,6 +64,7 @@ import {
 import {PermissionFormatterComponent} from "../components/util/permission_formatter";
 import {ConfigurationFieldValuePermissionListComponent} from "../components/configuration/field_values/permission_list";
 import {ConfigurationFieldValueGroupComponent} from "../components/configuration/field_values/group";
+import {ConfigurationFieldValuePlatformGroupComponent} from "../components/configuration/field_values/platform_group";
 
 /**
  * <welcome-page [loggedIn]="loggedIn"></welcome-page>
@@ -147,6 +148,7 @@ const routes: Routes = [
     ConfigurationFieldValueIntegerComponent, ConfigurationFieldValueMasterEnableComponent, ConfigurationFieldValueStringComponent,
     ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
     ConfigurationFieldValueUserListComponent, ConfigurationFieldValuePermissionListComponent, ConfigurationFieldValueGroupComponent,
+    ConfigurationFieldValuePlatformGroupComponent,
     TopNavComponent, TopNavEntryComponent, UserDropdownNavComponent, TenantDropdownNavComponent, NavRouterComponent,
     DashboardPageComponent, HelpPageComponent, LogsPageComponent, UserPageComponent,
     PermissionsPageComponent, PermissionsGroupsComponent, PermissionsGroupComponent, PermissionsMappingComponent, PermissionsGroupMappingComponent,

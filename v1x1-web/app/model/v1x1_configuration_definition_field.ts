@@ -16,7 +16,8 @@ export enum ConfigType {
   USER_LIST,
   PERMISSION,
   PERMISSION_LIST,
-  GROUP
+  GROUP,
+  PLATFORM_GROUP
 }
 
 export enum Permission {

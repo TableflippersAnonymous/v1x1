@@ -5,12 +5,14 @@ import {Observable} from "rxjs";
 import {V1x1PermissionDefinition} from "../model/v1x1_permission_definition";
 import {publishReplay, refCount} from "rxjs/operators";
 import {V1x1GroupMembership} from "../model/v1x1_group_membership";
+import {V1x1ChannelGroupPlatformGroup} from "../model/v1x1_channel_group_platform_group";
 
 @Injectable()
 export class V1x1ApiCache {
   private modules: Observable<V1x1Module[]>;
   private permissions: Observable<V1x1PermissionDefinition[]>;
   private groups: {[key: string]: Observable<V1x1GroupMembership[]>} = {};
+  private platformGroups: {[key: string]: Observable<V1x1ChannelGroupPlatformGroup[]>} = {};
 
   constructor(private api: V1x1Api) {}
 
@@ -39,5 +41,12 @@ export class V1x1ApiCache {
 
   clearGroupsCache(): void {
     this.groups = {};
+  }
+
+  getPlatformGroups(tenantId: string, platform: string, channelGroupId: string): Observable<V1x1ChannelGroupPlatformGroup[]> {
+    let key = tenantId + '/' + platform + '/' + channelGroupId;
+    if(!this.platformGroups[key])
+      this.platformGroups[key] = this.api.getChannelGroupPlatformGroups(tenantId, platform, channelGroupId).pipe(publishReplay(1), refCount());
+    return this.platformGroups[key];
   }
 }
