@@ -218,8 +218,8 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
         scheduledExecutorService = Executors.newScheduledThreadPool(100);
         identifyShortLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "discord/identify/short", 1, 8);
         identifyDailyLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "discord/identify/daily", 900, 86400);
-        lastSeen = getRedisson().getMapCache("Modules|Core|Discord|lastSeen", ByteArrayCodec.INSTANCE);
-        sessionIds = getRedisson().getMapCache("Modules|Core|Discord|sessionIds", ByteArrayCodec.INSTANCE);
+        lastSeen = getRedisson().getMapCache("Modules|Core|Discord|lastSeen|v2", ByteArrayCodec.INSTANCE);
+        sessionIds = getRedisson().getMapCache("Modules|Core|Discord|sessionIds|v2", ByteArrayCodec.INSTANCE);
         roles = getRedisson().getMapCache("Modules|Core|Discord|roles", ByteArrayCodec.INSTANCE);
         voiceStates = getRedisson().getMapCache("Modules|Core|Discord|voiceStates", ByteArrayCodec.INSTANCE);
         eventRouter = getMessageQueueManager().forName(getMainQueueForModule(new Module("event_router")));

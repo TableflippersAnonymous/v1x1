@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +17,7 @@ import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.db.JoinedTwitchChannel;
 import tv.v1x1.common.dto.db.Platform;
+import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.modules.ServiceModule;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
@@ -298,6 +300,21 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
             if (bots.containsKey(channelId))
                 return;
             final Tenant tenant = getTenant(channelId);
+            LOG.debug("Setting ChannelGroupPlatformGroups for {}", channel.getDisplayName());
+            getDaoManager().getDaoChannelGroupPlatformGroups().putOnly(Platform.TWITCH, channelId, ImmutableMap.<String, String>builder()
+                    .put("_DEFAULT_", "Everyone")
+                    .put(MessageTaggedIrcStanza.Badge.ADMIN.name(), "Twitch Admin")
+                    .put(MessageTaggedIrcStanza.Badge.BITS.name(), "Bits")
+                    .put(MessageTaggedIrcStanza.Badge.BROADCASTER.name(), "Broadcaster")
+                    .put(MessageTaggedIrcStanza.Badge.GLOBAL_MOD.name(), "Global Mod")
+                    .put(MessageTaggedIrcStanza.Badge.MODERATOR.name(), "Channel Moderator")
+                    .put(MessageTaggedIrcStanza.Badge.PREMIUM.name(), "Twitch Prime")
+                    .put(MessageTaggedIrcStanza.Badge.STAFF.name(), "Twitch Staff")
+                    .put(MessageTaggedIrcStanza.Badge.SUBSCRIBER.name(), "Subscriber")
+                    .put(MessageTaggedIrcStanza.Badge.TURBO.name(), "Twitch Turbo")
+                    .put(MessageTaggedIrcStanza.Badge.TWITCHCON2017.name(), "TwitchCon17 Attendee")
+                    .build()
+            );
             LOG.debug("Getting tenant configuration for {}/{}", channel.getDisplayName(), tenant);
             final TmiUserConfiguration tenantConfiguration = getConfiguration(tenant.getChannel(Platform.TWITCH, channelId, channelId + ":main").get());
             final String oauthToken;

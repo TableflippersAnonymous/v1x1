@@ -6,6 +6,7 @@ import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
 import tv.v1x1.common.dao.DAOChannelConfiguration;
 import tv.v1x1.common.dao.DAOChannelGroupConfiguration;
+import tv.v1x1.common.dao.DAOChannelGroupPlatformGroups;
 import tv.v1x1.common.dao.DAOConfigurationDefinition;
 import tv.v1x1.common.dao.DAOGlobalConfiguration;
 import tv.v1x1.common.dao.DAOGlobalUser;
@@ -42,6 +43,7 @@ public class DAOManager {
     private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
     private final DAOI18nDefinition daoI18nDefinition;
     private final DAOPermissionDefinition daoPermissionDefinition;
+    private final DAOChannelGroupPlatformGroups daoChannelGroupPlatformGroups;
 
     @Inject
     public DAOManager(final RedissonClient redissonClient, final MappingManager mappingManager, final DisplayNameService displayNameService) {
@@ -60,6 +62,7 @@ public class DAOManager {
         daoJoinedTwitchChannel = new DAOJoinedTwitchChannel(mappingManager);
         daoI18nDefinition = new DAOI18nDefinition(mappingManager);
         daoPermissionDefinition = new DAOPermissionDefinition(mappingManager);
+        daoChannelGroupPlatformGroups = new DAOChannelGroupPlatformGroups(mappingManager);
     }
 
     public DAOTenant getDaoTenant() {
@@ -120,5 +123,9 @@ public class DAOManager {
 
     public DAOPermissionDefinition getDaoPermissionDefinition() {
         return daoPermissionDefinition;
+    }
+
+    public DAOChannelGroupPlatformGroups getDaoChannelGroupPlatformGroups() {
+        return daoChannelGroupPlatformGroups;
     }
 }

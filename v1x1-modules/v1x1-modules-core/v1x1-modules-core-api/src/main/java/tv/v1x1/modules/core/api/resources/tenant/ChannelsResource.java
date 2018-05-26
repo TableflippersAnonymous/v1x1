@@ -1,6 +1,7 @@
 package tv.v1x1.modules.core.api.resources.tenant;
 
 import com.google.inject.Inject;
+import tv.v1x1.common.dao.DAOChannelGroupPlatformGroups;
 import tv.v1x1.common.dao.DAOJoinedTwitchChannel;
 import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dto.core.Tenant;
@@ -13,6 +14,7 @@ import tv.v1x1.modules.core.api.api.rest.ApiList;
 import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.rest.Channel;
 import tv.v1x1.modules.core.api.api.rest.ChannelGroup;
+import tv.v1x1.modules.core.api.api.rest.ChannelGroupPlatformGroup;
 import tv.v1x1.modules.core.api.auth.Authorizer;
 
 import javax.ws.rs.ClientErrorException;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 /**
  * @author Naomi
@@ -52,6 +55,7 @@ import java.util.stream.Collectors;
 public class ChannelsResource {
     private final DAOTenant daoTenant;
     private final DAOJoinedTwitchChannel daoJoinedTwitchChannel;
+    private final DAOChannelGroupPlatformGroups daoChannelGroupPlatformGroups;
     private final Authorizer authorizer;
     private final ApiModule module;
 
@@ -59,6 +63,7 @@ public class ChannelsResource {
     public ChannelsResource(final DAOManager daoManager, final Authorizer authorizer, final ApiModule module) {
         this.daoTenant = daoManager.getDaoTenant();
         this.daoJoinedTwitchChannel = daoManager.getDaoJoinedTwitchChannel();
+        this.daoChannelGroupPlatformGroups = daoManager.getDaoChannelGroupPlatformGroups();
         this.authorizer = authorizer;
         this.module = module;
     }
@@ -127,6 +132,21 @@ public class ChannelsResource {
     public Response unlinkChannel(@PathParam("tenant_id") final String tenantId, @PathParam("platform") final String platform,
                                   @PathParam("channel_id") final String channelId) {
         return null; //TODO
+    }
+
+    @Path("/{platform}/{channel_group_id}/platform-groups")
+    @GET
+    public ApiList<ChannelGroupPlatformGroup> getPlatformGroups(@HeaderParam("Authorization") final String authorization,
+                                                                @PathParam("tenant_id") final String tenantId,
+                                                                @PathParam("platform") final String platformStr,
+                                                                @PathParam("channel_group_id") final String channelGroupId) {
+        final Tenant tenant = getTenant(tenantId);
+        authorizer.tenantAuthorization(tenant.getId().getValue(), authorization).ensurePermission("api.tenants.read");
+        final Platform platform = getDtoPlatform(platformStr);
+        final ChannelGroup channelGroup = getDtoChannelGroup(tenant, platform, channelGroupId);
+        return new ApiList<>(StreamSupport.stream(daoChannelGroupPlatformGroups.getAll(platform, channelGroup.getId()).spliterator(), false)
+                .map(channelGroupPlatformGroup -> new ChannelGroupPlatformGroup(channelGroupPlatformGroup.getName(), channelGroupPlatformGroup.getDisplayName()))
+                .collect(Collectors.toList()));
     }
 
     @Path("/{platform}/{channel_group_id}/state")
