@@ -479,3 +479,14 @@ CREATE TABLE migrations (
 );
 
 INSERT INTO migrations (version, name, migrated_at) VALUES (10, 'i18n_module_definition, permission_module_definition, and migrations', NOW());
+
+/* Version 11 */
+CREATE TABLE channel_group_platform_group (
+    platform int,
+    channel_group_id text,
+    name text,
+    display_name text,
+    PRIMARY KEY ((platform, channel_group_id), name)
+);
+
+INSERT INTO migrations (version, name, migrated_at) VALUES (11, 'channel_group_platform_group', NOW());

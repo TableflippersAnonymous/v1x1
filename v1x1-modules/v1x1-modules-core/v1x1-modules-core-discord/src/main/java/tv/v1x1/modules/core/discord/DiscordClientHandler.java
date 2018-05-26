@@ -11,6 +11,7 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.DiscordChannel;
 import tv.v1x1.common.dto.core.DiscordUser;
 import tv.v1x1.common.dto.db.ChannelGroup;
+import tv.v1x1.common.dto.db.ChannelGroupPlatformGroup;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.messages.events.DiscordChatMessageEvent;
@@ -21,6 +22,7 @@ import tv.v1x1.common.services.discord.dto.guild.CompleteGuild;
 import tv.v1x1.common.services.discord.dto.guild.Guild;
 import tv.v1x1.common.services.discord.dto.guild.GuildMember;
 import tv.v1x1.common.services.discord.dto.guild.UnavailableGuild;
+import tv.v1x1.common.services.discord.dto.permissions.Role;
 import tv.v1x1.common.services.discord.dto.user.Status;
 import tv.v1x1.common.services.discord.dto.user.StatusUpdate;
 import tv.v1x1.common.services.discord.dto.user.User;
@@ -74,12 +76,14 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Created by cobi on 4/11/2018.
@@ -273,15 +277,29 @@ public class DiscordClientHandler implements MessageHandler.Whole<String> {
     }
 
     private void handleEvent(final GuildRoleCreateEvent payload) {
-
+        discordModule.getDaoManager().getDaoChannelGroupPlatformGroups().put(new ChannelGroupPlatformGroup(
+                Platform.DISCORD,
+                payload.getGuildRole().getGuildId(),
+                payload.getGuildRole().getRole().getId(),
+                payload.getGuildRole().getRole().getName()
+        ));
     }
 
     private void handleEvent(final GuildRoleUpdateEvent payload) {
-
+        discordModule.getDaoManager().getDaoChannelGroupPlatformGroups().put(new ChannelGroupPlatformGroup(
+                Platform.DISCORD,
+                payload.getGuildRole().getGuildId(),
+                payload.getGuildRole().getRole().getId(),
+                payload.getGuildRole().getRole().getName()
+        ));
     }
 
     private void handleEvent(final GuildRoleDeleteEvent payload) {
-
+        discordModule.getDaoManager().getDaoChannelGroupPlatformGroups().delete(
+                Platform.DISCORD,
+                payload.getGuildRoleId().getGuildId(),
+                payload.getGuildRoleId().getRoleId()
+        );
     }
 
     private void handleEvent(final MessageCreateEvent payload) {
@@ -458,6 +476,9 @@ public class DiscordClientHandler implements MessageHandler.Whole<String> {
         createMembers(guild.getId(), guild.getMembers());
         for(final Channel channel : guild.getChannels())
             createChannel(guild.getId(), channel);
+        final Map<String, String> roleMap = guild.getRoles().stream().collect(Collectors.toMap(Role::getId, Role::getName));
+        roleMap.put("_DEFAULT_", "Everyone");
+        discordModule.getDaoManager().getDaoChannelGroupPlatformGroups().putOnly(Platform.DISCORD, guild.getId(), roleMap);
     }
 
     private void updateChannelGroup(final Guild guild) {
@@ -466,6 +487,7 @@ public class DiscordClientHandler implements MessageHandler.Whole<String> {
 
     private void deleteChannelGroup(final UnavailableGuild guild) {
         discordModule.getDaoManager().getDaoTenant().removeChannelGroup(discordModule.getTenant(guild.getId()).toDB(), Platform.DISCORD, guild.getId());
+        discordModule.getDaoManager().getDaoChannelGroupPlatformGroups().deleteAll(Platform.DISCORD, guild.getId());
     }
 
     private void createChannel(final String guildId, final Channel channel) {
