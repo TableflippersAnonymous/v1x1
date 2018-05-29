@@ -36,7 +36,7 @@ public class ChannelsResource {
      * because Get Channel is privileged.
      */
     public PrivateChannel getChannel() {
-        return channels.request(TwitchApi.ACCEPT).get().readEntity(PrivateChannel.class);
+        return channels.request(TwitchApi.ACCEPT).get(PrivateChannel.class);
     }
 
     /**
@@ -57,8 +57,7 @@ public class ChannelsResource {
      */
     public Channel updateChannel(final String channelId, final String status, final String game, final Integer delay, final Boolean channelFeedEnabled) {
         return channels.path(channelId).request(TwitchApi.ACCEPT)
-                .put(Entity.entity(new UpdateChannelRequest(new ChannelRequest(status, game, delay, channelFeedEnabled)), MediaType.APPLICATION_JSON))
-                .readEntity(Channel.class);
+                .put(Entity.entity(new UpdateChannelRequest(new ChannelRequest(status, game, delay, channelFeedEnabled)), MediaType.APPLICATION_JSON), Channel.class);
     }
 
     /**
@@ -66,7 +65,7 @@ public class ChannelsResource {
      * @param channelId ID of channel
      */
     public UserList getEditors(final String channelId) {
-        return channels.path(channelId).path("editors").request(TwitchApi.ACCEPT).get().readEntity(UserList.class);
+        return channels.path(channelId).path("editors").request(TwitchApi.ACCEPT).get(UserList.class);
     }
 
     /**
@@ -80,8 +79,7 @@ public class ChannelsResource {
     public FollowerList getFollowers(final String channelId, final Integer limit, final String cursor, final SortDirection direction) {
         return channels.path(channelId).path("follows").queryParam("limit", limit).queryParam("cursor", cursor).queryParam("direction", direction == null ? null : direction.name())
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(FollowerList.class);
+                .get(FollowerList.class);
     }
 
     /**
@@ -90,8 +88,7 @@ public class ChannelsResource {
      */
     public TeamList getTeams(final String channelId) {
         return channels.path(channelId).path("teams").request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(TeamList.class);
+                .get(TeamList.class);
     }
 
     /**
@@ -105,8 +102,7 @@ public class ChannelsResource {
         return channels.path(channelId).path("subscriptions")
                 .queryParam("limit", limit).queryParam("offset", offset).queryParam("direction", direction == null ? null : direction.name().toLowerCase())
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(SubscriberList.class);
+                .get(SubscriberList.class);
     }
 
     /**
@@ -118,8 +114,7 @@ public class ChannelsResource {
     public Subscriber getSubscriber(final String channelId, final String userId) {
         return channels.path(channelId).path("subscriptions").path(userId)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(Subscriber.class);
+                .get(Subscriber.class);
     }
 
     /**
@@ -140,8 +135,7 @@ public class ChannelsResource {
                 .queryParam("language", Joiner.on(",").join(language))
                 .queryParam("sort", sort)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(TotalledVideoList.class);
+                .get(TotalledVideoList.class);
     }
 
     /**
@@ -164,8 +158,7 @@ public class ChannelsResource {
      */
     public PrivateChannel resetStreamKey(final String channelId) {
         return channels.path(channelId).path("stream_key").request(TwitchApi.ACCEPT)
-                .delete()
-                .readEntity(PrivateChannel.class);
+                .delete(PrivateChannel.class);
     }
 
     /**
@@ -174,8 +167,7 @@ public class ChannelsResource {
      */
     public Community getCommunity(final String channelId) {
         return channels.path(channelId).path("community").request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(Community.class);
+                .get(Community.class);
     }
 
     /**

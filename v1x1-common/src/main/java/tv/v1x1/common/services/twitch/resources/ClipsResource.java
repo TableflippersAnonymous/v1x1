@@ -26,8 +26,7 @@ public class ClipsResource {
     public Clip getClip(final String channelName, final String slug) {
         return clips.path(channelName).path(slug)
                 .request(TwitchApi.ACCEPT_V4)
-                .get()
-                .readEntity(Clip.class);
+                .get(Clip.class);
     }
 
     /**
@@ -46,8 +45,7 @@ public class ClipsResource {
                 .queryParam("channel", channel).queryParam("cursor", cursor).queryParam("game", game)
                 .queryParam("limit", limit).queryParam("period", period).queryParam("trending", trending)
                 .request(TwitchApi.ACCEPT_V4)
-                .get()
-                .readEntity(ClipList.class);
+                .get(ClipList.class);
     }
 
     /**
@@ -60,7 +58,6 @@ public class ClipsResource {
         return clips.path("followed")
                 .queryParam("limit", limit).queryParam("cursor", cursor).queryParam("trending", trending)
                 .request(TwitchApi.ACCEPT_V4)
-                .get()
-                .readEntity(ClipList.class);
+                .get(ClipList.class);
     }
 }

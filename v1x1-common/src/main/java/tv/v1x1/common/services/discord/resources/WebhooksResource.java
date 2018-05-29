@@ -30,51 +30,44 @@ public class WebhooksResource {
     public Webhook createWebhook(final String channelId, final CreateWebhookRequest createWebhookRequest) {
         return channels.path(channelId).path("webhooks")
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createWebhookRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Webhook.class);
+                .post(Entity.entity(createWebhookRequest, MediaType.APPLICATION_JSON), Webhook.class);
     }
 
     public List<Webhook> getChannelWebhooks(final String channelId) {
         return channels.path(channelId).path("webhooks")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Webhook>>() {});
+                .get(new GenericType<List<Webhook>>() {});
     }
 
     public List<Webhook> getGuildWebhooks(final String guildId) {
         return guilds.path(guildId).path("webhooks")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Webhook>>() {});
+                .get(new GenericType<List<Webhook>>() {});
     }
 
     public Webhook getWebhook(final String webhookId) {
         return webhooks.path(webhookId)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(Webhook.class);
+                .get(Webhook.class);
     }
 
     public Webhook getWebhookWithToken(final String webhookId, final String webhookToken) {
         return webhooks.path(webhookId).path(webhookToken)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(Webhook.class);
+                .get(Webhook.class);
     }
 
     public Webhook modifyWebhook(final String webhookId, final ModifyWebhookRequest modifyWebhookRequest) {
         return webhooks.path(webhookId)
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(modifyWebhookRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Webhook.class);
+                .method("PATCH", Entity.entity(modifyWebhookRequest, MediaType.APPLICATION_JSON), Webhook.class);
     }
 
     public Webhook modifyWebhookWithToken(final String webhookId, final String webhookToken,
                                           final ModifyWebhookRequest modifyWebhookRequest) {
         return webhooks.path(webhookId).path(webhookToken)
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(modifyWebhookRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Webhook.class);
+                .method("PATCH", Entity.entity(modifyWebhookRequest, MediaType.APPLICATION_JSON), Webhook.class);
     }
 
     public void deleteWebhook(final String webhookId) {
@@ -94,7 +87,6 @@ public class WebhooksResource {
         return webhooks.path(webhookId).path(webhookToken)
                 .queryParam("wait", wait)
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(executeWebhookRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Message.class);
+                .post(Entity.entity(executeWebhookRequest, MediaType.APPLICATION_JSON), Message.class);
     }
 }

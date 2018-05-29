@@ -30,8 +30,7 @@ public class SearchResource {
                 .queryParam("query", query)
                 .queryParam("limit", limit).queryParam("offset", offset)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(ChannelList.class);
+                .get(ChannelList.class);
     }
 
     /**
@@ -45,8 +44,7 @@ public class SearchResource {
                 .queryParam("query", query)
                 .queryParam("live", live)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(GameList.class);
+                .get(GameList.class);
     }
 
     /**
@@ -64,7 +62,6 @@ public class SearchResource {
                 .queryParam("query", query)
                 .queryParam("limit", limit).queryParam("offset", offset).queryParam("hls", hls)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(StreamList.class);
+                .get(StreamList.class);
     }
 }

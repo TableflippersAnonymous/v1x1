@@ -25,7 +25,7 @@ public class ChatResource {
      * @param channelId ID of channel
      */
     public BadgeList getChannelBadges(final String channelId) {
-        return chat.path(channelId).path("badges").request(TwitchApi.ACCEPT).get().readEntity(BadgeList.class);
+        return chat.path(channelId).path("badges").request(TwitchApi.ACCEPT).get(BadgeList.class);
     }
 
     /**
@@ -33,7 +33,7 @@ public class ChatResource {
      * @apiNote This endpoint returns a large amount of data.
      */
     public EmoticonImageList getEmoticonImages() {
-        return chat.path("emoticon_images").request(TwitchApi.ACCEPT).get().readEntity(EmoticonImageList.class);
+        return chat.path("emoticon_images").request(TwitchApi.ACCEPT).get(EmoticonImageList.class);
     }
 
     /**
@@ -41,7 +41,7 @@ public class ChatResource {
      * @param emoticonSets Specifies the set(s) of emoticons to retrieve.
      */
     public EmoticonSetList getEmoticonSets(final List<String> emoticonSets) {
-        return chat.path("emoticon_images").queryParam("emotesets", Joiner.on(",").join(emoticonSets)).request(TwitchApi.ACCEPT).get().readEntity(EmoticonSetList.class);
+        return chat.path("emoticon_images").queryParam("emotesets", Joiner.on(",").join(emoticonSets)).request(TwitchApi.ACCEPT).get(EmoticonSetList.class);
     }
 
     /**
@@ -49,6 +49,6 @@ public class ChatResource {
      * @apiNote This endpoint returns a large amount of data.
      */
     public EmoticonList getEmoticons() {
-        return chat.path("emoticons").request(TwitchApi.ACCEPT).get().readEntity(EmoticonList.class);
+        return chat.path("emoticons").request(TwitchApi.ACCEPT).get(EmoticonList.class);
     }
 }

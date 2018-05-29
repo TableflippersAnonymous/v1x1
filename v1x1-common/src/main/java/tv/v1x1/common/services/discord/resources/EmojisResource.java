@@ -24,30 +24,26 @@ public class EmojisResource {
     public List<Emoji> listGuildEmojis(final String guildId) {
         return guilds.path(guildId).path("emojis")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Emoji>>() {});
+                .get(new GenericType<List<Emoji>>() {});
     }
 
     public Emoji getGuildEmoji(final String guildId, final String emojiId) {
         return guilds.path(guildId).path("emojis").path(emojiId)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(Emoji.class);
+                .get(Emoji.class);
     }
 
     public Emoji createGuildEmoji(final String guildId, final CreateGuildEmojiRequest createGuildEmojiRequest) {
         return guilds.path(guildId).path("emojis")
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createGuildEmojiRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Emoji.class);
+                .post(Entity.entity(createGuildEmojiRequest, MediaType.APPLICATION_JSON), Emoji.class);
     }
 
     public Emoji modifyGuildEmoji(final String guildId, final String emojiId,
                                   final ModifyGuildEmojiRequest modifyGuildEmojiRequest) {
         return guilds.path(guildId).path("emojis").path(emojiId)
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(modifyGuildEmojiRequest,  MediaType.APPLICATION_JSON))
-                .readEntity(Emoji.class);
+                .method("PATCH", Entity.entity(modifyGuildEmojiRequest,  MediaType.APPLICATION_JSON), Emoji.class);
     }
 
     public void deleteGuildEmoji(final String guildId, final String emojiId) {

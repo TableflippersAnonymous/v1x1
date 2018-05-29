@@ -26,8 +26,7 @@ public class TeamsResource {
         return teams
                 .queryParam("limit", limit).queryParam("offset", offset)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(TeamList.class);
+                .get(TeamList.class);
     }
 
     /**
@@ -37,7 +36,6 @@ public class TeamsResource {
     public Team getTeam(final String team) {
         return teams.path(team)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(Team.class);
+                .get(Team.class);
     }
 }
