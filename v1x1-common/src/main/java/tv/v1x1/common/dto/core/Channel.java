@@ -78,6 +78,10 @@ public abstract class Channel {
         return channelGroup;
     }
 
+    public Tenant getTenant() {
+        return getChannelGroup().getTenant();
+    }
+
     @Override
     public String toString() {
         return "{Channel/" + id + ":" + displayName + "}";
@@ -105,4 +109,6 @@ public abstract class Channel {
     public Platform getPlatform() {
         return channelGroup.getPlatform();
     }
+
+    public abstract String getMention();
 }

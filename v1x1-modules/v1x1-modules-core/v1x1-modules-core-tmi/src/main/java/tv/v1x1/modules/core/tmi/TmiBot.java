@@ -17,7 +17,7 @@ import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.messages.events.*;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.queue.MessageQueue;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.dto.channels.Channel;
 import tv.v1x1.common.util.data.CompositeKey;
@@ -157,7 +157,7 @@ public class TmiBot implements Runnable {
         final Span span = tracer.newChild(rootSpan.context()).name("TMI event stanza").start();
         try {
             event(stanza, span);
-        } catch(final NoSuchUserException e) {
+        } catch(final NoSuchTargetException e) {
             throw new IllegalStateException(e);
         } finally {
             span.finish();
@@ -198,7 +198,7 @@ public class TmiBot implements Runnable {
         messageQueue.add(event);
     }
 
-    private void event(final IrcStanza stanza, final Span parentSpan) throws NoSuchUserException {
+    private void event(final IrcStanza stanza, final Span parentSpan) throws NoSuchTargetException {
         cache(stanza, parentSpan);
         event(new TwitchRawMessageEvent(module, bot, stanza), parentSpan);
         if(stanza instanceof ClearChatCommand)
@@ -254,7 +254,7 @@ public class TmiBot implements Runnable {
         }
     }
 
-    private void event(final ClearChatCommand clearChatCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final ClearChatCommand clearChatCommand, final Span parentSpan) throws NoSuchTargetException {
         event(new TwitchTimeoutEvent(module, getChannel(clearChatCommand), getUserByUsername(clearChatCommand.getNickname()), clearChatCommand), parentSpan);
     }
 
@@ -262,24 +262,24 @@ public class TmiBot implements Runnable {
         event(new TwitchBotGlobalStateEvent(module, bot, globalUserStateCommand), parentSpan);
     }
 
-    private void event(final HostTargetCommand hostTargetCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final HostTargetCommand hostTargetCommand, final Span parentSpan) throws NoSuchTargetException {
         event(new TwitchHostEvent(module, getChannel(hostTargetCommand), hostTargetCommand.getTargetChannel().equals("-") ? null : getChannelByName(hostTargetCommand.getTargetChannel()), hostTargetCommand), parentSpan);
     }
 
-    private void event(final JoinCommand joinCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final JoinCommand joinCommand, final Span parentSpan) throws NoSuchTargetException {
         event(new TwitchChatJoinEvent(module, getUser(joinCommand), getChannel(joinCommand), joinCommand), parentSpan);
     }
 
-    private void event(final ModeCommand modeCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final ModeCommand modeCommand, final Span parentSpan) throws NoSuchTargetException {
         for (final String username : modeCommand.getNicknames())
             event(new TwitchUserModChangeEvent(module, getChannel(modeCommand), getUserByUsername(username), modeCommand.getModeString().startsWith("+"), modeCommand), parentSpan);
     }
 
-    private void event(final NoticeCommand noticeCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final NoticeCommand noticeCommand, final Span parentSpan) throws NoSuchTargetException {
         event(new TwitchChannelEvent(module, getChannel(noticeCommand), noticeCommand.getMessage(), noticeCommand), parentSpan);
     }
 
-    private void event(final PartCommand partCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final PartCommand partCommand, final Span parentSpan) throws NoSuchTargetException {
         event(new TwitchChatPartEvent(module, getUser(partCommand), getChannel(partCommand), partCommand), parentSpan);
     }
 
@@ -287,7 +287,7 @@ public class TmiBot implements Runnable {
         event(new TwitchPingEvent(module, pingCommand.getToken(), pingCommand), parentSpan);
     }
 
-    private void event(final PrivmsgCommand privmsgCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final PrivmsgCommand privmsgCommand, final Span parentSpan) throws NoSuchTargetException {
         final TwitchChannel channel = getChannel(privmsgCommand);
         final TwitchUser user = getUser(privmsgCommand);
         if((privmsgCommand.getSource() instanceof IrcUser) && ((IrcUser) privmsgCommand.getSource()).getNickname().equals(username))
@@ -303,7 +303,7 @@ public class TmiBot implements Runnable {
         event(new TwitchReconnectEvent(module, bot, reconnectCommand), parentSpan);
     }
 
-    private void event(final RoomStateCommand roomStateCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final RoomStateCommand roomStateCommand, final Span parentSpan) throws NoSuchTargetException {
         event(new TwitchRoomStateEvent(module, getChannel(roomStateCommand), roomStateCommand), parentSpan);
     }
 
@@ -311,11 +311,11 @@ public class TmiBot implements Runnable {
         event(new TwitchBotConnectedEvent(module, bot, rplEndOfMotdCommand), parentSpan);
     }
 
-    private void event(final RplNameReplyCommand rplNameReplyCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final RplNameReplyCommand rplNameReplyCommand, final Span parentSpan) throws NoSuchTargetException {
         event(new TwitchChannelUsersEvent(module, getChannel(rplNameReplyCommand), rplNameReplyCommand.getMembers().stream().map(member -> {
             try {
                 return getUserByUsername(member.getNickname());
-            } catch (final NoSuchUserException e) {
+            } catch (final NoSuchTargetException e) {
                 throw new IllegalStateException(e);
             }
         }).collect(Collectors.toList()), rplNameReplyCommand), parentSpan);
@@ -324,12 +324,12 @@ public class TmiBot implements Runnable {
     private void event(final UserNoticeCommand userNoticeCommand, final Span parentSpan) {
         try {
             event(new TwitchUserEvent(module, getChannel(userNoticeCommand), getUserByUsername(userNoticeCommand.getLogin()), userNoticeCommand.getMessage(), userNoticeCommand), parentSpan);
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             throw new IllegalStateException(e);
         }
     }
 
-    private void event(final UserStateCommand userStateCommand, final Span parentSpan) throws NoSuchUserException {
+    private void event(final UserStateCommand userStateCommand, final Span parentSpan) throws NoSuchTargetException {
         event(new TwitchBotChannelStateEvent(module, getChannel(userStateCommand), bot, userStateCommand), parentSpan);
     }
 
@@ -352,21 +352,21 @@ public class TmiBot implements Runnable {
                 return getUser(twitchDisplayNameService.getUserIdFromUsername(((IrcUser) source).getNickname()), displayName);
             else if (stanza.getTags().containsKey("login"))
                 return getUser(twitchDisplayNameService.getUserIdFromUsername(stanza.getTags().get("login")), displayName);
-        } catch(final NoSuchUserException e) {
+        } catch(final NoSuchTargetException e) {
             throw new IllegalArgumentException(e);
         }
         throw new IllegalArgumentException("Not able to find a TwitchUser in stanza: " + stanza.getRawLine());
     }
 
-    private TwitchUser getUserByUsername(final String username) throws NoSuchUserException {
+    private TwitchUser getUserByUsername(final String username) throws NoSuchTargetException {
         return getUser(twitchDisplayNameService.getUserIdFromUsername(username), null);
     }
 
-    private TwitchUser getUser(final String id, final String displayName) throws NoSuchUserException {
+    private TwitchUser getUser(final String id, final String displayName) throws NoSuchTargetException {
         return new TwitchUser(id, tmiModule.getGlobalUser(id), displayName == null ? twitchDisplayNameService.getDisplayNameFromUserId(id) : displayName);
     }
 
-    private TwitchChannel getChannel(final IrcStanza stanza) throws NoSuchUserException {
+    private TwitchChannel getChannel(final IrcStanza stanza) throws NoSuchTargetException {
         // If we have a room-id, use that.
         if(stanza.getTags().containsKey("room-id"))
             return getChannel(stanza.getTags().get("room-id"));
@@ -387,13 +387,13 @@ public class TmiBot implements Runnable {
         }
     }
 
-    private TwitchChannel getChannelByName(String channelName) throws NoSuchUserException {
+    private TwitchChannel getChannelByName(String channelName) throws NoSuchTargetException {
         if(channelName.startsWith("#"))
             channelName = channelName.substring(1);
         return getChannel(twitchDisplayNameService.getChannelIdByChannelName(channelName));
     }
 
-    private TwitchChannel getChannel(final String id) throws NoSuchUserException {
+    private TwitchChannel getChannel(final String id) throws NoSuchTargetException {
         final String displayName = twitchDisplayNameService.getDisplayNameFromChannelId(id);
         return getChannel(id, displayName);
     }

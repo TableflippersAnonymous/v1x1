@@ -20,7 +20,7 @@ import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.state.DisplayNameService;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.Set;
@@ -144,7 +144,7 @@ public class DAOTenant {
         if(displayName == null && platform == Platform.TWITCH)
             try {
                 displayName = displayNameService.getDisplayNameFromId(TwitchChannel.EMPTY, channelGroupId);
-            } catch (NoSuchUserException e) {
+            } catch (NoSuchTargetException e) {
                 throw new RuntimeException(e);
             }
         final Tenant tenant = new Tenant(UUID.randomUUID(), displayName);

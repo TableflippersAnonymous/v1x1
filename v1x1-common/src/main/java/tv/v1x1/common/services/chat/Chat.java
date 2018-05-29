@@ -11,7 +11,7 @@ import tv.v1x1.common.i18n.Language;
 import tv.v1x1.common.modules.Module;
 import tv.v1x1.common.rpc.client.ChatRouterServiceClient;
 import tv.v1x1.common.services.state.DisplayNameService;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.text.Splitter;
 
 import java.lang.invoke.MethodHandles;
@@ -84,7 +84,7 @@ public class Chat {
             String username;
             try {
                 username = dns.getUsernameFromId(channel, user.getId());
-            } catch(NoSuchUserException e) {
+            } catch(NoSuchTargetException e) {
                 LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
             }
@@ -112,7 +112,7 @@ public class Chat {
             String username;
             try {
                 username = dns.getUsernameFromId(channel, user.getId());
-            } catch(NoSuchUserException e) {
+            } catch(NoSuchTargetException e) {
                 LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
             }
@@ -138,7 +138,7 @@ public class Chat {
             String username;
             try {
                 username = dns.getUsernameFromId(channel, user.getId());
-            } catch(NoSuchUserException e) {
+            } catch(NoSuchTargetException e) {
                 LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
             }
@@ -184,7 +184,7 @@ public class Chat {
             String username;
             try {
                 username = dns.getUsernameFromId(channel, user.getId());
-            } catch(NoSuchUserException e) {
+            } catch(NoSuchTargetException e) {
                 LOG.error("Error resolving Twitch ID to username", e);
                 username = user.getDisplayName(); // Try anyway, since most of the time this will work
             }

@@ -3,6 +3,8 @@ package tv.v1x1.common.services.state;
 import com.google.common.cache.CacheLoader;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.cache.JsonCodec;
 import tv.v1x1.common.services.cache.SharedCache;
@@ -11,7 +13,9 @@ import tv.v1x1.common.services.discord.DiscordApi;
 import tv.v1x1.common.services.discord.dto.channel.Channel;
 import tv.v1x1.common.services.discord.dto.user.User;
 
+import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.NotFoundException;
+import java.lang.invoke.MethodHandles;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -36,6 +40,8 @@ public class DiscordDisplayNameService {
     private final SharedCache<String, Channel> channelByChannelNameCache;
     private final SharedCache<String, Channel> channelByDisplayNameCache;
     private final DiscordApi discordApi;
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
 
     @Inject
     public DiscordDisplayNameService(final CacheManager cacheManager, final DiscordApi discordApi) {
@@ -155,7 +161,7 @@ public class DiscordDisplayNameService {
         }), stringCodec, channelCodec);
     }
 
-    public String getDisplayNameFromUserId(final String userId) throws NoSuchUserException {
+    public String getDisplayNameFromUserId(final String userId) throws NoSuchTargetException {
         try {
             return displayNameByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
@@ -163,7 +169,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getUsernameFromUserId(final String userId) throws NoSuchUserException {
+    public String getUsernameFromUserId(final String userId) throws NoSuchTargetException {
         try {
             return usernameByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
@@ -171,7 +177,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getDisplayNameFromUsername(final String username) throws NoSuchUserException {
+    public String getDisplayNameFromUsername(final String username) throws NoSuchTargetException {
         try {
             return displayNameByUsernameCache.get(username);
         } catch (final ExecutionException e) {
@@ -179,7 +185,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getUsernameFromDisplayName(final String displayName) throws NoSuchUserException {
+    public String getUsernameFromDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return usernameByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -187,7 +193,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getUserIdFromUsername(final String username) throws NoSuchUserException {
+    public String getUserIdFromUsername(final String username) throws NoSuchTargetException {
         try {
             return userIdByUsernameCache.get(username);
         } catch (final ExecutionException e) {
@@ -195,7 +201,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getUserIdFromDisplayName(final String displayName) throws NoSuchUserException {
+    public String getUserIdFromDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return userIdByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -203,7 +209,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public User getUserByUsername(final String username) throws NoSuchUserException {
+    public User getUserByUsername(final String username) throws NoSuchTargetException {
         try {
             return userByUsernameCache.get(username);
         } catch (final ExecutionException e) {
@@ -211,7 +217,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public User getUserByDisplayName(final String displayName) throws NoSuchUserException {
+    public User getUserByDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return userByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -219,7 +225,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public User getUserByUserId(final String userId) throws NoSuchUserException {
+    public User getUserByUserId(final String userId) throws NoSuchTargetException {
         try {
             return userByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
@@ -227,7 +233,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getDisplayNameFromChannelId(final String channelId) throws NoSuchUserException {
+    public String getDisplayNameFromChannelId(final String channelId) throws NoSuchTargetException {
         try {
             return displayNameByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
@@ -235,7 +241,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getChannelNameFromChannelId(final String channelId) throws NoSuchUserException {
+    public String getChannelNameFromChannelId(final String channelId) throws NoSuchTargetException {
         try {
             return channelNameByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
@@ -243,7 +249,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getDisplayNameFromChannelName(final String channelName) throws NoSuchUserException {
+    public String getDisplayNameFromChannelName(final String channelName) throws NoSuchTargetException {
         try {
             return displayNameByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
@@ -251,7 +257,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getChannelNameByDisplayName(final String displayName) throws NoSuchUserException {
+    public String getChannelNameByDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return channelNameByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -259,7 +265,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getChannelIdByChannelName(final String channelName) throws NoSuchUserException {
+    public String getChannelIdByChannelName(final String channelName) throws NoSuchTargetException {
         try {
             return channelIdByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
@@ -267,7 +273,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public String getChannelIdFromDisplayName(final String displayName) throws NoSuchUserException {
+    public String getChannelIdFromDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return channelIdByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -275,7 +281,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public Channel getChannelByChannelName(final String channelName) throws NoSuchUserException {
+    public Channel getChannelByChannelName(final String channelName) throws NoSuchTargetException {
         try {
             return channelByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
@@ -283,7 +289,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public Channel getChannelByDisplayName(final String displayName) throws NoSuchUserException {
+    public Channel getChannelByDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return channelByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -291,7 +297,7 @@ public class DiscordDisplayNameService {
         }
     }
 
-    public Channel getChannelByChannelId(final String channelId) throws NoSuchUserException {
+    public Channel getChannelByChannelId(final String channelId) throws NoSuchTargetException {
         try {
             return channelByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
@@ -332,48 +338,54 @@ public class DiscordDisplayNameService {
     }
 
     public void cacheChannel(final Channel channel) {
-        if(channel == null)
+        if(channel == null) {
+            LOG.trace("cacheChannel(): channel passed in was null");
             return;
+        }
         channelByDisplayNameCache.put(channel.getName(), channel);
         channelByChannelNameCache.put(channel.getName(), channel);
         channelByChannelIdCache.put(String.valueOf(channel.getId()), channel);
         cache(String.valueOf(channel.getId()), channel.getName(), channel.getName());
     }
 
-    private User fetchUserByUserId(final String userId) throws NoSuchUserException {
+    private User fetchUserByUserId(final String userId) throws NoSuchTargetException {
         try {
             final User user = discordApi.getUsers().getUser(userId);
             cacheUser(user);
             return user;
         } catch(final NotFoundException e) {
-            throw new NoSuchUserException();
+            throw new NoSuchTargetException("User not found.");
         }
     }
 
-    private User fetchUserByUsername(final String username) throws NoSuchUserException {
-        throw new NoSuchUserException(); // There is no way to fetch a user by username in the Discord API.
+    private User fetchUserByUsername(final String username) throws NoSuchTargetException {
+        throw new NoSuchTargetException(); // There is no way to fetch a user by username in the Discord API.
     }
 
-    private User fetchUserByDisplayName(final String displayName) throws NoSuchUserException {
-        throw new NoSuchUserException();
+    private User fetchUserByDisplayName(final String displayName) throws NoSuchTargetException {
+        throw new NoSuchTargetException();
     }
 
-    private Channel fetchChannelByChannelId(final String channelId) throws NoSuchUserException {
+    private Channel fetchChannelByChannelId(final String channelId) throws NoSuchTargetException {
         try {
             final Channel channel = discordApi.getChannels().getChannel(channelId);
+            if(channel.getId() == null)
+                throw new NoSuchTargetException();
             cacheChannel(channel);
             return channel;
         } catch(final NotFoundException e) {
-            throw new NoSuchUserException();
+            throw new NoSuchTargetException("Channel not found.");
+        } catch(final ForbiddenException e) {
+            throw new NoSuchTargetException("Forbidden when accessing channel");
         }
     }
 
-    private Channel fetchChannelByChannelName(String channelName) throws NoSuchUserException {
-        throw new NoSuchUserException();
+    private Channel fetchChannelByChannelName(String channelName) throws NoSuchTargetException {
+        throw new NoSuchTargetException();
     }
 
-    private Channel fetchChannelByDisplayName(final String displayName) throws NoSuchUserException {
-        throw new NoSuchUserException();
+    private Channel fetchChannelByDisplayName(final String displayName) throws NoSuchTargetException {
+        throw new NoSuchTargetException();
     }
 
     private Throwable unwrapException(final ExecutionException ee) {
@@ -382,10 +394,10 @@ public class DiscordDisplayNameService {
         return ee.getCause();
     }
 
-    private RuntimeException rethrowUnwrapped(final ExecutionException ee) throws NoSuchUserException {
+    private RuntimeException rethrowUnwrapped(final ExecutionException ee) throws NoSuchTargetException {
         final Throwable throwable = unwrapException(ee);
-        if(throwable instanceof NoSuchUserException)
-            throw (NoSuchUserException) throwable;
+        if(throwable instanceof NoSuchTargetException)
+            throw (NoSuchTargetException) throwable;
         if(throwable instanceof RuntimeException)
             throw (RuntimeException) throwable;
         throw new RuntimeException(throwable);

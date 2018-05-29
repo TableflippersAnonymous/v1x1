@@ -5,7 +5,7 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.commands.Command;
 
 import java.util.List;
@@ -69,7 +69,7 @@ public class PermitCommand extends Command {
                         "target", targetName
                 );
             }
-        } catch(final NoSuchUserException e) {
+        } catch(final NoSuchTargetException e) {
             Chat.i18nMessage(module, channel, "notarget",
                     "commander", commanderName,
                     "target", args.get(0)

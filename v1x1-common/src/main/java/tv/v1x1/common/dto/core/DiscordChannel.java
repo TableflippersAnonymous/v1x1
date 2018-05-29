@@ -25,4 +25,9 @@ public class DiscordChannel extends Channel {
     public DiscordChannel(final String id, final ChannelGroup guild, final String displayName) {
         super(id, guild, displayName);
     }
+
+    @Override
+    public String getMention() {
+        return "<#" + getId() + ">";
+    }
 }

@@ -4,7 +4,7 @@ import com.google.inject.Inject;
 import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.state.DiscordDisplayNameService;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.dto.users.User;
 import tv.v1x1.modules.core.api.api.rest.DisplayNameRecord;
@@ -40,7 +40,7 @@ public class DisplayNameResource {
     public DisplayNameRecord getTwitchUserByUsername(@PathParam("username") final String username) {
         try {
             return displayNameRecordFromTwitchUser(twitchDisplayNameService.getUserByUsername(username));
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             throw new NotFoundException();
         }
     }
@@ -50,7 +50,7 @@ public class DisplayNameResource {
     public DisplayNameRecord getTwitchUserByDisplayName(@PathParam("display_name") final String displayName) {
         try {
             return displayNameRecordFromTwitchUser(twitchDisplayNameService.getUserByDisplayName(displayName));
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             throw new NotFoundException();
         }
     }
@@ -60,7 +60,7 @@ public class DisplayNameResource {
     public DisplayNameRecord getTwitchUserById(@PathParam("id") final String id) {
         try {
             return displayNameRecordFromTwitchUser(twitchDisplayNameService.getUserByUserId(id));
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             throw new NotFoundException();
         }
     }
@@ -70,7 +70,7 @@ public class DisplayNameResource {
     public DisplayNameRecord getDiscordUserByUsername(@PathParam("username") final String username) {
         try {
             return displayNameRecordFromDiscordUser(discordDisplayNameService.getUserByUsername(username));
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             throw new NotFoundException();
         }
     }
@@ -80,7 +80,7 @@ public class DisplayNameResource {
     public DisplayNameRecord getDiscordUserByDisplayName(@PathParam("display_name") final String displayName) {
         try {
             return displayNameRecordFromDiscordUser(discordDisplayNameService.getUserByDisplayName(displayName));
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             throw new NotFoundException();
         }
     }
@@ -90,7 +90,7 @@ public class DisplayNameResource {
     public DisplayNameRecord getDiscordUserById(@PathParam("id") final String id) {
         try {
             return displayNameRecordFromDiscordUser(discordDisplayNameService.getUserByUserId(id));
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             throw new NotFoundException();
         }
     }

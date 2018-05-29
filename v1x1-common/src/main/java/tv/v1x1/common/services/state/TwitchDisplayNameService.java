@@ -156,7 +156,7 @@ public class TwitchDisplayNameService {
         this.twitchApi = twitchApi;
     }
 
-    public String getDisplayNameFromUserId(final String userId) throws NoSuchUserException {
+    public String getDisplayNameFromUserId(final String userId) throws NoSuchTargetException {
         try {
             return displayNameByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
@@ -164,7 +164,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getUsernameFromUserId(final String userId) throws NoSuchUserException {
+    public String getUsernameFromUserId(final String userId) throws NoSuchTargetException {
         try {
             return usernameByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
@@ -172,7 +172,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getDisplayNameFromUsername(final String username) throws NoSuchUserException {
+    public String getDisplayNameFromUsername(final String username) throws NoSuchTargetException {
         try {
             return displayNameByUsernameCache.get(username);
         } catch (final ExecutionException e) {
@@ -180,7 +180,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getUsernameFromDisplayName(final String displayName) throws NoSuchUserException {
+    public String getUsernameFromDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return usernameByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -188,7 +188,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getUserIdFromUsername(final String username) throws NoSuchUserException {
+    public String getUserIdFromUsername(final String username) throws NoSuchTargetException {
         try {
             return userIdByUsernameCache.get(username);
         } catch (final ExecutionException e) {
@@ -196,7 +196,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getUserIdFromDisplayName(final String displayName) throws NoSuchUserException {
+    public String getUserIdFromDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return userIdByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -204,7 +204,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public User getUserByUsername(final String username) throws NoSuchUserException {
+    public User getUserByUsername(final String username) throws NoSuchTargetException {
         try {
             return userByUsernameCache.get(username);
         } catch (final ExecutionException e) {
@@ -212,7 +212,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public User getUserByDisplayName(final String displayName) throws NoSuchUserException {
+    public User getUserByDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return userByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -220,7 +220,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public User getUserByUserId(final String userId) throws NoSuchUserException {
+    public User getUserByUserId(final String userId) throws NoSuchTargetException {
         try {
             return userByUserIdCache.get(userId);
         } catch (final ExecutionException e) {
@@ -228,7 +228,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getDisplayNameFromChannelId(final String channelId) throws NoSuchUserException {
+    public String getDisplayNameFromChannelId(final String channelId) throws NoSuchTargetException {
         try {
             return displayNameByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
@@ -236,7 +236,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getChannelNameFromChannelId(final String channelId) throws NoSuchUserException {
+    public String getChannelNameFromChannelId(final String channelId) throws NoSuchTargetException {
         try {
             return channelNameByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
@@ -244,7 +244,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getDisplayNameFromChannelName(final String channelName) throws NoSuchUserException {
+    public String getDisplayNameFromChannelName(final String channelName) throws NoSuchTargetException {
         try {
             return displayNameByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
@@ -252,7 +252,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getChannelNameByDisplayName(final String displayName) throws NoSuchUserException {
+    public String getChannelNameByDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return channelNameByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -260,7 +260,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getChannelIdByChannelName(final String channelName) throws NoSuchUserException {
+    public String getChannelIdByChannelName(final String channelName) throws NoSuchTargetException {
         try {
             return channelIdByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
@@ -268,7 +268,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public String getChannelIdFromDisplayName(final String displayName) throws NoSuchUserException {
+    public String getChannelIdFromDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return channelIdByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -276,7 +276,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public Channel getChannelByChannelName(final String channelName) throws NoSuchUserException {
+    public Channel getChannelByChannelName(final String channelName) throws NoSuchTargetException {
         try {
             return channelByChannelNameCache.get(channelName);
         } catch (final ExecutionException e) {
@@ -284,7 +284,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public Channel getChannelByDisplayName(final String displayName) throws NoSuchUserException {
+    public Channel getChannelByDisplayName(final String displayName) throws NoSuchTargetException {
         try {
             return channelByDisplayNameCache.get(displayName);
         } catch (final ExecutionException e) {
@@ -292,7 +292,7 @@ public class TwitchDisplayNameService {
         }
     }
 
-    public Channel getChannelByChannelId(final String channelId) throws NoSuchUserException {
+    public Channel getChannelByChannelId(final String channelId) throws NoSuchTargetException {
         try {
             return channelByChannelIdCache.get(channelId);
         } catch (final ExecutionException e) {
@@ -343,41 +343,41 @@ public class TwitchDisplayNameService {
         cache(String.valueOf(channel.getId()), channel.getName(), channel.getDisplayName());
     }
 
-    private User fetchUserByUserId(final String userId) throws NoSuchUserException {
+    private User fetchUserByUserId(final String userId) throws NoSuchTargetException {
         try {
             final User user = twitchApi.getUsers().getUser(userId);
             cacheUser(user);
             return user;
         } catch(final NotFoundException e) {
-            throw new NoSuchUserException();
+            throw new NoSuchTargetException();
         }
     }
 
-    private User fetchUserByUsername(final String username) throws NoSuchUserException {
+    private User fetchUserByUsername(final String username) throws NoSuchTargetException {
         final User user = twitchApi.getUsers().getUserByUsername(username);
         if(user == null)
-            throw new NoSuchUserException();
+            throw new NoSuchTargetException();
         cacheUser(user);
         return user;
     }
 
-    private User fetchUserByDisplayName(final String displayName) throws NoSuchUserException {
+    private User fetchUserByDisplayName(final String displayName) throws NoSuchTargetException {
         final User user = fetchUserByUsername(displayName.toLowerCase());
         cacheUser(user);
         return user;
     }
 
-    private Channel fetchChannelByChannelId(final String channelId) throws NoSuchUserException {
+    private Channel fetchChannelByChannelId(final String channelId) throws NoSuchTargetException {
         try {
             final Channel channel = twitchApi.getChannels().getChannel(channelId.split(":")[0]);
             cacheChannel(channel);
             return channel;
         } catch(final NotFoundException e) {
-            throw new NoSuchUserException();
+            throw new NoSuchTargetException();
         }
     }
 
-    private Channel fetchChannelByChannelName(String channelName) throws NoSuchUserException {
+    private Channel fetchChannelByChannelName(String channelName) throws NoSuchTargetException {
         // Twitch does not have a getChannelByChannelName, but we can get the user ID with the same name, and use that
         if(channelName.startsWith("#"))
             channelName = channelName.substring(1);
@@ -386,7 +386,7 @@ public class TwitchDisplayNameService {
         return channel;
     }
 
-    private Channel fetchChannelByDisplayName(final String displayName) throws NoSuchUserException {
+    private Channel fetchChannelByDisplayName(final String displayName) throws NoSuchTargetException {
         final Channel channel = fetchChannelByChannelName(displayName.toLowerCase());
         cacheChannel(channel);
         return channel;
@@ -398,10 +398,10 @@ public class TwitchDisplayNameService {
         return ee.getCause();
     }
 
-    private RuntimeException rethrowUnwrapped(final ExecutionException ee) throws NoSuchUserException {
+    private RuntimeException rethrowUnwrapped(final ExecutionException ee) throws NoSuchTargetException {
         final Throwable throwable = unwrapException(ee);
-        if(throwable instanceof NoSuchUserException)
-            throw (NoSuchUserException) throwable;
+        if(throwable instanceof NoSuchTargetException)
+            throw (NoSuchTargetException) throwable;
         if(throwable instanceof RuntimeException)
             throw (RuntimeException) throwable;
         throw new RuntimeException(throwable);

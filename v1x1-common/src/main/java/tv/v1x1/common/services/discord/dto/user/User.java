@@ -2,6 +2,8 @@ package tv.v1x1.common.services.discord.dto.user;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import tv.v1x1.common.dao.DAOGlobalUser;
+import tv.v1x1.common.dto.db.Platform;
 
 /**
  * Created by cobi on 9/10/2017.
@@ -102,5 +104,10 @@ public class User {
 
     public void setEmail(final String email) {
         this.email = email;
+    }
+
+    public tv.v1x1.common.dto.core.User toCore(final DAOGlobalUser daoGlobalUser) {
+        return daoGlobalUser.getOrCreate(Platform.DISCORD, getId(),
+                getUsername()).toCore().getUser(Platform.DISCORD, getId()).orElse(null);
     }
 }

@@ -13,7 +13,7 @@ import tv.v1x1.common.dto.db.InverseGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.state.DisplayNameService;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.ArrayList;
@@ -104,7 +104,7 @@ public class DAOGlobalUser {
                             ? displayNameService.getIdFromDisplayName(platform, userId)
                             : displayName),
                     userId));
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             throw new RuntimeException(e);
         }
         final InverseGlobalUser inverseGlobalUser = new InverseGlobalUser(platform, userId, globalUser.getId());
