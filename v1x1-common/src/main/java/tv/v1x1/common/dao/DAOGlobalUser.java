@@ -4,6 +4,7 @@ import com.datastax.driver.core.BatchStatement;
 import com.datastax.driver.core.Session;
 import com.datastax.driver.mapping.Mapper;
 import com.datastax.driver.mapping.MappingManager;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
@@ -46,7 +47,7 @@ public class DAOGlobalUser {
             return null;
         final int length = globalUser.getEntries().size();
         final Set<GlobalUser.Entry> set = new HashSet<>();
-        for(final GlobalUser.Entry entry : globalUser.getEntries())
+        for(final GlobalUser.Entry entry : ImmutableList.copyOf(globalUser.getEntries()))
             if(!set.add(entry))
                 globalUser.getEntries().remove(entry);
         if(globalUser.getEntries().size() != length)
