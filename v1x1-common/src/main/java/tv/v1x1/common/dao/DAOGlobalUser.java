@@ -16,6 +16,8 @@ import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -39,7 +41,17 @@ public class DAOGlobalUser {
     }
 
     public GlobalUser getById(final UUID id) {
-        return globalUserMapper.get(id);
+        final GlobalUser globalUser = globalUserMapper.get(id);
+        if(globalUser == null)
+            return null;
+        final int length = globalUser.getEntries().size();
+        final Set<GlobalUser.Entry> set = new HashSet<>();
+        for(final GlobalUser.Entry entry : globalUser.getEntries())
+            if(!set.add(entry))
+                globalUser.getEntries().remove(entry);
+        if(globalUser.getEntries().size() != length)
+            globalUserMapper.save(globalUser);
+        return globalUser;
     }
 
     public InverseGlobalUser getUser(final Platform platform, final String userId) {
@@ -95,7 +107,9 @@ public class DAOGlobalUser {
     }
 
     public GlobalUser addUser(final GlobalUser globalUser, final Platform platform, final String userId, final String displayName) {
-        globalUser.getEntries().add(new GlobalUser.Entry(platform, displayName, userId));
+        final GlobalUser.Entry entry = new GlobalUser.Entry(platform, displayName, userId);
+        if(!globalUser.getEntries().contains(entry))
+            globalUser.getEntries().add(entry);
         final InverseGlobalUser inverseGlobalUser = new InverseGlobalUser(platform, userId, globalUser.getId());
         final BatchStatement b = new BatchStatement();
         b.add(globalUserMapper.saveQuery(globalUser));

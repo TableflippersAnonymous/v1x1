@@ -1,10 +1,16 @@
 package tv.v1x1.common.dto.db;
 
-import com.datastax.driver.mapping.annotations.*;
-import tv.v1x1.common.dto.core.*;
+import com.datastax.driver.mapping.annotations.Column;
+import com.datastax.driver.mapping.annotations.Field;
+import com.datastax.driver.mapping.annotations.PartitionKey;
+import com.datastax.driver.mapping.annotations.Table;
+import com.datastax.driver.mapping.annotations.UDT;
+import com.google.common.base.Objects;
+import tv.v1x1.common.dto.core.DiscordUser;
+import tv.v1x1.common.dto.core.TwitchUser;
+import tv.v1x1.common.dto.core.User;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -43,6 +49,20 @@ public class GlobalUser {
 
         public String getUserId() {
             return userId;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            final Entry entry = (Entry) o;
+            return platform == entry.platform &&
+                    Objects.equal(userId, entry.userId);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(platform, userId);
         }
 
         public User toCore(final tv.v1x1.common.dto.core.GlobalUser globalUser) {
