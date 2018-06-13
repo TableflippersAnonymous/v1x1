@@ -19,7 +19,7 @@
     "@angular/common": "6.0.4",
     "@angular/compiler": "6.0.4",
     "@angular/core": "6.0.4",
-    "@angular/forms": "6.0.4",
+    "@angular/forms": "6.0.5",
     "@angular/http": "6.0.5",
     "@angular/material": "6.2.1",
     "@angular/platform-browser": "6.0.4",
