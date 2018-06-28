@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import tv.v1x1.modules.channel.wasm.vm.types.I32;
+
 public class MemExportDescriptor extends ExportDescriptor {
-    private MemIdx mem;
+    private I32 mem;
 }

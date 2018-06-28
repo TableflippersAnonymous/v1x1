@@ -3,7 +3,7 @@ package tv.v1x1.modules.channel.wasm.vm;
 import java.util.List;
 
 public class WebAssemblyModule {
-    private List<FunctionTypeDef> functionTypes;
+    private List<FunctionType> functionTypes;
     private List<FunctionDef> functions;
     private List<TableDef> tables;
     private List<MemoryDef> memories;

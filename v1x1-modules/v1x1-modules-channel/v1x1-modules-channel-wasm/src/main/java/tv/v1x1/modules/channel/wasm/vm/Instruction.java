@@ -1,7 +1,10 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import tv.v1x1.modules.channel.wasm.vm.instructions.I32ConstInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.NopInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.UnreachableInstruction;
+
+import java.io.DataInputStream;
 
 public abstract class Instruction {
     /* See https://webassembly.github.io/spec/core/appendix/index-instructions.html */
@@ -87,6 +90,7 @@ public abstract class Instruction {
             /* 0xFC */ null, null, null, null
     };
 
+    public abstract void decode(final DataInputStream dataInputStream);
     public abstract boolean validate(final Context context);
     public abstract void execute(final Context context) throws TrapException;
 }

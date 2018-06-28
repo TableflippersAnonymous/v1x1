@@ -6,19 +6,19 @@ import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
 import java.io.DataInputStream;
 
-public class NopInstruction extends Instruction {
+public class I32ConstInstruction extends Instruction {
     @Override
     public void decode(final DataInputStream dataInputStream) {
-        /* No action */
+        I32
     }
 
     @Override
     public boolean validate(final Context context) {
-        return true;
+        return false;
     }
 
     @Override
     public void execute(final Context context) throws TrapException {
-        /* No action */
+
     }
 }
