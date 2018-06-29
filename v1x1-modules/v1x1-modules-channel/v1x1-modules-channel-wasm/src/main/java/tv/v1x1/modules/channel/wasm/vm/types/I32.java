@@ -1,6 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.types;
 
 import com.google.common.primitives.Ints;
+import com.google.common.primitives.UnsignedInteger;
+import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
 public final class I32 extends IN {
     public static final I32 ZERO = new I32(0);
@@ -52,22 +54,30 @@ public final class I32 extends IN {
     }
 
     @Override
-    public I32 divU(final IN other) {
+    public I32 divU(final IN other) throws TrapException {
+        if(other.wrap().val == 0)
+            throw new TrapException();
         return new I32(Integer.divideUnsigned(val, other.wrap().val));
     }
 
     @Override
-    public I32 divS(final IN other) {
+    public I32 divS(final IN other) throws TrapException {
+        if(other.wrap().val == 0 || (other.wrap().val == -1L && val == Integer.MIN_VALUE))
+            throw new TrapException();
         return new I32(val / other.wrap().val);
     }
 
     @Override
-    public I32 remU(final IN other) {
+    public I32 remU(final IN other) throws TrapException {
+        if(other.wrap().val == 0)
+            throw new TrapException();
         return new I32(Integer.remainderUnsigned(val, other.wrap().val));
     }
 
     @Override
-    public I32 remS(final IN other) {
+    public I32 remS(final IN other) throws TrapException {
+        if(other.wrap().val == 0)
+            throw new TrapException();
         return new I32(val % other.wrap().val);
     }
 
@@ -179,6 +189,16 @@ public final class I32 extends IN {
     @Override
     public I32 geS(final IN other) {
         return bool(val >= other.wrap().val);
+    }
+
+    @Override
+    public F32 convertU() {
+        return new F32(UnsignedInteger.fromIntBits(val).floatValue());
+    }
+
+    @Override
+    public F32 convertS() {
+        return new F32((float) val);
     }
 
     @Override

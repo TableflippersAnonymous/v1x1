@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.types;
 
+import tv.v1x1.modules.channel.wasm.vm.TrapException;
+
 public abstract class FN extends WebAssemblyType {
     public abstract FN add(final FN other);
     public abstract FN sub(final FN other);
@@ -21,8 +23,8 @@ public abstract class FN extends WebAssemblyType {
     public abstract IN gt(final FN other);
     public abstract IN le(final FN other);
     public abstract IN ge(final FN other);
-    public abstract IN truncU();
-    public abstract IN truncS();
+    public abstract IN truncU() throws TrapException;
+    public abstract IN truncS() throws TrapException;
     public abstract F64 promote();
     public abstract F32 demote();
     public abstract IN reinterpret();

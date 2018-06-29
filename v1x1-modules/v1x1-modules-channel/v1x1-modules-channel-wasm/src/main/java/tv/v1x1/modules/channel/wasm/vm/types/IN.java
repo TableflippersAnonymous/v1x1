@@ -1,13 +1,15 @@
 package tv.v1x1.modules.channel.wasm.vm.types;
 
+import tv.v1x1.modules.channel.wasm.vm.TrapException;
+
 public abstract class IN extends WebAssemblyType {
     public abstract IN add(final IN other);
     public abstract IN sub(final IN other);
     public abstract IN mul(final IN other);
-    public abstract IN divU(final IN other);
-    public abstract IN divS(final IN other);
-    public abstract IN remU(final IN other);
-    public abstract IN remS(final IN other);
+    public abstract IN divU(final IN other) throws TrapException;
+    public abstract IN divS(final IN other) throws TrapException;
+    public abstract IN remU(final IN other) throws TrapException;
+    public abstract IN remS(final IN other) throws TrapException;
     public abstract IN and(final IN other);
     public abstract IN or(final IN other);
     public abstract IN xor(final IN other);
@@ -33,5 +35,7 @@ public abstract class IN extends WebAssemblyType {
     public abstract I64 extendU();
     public abstract I64 extendS();
     public abstract I32 wrap();
+    public abstract FN convertU();
+    public abstract FN convertS();
     public abstract FN reinterpret();
 }

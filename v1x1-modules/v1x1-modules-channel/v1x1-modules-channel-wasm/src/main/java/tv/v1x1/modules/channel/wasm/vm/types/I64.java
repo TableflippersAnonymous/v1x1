@@ -1,6 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.types;
 
 import com.google.common.primitives.Longs;
+import com.google.common.primitives.UnsignedLong;
+import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
 public final class I64 extends IN {
     public static final I64 ZERO = new I64(0);
@@ -52,22 +54,30 @@ public final class I64 extends IN {
     }
 
     @Override
-    public I64 divU(final IN other) {
+    public I64 divU(final IN other) throws TrapException {
+        if(other.extendU().val == 0)
+            throw new TrapException();
         return new I64(Long.divideUnsigned(val, other.extendU().val));
     }
 
     @Override
-    public I64 divS(final IN other) {
+    public I64 divS(final IN other) throws TrapException {
+        if(other.extendS().val == 0 || (other.extendS().val == -1L && val == Long.MIN_VALUE))
+            throw new TrapException();
         return new I64(val / other.extendS().val);
     }
 
     @Override
-    public I64 remU(final IN other) {
+    public I64 remU(final IN other) throws TrapException {
+        if(other.extendU().val == 0)
+            throw new TrapException();
         return new I64(Long.remainderUnsigned(val, other.extendU().val));
     }
 
     @Override
-    public I64 remS(final IN other) {
+    public I64 remS(final IN other) throws TrapException {
+        if(other.extendS().val == 0)
+            throw new TrapException();
         return new I64(val % other.extendS().val);
     }
 
@@ -179,6 +189,16 @@ public final class I64 extends IN {
     @Override
     public I64 geS(final IN other) {
         return bool(val >= other.extendS().val);
+    }
+
+    @Override
+    public F64 convertU() {
+        return new F64(UnsignedLong.fromLongBits(val).doubleValue());
+    }
+
+    @Override
+    public F64 convertS() {
+        return new F64((double) val);
     }
 
     @Override

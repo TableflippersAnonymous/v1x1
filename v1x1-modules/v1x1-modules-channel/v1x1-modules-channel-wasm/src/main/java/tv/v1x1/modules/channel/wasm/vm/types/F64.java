@@ -1,6 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.types;
 
 import com.google.common.primitives.Longs;
+import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
 import java.math.BigDecimal;
 
@@ -87,61 +88,75 @@ public final class F64 extends FN {
 
     @Override
     public F64 nearest() {
-        return null;
+        return new F64(Math.round(val));
     }
 
     @Override
     public I64 eq(final FN other) {
-        return null;
+        return bool(val == other.promote().val);
     }
 
     @Override
     public I64 ne(final FN other) {
-        return null;
+        return bool(val != other.promote().val);
     }
 
     @Override
     public I64 lt(final FN other) {
-        return null;
+        return bool(val < other.promote().val);
     }
 
     @Override
     public I64 gt(final FN other) {
-        return null;
+        return bool(val > other.promote().val);
     }
 
     @Override
     public I64 le(final FN other) {
-        return null;
+        return bool(val <= other.promote().val);
     }
 
     @Override
     public I64 ge(final FN other) {
-        return null;
+        return bool(val >= other.promote().val);
     }
 
     @Override
-    public I64 truncU() {
-        return null;
+    public I64 truncU() throws TrapException {
+        if(Double.isNaN(val) || Double.isInfinite(val))
+            throw new TrapException();
+        final F64 trunc = trunc();
+        if(trunc.val >= 18446744073709551616D || trunc.val < 0D)
+            throw new TrapException();
+        return new I64(BigDecimal.valueOf(trunc.val).longValue());
     }
 
     @Override
-    public I64 truncS() {
-        return null;
+    public I64 truncS() throws TrapException {
+        if(Double.isNaN(val) || Double.isInfinite(val))
+            throw new TrapException();
+        final F64 trunc = trunc();
+        if(trunc.val > Long.MAX_VALUE || trunc.val < Long.MIN_VALUE)
+            throw new TrapException();
+        return new I64((long) trunc.val);
     }
 
     @Override
     public F64 promote() {
-        return null;
+        return this;
     }
 
     @Override
     public F32 demote() {
-        return null;
+        return new F32((float) val);
     }
 
     @Override
     public I64 reinterpret() {
-        return null;
+        return I64.decode(bits());
+    }
+
+    private I64 bool(final boolean bool) {
+        return bool ? I64.ONE : I64.ZERO;
     }
 }
