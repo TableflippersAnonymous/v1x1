@@ -3,11 +3,19 @@ package tv.v1x1.modules.channel.wasm.vm.types;
 import com.google.common.primitives.Ints;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 public final class F32 extends FN {
     public static F32 decode(final byte[] bits) {
         return new F32(Float.intBitsToFloat(Ints.fromByteArray(bits)));
+    }
+
+    public static F32 decode(final DataInputStream input) throws IOException {
+        final byte[] bits = new byte[4];
+        input.readFully(bits);
+        return decode(swapEndian(bits));
     }
 
     private final float val;

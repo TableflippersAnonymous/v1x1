@@ -3,11 +3,19 @@ package tv.v1x1.modules.channel.wasm.vm.types;
 import com.google.common.primitives.Longs;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
+import java.io.DataInputStream;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 public final class F64 extends FN {
     public static F64 decode(final byte[] bits) {
         return new F64(Double.longBitsToDouble(Longs.fromByteArray(bits)));
+    }
+
+    public static F64 decode(final DataInputStream input) throws IOException {
+        final byte[] bits = new byte[8];
+        input.readFully(bits);
+        return decode(swapEndian(bits));
     }
 
     private final double val;
@@ -92,32 +100,32 @@ public final class F64 extends FN {
     }
 
     @Override
-    public I64 eq(final FN other) {
+    public I32 eq(final FN other) {
         return bool(val == other.promote().val);
     }
 
     @Override
-    public I64 ne(final FN other) {
+    public I32 ne(final FN other) {
         return bool(val != other.promote().val);
     }
 
     @Override
-    public I64 lt(final FN other) {
+    public I32 lt(final FN other) {
         return bool(val < other.promote().val);
     }
 
     @Override
-    public I64 gt(final FN other) {
+    public I32 gt(final FN other) {
         return bool(val > other.promote().val);
     }
 
     @Override
-    public I64 le(final FN other) {
+    public I32 le(final FN other) {
         return bool(val <= other.promote().val);
     }
 
     @Override
-    public I64 ge(final FN other) {
+    public I32 ge(final FN other) {
         return bool(val >= other.promote().val);
     }
 
@@ -156,7 +164,7 @@ public final class F64 extends FN {
         return I64.decode(bits());
     }
 
-    private I64 bool(final boolean bool) {
-        return bool ? I64.ONE : I64.ZERO;
+    private I32 bool(final boolean bool) {
+        return bool ? I32.ONE : I32.ZERO;
     }
 }

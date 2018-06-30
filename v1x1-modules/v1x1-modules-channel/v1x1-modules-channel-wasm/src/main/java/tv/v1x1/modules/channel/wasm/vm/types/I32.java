@@ -4,12 +4,37 @@ import com.google.common.primitives.Ints;
 import com.google.common.primitives.UnsignedInteger;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
+import java.io.DataInputStream;
+import java.io.IOException;
+
 public final class I32 extends IN {
     public static final I32 ZERO = new I32(0);
     public static final I32 ONE = new I32(1);
 
     public static I32 decode(final byte[] bits) {
         return new I32(Ints.fromByteArray(bits));
+    }
+
+    public static I32 decode(final DataInputStream input) throws IOException {
+        int result = 0, shift;
+        byte val = -1;
+        for(shift = 0; shift < 32 && (val >> 7) != 0; shift += 7) {
+            val = input.readByte();
+            result |= (val & 0x7f) << shift;
+        }
+        if (shift < 32 && (val >> 6) != 0)
+            result |= (~0 << shift);
+        return new I32(result);
+    }
+
+    public static I32 decodeU(final DataInputStream input) throws IOException {
+        int result = 0;
+        byte val = -1;
+        for(int shift = 0; shift < 32 && (val >> 7) != 0; shift += 7) {
+            val = input.readByte();
+            result |= (val & 0x7f) << shift;
+        }
+        return new I32(result);
     }
 
     private final int val;
@@ -202,7 +227,7 @@ public final class I32 extends IN {
     }
 
     @Override
-    public FN reinterpret() {
+    public F32 reinterpret() {
         return F32.decode(bits());
     }
 

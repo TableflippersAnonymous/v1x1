@@ -1,15 +1,17 @@
-package tv.v1x1.modules.channel.wasm.vm.instructions;
+package tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64;
 
 import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
+import tv.v1x1.modules.channel.wasm.vm.types.I64;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 
-public class NopInstruction extends Instruction {
+public class I64EqzInstruction extends Instruction {
     @Override
-    public void decode(final DataInputStream dataInputStream) {
+    public void decode(final DataInputStream dataInputStream) throws IOException {
         /* No action */
     }
 
@@ -20,6 +22,7 @@ public class NopInstruction extends Instruction {
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        /* No action */
+        final I64 val = virtualMachine.getStack().pop(I64.class);
+        virtualMachine.getStack().push(val.eqz());
     }
 }

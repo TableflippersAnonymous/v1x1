@@ -1,10 +1,66 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
-import tv.v1x1.modules.channel.wasm.vm.instructions.I32ConstInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.NopInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.UnreachableInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.F32ConstInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.relop.F32EqInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.relop.F32GeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.relop.F32GtInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.relop.F32LeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.relop.F32LtInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.relop.F32NeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f64.F64ConstInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f64.relop.F64EqInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f64.relop.F64GeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f64.relop.F64GtInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f64.relop.F64LeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f64.relop.F64LtInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f64.relop.F64NeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.I32ConstInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32AddInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32AndInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32DivSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32DivUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32MulInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32OrInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32RemSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32RemUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32RotlInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32RotrInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32ShlInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32ShrSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32ShrUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32SubInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop.I32XorInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32EqInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32GeSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32GeUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32GtSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32GtUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32LeSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32LeUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32LtSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32LtUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.relop.I32NeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.unop.I32ClzInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.unop.I32CtzInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.unop.I32EqzInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.unop.I32PopcntInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.I64ConstInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.I64EqzInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64EqInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64GeSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64GeUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64GtSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64GtUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64LeSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64LeUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64LtSInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64LtUInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop.I64NeInstruction;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 
 public abstract class Instruction {
     /* See https://webassembly.github.io/spec/core/appendix/index-instructions.html */
@@ -90,7 +146,7 @@ public abstract class Instruction {
             /* 0xFC */ null, null, null, null
     };
 
-    public abstract void decode(final DataInputStream dataInputStream);
+    public abstract void decode(final DataInputStream dataInputStream) throws IOException;
     public abstract boolean validate(final Context context);
-    public abstract void execute(final Context context) throws TrapException;
+    public abstract void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException;
 }

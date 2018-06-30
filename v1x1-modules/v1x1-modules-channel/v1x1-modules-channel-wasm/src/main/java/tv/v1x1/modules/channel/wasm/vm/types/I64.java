@@ -4,12 +4,35 @@ import com.google.common.primitives.Longs;
 import com.google.common.primitives.UnsignedLong;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
-public final class I64 extends IN {
-    public static final I64 ZERO = new I64(0);
-    public static final I64 ONE = new I64(1);
+import java.io.DataInputStream;
+import java.io.IOException;
 
+public final class I64 extends IN {
     public static I64 decode(final byte[] bits) {
         return new I64(Longs.fromByteArray(bits));
+    }
+
+    public static I64 decode(final DataInputStream input) throws IOException {
+        long result = 0;
+        int shift;
+        byte val = -1;
+        for(shift = 0; shift < 64 && (val >> 7) != 0; shift += 7) {
+            val = input.readByte();
+            result |= (val & 0x7f) << shift;
+        }
+        if (shift < 64 && (val >> 6) != 0)
+            result |= (~0 << shift);
+        return new I64(result);
+    }
+
+    public static I64 decodeU(final DataInputStream input) throws IOException {
+        long result = 0;
+        byte val = -1;
+        for(int shift = 0; shift < 64 && (val >> 7) != 0; shift += 7) {
+            val = input.readByte();
+            result |= (val & 0x7f) << shift;
+        }
+        return new I64(result);
     }
 
     private final long val;
@@ -137,57 +160,57 @@ public final class I64 extends IN {
     }
 
     @Override
-    public I64 eqz() {
+    public I32 eqz() {
         return bool(val == 0);
     }
 
     @Override
-    public I64 eq(final IN other) {
+    public I32 eq(final IN other) {
         return bool(val == other.extendU().val);
     }
 
     @Override
-    public I64 ne(final IN other) {
+    public I32 ne(final IN other) {
         return bool(val != other.extendU().val);
     }
 
     @Override
-    public I64 ltU(final IN other) {
+    public I32 ltU(final IN other) {
         return bool(Long.compareUnsigned(val, other.extendU().val) < 0);
     }
 
     @Override
-    public I64 ltS(final IN other) {
+    public I32 ltS(final IN other) {
         return bool(val < other.extendS().val);
     }
 
     @Override
-    public I64 gtU(final IN other) {
+    public I32 gtU(final IN other) {
         return bool(Long.compareUnsigned(val, other.extendU().val) > 0);
     }
 
     @Override
-    public I64 gtS(final IN other) {
+    public I32 gtS(final IN other) {
         return bool(val > other.extendS().val);
     }
 
     @Override
-    public I64 leU(final IN other) {
+    public I32 leU(final IN other) {
         return bool(Long.compareUnsigned(val, other.extendU().val) <= 0);
     }
 
     @Override
-    public I64 leS(final IN other) {
+    public I32 leS(final IN other) {
         return bool(val <= other.extendS().val);
     }
 
     @Override
-    public I64 geU(final IN other) {
+    public I32 geU(final IN other) {
         return bool(Long.compareUnsigned(val, other.extendU().val) >= 0);
     }
 
     @Override
-    public I64 geS(final IN other) {
+    public I32 geS(final IN other) {
         return bool(val >= other.extendS().val);
     }
 
@@ -202,11 +225,11 @@ public final class I64 extends IN {
     }
 
     @Override
-    public FN reinterpret() {
+    public F64 reinterpret() {
         return F64.decode(bits());
     }
 
-    private I64 bool(final boolean bool) {
-        return bool ? I64.ONE : I64.ZERO;
+    private I32 bool(final boolean bool) {
+        return bool ? I32.ONE : I32.ZERO;
     }
 }
