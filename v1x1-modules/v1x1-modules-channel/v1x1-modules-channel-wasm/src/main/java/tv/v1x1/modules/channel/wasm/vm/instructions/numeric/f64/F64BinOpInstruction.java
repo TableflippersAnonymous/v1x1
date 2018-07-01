@@ -1,15 +1,15 @@
-package tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64;
+package tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f64;
 
 import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
-import tv.v1x1.modules.channel.wasm.vm.types.I64;
+import tv.v1x1.modules.channel.wasm.vm.types.F64;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class I64EqzInstruction extends Instruction {
+public abstract class F64BinOpInstruction extends Instruction {
     @Override
     public void decode(final DataInputStream dataInputStream) throws IOException {
         /* No action */
@@ -22,7 +22,10 @@ public class I64EqzInstruction extends Instruction {
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final I64 val = virtualMachine.getStack().pop(I64.class);
-        virtualMachine.getStack().push(val.eqz());
+        final F64 val2 = virtualMachine.getStack().pop(F64.class);
+        final F64 val1 = virtualMachine.getStack().pop(F64.class);
+        virtualMachine.getStack().push(op(val1, val2));
     }
+
+    public abstract F64 op(final F64 val1, final F64 val2) throws TrapException;
 }
