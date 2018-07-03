@@ -130,7 +130,7 @@ public final class F32 extends FN {
     }
 
     @Override
-    public I32 truncU() throws TrapException {
+    public I32 truncUI32() throws TrapException {
         if(Float.isNaN(val) || Float.isInfinite(val))
             throw new TrapException();
         final F32 trunc = trunc();
@@ -140,13 +140,33 @@ public final class F32 extends FN {
     }
 
     @Override
-    public I32 truncS() throws TrapException {
+    public I32 truncSI32() throws TrapException {
         if(Float.isNaN(val) || Float.isInfinite(val))
             throw new TrapException();
         final F32 trunc = trunc();
         if(trunc.val > Integer.MAX_VALUE || trunc.val < Integer.MIN_VALUE)
             throw new TrapException();
         return new I32((int) trunc.val);
+    }
+
+    @Override
+    public I64 truncUI64() throws TrapException {
+        if(Float.isNaN(val) || Float.isInfinite(val))
+            throw new TrapException();
+        final F32 trunc = trunc();
+        if(trunc.val >= 18446744073709551616D || trunc.val < 0D)
+            throw new TrapException();
+        return new I64(BigDecimal.valueOf(trunc.val).longValue());
+    }
+
+    @Override
+    public I64 truncSI64() throws TrapException {
+        if(Float.isNaN(val) || Float.isInfinite(val))
+            throw new TrapException();
+        final F32 trunc = trunc();
+        if(trunc.val > Long.MAX_VALUE || trunc.val < Long.MIN_VALUE)
+            throw new TrapException();
+        return new I64((long) trunc.val);
     }
 
     @Override

@@ -215,12 +215,22 @@ public final class I64 extends IN {
     }
 
     @Override
-    public F64 convertU() {
+    public F32 convertUF32() {
+        return new F32(UnsignedLong.fromLongBits(val).floatValue());
+    }
+
+    @Override
+    public F32 convertSF32() {
+        return new F32((float) val);
+    }
+
+    @Override
+    public F64 convertUF64() {
         return new F64(UnsignedLong.fromLongBits(val).doubleValue());
     }
 
     @Override
-    public F64 convertS() {
+    public F64 convertSF64() {
         return new F64((double) val);
     }
 

@@ -217,13 +217,23 @@ public final class I32 extends IN {
     }
 
     @Override
-    public F32 convertU() {
+    public F32 convertUF32() {
         return new F32(UnsignedInteger.fromIntBits(val).floatValue());
     }
 
     @Override
-    public F32 convertS() {
+    public F32 convertSF32() {
         return new F32((float) val);
+    }
+
+    @Override
+    public F64 convertUF64() {
+        return new F64(UnsignedInteger.fromIntBits(val).doubleValue());
+    }
+
+    @Override
+    public F64 convertSF64() {
+        return new F64((double) val);
     }
 
     @Override
