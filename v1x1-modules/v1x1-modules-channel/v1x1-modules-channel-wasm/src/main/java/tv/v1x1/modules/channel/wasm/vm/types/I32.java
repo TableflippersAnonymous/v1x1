@@ -241,6 +241,10 @@ public final class I32 extends IN {
         return F32.decode(bits());
     }
 
+    public int getVal() {
+        return val;
+    }
+
     private I32 bool(final boolean bool) {
         return bool ? I32.ONE : I32.ZERO;
     }

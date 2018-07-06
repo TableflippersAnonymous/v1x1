@@ -1,5 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import tv.v1x1.modules.channel.wasm.vm.stack.Activation;
 import tv.v1x1.modules.channel.wasm.vm.stack.WebAssemblyStack;
 
 public class WebAssemblyVirtualMachine {
@@ -11,5 +12,9 @@ public class WebAssemblyVirtualMachine {
 
     public WebAssemblyStack getStack() {
         return stack;
+    }
+
+    public Activation getCurrentActivation() {
+        return getStack().getCurrentFrame();
     }
 }

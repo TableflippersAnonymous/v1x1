@@ -129,6 +129,12 @@ import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.unop.I64ClzInstr
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.unop.I64CtzInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.unop.I64EqzInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.unop.I64PopcntInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.stack.DropInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.stack.GetLocalInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.stack.SelectInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.stack.SetLocalInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.stack.TeeLocalInstruction;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -218,6 +224,6 @@ public abstract class Instruction {
     };
 
     public abstract void decode(final DataInputStream dataInputStream) throws IOException;
-    public abstract boolean validate(final Context context);
+    public abstract void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException;
     public abstract void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException;
 }

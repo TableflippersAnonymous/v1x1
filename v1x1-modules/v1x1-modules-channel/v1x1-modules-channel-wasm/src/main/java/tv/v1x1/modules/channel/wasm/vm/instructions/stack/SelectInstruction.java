@@ -1,4 +1,4 @@
-package tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32;
+package tv.v1x1.modules.channel.wasm.vm.instructions.stack;
 
 import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
@@ -7,12 +7,13 @@ import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyValidationStack;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public abstract class I32RelOpInstruction extends Instruction {
+public class SelectInstruction extends Instruction {
     @Override
     public void decode(final DataInputStream dataInputStream) throws IOException {
         /* No action */
@@ -20,16 +21,17 @@ public abstract class I32RelOpInstruction extends Instruction {
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        stack.popOperands(ValType.I32, ValType.I32);
-        stack.pushOperand(ValType.I32);
+        stack.popOperand(ValType.I32);
+        final ValType type1 = stack.popOperand();
+        final ValType type2 = stack.popOperand(type1);
+        stack.pushOperand(type2);
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final I32 val2 = virtualMachine.getStack().pop(I32.class);
-        final I32 val1 = virtualMachine.getStack().pop(I32.class);
-        virtualMachine.getStack().push(op(val1, val2));
+        final I32 condition = virtualMachine.getStack().pop(I32.class);
+        final WebAssemblyType val2 = virtualMachine.getStack().pop(WebAssemblyType.class);
+        final WebAssemblyType val1 = virtualMachine.getStack().pop(val2.getClass());
+        virtualMachine.getStack().push(condition.eqz() == I32.ZERO ? val1 : val2);
     }
-
-    public abstract I32 op(final I32 val1, final I32 val2) throws TrapException;
 }

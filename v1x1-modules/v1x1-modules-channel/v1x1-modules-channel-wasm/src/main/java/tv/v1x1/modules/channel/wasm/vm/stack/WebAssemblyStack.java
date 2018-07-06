@@ -10,16 +10,22 @@ public class WebAssemblyStack {
     private static final int MAX_SIZE = 1024;
 
     private Deque<StackElement> stack = new ArrayDeque<>(MAX_SIZE);
+    private Deque<Activation> frames = new ArrayDeque<>();
 
     public void push(final StackElement val) throws TrapException {
         if(stack.size() >= MAX_SIZE)
             throw new TrapException("Call stack exhausted");
         stack.push(val);
+        if(val instanceof Activation)
+            frames.push((Activation) val);
     }
 
     public StackElement pop() throws TrapException {
         try {
-            return stack.pop();
+            final StackElement element = stack.pop();
+            if(element == getCurrentFrame())
+                frames.pop();
+            return element;
         } catch(final NoSuchElementException e) {
             throw new TrapException(e);
         }
@@ -41,5 +47,9 @@ public class WebAssemblyStack {
                 return (T) element;
         }
         throw new TrapException("Invalid frame on stack");
+    }
+
+    public Activation getCurrentFrame() {
+        return frames.peek();
     }
 }
