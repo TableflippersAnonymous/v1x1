@@ -9,7 +9,7 @@ public abstract class WebAssemblyType implements StackElement {
         return swapEndian(bits());
     }
 
-    protected static byte[] swapEndian(final byte[] original) {
+    public static byte[] swapEndian(final byte[] original) {
         byte[] ret = new byte[original.length];
         for(int i = 0; i < original.length; i++)
             ret[i] = original[original.length - 1 - i];

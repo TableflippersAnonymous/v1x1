@@ -1,7 +1,8 @@
-package tv.v1x1.modules.channel.wasm.vm.instructions.stack;
+package tv.v1x1.modules.channel.wasm.vm.instructions.store.globals;
 
 import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.Mutable;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyValidationStack;
@@ -13,25 +14,29 @@ import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class SelectInstruction extends Instruction {
+public class SetGlobalInstruction extends Instruction {
+    private I32 idx;
+    private ValType valType;
+
     @Override
     public void decode(final DataInputStream dataInputStream) throws IOException {
-        /* No action */
+        idx = I32.decodeU(dataInputStream);
     }
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        stack.popOperand(ValType.I32);
-        final ValType type1 = stack.popOperand();
-        final ValType type2 = stack.popOperand(type1);
-        stack.pushOperand(type2);
+        if(context.getGlobals().size() <= idx.getVal())
+            throw new ValidationException();
+        if(context.getGlobals().get(idx.getVal()).getMutable() != Mutable.VARIABLE)
+            throw new ValidationException();
+        valType = context.getGlobals().get(idx.getVal()).getValType();
+        stack.popOperand(valType);
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final I32 condition = virtualMachine.getStack().pop(I32.class);
-        final WebAssemblyType val2 = virtualMachine.getStack().pop(WebAssemblyType.class);
-        final WebAssemblyType val1 = virtualMachine.getStack().pop(val2.getClass());
-        virtualMachine.getStack().push(condition.eqz() == I32.ZERO ? val1 : val2);
+        final int globalAddress = virtualMachine.getCurrentActivation().getModule().getGlobalAddresses()[idx.getVal()];
+        final WebAssemblyType val = virtualMachine.getStack().pop(valType.getTypeClass());
+        virtualMachine.getStore().getGlobals().get(globalAddress).setValue(val);
     }
 }

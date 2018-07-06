@@ -239,6 +239,10 @@ public final class I64 extends IN {
         return F64.decode(bits());
     }
 
+    public long getVal() {
+        return val;
+    }
+
     private I32 bool(final boolean bool) {
         return bool ? I32.ONE : I32.ZERO;
     }

@@ -1,4 +1,4 @@
-package tv.v1x1.modules.channel.wasm.vm.instructions.stack;
+package tv.v1x1.modules.channel.wasm.vm.instructions.stack.locals;
 
 import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
@@ -13,7 +13,7 @@ import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class GetLocalInstruction extends Instruction {
+public class SetLocalInstruction extends Instruction {
     private I32 idx;
     private ValType valType;
 
@@ -27,12 +27,12 @@ public class GetLocalInstruction extends Instruction {
         if(context.getLocals().size() <= idx.getVal())
             throw new ValidationException();
         valType = context.getLocals().get(idx.getVal());
-        stack.pushOperand(valType);
+        stack.popOperand(valType);
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final WebAssemblyType val = virtualMachine.getCurrentActivation().getLocal(idx.getVal(), valType.getTypeClass());
-        virtualMachine.getStack().push(val);
+        final WebAssemblyType val = virtualMachine.getStack().pop(valType.getTypeClass());
+        virtualMachine.getCurrentActivation().setLocal(idx.getVal(), val);
     }
 }

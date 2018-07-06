@@ -1,4 +1,4 @@
-package tv.v1x1.modules.channel.wasm.vm.instructions.stack;
+package tv.v1x1.modules.channel.wasm.vm.instructions.stack.util;
 
 import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
@@ -13,26 +13,25 @@ import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 import java.io.DataInputStream;
 import java.io.IOException;
 
-public class SetLocalInstruction extends Instruction {
-    private I32 idx;
-    private ValType valType;
-
+public class SelectInstruction extends Instruction {
     @Override
     public void decode(final DataInputStream dataInputStream) throws IOException {
-        idx = I32.decodeU(dataInputStream);
+        /* No action */
     }
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        if(context.getLocals().size() <= idx.getVal())
-            throw new ValidationException();
-        valType = context.getLocals().get(idx.getVal());
-        stack.popOperand(valType);
+        stack.popOperand(ValType.I32);
+        final ValType type1 = stack.popOperand();
+        final ValType type2 = stack.popOperand(type1);
+        stack.pushOperand(type2);
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final WebAssemblyType val = virtualMachine.getStack().pop(valType.getTypeClass());
-        virtualMachine.getCurrentActivation().setLocal(idx.getVal(), val);
+        final I32 condition = virtualMachine.getStack().pop(I32.class);
+        final WebAssemblyType val2 = virtualMachine.getStack().pop(WebAssemblyType.class);
+        final WebAssemblyType val1 = virtualMachine.getStack().pop(val2.getClass());
+        virtualMachine.getStack().push(condition.eqz() == I32.ZERO ? val1 : val2);
     }
 }

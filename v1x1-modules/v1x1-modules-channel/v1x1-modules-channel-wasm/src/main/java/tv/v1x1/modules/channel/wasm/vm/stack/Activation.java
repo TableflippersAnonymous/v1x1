@@ -1,16 +1,16 @@
 package tv.v1x1.modules.channel.wasm.vm.stack;
 
+import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
-import tv.v1x1.modules.channel.wasm.vm.WebAssemblyModule;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 
 import java.util.List;
 
 public class Activation implements StackElement {
     private final List<WebAssemblyType> locals;
-    private final WebAssemblyModule module;
+    private final ModuleInstance module;
 
-    public Activation(final List<WebAssemblyType> locals, final WebAssemblyModule module) {
+    public Activation(final List<WebAssemblyType> locals, final ModuleInstance module) {
         this.locals = locals;
         this.module = module;
     }
@@ -32,7 +32,7 @@ public class Activation implements StackElement {
         locals.set(idx, val);
     }
 
-    public WebAssemblyModule getModule() {
+    public ModuleInstance getModule() {
         return module;
     }
 }
