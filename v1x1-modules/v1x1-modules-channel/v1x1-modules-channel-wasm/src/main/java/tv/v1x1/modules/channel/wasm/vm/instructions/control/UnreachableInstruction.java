@@ -1,4 +1,4 @@
-package tv.v1x1.modules.channel.wasm.vm.instructions;
+package tv.v1x1.modules.channel.wasm.vm.instructions.control;
 
 import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
@@ -9,7 +9,7 @@ import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 
-public class NopInstruction extends Instruction {
+public class UnreachableInstruction extends Instruction {
     @Override
     public void decode(final DataInputStream dataInputStream) {
         /* No action */
@@ -17,11 +17,11 @@ public class NopInstruction extends Instruction {
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        /* No action */
+        stack.setUnreachable();
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        /* No action */
+        throw new TrapException();
     }
 }

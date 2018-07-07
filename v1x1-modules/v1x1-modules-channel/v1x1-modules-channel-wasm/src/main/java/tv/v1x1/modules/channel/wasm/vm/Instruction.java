@@ -1,7 +1,14 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
-import tv.v1x1.modules.channel.wasm.vm.instructions.NopInstruction;
-import tv.v1x1.modules.channel.wasm.vm.instructions.UnreachableInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.BlockInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrIfInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.ElseInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.EndInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.IfInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.LoopInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.NopInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.UnreachableInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.F32ConstInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.binop.F32AddInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.binop.F32CopysignInstruction;
@@ -159,14 +166,21 @@ import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store.I64Store1
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store.I64Store32Instruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store.I64Store8Instruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store.I64StoreInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.util.MemoryGrowInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.util.MemorySizeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.stack.Label;
+import tv.v1x1.modules.channel.wasm.vm.stack.StackElement;
+import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 public abstract class Instruction {
     /* See https://webassembly.github.io/spec/core/appendix/index-instructions.html */
-    private final static Class<?>[] decodeTable = {
+    private final static Class<? extends Instruction>[] decodeTable = {
             /* 0x00 */ UnreachableInstruction.class, NopInstruction.class, BlockInstruction.class, LoopInstruction.class,
             /* 0x04 */ IfInstruction.class, ElseInstruction.class, null, null,
             /* 0x08 */ null, null, null, EndInstruction.class,
@@ -247,6 +261,61 @@ public abstract class Instruction {
             /* 0xF8 */ null, null, null, null,
             /* 0xFC */ null, null, null, null
     };
+
+    public static InstructionSequence decodeSequence(final DataInputStream dataInputStream, final boolean allowElse) throws IOException {
+        try {
+            Instruction firstInstruction = null;
+            Instruction lastInstruction = null;
+            do {
+                final int opcode = dataInputStream.readUnsignedByte();
+                final Class<? extends Instruction> clazz = decodeTable[opcode];
+                if (clazz == null)
+                    throw new DecodeException("Unknown opcode " + opcode);
+                final Instruction instruction = clazz.newInstance();
+                instruction.decode(dataInputStream);
+                if(firstInstruction == null)
+                    firstInstruction = instruction;
+                if(lastInstruction != null)
+                    lastInstruction.setNextInstruction(instruction);
+                lastInstruction = instruction;
+            } while(!(lastInstruction instanceof EndInstruction || (allowElse && lastInstruction instanceof ElseInstruction)));
+            return new InstructionSequence(firstInstruction, lastInstruction);
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new DecodeException(e);
+        }
+    }
+
+    public static void validateSequence(final WebAssemblyValidationStack stack, final Context context, final Instruction instructions) throws ValidationException {
+        for(Instruction instruction = instructions; instruction != null; instruction = instruction.nextInstruction)
+            instruction.validate(stack, context);
+    }
+
+    public static void enter(final WebAssemblyVirtualMachine virtualMachine, final Label label, final Instruction instruction) throws TrapException {
+        virtualMachine.getStack().push(label);
+        virtualMachine.setNextInstruction(instruction);
+    }
+
+    public static void exit(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
+        final Deque<WebAssemblyType> deque = new ArrayDeque<>();
+        for(;;) {
+            final StackElement stackElement = virtualMachine.getStack().pop();
+            if(stackElement instanceof WebAssemblyType)
+                deque.push((WebAssemblyType) stackElement);
+            else if(stackElement instanceof Label) {
+                virtualMachine.setNextInstruction(((Label) stackElement).getEnd());
+                break;
+            } else
+                throw new TrapException("Invalid stack element found.");
+        }
+        while(deque.size() > 0)
+            virtualMachine.getStack().push(deque.pop());
+    }
+
+    protected Instruction nextInstruction;
+
+    public void setNextInstruction(final Instruction nextInstruction) {
+        this.nextInstruction = nextInstruction;
+    }
 
     public abstract void decode(final DataInputStream dataInputStream) throws IOException;
     public abstract void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException;

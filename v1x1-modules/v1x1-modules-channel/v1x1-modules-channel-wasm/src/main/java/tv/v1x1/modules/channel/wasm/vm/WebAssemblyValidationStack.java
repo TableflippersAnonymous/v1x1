@@ -67,4 +67,12 @@ public class WebAssemblyValidationStack {
             popOperand();
         controlStack.peek().setUnreachable();
     }
+
+    public int controlSize() {
+        return controlStack.size();
+    }
+
+    public ValidationFrame getControl(final int label) {
+        return controlStack.toArray(new ValidationFrame[] {})[label];
+    }
 }

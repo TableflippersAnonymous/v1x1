@@ -1,5 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.stack;
 
+import com.google.common.collect.Iterables;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
 import java.util.ArrayDeque;
@@ -51,5 +52,11 @@ public class WebAssemblyStack {
 
     public Activation getCurrentFrame() {
         return frames.peek();
+    }
+
+    public Label getLabel(final int val) {
+        /* Disabling inspection because this is more efficient than what is recommended */
+        //noinspection StaticPseudoFunctionalStyleMethod
+        return Iterables.get(Iterables.filter(stack, Label.class), val);
     }
 }

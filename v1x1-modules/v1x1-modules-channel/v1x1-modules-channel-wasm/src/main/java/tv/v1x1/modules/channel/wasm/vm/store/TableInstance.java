@@ -7,5 +7,10 @@ import java.util.Optional;
 
 public class TableInstance {
     private List<Optional<I32>> elements;
-    private Optional<I32> max;
+    private final Optional<I32> max;
+
+    public TableInstance(final List<Optional<I32>> elements, final Optional<I32> max) {
+        this.elements = elements;
+        this.max = max;
+    }
 }
