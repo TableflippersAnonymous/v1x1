@@ -1,5 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.stack;
 
+import tv.v1x1.modules.channel.wasm.vm.Instruction;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
@@ -9,10 +10,14 @@ import java.util.List;
 public class Activation implements StackElement {
     private final List<WebAssemblyType> locals;
     private final ModuleInstance module;
+    private final int arity;
+    private final Instruction nextInstruction;
 
-    public Activation(final List<WebAssemblyType> locals, final ModuleInstance module) {
+    public Activation(final List<WebAssemblyType> locals, final ModuleInstance module, final int arity, final Instruction nextInstruction) {
         this.locals = locals;
         this.module = module;
+        this.arity = arity;
+        this.nextInstruction = nextInstruction;
     }
 
     @SuppressWarnings("unchecked")
@@ -34,5 +39,13 @@ public class Activation implements StackElement {
 
     public ModuleInstance getModule() {
         return module;
+    }
+
+    public int getArity() {
+        return arity;
+    }
+
+    public Instruction getNextInstruction() {
+        return nextInstruction;
     }
 }

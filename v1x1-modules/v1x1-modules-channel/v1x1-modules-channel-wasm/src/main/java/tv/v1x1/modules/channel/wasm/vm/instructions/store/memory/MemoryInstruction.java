@@ -25,9 +25,9 @@ public abstract class MemoryInstruction extends Instruction {
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
         if(context.getMemories().isEmpty())
             throw new ValidationException();
-        if(align.getVal() > 3 || align.getVal() < 0 || offset.getVal() < 0)
+        if(align.getValU() > 3)
             throw new ValidationException();
-        if(IntMath.pow(2, align.getVal()) > getWidth() / 8)
+        if(IntMath.pow(2, (int) align.getValU()) > getWidth() / 8)
             throw new ValidationException();
         stack.popOperand(ValType.I32);
     }

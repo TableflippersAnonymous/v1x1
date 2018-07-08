@@ -25,17 +25,17 @@ public class SetGlobalInstruction extends Instruction {
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        if(context.getGlobals().size() <= idx.getVal())
+        if(context.getGlobals().size() <= idx.getValU())
             throw new ValidationException();
-        if(context.getGlobals().get(idx.getVal()).getMutable() != Mutable.VARIABLE)
+        if(context.getGlobals().get((int) idx.getValU()).getMutable() != Mutable.VARIABLE)
             throw new ValidationException();
-        valType = context.getGlobals().get(idx.getVal()).getValType();
+        valType = context.getGlobals().get((int) idx.getValU()).getValType();
         stack.popOperand(valType);
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final int globalAddress = virtualMachine.getCurrentActivation().getModule().getGlobalAddresses()[idx.getVal()];
+        final int globalAddress = virtualMachine.getCurrentActivation().getModule().getGlobalAddresses()[(int) idx.getValU()];
         final WebAssemblyType val = virtualMachine.getStack().pop(valType.getTypeClass());
         virtualMachine.getStore().getGlobals().get(globalAddress).setValue(val);
     }

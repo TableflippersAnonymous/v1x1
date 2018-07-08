@@ -24,15 +24,15 @@ public class GetLocalInstruction extends Instruction {
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        if(context.getLocals().size() <= idx.getVal())
+        if(context.getLocals().size() <= idx.getValU())
             throw new ValidationException();
-        valType = context.getLocals().get(idx.getVal());
+        valType = context.getLocals().get((int) idx.getValU());
         stack.pushOperand(valType);
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final WebAssemblyType val = virtualMachine.getCurrentActivation().getLocal(idx.getVal(), valType.getTypeClass());
+        final WebAssemblyType val = virtualMachine.getCurrentActivation().getLocal((int) idx.getValU(), valType.getTypeClass());
         virtualMachine.getStack().push(val);
     }
 }

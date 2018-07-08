@@ -26,22 +26,20 @@ public class BrInstruction extends Instruction {
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        final int label = labelIndex.getVal();
-        if(label < 0)
-            throw new ValidationException();
+        final long label = labelIndex.getValU();
         if(stack.controlSize() < label)
             throw new ValidationException();
-        stack.popOperands(stack.getControl(label).getLabelTypes().toArray(new ValType[] {}));
+        stack.popOperands(stack.getControl((int) label).getLabelTypes().toArray(new ValType[] {}));
         stack.setUnreachable();
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final Label label = virtualMachine.getStack().getLabel(labelIndex.getVal());
+        final Label label = virtualMachine.getStack().getLabel((int) labelIndex.getValU());
         final Deque<WebAssemblyType> deque = new ArrayDeque<>();
         for(int i = 0; i < label.getArity(); i++)
             deque.push(virtualMachine.getStack().pop(WebAssemblyType.class));
-        for(int i = 0; i <= labelIndex.getVal(); i++)
+        for(int i = 0; i <= labelIndex.getValU(); i++)
             virtualMachine.getStack().popUntil(Label.class);
         while(deque.size() > 0)
             virtualMachine.getStack().push(deque.pop());

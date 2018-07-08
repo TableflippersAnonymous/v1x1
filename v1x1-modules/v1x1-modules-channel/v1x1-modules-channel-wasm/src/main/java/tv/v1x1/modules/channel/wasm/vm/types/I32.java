@@ -245,6 +245,10 @@ public final class I32 extends IN {
         return val;
     }
 
+    public long getValU() {
+        return Integer.toUnsignedLong(val);
+    }
+
     private I32 bool(final boolean bool) {
         return bool ? I32.ONE : I32.ZERO;
     }

@@ -3,11 +3,14 @@ package tv.v1x1.modules.channel.wasm.vm;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BlockInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrIfInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrTableInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.CallInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.ElseInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.EndInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.IfInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.LoopInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.NopInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.ReturnInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.UnreachableInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.F32ConstInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.f32.binop.F32AddInstruction;
@@ -170,6 +173,7 @@ import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.util.MemoryGrow
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.util.MemorySizeInstruction;
 import tv.v1x1.modules.channel.wasm.vm.stack.Label;
 import tv.v1x1.modules.channel.wasm.vm.stack.StackElement;
+import tv.v1x1.modules.channel.wasm.vm.store.FunctionInstance;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
@@ -309,6 +313,12 @@ public abstract class Instruction {
         }
         while(deque.size() > 0)
             virtualMachine.getStack().push(deque.pop());
+    }
+
+    public static void invoke(final WebAssemblyVirtualMachine virtualMachine, final int functionAddress, final Instruction nextInstruction) {
+        final FunctionInstance functionInstance = virtualMachine.getStore().getFunctions().get(functionAddress);
+        final FunctionType functionType = functionInstance.getType();
+        // TODO: Finish this.
     }
 
     protected Instruction nextInstruction;

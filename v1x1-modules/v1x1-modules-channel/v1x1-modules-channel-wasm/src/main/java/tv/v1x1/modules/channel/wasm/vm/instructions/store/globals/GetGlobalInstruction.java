@@ -24,15 +24,15 @@ public class GetGlobalInstruction extends Instruction {
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        if(context.getGlobals().size() <= idx.getVal())
+        if(context.getGlobals().size() <= idx.getValU())
             throw new ValidationException();
-        valType = context.getGlobals().get(idx.getVal()).getValType();
+        valType = context.getGlobals().get((int) idx.getValU()).getValType();
         stack.pushOperand(valType);
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        final int globalIdx = virtualMachine.getCurrentActivation().getModule().getGlobalAddresses()[idx.getVal()];
+        final int globalIdx = virtualMachine.getCurrentActivation().getModule().getGlobalAddresses()[(int) idx.getValU()];
         final WebAssemblyType val = virtualMachine.getStore().getGlobals().get(globalIdx).getValue();
         virtualMachine.getStack().push(val);
     }

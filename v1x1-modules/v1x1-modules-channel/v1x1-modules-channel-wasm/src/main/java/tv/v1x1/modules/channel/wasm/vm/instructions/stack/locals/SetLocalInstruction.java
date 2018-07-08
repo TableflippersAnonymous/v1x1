@@ -24,15 +24,15 @@ public class SetLocalInstruction extends Instruction {
 
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
-        if(context.getLocals().size() <= idx.getVal())
+        if(context.getLocals().size() <= idx.getValU())
             throw new ValidationException();
-        valType = context.getLocals().get(idx.getVal());
+        valType = context.getLocals().get((int) idx.getValU());
         stack.popOperand(valType);
     }
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
         final WebAssemblyType val = virtualMachine.getStack().pop(valType.getTypeClass());
-        virtualMachine.getCurrentActivation().setLocal(idx.getVal(), val);
+        virtualMachine.getCurrentActivation().setLocal((int) idx.getValU(), val);
     }
 }
