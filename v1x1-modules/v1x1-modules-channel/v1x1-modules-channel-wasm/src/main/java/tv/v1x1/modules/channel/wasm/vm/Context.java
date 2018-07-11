@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import tv.v1x1.modules.channel.wasm.vm.decoder.MemoryType;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

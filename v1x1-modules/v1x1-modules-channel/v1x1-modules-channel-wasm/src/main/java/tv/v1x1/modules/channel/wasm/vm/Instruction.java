@@ -4,6 +4,7 @@ import tv.v1x1.modules.channel.wasm.vm.instructions.control.BlockInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrIfInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrTableInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.CallIndirectInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.CallInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.ElseInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.EndInstruction;
@@ -171,6 +172,7 @@ import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store.I64Store8
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store.I64StoreInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.util.MemoryGrowInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.util.MemorySizeInstruction;
+import tv.v1x1.modules.channel.wasm.vm.stack.Activation;
 import tv.v1x1.modules.channel.wasm.vm.stack.Label;
 import tv.v1x1.modules.channel.wasm.vm.stack.StackElement;
 import tv.v1x1.modules.channel.wasm.vm.store.FunctionInstance;
@@ -180,11 +182,12 @@ import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
 
 public abstract class Instruction {
     /* See https://webassembly.github.io/spec/core/appendix/index-instructions.html */
-    private final static Class<? extends Instruction>[] decodeTable = {
+    private final static Class[] decodeTable = {
             /* 0x00 */ UnreachableInstruction.class, NopInstruction.class, BlockInstruction.class, LoopInstruction.class,
             /* 0x04 */ IfInstruction.class, ElseInstruction.class, null, null,
             /* 0x08 */ null, null, null, EndInstruction.class,
@@ -272,7 +275,8 @@ public abstract class Instruction {
             Instruction lastInstruction = null;
             do {
                 final int opcode = dataInputStream.readUnsignedByte();
-                final Class<? extends Instruction> clazz = decodeTable[opcode];
+                @SuppressWarnings("unchecked")
+                final Class<? extends Instruction> clazz = (Class<? extends Instruction>) decodeTable[opcode];
                 if (clazz == null)
                     throw new DecodeException("Unknown opcode " + opcode);
                 final Instruction instruction = clazz.newInstance();
@@ -315,10 +319,31 @@ public abstract class Instruction {
             virtualMachine.getStack().push(deque.pop());
     }
 
-    public static void invoke(final WebAssemblyVirtualMachine virtualMachine, final int functionAddress, final Instruction nextInstruction) {
+    public static void invoke(final WebAssemblyVirtualMachine virtualMachine, final int functionAddress, final Instruction nextInstruction) throws TrapException {
         final FunctionInstance functionInstance = virtualMachine.getStore().getFunctions().get(functionAddress);
         final FunctionType functionType = functionInstance.getType();
-        // TODO: Finish this.
+        if(functionType.getReturnTypes().size() > 1)
+            throw new TrapException();
+        final WebAssemblyType[] locals = new WebAssemblyType[functionType.getParameters().size() + functionInstance.getLocals().size()];
+        for(int i = functionType.getParameters().size() - 1; i >= 0; i--)
+            locals[i] = virtualMachine.getStack().pop(functionType.getParameters().get(i).getTypeClass());
+        for(int i = functionType.getParameters().size(), j = 0; i < locals.length && j < functionInstance.getLocals().size(); i++, j++)
+            locals[i] = functionInstance.getLocals().get(j).getZero();
+        final Activation frame = new Activation(Arrays.asList(locals), functionInstance.getModule(), functionType.getReturnTypes().size(), nextInstruction);
+        final Activation previousFrame = virtualMachine.getCurrentActivation();
+        virtualMachine.getStack().push(frame);
+        functionInstance.invoke(virtualMachine, previousFrame.getModule());
+    }
+
+    public static void exitFrame(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
+        final Deque<WebAssemblyType> retValues = new ArrayDeque<>();
+        final Activation currentFrame = virtualMachine.getCurrentActivation();
+        for(int i = 0; i < currentFrame.getArity(); i++)
+            retValues.push(virtualMachine.getStack().pop(WebAssemblyType.class));
+        virtualMachine.getStack().pop(Activation.class);
+        while(!retValues.isEmpty())
+            virtualMachine.getStack().push(retValues.pop());
+        virtualMachine.setNextInstruction(currentFrame.getNextInstruction());
     }
 
     protected Instruction nextInstruction;

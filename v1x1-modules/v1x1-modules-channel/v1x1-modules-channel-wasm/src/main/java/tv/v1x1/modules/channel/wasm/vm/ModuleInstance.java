@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import tv.v1x1.modules.channel.wasm.vm.decoder.ExportDef;
+
 public class ModuleInstance {
     private final FunctionType[] types;
     private final int[] functionAddresses;

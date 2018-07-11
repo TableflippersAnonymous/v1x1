@@ -8,6 +8,8 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 public final class I64 extends IN {
+    public static final I64 ZERO = new I64(0);
+
     public static I64 decode(final byte[] bits) {
         return new I64(Longs.fromByteArray(bits));
     }

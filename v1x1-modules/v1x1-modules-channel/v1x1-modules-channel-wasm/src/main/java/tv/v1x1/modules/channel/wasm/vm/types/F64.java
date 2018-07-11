@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 public final class F64 extends FN {
+    public static final F64 ZERO = new F64(0);
+
     public static F64 decode(final byte[] bits) {
         return new F64(Double.longBitsToDouble(Longs.fromByteArray(bits)));
     }

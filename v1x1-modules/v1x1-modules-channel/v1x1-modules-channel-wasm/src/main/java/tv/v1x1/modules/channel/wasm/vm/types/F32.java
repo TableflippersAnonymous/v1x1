@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 public final class F32 extends FN {
+    public static final F32 ZERO = new F32(0);
+
     public static F32 decode(final byte[] bits) {
         return new F32(Float.intBitsToFloat(Ints.fromByteArray(bits)));
     }
