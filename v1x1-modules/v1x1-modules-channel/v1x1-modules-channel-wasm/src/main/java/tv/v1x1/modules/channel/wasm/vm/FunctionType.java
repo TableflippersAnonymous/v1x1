@@ -2,6 +2,7 @@ package tv.v1x1.modules.channel.wasm.vm;
 
 import com.google.common.base.Objects;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -35,8 +36,9 @@ public class FunctionType {
     }
 
     // https://webassembly.github.io/spec/core/valid/types.html#function-types
-    public boolean validate() {
-        return this.returnTypes.size() <= 1;
+    public void validate() throws ValidationException {
+        if(this.returnTypes.size() > 1)
+            throw new ValidationException();
     }
 
     public List<ValType> getParameters() {

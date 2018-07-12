@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -27,7 +29,7 @@ public class GlobalType {
     }
 
     // https://webassembly.github.io/spec/core/valid/types.html#global-types
-    public boolean validate() {
-        return true;
+    public void validate() throws ValidationException {
+        /* No action */
     }
 }

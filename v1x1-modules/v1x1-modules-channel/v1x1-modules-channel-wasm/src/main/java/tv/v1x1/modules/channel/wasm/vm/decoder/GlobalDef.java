@@ -1,8 +1,12 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
+import com.google.common.collect.ImmutableList;
+import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.GlobalType;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.WebAssemblyValidationStack;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -38,5 +42,14 @@ public class GlobalDef {
 
     public Instruction getInit() {
         return init;
+    }
+
+    public void validate(final Context context) throws ValidationException {
+        type.validate();
+        final WebAssemblyValidationStack stack = new WebAssemblyValidationStack();
+        stack.pushControl(ImmutableList.of(), ImmutableList.of(type.getValType()));
+        Instruction.validateSequence(stack, context, init);
+        if(!Instruction.isConstantSequence(init))
+            throw new ValidationException();
     }
 }

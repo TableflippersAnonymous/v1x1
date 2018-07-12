@@ -1,15 +1,21 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
 import com.google.common.collect.ImmutableList;
+import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.DecodeException;
+import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.ResultType;
 import tv.v1x1.modules.channel.wasm.vm.ValType;
+import tv.v1x1.modules.channel.wasm.vm.WebAssemblyValidationStack;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class FunctionDef {
     private static final int MAX_LOCALS = 2048;
@@ -61,5 +67,19 @@ public class FunctionDef {
 
     public Instruction getBody() {
         return body;
+    }
+
+    public void validate(final Context context) throws ValidationException {
+        if(context.getTypes().size() <= typeIdx)
+            throw new ValidationException();
+        final FunctionType type = context.getTypes().get(typeIdx);
+        final List<ValType> locals = new ArrayList<>(type.getParameters());
+        locals.addAll(getLocals());
+        final Context newContext = new Context(context.getTypes(), context.getFuncs(), context.getTables(),
+                context.getMemories(), context.getGlobals(), locals, ImmutableList.of(new ResultType(type.getReturnTypes())),
+                Optional.of(new ResultType(type.getReturnTypes())));
+        final WebAssemblyValidationStack stack = new WebAssemblyValidationStack();
+        stack.pushControl(type.getReturnTypes(), type.getReturnTypes());
+        Instruction.validateSequence(stack, newContext, body);
     }
 }

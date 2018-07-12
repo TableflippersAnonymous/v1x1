@@ -29,4 +29,9 @@ public class I64ConstInstruction extends Instruction {
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
         virtualMachine.getStack().push(val);
     }
+
+    @Override
+    protected boolean isConstant() {
+        return true;
+    }
 }

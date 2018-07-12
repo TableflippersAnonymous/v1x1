@@ -1,6 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -27,8 +28,9 @@ public class Limits {
     }
 
     // https://webassembly.github.io/spec/core/valid/types.html#limits
-    public boolean validate() {
-        return max.map(i32 -> min.leU(i32) == I32.ONE)
-                .orElse(true);
+    public void validate() throws ValidationException {
+        if(max.map(i32 -> min.leU(i32) == I32.ONE).orElse(true))
+            return;
+        throw new ValidationException();
     }
 }

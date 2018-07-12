@@ -1,5 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
+import tv.v1x1.modules.channel.wasm.vm.Context;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -13,6 +16,11 @@ public class MemImportDescriptor extends ImportDescriptor {
     public static MemImportDescriptor decode(final DataInputStream dataInputStream) throws IOException {
         final MemoryType memoryType = MemoryType.decode(dataInputStream);
         return new MemImportDescriptor(memoryType);
+    }
+
+    @Override
+    public void validate(final Context context) throws ValidationException {
+        memoryType.validate();
     }
 
     public MemoryType getMemoryType() {

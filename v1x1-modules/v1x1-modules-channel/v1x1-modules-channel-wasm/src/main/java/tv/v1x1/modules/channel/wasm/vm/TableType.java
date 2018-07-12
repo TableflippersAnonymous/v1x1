@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 
@@ -19,8 +21,8 @@ public class TableType {
     }
 
     // https://webassembly.github.io/spec/core/valid/types.html#table-types
-    public boolean validate() {
-        return limits.validate();
+    public void validate() throws ValidationException {
+        limits.validate();
     }
 
     public Limits getLimits() {

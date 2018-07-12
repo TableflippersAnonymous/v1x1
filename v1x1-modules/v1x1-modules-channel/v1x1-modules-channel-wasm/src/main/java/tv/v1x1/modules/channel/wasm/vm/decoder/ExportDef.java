@@ -1,6 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
+import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -36,5 +38,9 @@ public class ExportDef {
 
     public ExportDescriptor getDescriptor() {
         return descriptor;
+    }
+
+    public void validate(final Context context) throws ValidationException {
+        descriptor.validate(context);
     }
 }

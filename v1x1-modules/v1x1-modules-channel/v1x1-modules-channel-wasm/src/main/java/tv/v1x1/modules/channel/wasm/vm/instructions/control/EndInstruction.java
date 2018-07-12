@@ -26,4 +26,9 @@ public class EndInstruction extends Instruction {
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
         exit(virtualMachine);
     }
+
+    @Override
+    protected boolean isConstant() {
+        return true;
+    }
 }

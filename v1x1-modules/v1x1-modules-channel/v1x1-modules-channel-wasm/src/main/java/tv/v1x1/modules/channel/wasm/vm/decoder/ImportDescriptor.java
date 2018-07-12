@@ -1,6 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
+import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.DecodeException;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -21,4 +23,6 @@ public abstract class ImportDescriptor {
                 throw new DecodeException("Invalid importdesc type");
         }
     }
+
+    public abstract void validate(final Context context) throws ValidationException;
 }

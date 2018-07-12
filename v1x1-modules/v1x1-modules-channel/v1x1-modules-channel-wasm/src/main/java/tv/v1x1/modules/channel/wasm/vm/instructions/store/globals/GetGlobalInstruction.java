@@ -36,4 +36,9 @@ public class GetGlobalInstruction extends Instruction {
         final WebAssemblyType val = virtualMachine.getStore().getGlobals().get(globalIdx).getValue();
         virtualMachine.getStack().push(val);
     }
+
+    @Override
+    protected boolean isConstant() {
+        return true;
+    }
 }

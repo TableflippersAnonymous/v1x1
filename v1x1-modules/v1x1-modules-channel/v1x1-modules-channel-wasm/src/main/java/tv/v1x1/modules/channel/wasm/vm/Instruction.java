@@ -348,6 +348,17 @@ public abstract class Instruction {
 
     protected Instruction nextInstruction;
 
+    public static boolean isConstantSequence(final Instruction instructions) {
+        for(Instruction instruction = instructions; instruction != null; instruction = instruction.nextInstruction)
+            if(!instruction.isConstant())
+                return false;
+        return true;
+    }
+
+    protected boolean isConstant() {
+        return false;
+    }
+
     public void setNextInstruction(final Instruction nextInstruction) {
         this.nextInstruction = nextInstruction;
     }

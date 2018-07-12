@@ -1,10 +1,14 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
 import com.google.common.collect.ImmutableList;
+import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
+import tv.v1x1.modules.channel.wasm.vm.GlobalType;
 import tv.v1x1.modules.channel.wasm.vm.Section;
+import tv.v1x1.modules.channel.wasm.vm.TableType;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -15,6 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ModuleDef {
     private static final byte[] MAGIC = { 0x00, 0x61, 0x73, 0x6d };
@@ -167,5 +174,105 @@ public class ModuleDef {
         for(long i = 0; i < count; i++)
             integers.add((int) I32.decodeU(dataInputStream).getValU());
         return integers;
+    }
+
+    public void validate() throws ValidationException {
+        final List<FunctionType> functions = getContextFunctions();
+        final List<TableType> tableTypes = getContextTables();
+        final List<MemoryType> memoryTypes = getContextMemories();
+        final List<GlobalType> globalTypes = getContextGlobals();
+        final Context context = new Context(ImmutableList.copyOf(functionTypes), ImmutableList.copyOf(functions),
+                ImmutableList.copyOf(tableTypes), ImmutableList.copyOf(memoryTypes), ImmutableList.copyOf(globalTypes),
+                ImmutableList.of(), ImmutableList.of(), Optional.empty());
+        final Context globalImportContext = new Context(ImmutableList.of(), ImmutableList.of(), ImmutableList.of(),
+                ImmutableList.of(), ImmutableList.copyOf(globals()), ImmutableList.of(), ImmutableList.of(),
+                Optional.empty());
+        for(final FunctionType functionType : functionTypes)
+            functionType.validate();
+        for(final FunctionDef functionDef : this.functions)
+            functionDef.validate(context);
+        for(final TableDef tableDef : tables)
+            tableDef.validate();
+        for(final MemoryDef memoryDef : memories)
+            memoryDef.validate();
+        for(final GlobalDef globalDef : globals)
+            globalDef.validate(globalImportContext);
+        for(final ElementSegmentDef elementSegmentDef : elementSegments)
+            elementSegmentDef.validate(context);
+        for(final DataSegmentDef dataSegmentDef : dataSegments)
+            dataSegmentDef.validate(context);
+        if(start.isPresent())
+            start.get().validate(context);
+        for(final ImportDef importDef : imports)
+            importDef.validate(context);
+        for(final ExportDef exportDef : exports)
+            exportDef.validate(context);
+        if(context.getTables().size() > 1)
+            throw new ValidationException();
+        if(context.getMemories().size() > 1)
+            throw new ValidationException();
+        final Set<String> exportNames = exports.stream().map(ExportDef::getName).collect(Collectors.toSet());
+        if(exportNames.size() != exports.size())
+            throw new ValidationException();
+    }
+
+    private List<GlobalType> globals() {
+        return getImportDescriptorStream()
+                .filter(importDescriptor -> importDescriptor instanceof GlobalImportDescriptor)
+                .map(importDescriptor -> (GlobalImportDescriptor) importDescriptor)
+                .map(GlobalImportDescriptor::getGlobalType)
+                .collect(Collectors.toList());
+    }
+
+    private Stream<ImportDescriptor> getImportDescriptorStream() {
+        return imports.stream()
+                .map(ImportDef::getDescriptor);
+    }
+
+    private List<GlobalType> getContextGlobals() {
+        return merge(globals(), globals.stream()
+                .map(GlobalDef::getType)
+                .collect(Collectors.toList()));
+    }
+
+    private List<MemoryType> getContextMemories() {
+        return merge(getImportDescriptorStream()
+                    .filter(importDescriptor -> importDescriptor instanceof MemImportDescriptor)
+                    .map(importDescriptor -> (MemImportDescriptor) importDescriptor)
+                    .map(MemImportDescriptor::getMemoryType)
+                    .collect(Collectors.toList()),
+                memories.stream()
+                    .map(MemoryDef::getMemoryType)
+                    .collect(Collectors.toList()));
+    }
+
+    private List<TableType> getContextTables() {
+        return merge(getImportDescriptorStream()
+                    .filter(importDescriptor -> importDescriptor instanceof TableImportDescriptor)
+                    .map(importDescriptor -> (TableImportDescriptor) importDescriptor)
+                    .map(TableImportDescriptor::getTableType)
+                    .collect(Collectors.toList()),
+                tables.stream()
+                    .map(TableDef::getTableType)
+                    .collect(Collectors.toList()));
+    }
+
+    private List<FunctionType> getContextFunctions() {
+        return merge(getImportDescriptorStream()
+                    .filter(importDescriptor -> importDescriptor instanceof FuncImportDescriptor)
+                    .map(importDescriptor -> (FuncImportDescriptor) importDescriptor)
+                    .map(FuncImportDescriptor::getTypeIdx)
+                    .map(typeIdx -> functionTypes.get(typeIdx.intValue()))
+                    .collect(Collectors.toList()),
+                this.functions.stream()
+                    .map(FunctionDef::getTypeIdx)
+                    .map(functionTypes::get)
+                    .collect(Collectors.toList()));
+    }
+
+    private <T> List<T> merge(final List<T> list1, final List<T> list2) {
+        final List<T> list = new ArrayList<>(list1);
+        list.addAll(list2);
+        return list;
     }
 }

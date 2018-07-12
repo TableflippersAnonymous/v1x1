@@ -1,7 +1,12 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
+import com.google.common.collect.ImmutableList;
+import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.ValType;
+import tv.v1x1.modules.channel.wasm.vm.WebAssemblyValidationStack;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -32,5 +37,15 @@ public class DataSegmentDef {
         final Instruction instruction = Instruction.decodeSequence(dataInputStream, false).getFirst();
         final byte[] init = ModuleDef.decodeByteVec(dataInputStream);
         return new DataSegmentDef(memIdx, instruction, init);
+    }
+
+    public void validate(final Context context) throws ValidationException {
+        if(context.getMemories().size() <= memIdx)
+            throw new ValidationException();
+        final WebAssemblyValidationStack stack = new WebAssemblyValidationStack();
+        stack.pushControl(ImmutableList.of(), ImmutableList.of(ValType.I32));
+        Instruction.validateSequence(stack, context, offset);
+        if(!Instruction.isConstantSequence(offset))
+            throw new ValidationException();
     }
 }

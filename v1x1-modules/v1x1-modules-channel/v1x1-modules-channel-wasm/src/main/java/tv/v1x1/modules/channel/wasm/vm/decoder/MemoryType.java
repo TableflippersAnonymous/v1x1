@@ -1,6 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
 import tv.v1x1.modules.channel.wasm.vm.Limits;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -18,5 +19,9 @@ public class MemoryType {
 
     public Limits getLimits() {
         return limits;
+    }
+
+    public void validate() throws ValidationException {
+        limits.validate();
     }
 }
