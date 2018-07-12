@@ -33,4 +33,12 @@ public class Limits {
             return;
         throw new ValidationException();
     }
+
+    public I32 getMin() {
+        return min;
+    }
+
+    public Optional<I32> getMax() {
+        return max;
+    }
 }

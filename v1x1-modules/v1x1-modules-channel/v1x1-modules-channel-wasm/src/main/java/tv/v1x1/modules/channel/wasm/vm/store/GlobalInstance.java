@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
+import tv.v1x1.modules.channel.wasm.vm.GlobalType;
+import tv.v1x1.modules.channel.wasm.vm.Mutable;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 
 public class GlobalInstance {
@@ -21,5 +23,10 @@ public class GlobalInstance {
 
     public boolean isMutable() {
         return mutable;
+    }
+
+    public boolean matches(final GlobalType globalType) {
+        return mutable == (globalType.getMutable() == Mutable.VARIABLE)
+                && globalType.getValType().getTypeClass().isInstance(value);
     }
 }

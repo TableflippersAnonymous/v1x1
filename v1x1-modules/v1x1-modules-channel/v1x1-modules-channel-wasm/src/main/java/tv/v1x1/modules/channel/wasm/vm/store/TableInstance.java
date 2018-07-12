@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
+import tv.v1x1.modules.channel.wasm.vm.TableType;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,5 +20,11 @@ public class TableInstance {
 
     public Optional<Integer> getMax() {
         return max;
+    }
+
+    public boolean matches(final TableType tableType) {
+        return elements.size() >= tableType.getLimits().getMin().getValU()
+                && (!tableType.getLimits().getMax().isPresent()
+                    || (max.isPresent() && max.get() <= tableType.getLimits().getMax().get().getValU()));
     }
 }

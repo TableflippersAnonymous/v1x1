@@ -5,8 +5,20 @@ import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.GlobalType;
+import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
+import tv.v1x1.modules.channel.wasm.vm.Mutable;
 import tv.v1x1.modules.channel.wasm.vm.Section;
 import tv.v1x1.modules.channel.wasm.vm.TableType;
+import tv.v1x1.modules.channel.wasm.vm.TrapException;
+import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
+import tv.v1x1.modules.channel.wasm.vm.stack.Activation;
+import tv.v1x1.modules.channel.wasm.vm.store.FunctionInstance;
+import tv.v1x1.modules.channel.wasm.vm.store.GlobalInstance;
+import tv.v1x1.modules.channel.wasm.vm.store.LinkingException;
+import tv.v1x1.modules.channel.wasm.vm.store.MemoryInstance;
+import tv.v1x1.modules.channel.wasm.vm.store.TableInstance;
+import tv.v1x1.modules.channel.wasm.vm.store.WebAssemblyFunctionInstance;
+import tv.v1x1.modules.channel.wasm.vm.store.WebAssemblyStore;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
@@ -274,5 +286,84 @@ public class ModuleDef {
         final List<T> list = new ArrayList<>(list1);
         list.addAll(list2);
         return list;
+    }
+
+    public ModuleInstance allocate(final WebAssemblyStore store) throws LinkingException {
+        final FunctionType[] types = functionTypes.toArray(new FunctionType[] {});
+        final int[] functionAddresses = new int[getContextFunctions().size()];
+        final int[] tableAddresses = new int[getContextTables().size()];
+        final int[] memoryAddresses = new int[getContextMemories().size()];
+        final int[] globalAddresses = new int[getContextGlobals().size()];
+        final ExportDef[] exports = new ExportDef[this.exports.size()];
+        final ModuleInstance moduleInstance = new ModuleInstance(types, functionAddresses, tableAddresses,
+                memoryAddresses, globalAddresses, exports);
+        final ResolvedImports resolvedImports = store.resolveImports(types, imports);
+        System.arraycopy(resolvedImports.getFunctionAddresses(), 0, functionAddresses, 0, resolvedImports.getFunctionAddresses().length);
+        System.arraycopy(resolvedImports.getTableAddresses(), 0, tableAddresses, 0, resolvedImports.getTableAddresses().length);
+        System.arraycopy(resolvedImports.getMemoryAddresses(), 0, memoryAddresses, 0, resolvedImports.getMemoryAddresses().length);
+        System.arraycopy(resolvedImports.getGlobalAddresses(), 0, globalAddresses, 0, resolvedImports.getGlobalAddresses().length);
+        for(int i = 0; i < functions.size(); i++) {
+            final FunctionDef functionDef = functions.get(i);
+            final FunctionInstance functionInstance = new WebAssemblyFunctionInstance(types[functionDef.getTypeIdx()],
+                    functionDef.getLocals(), moduleInstance, functionDef.getBody());
+            functionAddresses[resolvedImports.getFunctionAddresses().length + i] = store.allocateFunction(functionInstance);
+        }
+        for(int i = 0; i < tables.size(); i++) {
+            final TableDef tableDef = tables.get(i);
+            final List<Optional<Integer>> elements = new ArrayList<>();
+            for(long j = 0; j < tableDef.getTableType().getLimits().getMin().getValU(); j++)
+                elements.add(Optional.empty());
+            final TableInstance tableInstance = new TableInstance(elements, tableDef.getTableType().getLimits().getMax().map(i32 -> (int) i32.getValU()));
+            tableAddresses[resolvedImports.getTableAddresses().length + i] = store.allocateTable(tableInstance);
+        }
+        for(int i = 0; i < memories.size(); i++) {
+            final MemoryDef memoryDef = memories.get(i);
+            final MemoryInstance memoryInstance = new MemoryInstance(new byte[0], memoryDef.getMemoryType().getLimits().getMax());
+            memoryInstance.grow((int) memoryDef.getMemoryType().getLimits().getMin().getValU());
+            memoryAddresses[resolvedImports.getMemoryAddresses().length + i] = store.allocateMemory(memoryInstance);
+        }
+        for(int i = 0; i < globals.size(); i++) {
+            final GlobalDef globalDef = globals.get(i);
+            final GlobalInstance globalInstance = new GlobalInstance(globalDef.getType().getValType().getZero(), globalDef.getType().getMutable() == Mutable.VARIABLE);
+            globalAddresses[resolvedImports.getGlobalAddresses().length + i] = store.allocateGlobal(globalInstance);
+        }
+        for(int i = 0; i < this.exports.size(); i++) {
+            final ExportDef exportDef = this.exports.get(i);
+            final ExportDescriptor exportDescriptor = exportDef.getDescriptor();
+            final ExportDescriptor rewrittenDescriptor;
+            if(exportDescriptor instanceof FuncExportDescriptor)
+                rewrittenDescriptor = new FuncExportDescriptor(functionAddresses[(int) ((FuncExportDescriptor) exportDescriptor).getFuncIdx()]);
+            else if(exportDescriptor instanceof TableExportDescriptor)
+                rewrittenDescriptor = new TableExportDescriptor(tableAddresses[(int) ((TableExportDescriptor) exportDescriptor).getTableIdx()]);
+            else if(exportDescriptor instanceof MemExportDescriptor)
+                rewrittenDescriptor = new MemExportDescriptor(memoryAddresses[(int) ((MemExportDescriptor) exportDescriptor).getMemIdx()]);
+            else if(exportDescriptor instanceof GlobalExportDescriptor)
+                rewrittenDescriptor = new GlobalExportDescriptor(globalAddresses[(int) ((GlobalExportDescriptor) exportDescriptor).getGlobalIdx()]);
+            else
+                throw new LinkingException();
+            exports[i] = new ExportDef(exportDef.getName(), rewrittenDescriptor);
+        }
+        store.loadModule(getName(), moduleInstance);
+        return moduleInstance;
+    }
+
+    public void instantiate(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        virtualMachine.getStack().push(new Activation(ImmutableList.of(), moduleInstance, 0, null));
+        instantiateGlobals(virtualMachine, moduleInstance);
+        // TODO: Finish this
+        virtualMachine.getStack().pop(Activation.class);
+    }
+
+    private void instantiateGlobals(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        for(int i = 0; i < globals.size(); i++) {
+            final GlobalDef globalDef = globals.get(i);
+            final int globalAddress = moduleInstance.getGlobalAddresses()[i + moduleInstance.getGlobalAddresses().length - globals.size()];
+            final GlobalInstance globalInstance = virtualMachine.getStore().getGlobals().get(globalAddress);
+            globalInstance.setValue(virtualMachine.evaluate(globalDef.getInit(), 2048, globalDef.getType().getValType().getTypeClass()));
+        }
+    }
+
+    protected String getName() {
+        return "__default__";
     }
 }

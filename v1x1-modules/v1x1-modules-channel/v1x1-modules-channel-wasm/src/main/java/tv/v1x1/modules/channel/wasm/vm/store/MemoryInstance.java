@@ -1,5 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
+import tv.v1x1.modules.channel.wasm.vm.decoder.MemoryType;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
 import java.util.Optional;
@@ -22,7 +23,7 @@ public class MemoryInstance {
     public int grow(final int val) {
         final int oldPageCount = data.length / PAGE_SIZE;
         final int newPageCount = oldPageCount + val;
-        if(max.isPresent() && newPageCount > max.get().getVal())
+        if(max.isPresent() && newPageCount > max.get().getValU())
             return -1;
         if(newPageCount > MAX_SIZE)
             return -1;
@@ -30,5 +31,11 @@ public class MemoryInstance {
         data = new byte[newPageCount * PAGE_SIZE];
         System.arraycopy(oldData, 0, data, 0, Math.min(data.length, oldData.length));
         return oldPageCount;
+    }
+
+    public boolean matches(final MemoryType memoryType) {
+        return data.length / PAGE_SIZE >= memoryType.getLimits().getMin().getValU()
+                && (!memoryType.getLimits().getMax().isPresent()
+                || (max.isPresent() && max.get().getValU() <= memoryType.getLimits().getMax().get().getValU()));
     }
 }
