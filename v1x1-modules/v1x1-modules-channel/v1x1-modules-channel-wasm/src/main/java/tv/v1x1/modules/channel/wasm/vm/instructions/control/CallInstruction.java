@@ -18,7 +18,7 @@ public class CallInstruction extends Instruction {
     private I32 functionIdx;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         functionIdx = I32.decodeU(dataInputStream);
     }
 

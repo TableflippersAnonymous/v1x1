@@ -15,7 +15,7 @@ import java.io.IOException;
 
 public class MemoryGrowInstruction extends Instruction {
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         /* No action */
     }
 

@@ -34,7 +34,7 @@ public class DataSegmentDef {
 
     public static DataSegmentDef decode(final DataInputStream dataInputStream) throws IOException {
         final long memIdx = I32.decodeU(dataInputStream).getValU();
-        final Instruction instruction = Instruction.decodeSequence(dataInputStream, false).getFirst();
+        final Instruction instruction = Instruction.decodeSequence(dataInputStream, false, false).getFirst();
         final byte[] init = ModuleDef.decodeByteVec(dataInputStream);
         return new DataSegmentDef(memIdx, instruction, init);
     }

@@ -11,7 +11,7 @@ import java.io.DataInputStream;
 
 public class UnreachableInstruction extends Instruction {
     @Override
-    public void decode(final DataInputStream dataInputStream) {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) {
         /* No action */
     }
 

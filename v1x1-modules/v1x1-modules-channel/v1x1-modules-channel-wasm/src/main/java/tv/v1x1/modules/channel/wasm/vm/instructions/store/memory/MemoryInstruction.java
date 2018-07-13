@@ -16,9 +16,9 @@ public abstract class MemoryInstruction extends Instruction {
     protected I32 align;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
-        offset = I32.decodeU(dataInputStream);
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         align = I32.decodeU(dataInputStream);
+        offset = I32.decodeU(dataInputStream);
     }
 
     @Override

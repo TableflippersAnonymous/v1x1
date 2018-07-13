@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public abstract class I64UnOpInstruction extends Instruction {
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         /* No action */
     }
 

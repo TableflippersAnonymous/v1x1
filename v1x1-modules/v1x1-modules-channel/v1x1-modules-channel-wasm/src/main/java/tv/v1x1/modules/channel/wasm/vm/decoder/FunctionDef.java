@@ -53,7 +53,7 @@ public class FunctionDef {
                     throw new DecodeException("Too many locals");
             }
         }
-        final Instruction instruction = Instruction.decodeSequence(dataInputStream, false).getFirst();
+        final Instruction instruction = Instruction.decodeSequence(dataInputStream, false, false).getFirst();
         return new FunctionDef(typeIdx, locals, instruction);
     }
 

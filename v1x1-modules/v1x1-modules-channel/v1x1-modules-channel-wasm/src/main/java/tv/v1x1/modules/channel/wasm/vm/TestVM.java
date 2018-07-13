@@ -13,6 +13,7 @@ import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.Arrays;
 
 public class TestVM {
     public static class V1x1WriteFunction extends NativeFunctionInstance {
@@ -55,17 +56,24 @@ public class TestVM {
     public static void main(final String[] args) {
         try {
             final long start = System.nanoTime();
-            for(int i = 0; i < 1; i++) {
-                final WebAssemblyVirtualMachine virtualMachine = WebAssemblyVirtualMachine.build();
-                virtualMachine.getStore().loadModule("v1x1", new V1x1Module(virtualMachine.getStore()));
-                final byte[] moduleBytes = BaseEncoding.base64().decode(
-                        "AGFzbQEAAAABCQJgAn9/AGAAAAISAQNlbnYKdjF4MV93cml0ZQAAAwMCAQEEBQFwAQEBBQMBAAIG" +
-                                "FQN/AUGQiAQLfwBBkIgEC38AQY0ICwcsBARtYWluAAIGbWVtb3J5AgALX19oZWFwX2Jhc2UDAQpf" +
-                                "X2RhdGFfZW5kAwIIAQIKDgICAAsJAEGACEEMEAALCxQBAEGACAsNSGVsbG8gV29ybGQKAAA6BG5h" +
-                                "bWUBJgMACnYxeDFfd3JpdGUBEV9fd2FzbV9jYWxsX2N0b3JzAgRtYWluAgsDAAIAAAEAAQACAA==");
-                final ModuleDef moduleDef = ModuleDef.decode(new DataInputStream(new ByteArrayInputStream(moduleBytes)));
-                final ModuleInstance moduleInstance = moduleDef.allocate(virtualMachine.getStore());
-                moduleDef.instantiate(virtualMachine, moduleInstance);
+            final WebAssemblyVirtualMachine virtualMachine = WebAssemblyVirtualMachine.build();
+            virtualMachine.getStore().loadModule("v1x1", new V1x1Module(virtualMachine.getStore()));
+            final byte[] moduleBytes = BaseEncoding.base64().decode(
+                    "AGFzbQEAAAABCQJgAn9/AGAAAAISAQNlbnYKdjF4MV93cml0ZQAAAwMCAQEEBQFwAQEBBQMBAAIG" +
+                            "FQN/AUGQiAQLfwBBkIgEC38AQY0ICwcsBARtYWluAAIGbWVtb3J5AgALX19oZWFwX2Jhc2UDAQpf" +
+                            "X2RhdGFfZW5kAwIIAQIKDgICAAsJAEGACEEMEAALCxQBAEGACAsNSGVsbG8gV29ybGQKAAA6BG5h" +
+                            "bWUBJgMACnYxeDFfd3JpdGUBEV9fd2FzbV9jYWxsX2N0b3JzAgRtYWluAgsDAAIAAAEAAQACAA==");
+            final ModuleDef moduleDef = ModuleDef.decode(new DataInputStream(new ByteArrayInputStream(moduleBytes)));
+            moduleDef.validate();
+            final ModuleInstance moduleInstance = moduleDef.allocate(virtualMachine.getStore());
+            moduleDef.instantiate(virtualMachine, moduleInstance);
+            final ExportDef exportDef = Arrays.stream(moduleInstance.getExports())
+                    .filter(exportDef1 -> exportDef1.getName().equals("main") && exportDef1.getDescriptor() instanceof FuncExportDescriptor)
+                    .findFirst().get();
+            final int functionAddress = (int) ((FuncExportDescriptor) exportDef.getDescriptor()).getFuncIdx();
+            for(int i = 0; i < 10000; i++) {
+                Instruction.invoke(virtualMachine, functionAddress, null);
+                virtualMachine.execute(65536);
             }
             System.out.println("Time: " + (System.nanoTime() - start));
         } catch(final Exception e) {

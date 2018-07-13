@@ -16,7 +16,7 @@ public class F32ConstInstruction extends Instruction {
     private F32 val;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         val = F32.decode(dataInputStream);
     }
 

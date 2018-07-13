@@ -269,7 +269,7 @@ public abstract class Instruction {
             /* 0xFC */ null, null, null, null
     };
 
-    public static InstructionSequence decodeSequence(final DataInputStream dataInputStream, final boolean allowElse) throws IOException {
+    public static InstructionSequence decodeSequence(final DataInputStream dataInputStream, final boolean allowElse, final boolean inFunction) throws IOException {
         try {
             Instruction firstInstruction = null;
             Instruction lastInstruction = null;
@@ -280,7 +280,7 @@ public abstract class Instruction {
                 if (clazz == null)
                     throw new DecodeException("Unknown opcode " + opcode);
                 final Instruction instruction = clazz.newInstance();
-                instruction.decode(dataInputStream);
+                instruction.decode(dataInputStream, inFunction);
                 if(firstInstruction == null)
                     firstInstruction = instruction;
                 if(lastInstruction != null)
@@ -366,7 +366,7 @@ public abstract class Instruction {
         this.nextInstruction = nextInstruction;
     }
 
-    public abstract void decode(final DataInputStream dataInputStream) throws IOException;
+    public abstract void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException;
     public abstract void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException;
     public abstract void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException;
 }

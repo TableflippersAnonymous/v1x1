@@ -20,7 +20,7 @@ public class BrInstruction extends Instruction {
     protected I32 labelIndex;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         labelIndex = I32.decodeU(dataInputStream);
     }
 

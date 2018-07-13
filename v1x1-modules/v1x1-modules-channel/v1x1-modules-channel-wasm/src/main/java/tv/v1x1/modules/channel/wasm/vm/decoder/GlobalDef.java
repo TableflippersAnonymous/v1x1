@@ -32,7 +32,7 @@ public class GlobalDef {
 
     private static GlobalDef decode(final DataInputStream dataInputStream) throws IOException {
         final GlobalType globalType = GlobalType.decode(dataInputStream);
-        final Instruction instruction = Instruction.decodeSequence(dataInputStream, false).getFirst();
+        final Instruction instruction = Instruction.decodeSequence(dataInputStream, false, false).getFirst();
         return new GlobalDef(globalType, instruction);
     }
 

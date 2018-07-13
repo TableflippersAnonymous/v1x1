@@ -24,12 +24,12 @@ public class IfInstruction extends Instruction {
     private Instruction elseBody;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         returnType = ValType.decodeOptional(dataInputStream);
-        final InstructionSequence sequence = decodeSequence(dataInputStream, true);
+        final InstructionSequence sequence = decodeSequence(dataInputStream, true, true);
         ifBody = sequence.getFirst();
         if(sequence.getLast() instanceof ElseInstruction)
-            elseBody = decodeSequence(dataInputStream, false).getFirst();
+            elseBody = decodeSequence(dataInputStream, false, true).getFirst();
         else
             elseBody = new EndInstruction();
     }

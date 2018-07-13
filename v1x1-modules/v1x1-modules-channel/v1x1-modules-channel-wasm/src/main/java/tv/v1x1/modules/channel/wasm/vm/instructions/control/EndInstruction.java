@@ -12,9 +12,11 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 public class EndInstruction extends Instruction {
+    private boolean inFunction = true;
+
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
-        /* No action */
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
+        this.inFunction = inFunction;
     }
 
     @Override
@@ -24,7 +26,7 @@ public class EndInstruction extends Instruction {
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        if(nextInstruction != null)
+        if(inFunction)
             exit(virtualMachine);
     }
 

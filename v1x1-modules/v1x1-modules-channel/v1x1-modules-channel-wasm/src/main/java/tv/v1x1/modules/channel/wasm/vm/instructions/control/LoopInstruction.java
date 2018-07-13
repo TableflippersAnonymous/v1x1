@@ -21,9 +21,9 @@ public class LoopInstruction extends Instruction {
     private Instruction innerInstructions;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         returnType = ValType.decodeOptional(dataInputStream);
-        innerInstructions = decodeSequence(dataInputStream, false).getFirst();
+        innerInstructions = decodeSequence(dataInputStream, false, true).getFirst();
     }
 
     @Override

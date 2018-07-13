@@ -36,7 +36,7 @@ public class ElementSegmentDef {
 
     public static ElementSegmentDef decode(final DataInputStream dataInputStream) throws IOException {
         final long tableIdx = I32.decodeU(dataInputStream).getValU();
-        final Instruction instruction = Instruction.decodeSequence(dataInputStream, false).getFirst();
+        final Instruction instruction = Instruction.decodeSequence(dataInputStream, false, false).getFirst();
         final List<Integer> init = ModuleDef.decodeU32Vec(dataInputStream);
         return new ElementSegmentDef(tableIdx, instruction, init);
     }

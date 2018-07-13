@@ -20,7 +20,7 @@ public class BrTableInstruction extends BrInstruction {
     private I32 defaultLabel;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         final long count = I32.decodeU(dataInputStream).getValU();
         if(count > 256)
             throw new DecodeException();

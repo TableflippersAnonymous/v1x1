@@ -16,7 +16,7 @@ public class I64ConstInstruction extends Instruction {
     private I64 val;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         val = I64.decode(dataInputStream);
     }
 

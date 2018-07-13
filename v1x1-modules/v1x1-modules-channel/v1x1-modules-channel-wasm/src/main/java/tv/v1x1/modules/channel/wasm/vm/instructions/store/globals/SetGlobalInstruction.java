@@ -19,7 +19,7 @@ public class SetGlobalInstruction extends Instruction {
     private ValType valType;
 
     @Override
-    public void decode(final DataInputStream dataInputStream) throws IOException {
+    public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
         idx = I32.decodeU(dataInputStream);
     }
 
