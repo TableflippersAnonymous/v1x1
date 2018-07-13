@@ -2,6 +2,7 @@ package tv.v1x1.modules.channel.wasm.vm.store;
 
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
+import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
 
@@ -30,5 +31,5 @@ public abstract class FunctionInstance {
         return locals;
     }
 
-    public abstract void invoke(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule);
+    public abstract void invoke(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException;
 }

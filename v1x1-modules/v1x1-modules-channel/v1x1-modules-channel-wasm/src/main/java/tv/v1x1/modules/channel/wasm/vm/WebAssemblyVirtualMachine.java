@@ -15,6 +15,10 @@ public class WebAssemblyVirtualMachine {
         this.store = store;
     }
 
+    public static WebAssemblyVirtualMachine build() {
+        return new WebAssemblyVirtualMachine(new WebAssemblyStack(), new WebAssemblyStore());
+    }
+
     public WebAssemblyStack getStack() {
         return stack;
     }
@@ -33,12 +37,19 @@ public class WebAssemblyVirtualMachine {
 
     public <T extends WebAssemblyType> T evaluate(final Instruction instructions, final int maxInstructions, final Class<T> typeClass) throws TrapException {
         setNextInstruction(instructions);
-        execute(maxInstructions);
+        execute(maxInstructions, false);
         return stack.pop(typeClass);
     }
 
     public void execute(final int maxInstructions) throws TrapException {
+        execute(maxInstructions, true);
+    }
+
+    public void execute(final int maxInstructions, final boolean exitFrames) throws TrapException {
         for(int i = 0; i < maxInstructions; i++) {
+            //noinspection StatementWithEmptyBody
+            while(exitFrames && nextInstruction == null && Instruction.exitFrame(this))
+                /* Loop */;
             if(nextInstruction == null)
                 return;
             final Instruction instruction = nextInstruction;

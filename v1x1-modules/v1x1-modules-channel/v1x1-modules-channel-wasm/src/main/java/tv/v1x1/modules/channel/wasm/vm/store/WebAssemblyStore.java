@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ExportDef;
@@ -17,24 +19,13 @@ import tv.v1x1.modules.channel.wasm.vm.decoder.TableImportDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class WebAssemblyStore {
-    private final List<FunctionInstance> functions;
-    private final List<TableInstance> tables;
-    private final List<MemoryInstance> memories;
-    private final List<GlobalInstance> globals;
-    private final Map<String, ModuleInstance> modules;
-
-    public WebAssemblyStore(final List<FunctionInstance> functions, final List<TableInstance> tables,
-                            final List<MemoryInstance> memories, final List<GlobalInstance> globals,
-                            final Map<String, ModuleInstance> modules) {
-        this.functions = functions;
-        this.tables = tables;
-        this.memories = memories;
-        this.globals = globals;
-        this.modules = modules;
-    }
+    private final List<FunctionInstance> functions = new ArrayList<>();
+    private final List<TableInstance> tables = new ArrayList<>();
+    private final List<MemoryInstance> memories = new ArrayList<>();
+    private final List<GlobalInstance> globals = new ArrayList<>();
+    private final Multimap<String, ModuleInstance> modules = HashMultimap.create();
 
     public List<FunctionInstance> getFunctions() {
         return functions;
@@ -62,17 +53,17 @@ public class WebAssemblyStore {
             if(!modules.containsKey(importDef.getModule()))
                 throw new LinkingException();
             final ImportDescriptor importDescriptor = importDef.getDescriptor();
-            final ModuleInstance moduleInstance = modules.get(importDef.getModule());
-            if(importDescriptor instanceof FuncImportDescriptor)
-                functionAddresses.add(resolveImport(types, moduleInstance, importDef.getName(), (FuncImportDescriptor) importDescriptor));
-            else if(importDescriptor instanceof TableImportDescriptor)
-                tableAddresses.add(resolveImport(moduleInstance, importDef.getName(), (TableImportDescriptor) importDescriptor));
-            else if(importDescriptor instanceof MemImportDescriptor)
-                memoryAddresses.add(resolveImport(moduleInstance, importDef.getName(), (MemImportDescriptor) importDescriptor));
-            else if(importDescriptor instanceof GlobalImportDescriptor)
-                globalAddresses.add(resolveImport(moduleInstance, importDef.getName(), (GlobalImportDescriptor) importDescriptor));
-            else
-                throw new LinkingException();
+            for(final ModuleInstance moduleInstance : modules.get(importDef.getModule()))
+                if(importDescriptor instanceof FuncImportDescriptor)
+                    functionAddresses.add(resolveImport(types, moduleInstance, importDef.getName(), (FuncImportDescriptor) importDescriptor));
+                else if(importDescriptor instanceof TableImportDescriptor)
+                    tableAddresses.add(resolveImport(moduleInstance, importDef.getName(), (TableImportDescriptor) importDescriptor));
+                else if(importDescriptor instanceof MemImportDescriptor)
+                    memoryAddresses.add(resolveImport(moduleInstance, importDef.getName(), (MemImportDescriptor) importDescriptor));
+                else if(importDescriptor instanceof GlobalImportDescriptor)
+                    globalAddresses.add(resolveImport(moduleInstance, importDef.getName(), (GlobalImportDescriptor) importDescriptor));
+                else
+                    throw new LinkingException();
         }
 
         return new ResolvedImports(
@@ -169,5 +160,6 @@ public class WebAssemblyStore {
 
     public void loadModule(final String name, final ModuleInstance moduleInstance) {
         modules.put(name, moduleInstance);
+        modules.put("env", moduleInstance);
     }
 }

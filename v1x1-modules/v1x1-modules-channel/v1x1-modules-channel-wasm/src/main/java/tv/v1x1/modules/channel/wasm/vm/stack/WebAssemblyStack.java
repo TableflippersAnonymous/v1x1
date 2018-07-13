@@ -36,7 +36,7 @@ public class WebAssemblyStack {
     public <T extends StackElement> T pop(final Class<T> clazz) throws TrapException {
         final StackElement element = pop();
         if(!clazz.isInstance(element))
-            throw new TrapException("Invalid value on stack");
+            throw new TrapException("Invalid value on stack: expected=" + clazz.getCanonicalName() + " got=" + element.getClass().getCanonicalName());
         return (T) element;
     }
 

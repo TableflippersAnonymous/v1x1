@@ -313,7 +313,7 @@ public abstract class Instruction {
                 virtualMachine.setNextInstruction(((Label) stackElement).getEnd());
                 break;
             } else
-                throw new TrapException("Invalid stack element found.");
+                throw new TrapException("Invalid stack element found: " + stackElement.getClass().getCanonicalName());
         }
         while(deque.size() > 0)
             virtualMachine.getStack().push(deque.pop());
@@ -335,15 +335,18 @@ public abstract class Instruction {
         functionInstance.invoke(virtualMachine, previousFrame == null ? null : previousFrame.getModule());
     }
 
-    public static void exitFrame(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
+    public static boolean exitFrame(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
         final Deque<WebAssemblyType> retValues = new ArrayDeque<>();
         final Activation currentFrame = virtualMachine.getCurrentActivation();
+        if(currentFrame == null)
+            return false;
         for(int i = 0; i < currentFrame.getArity(); i++)
             retValues.push(virtualMachine.getStack().pop(WebAssemblyType.class));
         virtualMachine.getStack().pop(Activation.class);
         while(!retValues.isEmpty())
             virtualMachine.getStack().push(retValues.pop());
         virtualMachine.setNextInstruction(currentFrame.getNextInstruction());
+        return true;
     }
 
     protected Instruction nextInstruction;

@@ -24,7 +24,8 @@ public class EndInstruction extends Instruction {
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        exit(virtualMachine);
+        if(nextInstruction != null)
+            exit(virtualMachine);
     }
 
     @Override
