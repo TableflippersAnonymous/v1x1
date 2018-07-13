@@ -81,28 +81,28 @@ public final class I64 extends IN {
     @Override
     public I64 divU(final IN other) throws TrapException {
         if(other.extendU().val == 0)
-            throw new TrapException();
+            throw new TrapException("Div by 0");
         return new I64(Long.divideUnsigned(val, other.extendU().val));
     }
 
     @Override
     public I64 divS(final IN other) throws TrapException {
         if(other.extendS().val == 0 || (other.extendS().val == -1L && val == Long.MIN_VALUE))
-            throw new TrapException();
+            throw new TrapException("Div by 0");
         return new I64(val / other.extendS().val);
     }
 
     @Override
     public I64 remU(final IN other) throws TrapException {
         if(other.extendU().val == 0)
-            throw new TrapException();
+            throw new TrapException("Div by 0");
         return new I64(Long.remainderUnsigned(val, other.extendU().val));
     }
 
     @Override
     public I64 remS(final IN other) throws TrapException {
         if(other.extendS().val == 0)
-            throw new TrapException();
+            throw new TrapException("Div by 0");
         return new I64(val % other.extendS().val);
     }
 

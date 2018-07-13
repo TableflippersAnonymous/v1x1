@@ -53,14 +53,14 @@ public class CallIndirectInstruction extends Instruction {
         final FunctionType expectedFunctionType = currentFrame.getModule().getTypes()[(int) typeIdx.getValU()];
         final long idx = virtualMachine.getStack().pop(I32.class).getValU();
         if(tableInstance.getElements().size() <= idx)
-            throw new TrapException();
+            throw new TrapException("Invalid table index");
         if(!tableInstance.getElements().get((int) idx).isPresent())
-            throw new TrapException();
+            throw new TrapException("Jump to uninitialized table entry");
         final int functionAddress = tableInstance.getElements().get((int) idx).get();
         final FunctionInstance functionInstance = virtualMachine.getStore().getFunctions().get(functionAddress);
         final FunctionType actualFunctionType = functionInstance.getType();
         if(!Objects.equals(expectedFunctionType, actualFunctionType))
-            throw new TrapException();
+            throw new TrapException("Invalid function type");
         invoke(virtualMachine, functionAddress, nextInstruction);
     }
 }

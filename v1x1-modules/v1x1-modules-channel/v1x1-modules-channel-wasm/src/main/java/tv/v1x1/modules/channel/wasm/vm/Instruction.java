@@ -323,7 +323,7 @@ public abstract class Instruction {
         final FunctionInstance functionInstance = virtualMachine.getStore().getFunctions().get(functionAddress);
         final FunctionType functionType = functionInstance.getType();
         if(functionType.getReturnTypes().size() > 1)
-            throw new TrapException();
+            throw new TrapException("Invalid return types");
         final WebAssemblyType[] locals = new WebAssemblyType[functionType.getParameters().size() + functionInstance.getLocals().size()];
         for(int i = functionType.getParameters().size() - 1; i >= 0; i--)
             locals[i] = virtualMachine.getStack().pop(functionType.getParameters().get(i).getTypeClass());
@@ -332,7 +332,7 @@ public abstract class Instruction {
         final Activation frame = new Activation(Arrays.asList(locals), functionInstance.getModule(), functionType.getReturnTypes().size(), nextInstruction);
         final Activation previousFrame = virtualMachine.getCurrentActivation();
         virtualMachine.getStack().push(frame);
-        functionInstance.invoke(virtualMachine, previousFrame.getModule());
+        functionInstance.invoke(virtualMachine, previousFrame == null ? null : previousFrame.getModule());
     }
 
     public static void exitFrame(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {

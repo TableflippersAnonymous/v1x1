@@ -37,7 +37,7 @@ public class WebAssemblyVirtualMachine {
         return stack.pop(typeClass);
     }
 
-    private void execute(final int maxInstructions) throws TrapException {
+    public void execute(final int maxInstructions) throws TrapException {
         for(int i = 0; i < maxInstructions; i++) {
             if(nextInstruction == null)
                 return;

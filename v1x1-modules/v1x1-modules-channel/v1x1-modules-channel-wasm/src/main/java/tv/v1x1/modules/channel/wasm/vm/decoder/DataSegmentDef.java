@@ -48,4 +48,16 @@ public class DataSegmentDef {
         if(!Instruction.isConstantSequence(offset))
             throw new ValidationException();
     }
+
+    public long getMemIdx() {
+        return memIdx;
+    }
+
+    public Instruction getOffset() {
+        return offset;
+    }
+
+    public byte[] getInit() {
+        return init;
+    }
 }

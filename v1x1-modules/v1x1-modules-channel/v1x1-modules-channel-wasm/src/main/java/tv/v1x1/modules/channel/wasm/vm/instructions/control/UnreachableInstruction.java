@@ -22,6 +22,6 @@ public class UnreachableInstruction extends Instruction {
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        throw new TrapException();
+        throw new TrapException("Unreachable");
     }
 }

@@ -5,6 +5,7 @@ import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.GlobalType;
+import tv.v1x1.modules.channel.wasm.vm.Instruction;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.Mutable;
 import tv.v1x1.modules.channel.wasm.vm.Section;
@@ -38,6 +39,9 @@ import java.util.stream.Stream;
 public class ModuleDef {
     private static final byte[] MAGIC = { 0x00, 0x61, 0x73, 0x6d };
     private static final byte[] VERSION = { 0x01, 0x00, 0x00, 0x00 };
+
+    private static final int MAX_INITIALIZER_INSTRUCTIONS = 2048;
+    private static final int MAX_START_INSTRUCTIONS = 65536;
 
     private final List<FunctionType> functionTypes;
     private final List<FunctionDef> functions;
@@ -350,8 +354,14 @@ public class ModuleDef {
     public void instantiate(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
         virtualMachine.getStack().push(new Activation(ImmutableList.of(), moduleInstance, 0, null));
         instantiateGlobals(virtualMachine, moduleInstance);
-        // TODO: Finish this
+        instantiateTables(virtualMachine, moduleInstance);
+        instantiateMemories(virtualMachine, moduleInstance);
         virtualMachine.getStack().pop(Activation.class);
+        if(start.isPresent()) {
+            final int functionAddress = moduleInstance.getFunctionAddresses()[(int) start.get().getFuncIdx()];
+            Instruction.invoke(virtualMachine, functionAddress, null);
+            virtualMachine.execute(MAX_START_INSTRUCTIONS);
+        }
     }
 
     private void instantiateGlobals(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
@@ -359,7 +369,35 @@ public class ModuleDef {
             final GlobalDef globalDef = globals.get(i);
             final int globalAddress = moduleInstance.getGlobalAddresses()[i + moduleInstance.getGlobalAddresses().length - globals.size()];
             final GlobalInstance globalInstance = virtualMachine.getStore().getGlobals().get(globalAddress);
-            globalInstance.setValue(virtualMachine.evaluate(globalDef.getInit(), 2048, globalDef.getType().getValType().getTypeClass()));
+            globalInstance.setValue(virtualMachine.evaluate(globalDef.getInit(), MAX_INITIALIZER_INSTRUCTIONS, globalDef.getType().getValType().getTypeClass()));
+        }
+    }
+
+    private void instantiateTables(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        for(final ElementSegmentDef elementSegmentDef : elementSegments) {
+            final I32 offset = virtualMachine.evaluate(elementSegmentDef.getOffset(), MAX_INITIALIZER_INSTRUCTIONS, I32.class);
+            final long tableIdx = elementSegmentDef.getTableIdx();
+            final int tableAddress = moduleInstance.getTableAddresses()[(int) tableIdx];
+            final TableInstance tableInstance = virtualMachine.getStore().getTables().get(tableAddress);
+            if(elementSegmentDef.getInit().size() + offset.getValU() > tableInstance.getElements().size())
+                throw new TrapException("Invalid element segment offset");
+            for(int j = 0; j < elementSegmentDef.getInit().size(); j++) {
+                final int functionIdx = elementSegmentDef.getInit().get(j);
+                final int functionAddress = moduleInstance.getFunctionAddresses()[functionIdx];
+                tableInstance.getElements().set((int) (offset.getValU() + j), Optional.of(functionAddress));
+            }
+        }
+    }
+
+    private void instantiateMemories(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        for(final DataSegmentDef dataSegmentDef : dataSegments) {
+            final I32 offset = virtualMachine.evaluate(dataSegmentDef.getOffset(), MAX_INITIALIZER_INSTRUCTIONS, I32.class);
+            final long memoryIdx = dataSegmentDef.getMemIdx();
+            final int memoryAddress = moduleInstance.getMemoryAddresses()[(int) memoryIdx];
+            final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(memoryAddress);
+            if(dataSegmentDef.getInit().length + offset.getValU() > memoryInstance.getData().length)
+                throw new TrapException("Invalid data segment offset");
+            System.arraycopy(dataSegmentDef.getInit(), 0, memoryInstance.getData(), (int) offset.getValU(), dataSegmentDef.getInit().length);
         }
     }
 
