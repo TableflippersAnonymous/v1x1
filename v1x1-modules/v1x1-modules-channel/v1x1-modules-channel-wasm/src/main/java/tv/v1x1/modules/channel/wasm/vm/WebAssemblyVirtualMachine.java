@@ -75,4 +75,11 @@ public class WebAssemblyVirtualMachine {
         Instruction.invoke(this, functionAddress, null);
         execute(maxInstructions);
     }
+
+    public void callAllExports(final String name, final int maxInstructions) throws TrapException {
+        for(final int functionAddress : store.getAllExportFunction("env", name)) {
+            Instruction.invoke(this, functionAddress, null);
+            execute(maxInstructions);
+        }
+    }
 }

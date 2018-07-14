@@ -1,7 +1,7 @@
 package tv.v1x1.modules.channel.wasm.api;
 
 import com.google.common.collect.ImmutableList;
-import tv.v1x1.modules.channel.wasm.WebAssembly;
+import tv.v1x1.modules.channel.wasm.ExecutionEnvironment;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
@@ -28,71 +28,71 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             new NativeFunctionSpec("v1x1_log", new FunctionType(ImmutableList.of(ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::log)
     };
 
-    public V1x1WebAssemblyModuleDef(final WebAssembly module) {
-        super(module, "v1x1", FUNCTIONS);
+    public V1x1WebAssemblyModuleDef(final ExecutionEnvironment executionEnvironment) {
+        super(executionEnvironment, "v1x1", FUNCTIONS);
     }
 
-    private static void eventSize(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void eventSize(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void readEvent(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void readEvent(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void sendMessage(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void sendMessage(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void purge(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void purge(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void timeout(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void timeout(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void untimeout(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void untimeout(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void kick(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void kick(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void ban(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void ban(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void punish(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void punish(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void scheduleOnce(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void scheduleOnce(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void kvstoreWrite(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void kvstoreWrite(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void kvstoreHasKey(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void kvstoreHasKey(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void kvstoreLength(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void kvstoreLength(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void kvstoreRead(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void kvstoreRead(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void kvstoreDelete(final WebAssembly webAssembly, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
+    private static void kvstoreDelete(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
         /* TODO */
     }
 
-    private static void log(final WebAssembly module, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException {
+    private static void log(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException {
         /* TODO */
     }
 }

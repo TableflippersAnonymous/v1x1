@@ -1,7 +1,7 @@
 package tv.v1x1.modules.channel.wasm.api;
 
 import com.google.common.collect.ImmutableList;
-import tv.v1x1.modules.channel.wasm.WebAssembly;
+import tv.v1x1.modules.channel.wasm.ExecutionEnvironment;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
@@ -23,13 +23,13 @@ import java.util.stream.IntStream;
 public class NativeWebAssemblyModuleDef extends ModuleDef {
     private final String name;
 
-    public NativeWebAssemblyModuleDef(final WebAssembly module, final String name, final NativeFunctionSpec[] functions) {
+    public NativeWebAssemblyModuleDef(final ExecutionEnvironment executionEnvironment, final String name, final NativeFunctionSpec[] functions) {
         super(
                 ImmutableList.copyOf(Arrays.stream(functions)
                         .map(NativeFunctionSpec::getFunctionType)
                         .collect(Collectors.toList())),
                 ImmutableList.copyOf(IntStream.range(0, functions.length)
-                        .mapToObj(i -> new NativeFunctionDef(i, ImmutableList.of(), module, functions[i].getFunction()))
+                        .mapToObj(i -> new NativeFunctionDef(i, ImmutableList.of(), executionEnvironment, functions[i].getFunction()))
                         .collect(Collectors.toList())),
                 ImmutableList.of(),
                 ImmutableList.of(),
@@ -76,16 +76,16 @@ public class NativeWebAssemblyModuleDef extends ModuleDef {
 
     @FunctionalInterface
     protected interface NativeFunction {
-        void invoke(final WebAssembly module, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException;
+        void invoke(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException;
     }
 
     private static class NativeFunctionDef extends FunctionDef {
-        private final WebAssembly module;
+        private final ExecutionEnvironment executionEnvironment;
         private final NativeFunction nativeFunction;
 
-        public NativeFunctionDef(final int typeIdx, final List<ValType> locals, final WebAssembly module, final NativeFunction nativeFunction) {
+        public NativeFunctionDef(final int typeIdx, final List<ValType> locals, final ExecutionEnvironment executionEnvironment, final NativeFunction nativeFunction) {
             super(typeIdx, locals, null);
-            this.module = module;
+            this.executionEnvironment = executionEnvironment;
             this.nativeFunction = nativeFunction;
         }
 
@@ -94,7 +94,7 @@ public class NativeWebAssemblyModuleDef extends ModuleDef {
             return new NativeFunctionInstance(moduleInstance.getTypes()[getTypeIdx()], getLocals(), moduleInstance) {
                 @Override
                 public void invoke(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException {
-                    nativeFunction.invoke(module, virtualMachine, previousModule);
+                    nativeFunction.invoke(executionEnvironment, virtualMachine, previousModule);
                 }
             };
         }

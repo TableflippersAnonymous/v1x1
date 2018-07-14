@@ -9,7 +9,7 @@ public class TestVM {
             final long start = System.nanoTime();
             final WebAssemblyVirtualMachine virtualMachine = WebAssemblyVirtualMachine.build();
             final ModuleDef v1x1ModuleDef = new V1x1WebAssemblyModuleDef(null);
-            final ModuleDef moduleDef = ModuleDef.fromString(
+            final ModuleDef moduleDef = ModuleDef.fromString("main",
                     "AGFzbQEAAAABCQJgAn9/AGAAAAISAQNlbnYKdjF4MV93cml0ZQAAAwMCAQEEBQFwAQEBBQMBAAIG" +
                     "FQN/AUGQiAQLfwBBkIgEC38AQY0ICwcsBARtYWluAAIGbWVtb3J5AgALX19oZWFwX2Jhc2UDAQpf" +
                     "X2RhdGFfZW5kAwIIAQIKDgICAAsJAEGACEEMEAALCxQBAEGACAsNSGVsbG8gV29ybGQKAAA6BG5h" +

@@ -43,6 +43,7 @@ public class ModuleDef {
     private static final int MAX_INITIALIZER_INSTRUCTIONS = 2048;
     private static final int MAX_START_INSTRUCTIONS = 65536;
 
+    private final String name;
     private final List<FunctionType> functionTypes;
     private final List<FunctionDef> functions;
     private final List<TableDef> tables;
@@ -54,10 +55,11 @@ public class ModuleDef {
     private final List<ImportDef> imports;
     private final List<ExportDef> exports;
 
-    public ModuleDef(final List<FunctionType> functionTypes, final List<FunctionDef> functions,
+    public ModuleDef(final String name, final List<FunctionType> functionTypes, final List<FunctionDef> functions,
                      final List<TableDef> tables, final List<MemoryDef> memories, final List<GlobalDef> globals,
                      final List<ElementSegmentDef> elementSegments, final List<DataSegmentDef> dataSegments,
                      final Optional<StartDef> start, final List<ImportDef> imports, final List<ExportDef> exports) {
+        this.name = name;
         this.functionTypes = functionTypes;
         this.functions = functions;
         this.tables = tables;
@@ -70,15 +72,15 @@ public class ModuleDef {
         this.exports = exports;
     }
 
-    public static ModuleDef fromString(final String base64) throws IOException {
-        return fromBytes(BaseEncoding.base64().decode(base64));
+    public static ModuleDef fromString(final String name, final String base64) throws IOException {
+        return fromBytes(name, BaseEncoding.base64().decode(base64));
     }
 
-    public static ModuleDef fromBytes(final byte[] bytes) throws IOException {
-        return ModuleDef.decode(new DataInputStream(new ByteArrayInputStream(bytes)));
+    public static ModuleDef fromBytes(final String name, final byte[] bytes) throws IOException {
+        return ModuleDef.decode(name, new DataInputStream(new ByteArrayInputStream(bytes)));
     }
 
-    public static ModuleDef decode(final DataInputStream dataInputStream) throws IOException {
+    public static ModuleDef decode(final String name, final DataInputStream dataInputStream) throws IOException {
         final List<FunctionType> functionTypes = new ArrayList<>();
         final List<FunctionDef> functions = new ArrayList<>();
         final List<Integer> types = new ArrayList<>();
@@ -141,6 +143,7 @@ public class ModuleDef {
         }
 
         return new ModuleDef(
+                name,
                 ImmutableList.copyOf(functionTypes),
                 ImmutableList.copyOf(functions),
                 ImmutableList.copyOf(tables),
@@ -409,6 +412,6 @@ public class ModuleDef {
     }
 
     protected String getName() {
-        return "__default__";
+        return name;
     }
 }

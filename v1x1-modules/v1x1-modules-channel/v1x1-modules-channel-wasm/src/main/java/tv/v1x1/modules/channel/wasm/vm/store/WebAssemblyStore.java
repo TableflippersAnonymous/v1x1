@@ -165,10 +165,18 @@ public class WebAssemblyStore {
     }
 
     public int getExportFunction(final String module, final String name) throws TrapException {
+        final List<Integer> list = getAllExportFunction(module, name);
+        if(list.size() == 0)
+            throw new TrapException("No such method");
+        return list.get(0);
+    }
+
+    public List<Integer> getAllExportFunction(final String module, final String name) {
+        final List<Integer> functions = new ArrayList<>();
         for(final ModuleInstance moduleInstance : modules.get(module))
             for(final ExportDef exportDef : moduleInstance.getExports())
                 if(exportDef.getName().equals(name) && exportDef.getDescriptor() instanceof FuncExportDescriptor)
-                    return (int) ((FuncExportDescriptor) exportDef.getDescriptor()).getFuncIdx();
-        throw new TrapException("No such method");
+                    functions.add((int) ((FuncExportDescriptor) exportDef.getDescriptor()).getFuncIdx());
+        return functions;
     }
 }
