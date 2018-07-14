@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
+import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ExportDef;
 import tv.v1x1.modules.channel.wasm.vm.decoder.FuncExportDescriptor;
 import tv.v1x1.modules.channel.wasm.vm.decoder.FuncImportDescriptor;
@@ -161,5 +162,13 @@ public class WebAssemblyStore {
     public void loadModule(final String name, final ModuleInstance moduleInstance) {
         modules.put(name, moduleInstance);
         modules.put("env", moduleInstance);
+    }
+
+    public int getExportFunction(final String module, final String name) throws TrapException {
+        for(final ModuleInstance moduleInstance : modules.get(module))
+            for(final ExportDef exportDef : moduleInstance.getExports())
+                if(exportDef.getName().equals(name) && exportDef.getDescriptor() instanceof FuncExportDescriptor)
+                    return (int) ((FuncExportDescriptor) exportDef.getDescriptor()).getFuncIdx();
+        throw new TrapException("No such method");
     }
 }

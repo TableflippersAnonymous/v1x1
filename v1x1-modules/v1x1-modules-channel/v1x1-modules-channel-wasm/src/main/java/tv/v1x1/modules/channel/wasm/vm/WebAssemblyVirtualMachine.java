@@ -1,9 +1,12 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import tv.v1x1.modules.channel.wasm.vm.decoder.ModuleDef;
 import tv.v1x1.modules.channel.wasm.vm.stack.Activation;
 import tv.v1x1.modules.channel.wasm.vm.stack.WebAssemblyStack;
+import tv.v1x1.modules.channel.wasm.vm.store.LinkingException;
 import tv.v1x1.modules.channel.wasm.vm.store.WebAssemblyStore;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 public class WebAssemblyVirtualMachine {
     private final WebAssemblyStack stack;
@@ -57,5 +60,19 @@ public class WebAssemblyVirtualMachine {
             instruction.execute(this);
         }
         throw new TrapException("Max instruction count exceeded");
+    }
+
+    public void loadModules(final ModuleDef... moduleDefs) throws ValidationException, LinkingException, TrapException {
+        for(final ModuleDef moduleDef : moduleDefs) {
+            moduleDef.validate();
+            final ModuleInstance moduleInstance = moduleDef.allocate(getStore());
+            moduleDef.instantiate(this, moduleInstance);
+        }
+    }
+
+    public void callExport(final String module, final String name, final int maxInstructions) throws TrapException {
+        final int functionAddress = store.getExportFunction(module, name);
+        Instruction.invoke(this, functionAddress, null);
+        execute(maxInstructions);
     }
 }

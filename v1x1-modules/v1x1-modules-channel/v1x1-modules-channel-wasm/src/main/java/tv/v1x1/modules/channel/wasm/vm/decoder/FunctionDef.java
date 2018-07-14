@@ -5,9 +5,12 @@ import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.ResultType;
 import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyValidationStack;
+import tv.v1x1.modules.channel.wasm.vm.store.FunctionInstance;
+import tv.v1x1.modules.channel.wasm.vm.store.WebAssemblyFunctionInstance;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
@@ -81,5 +84,9 @@ public class FunctionDef {
         final WebAssemblyValidationStack stack = new WebAssemblyValidationStack();
         stack.pushControl(type.getReturnTypes(), type.getReturnTypes());
         Instruction.validateSequence(stack, newContext, body);
+    }
+
+    public FunctionInstance instantiate(final ModuleInstance moduleInstance) {
+        return new WebAssemblyFunctionInstance(moduleInstance.getTypes()[typeIdx], locals, moduleInstance, body);
     }
 }

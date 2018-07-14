@@ -1,6 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.io.BaseEncoding;
 import tv.v1x1.modules.channel.wasm.vm.Context;
 import tv.v1x1.modules.channel.wasm.vm.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
@@ -18,7 +19,6 @@ import tv.v1x1.modules.channel.wasm.vm.store.GlobalInstance;
 import tv.v1x1.modules.channel.wasm.vm.store.LinkingException;
 import tv.v1x1.modules.channel.wasm.vm.store.MemoryInstance;
 import tv.v1x1.modules.channel.wasm.vm.store.TableInstance;
-import tv.v1x1.modules.channel.wasm.vm.store.WebAssemblyFunctionInstance;
 import tv.v1x1.modules.channel.wasm.vm.store.WebAssemblyStore;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
@@ -68,6 +68,14 @@ public class ModuleDef {
         this.start = start;
         this.imports = imports;
         this.exports = exports;
+    }
+
+    public static ModuleDef fromString(final String base64) throws IOException {
+        return fromBytes(BaseEncoding.base64().decode(base64));
+    }
+
+    public static ModuleDef fromBytes(final byte[] bytes) throws IOException {
+        return ModuleDef.decode(new DataInputStream(new ByteArrayInputStream(bytes)));
     }
 
     public static ModuleDef decode(final DataInputStream dataInputStream) throws IOException {
@@ -308,8 +316,7 @@ public class ModuleDef {
         System.arraycopy(resolvedImports.getGlobalAddresses(), 0, globalAddresses, 0, resolvedImports.getGlobalAddresses().length);
         for(int i = 0; i < functions.size(); i++) {
             final FunctionDef functionDef = functions.get(i);
-            final FunctionInstance functionInstance = new WebAssemblyFunctionInstance(types[functionDef.getTypeIdx()],
-                    functionDef.getLocals(), moduleInstance, functionDef.getBody());
+            final FunctionInstance functionInstance = functionDef.instantiate(moduleInstance);
             functionAddresses[resolvedImports.getFunctionAddresses().length + i] = store.allocateFunction(functionInstance);
         }
         for(int i = 0; i < tables.size(); i++) {
