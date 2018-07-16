@@ -131,7 +131,7 @@ public class ExecutionEnvironment {
         try {
             virtualMachine.callAllExports("event_handler", MAX_INSTRUCTIONS);
         } catch(final TrapException e) {
-            handleTrapped();
+            handleTrapped(e);
         }
     }
 
@@ -299,10 +299,10 @@ public class ExecutionEnvironment {
         return dynamicAllocations.toByteArray();
     }
 
-    private void handleTrapped() {
+    private void handleTrapped(final TrapException e) {
         this.trapped = true;
         this.lastTrapped = System.currentTimeMillis();
-        LOG.warn("VM Trapped for {}", tenant);
+        LOG.warn("VM Trapped for {}", tenant, e);
     }
 
     private boolean isTrapped() {
