@@ -313,7 +313,7 @@ public class ExecutionEnvironment {
     private void reset() {
         this.currentEvent = null;
         this.trapped = false;
-        final WebAssemblyVirtualMachine virtualMachine = WebAssemblyVirtualMachine.build();
+        virtualMachine = WebAssemblyVirtualMachine.build();
         final ModuleDef moduleDef = new V1x1WebAssemblyModuleDef(this);
         try {
             virtualMachine.loadModules(moduleDef);
