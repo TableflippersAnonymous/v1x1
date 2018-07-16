@@ -21,10 +21,9 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class NativeWebAssemblyModuleDef extends ModuleDef {
-    private final String name;
-
     public NativeWebAssemblyModuleDef(final ExecutionEnvironment executionEnvironment, final String name, final NativeFunctionSpec[] functions) {
         super(
+                name,
                 ImmutableList.copyOf(Arrays.stream(functions)
                         .map(NativeFunctionSpec::getFunctionType)
                         .collect(Collectors.toList())),
@@ -42,12 +41,6 @@ public class NativeWebAssemblyModuleDef extends ModuleDef {
                         .mapToObj(i -> new ExportDef(functions[i].getName(), new FuncExportDescriptor(i)))
                         .collect(Collectors.toList()))
         );
-        this.name = name;
-    }
-
-    @Override
-    protected String getName() {
-        return name;
     }
 
     protected static class NativeFunctionSpec {
