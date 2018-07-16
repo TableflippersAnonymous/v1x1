@@ -2,6 +2,8 @@ package tv.v1x1.modules.channel.wasm.api;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.User;
@@ -16,10 +18,13 @@ import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
 import tv.v1x1.modules.channel.wasm.vm.store.MemoryInstance;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.Optional;
 
 public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private static final Map<Integer, Platform> PLATFORM_MAP = new ImmutableMap.Builder<Integer, Platform>()
             .put(1, Platform.TWITCH)
             .put(2, Platform.DISCORD)
@@ -56,6 +61,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     private static void eventSize(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
         final byte[] event = executionEnvironment.getCurrentEvent(0);
         virtualMachine.getStack().push(new I32(event != null ? event.length : -1));
+        LOG.info("VM Native: event_size() = {}", event != null ? event.length : -1);
     }
 
     private static void readEvent(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
@@ -65,10 +71,12 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
         if(baseAddress < 0 || event == null || length < event.length || length + baseAddress > memoryInstance.getData().length) {
             virtualMachine.getStack().push(new I32(0));
+            LOG.info("VM Native: read_event({}, {}) = 0", baseAddress, length);
             return;
         }
         System.arraycopy(event, 0, memoryInstance.getData(), baseAddress, event.length);
         virtualMachine.getStack().push(new I32(event.length));
+        LOG.info("VM Native: read_event({}, {}) = {}", baseAddress, length, event.length);
     }
 
     private static void sendMessage(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
@@ -77,19 +85,23 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
         if(channelAddress < 0 || messageBufferAddress < 0) {
             virtualMachine.getStack().push(new I32(0));
+            LOG.info("VM Native: send_message({}, {}) = 0", channelAddress, messageBufferAddress);
             return;
         }
         final Optional<Channel> channel = decodeChannel(executionEnvironment, memoryInstance, channelAddress);
         final String message = new String(decodeBuffer(memoryInstance, messageBufferAddress));
         if(!channel.isPresent()) {
             virtualMachine.getStack().push(new I32(0));
+            LOG.info("VM Native: send_message({}, {}) = 0", channelAddress, messageBufferAddress);
             return;
         }
         try {
             Chat.message(executionEnvironment.getModule(), channel.get(), message);
             virtualMachine.getStack().push(new I32(message.length()));
+            LOG.info("VM Native: send_message({} = {}, {} = {}) = {}", channelAddress, channel, messageBufferAddress, message, message.length());
         } catch(final IllegalArgumentException e) {
             virtualMachine.getStack().push(new I32(0));
+            LOG.info("VM Native: send_message({} = {}, {} = {}) = 0", channelAddress, channel, messageBufferAddress, message);
         }
     }
 
@@ -162,8 +174,17 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         /* TODO */
     }
 
-    private static void log(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException {
-        /* TODO */
+    private static void log(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final int messageBufferAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
+        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+        if(messageBufferAddress < 0) {
+            virtualMachine.getStack().push(new I32(0));
+            LOG.info("VM Native: log({}) = 0", messageBufferAddress);
+            return;
+        }
+        final String message = new String(decodeBuffer(memoryInstance, messageBufferAddress));
+        LOG.info("VM Log: {}", message);
+        virtualMachine.getStack().push(new I32(message.length()));
     }
 
     private static Optional<Channel> decodeChannel(final ExecutionEnvironment executionEnvironment, final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {
