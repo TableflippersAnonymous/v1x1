@@ -127,7 +127,7 @@ struct v1x1_event {
  * Get the size of the current event
  * @return size of the current event
  */
-extern int32_t v1x1_event_size();
+extern int32_t v1x1_event_size(void);
 
 /**
  * Read the current event into memory.
