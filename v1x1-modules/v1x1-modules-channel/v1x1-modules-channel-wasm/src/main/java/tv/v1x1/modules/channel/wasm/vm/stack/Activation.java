@@ -48,4 +48,14 @@ public class Activation implements StackElement {
     public Instruction getNextInstruction() {
         return nextInstruction;
     }
+
+    @Override
+    public String toString() {
+        return "Activation{" +
+                "locals=" + locals +
+                ", module=" + module +
+                ", arity=" + arity +
+                ", nextInstruction=" + nextInstruction +
+                '}';
+    }
 }

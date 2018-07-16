@@ -179,4 +179,14 @@ public class WebAssemblyStore {
                     functions.add((int) ((FuncExportDescriptor) exportDef.getDescriptor()).getFuncIdx());
         return functions;
     }
+
+    @Override
+    public String toString() {
+        return "WebAssemblyStore{" +
+                "functions=" + functions +
+                ", tables=" + tables +
+                ", memories=" + memories +
+                ", globals=" + globals +
+                '}';
+    }
 }

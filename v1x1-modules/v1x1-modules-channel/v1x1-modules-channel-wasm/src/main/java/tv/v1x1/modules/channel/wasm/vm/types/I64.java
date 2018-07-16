@@ -245,6 +245,13 @@ public final class I64 extends IN {
         return val;
     }
 
+    @Override
+    public String toString() {
+        return "I64{" +
+                "val=" + val +
+                '}';
+    }
+
     private I32 bool(final boolean bool) {
         return bool ? I32.ONE : I32.ZERO;
     }

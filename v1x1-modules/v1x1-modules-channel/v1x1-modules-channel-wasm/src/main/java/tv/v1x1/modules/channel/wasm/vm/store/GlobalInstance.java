@@ -29,4 +29,12 @@ public class GlobalInstance {
         return mutable == (globalType.getMutable() == Mutable.VARIABLE)
                 && globalType.getValType().getTypeClass().isInstance(value);
     }
+
+    @Override
+    public String toString() {
+        return "GlobalInstance{" +
+                "value=" + value +
+                ", mutable=" + mutable +
+                '}';
+    }
 }

@@ -303,6 +303,7 @@ public class ExecutionEnvironment {
         this.trapped = true;
         this.lastTrapped = System.currentTimeMillis();
         LOG.warn("VM Trapped for {}", tenant, e);
+        LOG.info("VM State: {}", virtualMachine);
     }
 
     private boolean isTrapped() {

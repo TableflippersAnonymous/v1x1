@@ -186,6 +186,13 @@ public final class F64 extends FN {
         return I64.decode(bits());
     }
 
+    @Override
+    public String toString() {
+        return "F64{" +
+                "val=" + val +
+                '}';
+    }
+
     private I32 bool(final boolean bool) {
         return bool ? I32.ONE : I32.ZERO;
     }

@@ -82,4 +82,13 @@ public class WebAssemblyVirtualMachine {
             execute(maxInstructions);
         }
     }
+
+    @Override
+    public String toString() {
+        return "WebAssemblyVirtualMachine{" +
+                "stack=" + stack +
+                ", store=" + store +
+                ", nextInstruction=" + nextInstruction +
+                '}';
+    }
 }

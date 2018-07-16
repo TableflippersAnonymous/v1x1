@@ -59,4 +59,12 @@ public class WebAssemblyStack {
         //noinspection StaticPseudoFunctionalStyleMethod
         return Iterables.get(Iterables.filter(stack, Label.class), val);
     }
+
+    @Override
+    public String toString() {
+        return "WebAssemblyStack{" +
+                "stack=" + stack +
+                ", frames=" + frames +
+                '}';
+    }
 }

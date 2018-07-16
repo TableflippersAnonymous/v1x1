@@ -27,4 +27,12 @@ public class TableInstance {
                 && (!tableType.getLimits().getMax().isPresent()
                     || (max.isPresent() && max.get() <= tableType.getLimits().getMax().get().getValU()));
     }
+
+    @Override
+    public String toString() {
+        return "TableInstance{" +
+                "elements=" + elements +
+                ", max=" + max +
+                '}';
+    }
 }

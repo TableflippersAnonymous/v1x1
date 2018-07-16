@@ -62,4 +62,12 @@ public class FunctionType {
     public int hashCode() {
         return Objects.hashCode(parameters, returnTypes);
     }
+
+    @Override
+    public String toString() {
+        return "FunctionType{" +
+                "parameters=" + parameters +
+                ", returnTypes=" + returnTypes +
+                '}';
+    }
 }

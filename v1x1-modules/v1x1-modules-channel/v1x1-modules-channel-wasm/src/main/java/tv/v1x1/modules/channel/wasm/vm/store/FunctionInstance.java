@@ -32,4 +32,12 @@ public abstract class FunctionInstance {
     }
 
     public abstract void invoke(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException;
+
+    @Override
+    public String toString() {
+        return "FunctionInstance{" +
+                "type=" + type +
+                ", locals=" + locals +
+                '}';
+    }
 }

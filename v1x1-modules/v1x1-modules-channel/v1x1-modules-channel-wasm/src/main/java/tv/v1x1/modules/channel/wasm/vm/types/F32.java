@@ -186,6 +186,13 @@ public final class F32 extends FN {
         return I32.decode(bits());
     }
 
+    @Override
+    public String toString() {
+        return "F32{" +
+                "val=" + val +
+                '}';
+    }
+
     private I32 bool(final boolean bool) {
         return bool ? I32.ONE : I32.ZERO;
     }

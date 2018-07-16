@@ -24,4 +24,13 @@ public class Label implements StackElement {
     public Instruction getEnd() {
         return end;
     }
+
+    @Override
+    public String toString() {
+        return "Label{" +
+                "arity=" + arity +
+                ", body=" + body +
+                ", end=" + end +
+                '}';
+    }
 }

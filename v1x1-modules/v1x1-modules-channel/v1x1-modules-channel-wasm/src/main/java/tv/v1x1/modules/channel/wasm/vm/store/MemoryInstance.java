@@ -3,6 +3,7 @@ package tv.v1x1.modules.channel.wasm.vm.store;
 import tv.v1x1.modules.channel.wasm.vm.decoder.MemoryType;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class MemoryInstance {
@@ -37,5 +38,13 @@ public class MemoryInstance {
         return data.length / PAGE_SIZE >= memoryType.getLimits().getMin().getValU()
                 && (!memoryType.getLimits().getMax().isPresent()
                 || (max.isPresent() && max.get().getValU() <= memoryType.getLimits().getMax().get().getValU()));
+    }
+
+    @Override
+    public String toString() {
+        return "MemoryInstance{" +
+                "data=" + Arrays.toString(data) +
+                ", max=" + max +
+                '}';
     }
 }
