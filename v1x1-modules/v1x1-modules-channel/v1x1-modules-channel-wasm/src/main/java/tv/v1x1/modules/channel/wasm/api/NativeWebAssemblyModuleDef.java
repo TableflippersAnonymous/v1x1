@@ -3,6 +3,7 @@ package tv.v1x1.modules.channel.wasm.api;
 import com.google.common.collect.ImmutableList;
 import tv.v1x1.modules.channel.wasm.ExecutionEnvironment;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
+import tv.v1x1.modules.channel.wasm.vm.Instruction;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.ValType;
@@ -88,6 +89,7 @@ public class NativeWebAssemblyModuleDef extends ModuleDef {
                 @Override
                 public void invoke(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance previousModule) throws TrapException {
                     nativeFunction.invoke(executionEnvironment, virtualMachine, previousModule);
+                    Instruction.exitFrame(virtualMachine);
                 }
             };
         }

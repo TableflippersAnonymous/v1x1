@@ -3,7 +3,6 @@ package tv.v1x1.modules.channel.wasm.vm.store;
 import tv.v1x1.modules.channel.wasm.vm.decoder.MemoryType;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class MemoryInstance {
@@ -43,7 +42,7 @@ public class MemoryInstance {
     @Override
     public String toString() {
         return "MemoryInstance{" +
-                "data=" + Arrays.toString(data) +
+                "data=[SNIP]" +
                 ", max=" + max +
                 '}';
     }
