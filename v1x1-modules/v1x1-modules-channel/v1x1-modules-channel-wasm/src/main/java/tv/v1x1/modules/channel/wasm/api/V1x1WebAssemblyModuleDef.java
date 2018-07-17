@@ -209,10 +209,12 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         System.arraycopy(memoryInstance.getData(), baseAddress + 4, addressArray, 0, 4);
         final int length = I32.decode(I32.swapEndian(lengthArray)).getVal();
         final int address = I32.decode(I32.swapEndian(addressArray)).getVal();
+        LOG.info("decodeBuffer({} => {}/{} => {}/{})", baseAddress, lengthArray, length, addressArray, address);
         if(address + length > memoryInstance.getData().length || length > 1024*1024)
             throw new TrapException("Invalid v1x1_buffer size");
         final byte[] data = new byte[length];
         System.arraycopy(memoryInstance.getData(), address, data, 0, length);
+        LOG.info("decodeBuffer() = {}", data);
         return data;
     }
 }
