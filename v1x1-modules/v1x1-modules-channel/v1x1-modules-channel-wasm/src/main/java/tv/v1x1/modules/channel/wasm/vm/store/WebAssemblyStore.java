@@ -56,17 +56,26 @@ public class WebAssemblyStore {
             if(!modules.containsKey(importDef.getModule()))
                 throw new LinkingException();
             final ImportDescriptor importDescriptor = importDef.getDescriptor();
+            boolean linked = false;
             for(final ModuleInstance moduleInstance : modules.get(importDef.getModule()))
-                if(importDescriptor instanceof FuncImportDescriptor)
-                    functionAddresses.add(resolveImport(types, moduleInstance, importDef.getName(), (FuncImportDescriptor) importDescriptor));
-                else if(importDescriptor instanceof TableImportDescriptor)
-                    tableAddresses.add(resolveImport(moduleInstance, importDef.getName(), (TableImportDescriptor) importDescriptor));
-                else if(importDescriptor instanceof MemImportDescriptor)
-                    memoryAddresses.add(resolveImport(moduleInstance, importDef.getName(), (MemImportDescriptor) importDescriptor));
-                else if(importDescriptor instanceof GlobalImportDescriptor)
-                    globalAddresses.add(resolveImport(moduleInstance, importDef.getName(), (GlobalImportDescriptor) importDescriptor));
-                else
-                    throw new LinkingException();
+                try {
+                    if (importDescriptor instanceof FuncImportDescriptor)
+                        functionAddresses.add(resolveImport(types, moduleInstance, importDef.getName(), (FuncImportDescriptor) importDescriptor));
+                    else if(importDescriptor instanceof TableImportDescriptor)
+                        tableAddresses.add(resolveImport(moduleInstance, importDef.getName(), (TableImportDescriptor) importDescriptor));
+                    else if(importDescriptor instanceof MemImportDescriptor)
+                        memoryAddresses.add(resolveImport(moduleInstance, importDef.getName(), (MemImportDescriptor) importDescriptor));
+                    else if(importDescriptor instanceof GlobalImportDescriptor)
+                        globalAddresses.add(resolveImport(moduleInstance, importDef.getName(), (GlobalImportDescriptor) importDescriptor));
+                    else
+                        throw new LinkingException();
+                    linked = true;
+                    break;
+                } catch(final LinkingException e) {
+                    /* Ignore */
+                }
+            if(!linked)
+                throw new LinkingException();
         }
 
         return new ResolvedImports(
