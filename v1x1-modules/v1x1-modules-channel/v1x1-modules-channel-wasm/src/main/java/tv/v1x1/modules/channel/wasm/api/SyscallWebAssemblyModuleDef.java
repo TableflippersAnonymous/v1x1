@@ -50,12 +50,7 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final int param1 = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
         switch(syscallId) {
             case SYS_BRK:
-                final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-                if(param1 > memoryInstance.getData().length) {
-                    final int amountToGrow = memoryInstance.getData().length - param1;
-                    memoryInstance.grow((amountToGrow + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
-                }
-                virtualMachine.getStack().push(new I32(memoryInstance.getData().length));
+                virtualMachine.getStack().push(I32.ZERO);
                 break;
             default:
                 virtualMachine.getStack().push(ENOSYS);
@@ -112,8 +107,12 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         switch(syscallId) {
             case SYS_MMAP_PGOFF:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-                final int curPos = memoryInstance.getData().length;
-                memoryInstance.grow((param2 + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
+                final int curPos = memoryInstance.getCurrentPosition();
+                if(curPos + param2 > memoryInstance.getData().length) {
+                    final int need = curPos + param2 - memoryInstance.getData().length;
+                    memoryInstance.grow((need + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
+                }
+                memoryInstance.setCurrentPosition(memoryInstance.getCurrentPosition() + param2);
                 virtualMachine.getStack().push(new I32(curPos));
                 break;
             default:

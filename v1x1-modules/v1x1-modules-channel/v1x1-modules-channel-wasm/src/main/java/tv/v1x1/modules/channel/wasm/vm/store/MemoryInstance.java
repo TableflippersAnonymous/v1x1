@@ -15,10 +15,12 @@ public class MemoryInstance {
     public static final int MAX_SIZE = 2000; // 2000 * 64KiB = 128MiB
     private byte[] data;
     private Optional<I32> max;
+    private int currentPosition;
 
     public MemoryInstance(final byte[] data, final Optional<I32> max) {
         this.data = data;
         this.max = max;
+        this.currentPosition = data.length;
     }
 
     public byte[] getData() {
@@ -37,6 +39,14 @@ public class MemoryInstance {
         data = new byte[newPageCount * PAGE_SIZE];
         System.arraycopy(oldData, 0, data, 0, Math.min(data.length, oldData.length));
         return oldPageCount;
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
+    public void setCurrentPosition(final int currentPosition) {
+        this.currentPosition = currentPosition;
     }
 
     public boolean matches(final MemoryType memoryType) {
