@@ -52,10 +52,9 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         switch(syscallId) {
             case SYS_BRK:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-                if(param1 == 0)
-                    virtualMachine.getStack().push(new I32(memoryInstance.getCurrentPosition()));
-                else
-                    virtualMachine.getStack().push(I32.ZERO);
+                if(param1 > memoryInstance.getCurrentPosition())
+                    allocate(param1 - memoryInstance.getCurrentPosition(), memoryInstance);
+                virtualMachine.getStack().push(new I32(memoryInstance.getCurrentPosition()));
                 break;
             default:
                 virtualMachine.getStack().push(ENOSYS);
@@ -113,17 +112,22 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         switch(syscallId) {
             case SYS_MMAP_PGOFF:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-                final int curPos = memoryInstance.getCurrentPosition();
-                if(curPos + param2 > memoryInstance.getData().length) {
-                    final int need = curPos + param2 - memoryInstance.getData().length;
-                    memoryInstance.grow((need + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
-                }
-                memoryInstance.setCurrentPosition(memoryInstance.getCurrentPosition() + param2);
+                final int curPos = allocate(param2, memoryInstance);
                 virtualMachine.getStack().push(new I32(curPos));
                 break;
             default:
                 virtualMachine.getStack().push(ENOSYS);
                 LOG.info("Unhandled syscall6({}, {}, {}, {}, {}, {}, {})", syscallId, param1, param2, param3, param4, param5, param6);
         }
+    }
+
+    private static int allocate(final int length, final MemoryInstance memoryInstance) {
+        final int curPos = memoryInstance.getCurrentPosition();
+        if(curPos + length > memoryInstance.getData().length) {
+            final int need = curPos + length - memoryInstance.getData().length;
+            memoryInstance.grow((need + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
+        }
+        memoryInstance.setCurrentPosition(memoryInstance.getCurrentPosition() + length);
+        return curPos;
     }
 }
