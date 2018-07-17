@@ -334,6 +334,7 @@ public class ModuleDef {
             final MemoryDef memoryDef = memories.get(i);
             final MemoryInstance memoryInstance = new MemoryInstance(new byte[0], memoryDef.getMemoryType().getLimits().getMax());
             memoryInstance.grow((int) memoryDef.getMemoryType().getLimits().getMin().getValU());
+            memoryInstance.setCurrentPosition(memoryInstance.getData().length);
             memoryAddresses[resolvedImports.getMemoryAddresses().length + i] = store.allocateMemory(memoryInstance);
         }
         for(int i = 0; i < globals.size(); i++) {
