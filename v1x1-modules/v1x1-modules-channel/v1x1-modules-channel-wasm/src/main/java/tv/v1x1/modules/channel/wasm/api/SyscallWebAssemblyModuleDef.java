@@ -48,9 +48,14 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     private static void syscall1(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
         final int syscallId = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
         final int param1 = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
+        LOG.info("syscall1({}, {})", syscallId, param1);
         switch(syscallId) {
             case SYS_BRK:
-                virtualMachine.getStack().push(I32.ZERO);
+                final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+                if(param1 == 0)
+                    virtualMachine.getStack().push(new I32(memoryInstance.getCurrentPosition()));
+                else
+                    virtualMachine.getStack().push(I32.ZERO);
                 break;
             default:
                 virtualMachine.getStack().push(ENOSYS);
@@ -104,6 +109,7 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final int param4 = virtualMachine.getCurrentActivation().getLocal(4, I32.class).getVal();
         final int param5 = virtualMachine.getCurrentActivation().getLocal(5, I32.class).getVal();
         final int param6 = virtualMachine.getCurrentActivation().getLocal(6, I32.class).getVal();
+        LOG.info("syscall6({}, {}, {}, {}, {}, {}, {})", syscallId, param1, param2, param3, param4, param5, param6);
         switch(syscallId) {
             case SYS_MMAP_PGOFF:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
