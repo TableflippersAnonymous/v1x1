@@ -18,6 +18,7 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final int SYS_BRK = 45;
+    private static final int SYS_MMAP_PGOFF = 192;
 
     private static final I32 ENOSYS = new I32(-38);
 
@@ -108,7 +109,16 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final int param4 = virtualMachine.getCurrentActivation().getLocal(4, I32.class).getVal();
         final int param5 = virtualMachine.getCurrentActivation().getLocal(5, I32.class).getVal();
         final int param6 = virtualMachine.getCurrentActivation().getLocal(6, I32.class).getVal();
-        virtualMachine.getStack().push(ENOSYS);
-        LOG.info("Unhandled syscall6({}, {}, {}, {}, {}, {}, {})", syscallId, param1, param2, param3, param4, param5, param6);
+        switch(syscallId) {
+            case SYS_MMAP_PGOFF:
+                final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+                final int curPos = memoryInstance.getData().length;
+                memoryInstance.grow((param2 + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
+                virtualMachine.getStack().push(new I32(curPos));
+                break;
+            default:
+                virtualMachine.getStack().push(ENOSYS);
+                LOG.info("Unhandled syscall6({}, {}, {}, {}, {}, {}, {})", syscallId, param1, param2, param3, param4, param5, param6);
+        }
     }
 }

@@ -1,11 +1,16 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.channel.wasm.vm.decoder.MemoryType;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 
 public class MemoryInstance {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     public static final int PAGE_SIZE = 65536; // 64KiB
     public static final int MAX_SIZE = 2000; // 2000 * 64KiB = 128MiB
     private byte[] data;
@@ -27,6 +32,7 @@ public class MemoryInstance {
             return -1;
         if(newPageCount > MAX_SIZE)
             return -1;
+        LOG.info("Growing VM memory by {}", val);
         final byte[] oldData = data;
         data = new byte[newPageCount * PAGE_SIZE];
         System.arraycopy(oldData, 0, data, 0, Math.min(data.length, oldData.length));
