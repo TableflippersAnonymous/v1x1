@@ -9,12 +9,16 @@ import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
+import tv.v1x1.modules.channel.wasm.vm.store.MemoryInstance;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
 import java.lang.invoke.MethodHandles;
 
 public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
+    private static final int SYS_BRK = 45;
+
     private static final I32 ENOSYS = new I32(-38);
 
     private static final NativeFunctionSpec[] FUNCTIONS = {
@@ -33,15 +37,29 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
 
     private static void syscall0(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
         final int syscallId = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
-        virtualMachine.getStack().push(ENOSYS);
-        LOG.info("Unhandled syscall0({})", syscallId);
+        switch(syscallId) {
+            default:
+                virtualMachine.getStack().push(ENOSYS);
+                LOG.info("Unhandled syscall0({})", syscallId);
+        }
     }
 
     private static void syscall1(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
         final int syscallId = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
         final int param1 = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
-        virtualMachine.getStack().push(ENOSYS);
-        LOG.info("Unhandled syscall1({}, {})", syscallId, param1);
+        switch(syscallId) {
+            case SYS_BRK:
+                final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+                if(param1 > memoryInstance.getData().length) {
+                    final int amountToGrow = memoryInstance.getData().length - param1;
+                    memoryInstance.grow((amountToGrow + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
+                }
+                virtualMachine.getStack().push(new I32(memoryInstance.getData().length));
+                break;
+            default:
+                virtualMachine.getStack().push(ENOSYS);
+                LOG.info("Unhandled syscall1({}, {})", syscallId, param1);
+        }
     }
 
     private static void syscall2(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
