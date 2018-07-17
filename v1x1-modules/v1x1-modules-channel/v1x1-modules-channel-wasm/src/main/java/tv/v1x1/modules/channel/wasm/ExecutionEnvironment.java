@@ -18,6 +18,7 @@ import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.DiscordVoiceStateEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.services.discord.dto.voice.VoiceState;
+import tv.v1x1.modules.channel.wasm.api.SyscallWebAssemblyModuleDef;
 import tv.v1x1.modules.channel.wasm.api.V1x1WebAssemblyModuleDef;
 import tv.v1x1.modules.channel.wasm.config.ModuleUserConfiguration;
 import tv.v1x1.modules.channel.wasm.config.WebAssemblyUserConfiguration;
@@ -316,9 +317,10 @@ public class ExecutionEnvironment {
         this.currentEvent = null;
         this.trapped = false;
         virtualMachine = WebAssemblyVirtualMachine.build();
+        final ModuleDef syscallDef = new SyscallWebAssemblyModuleDef(this);
         final ModuleDef moduleDef = new V1x1WebAssemblyModuleDef(this);
         try {
-            virtualMachine.loadModules(moduleDef);
+            virtualMachine.loadModules(syscallDef, moduleDef);
             for(final Map.Entry<String, ModuleUserConfiguration> entry : configuration.getModules().entrySet())
                 virtualMachine.loadModules(ModuleDef.fromString(entry.getKey(), entry.getValue().getData()));
         } catch (final ValidationException | LinkingException | TrapException | IOException e) {
