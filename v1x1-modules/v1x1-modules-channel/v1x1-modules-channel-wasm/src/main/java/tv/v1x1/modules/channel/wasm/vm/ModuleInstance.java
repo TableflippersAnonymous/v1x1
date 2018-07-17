@@ -2,6 +2,8 @@ package tv.v1x1.modules.channel.wasm.vm;
 
 import tv.v1x1.modules.channel.wasm.vm.decoder.ExportDef;
 
+import java.util.Arrays;
+
 public class ModuleInstance {
     private final FunctionType[] types;
     private final int[] functionAddresses;
@@ -42,5 +44,17 @@ public class ModuleInstance {
 
     public ExportDef[] getExports() {
         return exports;
+    }
+
+    @Override
+    public String toString() {
+        return "ModuleInstance{" +
+                "types=" + Arrays.toString(types) +
+                ", functionAddresses=" + Arrays.toString(functionAddresses) +
+                ", tableAddresses=" + Arrays.toString(tableAddresses) +
+                ", memoryAddresses=" + Arrays.toString(memoryAddresses) +
+                ", globalAddresses=" + Arrays.toString(globalAddresses) +
+                ", exports=" + Arrays.toString(exports) +
+                '}';
     }
 }

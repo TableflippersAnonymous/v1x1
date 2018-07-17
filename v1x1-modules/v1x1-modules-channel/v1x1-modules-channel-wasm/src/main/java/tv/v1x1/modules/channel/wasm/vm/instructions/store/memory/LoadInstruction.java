@@ -25,7 +25,7 @@ public abstract class LoadInstruction extends MemoryInstruction {
         final I32 location = virtualMachine.getStack().pop(I32.class);
         final int effectiveAddress = location.add(offset).getVal();
         if(effectiveAddress + getWidth() / 8 > memoryInstance.getData().length)
-            throw new TrapException("Invalid memory access");
+            throw new TrapException("Invalid memory access: " + effectiveAddress + "/" + getWidth());
         final byte[] bytes = Arrays.copyOfRange(memoryInstance.getData(), effectiveAddress,
                 effectiveAddress + getWidth() / 8);
         virtualMachine.getStack().push(convert(bytes));

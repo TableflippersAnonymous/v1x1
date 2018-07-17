@@ -48,7 +48,7 @@ public class IfInstruction extends Instruction {
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
         final I32 condition = virtualMachine.getStack().pop(I32.class);
-        final Label label = new Label(returnType.isPresent() ? 1 : 0, nextInstruction, nextInstruction);
+        final Label label = new Label(this, returnType.isPresent() ? 1 : 0, nextInstruction, nextInstruction);
         if(condition.eqz() == I32.ZERO)
             enter(virtualMachine, label, ifBody);
         else

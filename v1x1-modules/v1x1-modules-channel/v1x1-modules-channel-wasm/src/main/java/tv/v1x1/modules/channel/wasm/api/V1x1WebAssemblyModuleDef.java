@@ -176,6 +176,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
 
     private static void log(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
         final int messageBufferAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
+        LOG.info("VM Native: log({}) = 0", messageBufferAddress);
         final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
         if(messageBufferAddress < 0) {
             virtualMachine.getStack().push(new I32(0));

@@ -12,6 +12,8 @@ public class WebAssemblyVirtualMachine {
     private final WebAssemblyStack stack;
     private final WebAssemblyStore store;
     private Instruction nextInstruction;
+    private Instruction currentInstruction;
+    private int instructionCounter;
 
     public WebAssemblyVirtualMachine(final WebAssemblyStack stack, final WebAssemblyStore store) {
         this.stack = stack;
@@ -49,15 +51,15 @@ public class WebAssemblyVirtualMachine {
     }
 
     public void execute(final int maxInstructions, final boolean exitFrames) throws TrapException {
-        for(int i = 0; i < maxInstructions; i++) {
+        for(instructionCounter = 0; instructionCounter < maxInstructions; instructionCounter++) {
             //noinspection StatementWithEmptyBody
             while(exitFrames && nextInstruction == null && Instruction.exitFrame(this))
                 /* Loop */;
             if(nextInstruction == null)
                 return;
-            final Instruction instruction = nextInstruction;
-            nextInstruction = instruction.nextInstruction;
-            instruction.execute(this);
+            currentInstruction = nextInstruction;
+            nextInstruction = currentInstruction.nextInstruction;
+            currentInstruction.execute(this);
         }
         throw new TrapException("Max instruction count exceeded");
     }
@@ -90,5 +92,17 @@ public class WebAssemblyVirtualMachine {
                 ", store=" + store +
                 ", nextInstruction=" + nextInstruction +
                 '}';
+    }
+
+    public String dumpString() {
+        return "= WebAssemblyVirtualMachine =\n" +
+                "\n" +
+                "currentInstruction: " + String.valueOf(currentInstruction) + "\n" +
+                "nextInstruction: " + String.valueOf(nextInstruction) + "\n" +
+                "instructionCounter: " + instructionCounter + "\n" +
+                "\n" +
+                stack.dumpString() + "\n" +
+                "\n" +
+                store.dumpString() + "\n";
     }
 }

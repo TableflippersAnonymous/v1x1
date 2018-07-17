@@ -273,6 +273,7 @@ public abstract class Instruction {
         try {
             Instruction firstInstruction = null;
             Instruction lastInstruction = null;
+            int sequenceCount = 0;
             do {
                 final int opcode = dataInputStream.readUnsignedByte();
                 @SuppressWarnings("unchecked")
@@ -285,9 +286,11 @@ public abstract class Instruction {
                     firstInstruction = instruction;
                 if(lastInstruction != null)
                     lastInstruction.setNextInstruction(instruction);
+                instruction.setSeqIdx(sequenceCount);
                 lastInstruction = instruction;
+                sequenceCount++;
             } while(!(lastInstruction instanceof EndInstruction || (allowElse && lastInstruction instanceof ElseInstruction)));
-            return new InstructionSequence(firstInstruction, lastInstruction);
+            return new InstructionSequence(firstInstruction, lastInstruction, sequenceCount);
         } catch (InstantiationException | IllegalAccessException e) {
             throw new DecodeException(e);
         }
@@ -329,7 +332,7 @@ public abstract class Instruction {
             locals[i] = virtualMachine.getStack().pop(functionType.getParameters().get(i).getTypeClass());
         for(int i = functionType.getParameters().size(), j = 0; i < locals.length && j < functionInstance.getLocals().size(); i++, j++)
             locals[i] = functionInstance.getLocals().get(j).getZero();
-        final Activation frame = new Activation(Arrays.asList(locals), functionInstance.getModule(), functionType.getReturnTypes().size(), nextInstruction);
+        final Activation frame = new Activation(Arrays.asList(locals), functionInstance.getModule(), functionType.getReturnTypes().size(), nextInstruction, functionAddress);
         final Activation previousFrame = virtualMachine.getCurrentActivation();
         virtualMachine.getStack().push(frame);
         functionInstance.invoke(virtualMachine, previousFrame == null ? null : previousFrame.getModule());
@@ -349,14 +352,15 @@ public abstract class Instruction {
         return true;
     }
 
-    protected Instruction nextInstruction;
-
     public static boolean isConstantSequence(final Instruction instructions) {
         for(Instruction instruction = instructions; instruction != null; instruction = instruction.nextInstruction)
             if(!instruction.isConstant())
                 return false;
         return true;
     }
+
+    protected Instruction nextInstruction;
+    private int seqIdx;
 
     protected boolean isConstant() {
         return false;
@@ -366,7 +370,16 @@ public abstract class Instruction {
         this.nextInstruction = nextInstruction;
     }
 
+    public void setSeqIdx(final int seqIdx) {
+        this.seqIdx = seqIdx;
+    }
+
     public abstract void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException;
     public abstract void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException;
     public abstract void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException;
+
+    @Override
+    public String toString() {
+        return getClass().getName() + '{' + seqIdx + '}';
+    }
 }

@@ -362,7 +362,7 @@ public class ModuleDef {
     }
 
     public void instantiate(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
-        virtualMachine.getStack().push(new Activation(ImmutableList.of(), moduleInstance, 0, null));
+        virtualMachine.getStack().push(new Activation(ImmutableList.of(), moduleInstance, 0, null, -1));
         instantiateGlobals(virtualMachine, moduleInstance);
         instantiateTables(virtualMachine, moduleInstance);
         instantiateMemories(virtualMachine, moduleInstance);

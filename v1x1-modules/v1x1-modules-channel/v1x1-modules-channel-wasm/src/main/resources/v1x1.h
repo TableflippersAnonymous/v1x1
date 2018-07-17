@@ -3,21 +3,17 @@
 
 #include <stdint.h>
 
-enum v1x1_event_type {
-    MESSAGE = 0,
-    SCHEDULER_NOTIFY = 1,
-    DISCORD_VOICE_STATE = 2
-};
+#define MESSAGE 0
+#define SCHEDULER_NOTIFY 1
+#define DISCORD_VOICE_STATE 2
 
-enum v1x1_platform {
-    TWITCH = 1,
-    DISCORD = 2,
-    SLACK = 3,
-    MIXER = 4,
-    YOUTUBE = 5,
-    CURSE = 6,
-    API = 7
-};
+#define TWITCH 1
+#define DISCORD 2
+#define SLACK 3
+#define MIXER 4
+#define YOUTUBE 5
+#define CURSE 6
+#define API 7
 
 /* A standard UUID */
 struct v1x1_uuid {
@@ -41,7 +37,7 @@ struct v1x1_tenant {
 struct v1x1_channel_group {
     struct v1x1_buffer id;
     struct v1x1_buffer display_name;
-    enum v1x1_platform platform;
+    uint8_t platform;
     struct v1x1_tenant tenant;
 } __attribute__((__packed__));
 
@@ -61,7 +57,7 @@ struct v1x1_global_user {
 struct v1x1_user {
     struct v1x1_buffer id;
     struct v1x1_buffer display_name;
-    enum v1x1_platform platform;
+    uint8_t platform;
     struct v1x1_global_user global_user;
 } __attribute__((__packed__));
 
@@ -115,7 +111,7 @@ struct v1x1_event_discord_voice_state {
 
 /* An event is a struct describing the properties of a given change that is observed by v1x1 */
 struct v1x1_event {
-    enum v1x1_event_type event_type;
+    uint8_t event_type;
     union {
         struct v1x1_event_message message_event;
         struct v1x1_event_scheduler_notify scheduler_notify_event;

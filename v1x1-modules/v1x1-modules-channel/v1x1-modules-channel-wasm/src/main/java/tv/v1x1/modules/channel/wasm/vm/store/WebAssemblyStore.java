@@ -1,5 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
@@ -20,6 +21,7 @@ import tv.v1x1.modules.channel.wasm.vm.decoder.TableImportDescriptor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class WebAssemblyStore {
     private final List<FunctionInstance> functions = new ArrayList<>();
@@ -187,6 +189,25 @@ public class WebAssemblyStore {
                 ", tables=" + tables +
                 ", memories=" + memories +
                 ", globals=" + globals +
+                ", modules=" + modules +
                 '}';
+    }
+
+    public String dumpString() {
+        return "== WebAssemblyStore ==\n" +
+                "functions:\n" +
+                "- " + Joiner.on("\n - ").join(functions) + "\n" +
+                "\n" +
+                "tables:\n" +
+                "- " + Joiner.on("\n - ").join(tables) + "\n" +
+                "\n" +
+                "memories:\n" +
+                "- " + Joiner.on("\n - ").join(memories) + "\n" +
+                "\n" +
+                "globals:\n" +
+                "- " + Joiner.on("\n - ").join(globals) + "\n" +
+                "\n" +
+                "modules:\n" +
+                Joiner.on("\n").join(modules.entries().stream().map(entry -> entry.getKey() + ": " + entry.getValue()).collect(Collectors.toList()));
     }
 }

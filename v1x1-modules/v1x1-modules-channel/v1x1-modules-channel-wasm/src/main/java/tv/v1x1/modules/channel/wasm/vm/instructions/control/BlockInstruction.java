@@ -36,6 +36,6 @@ public class BlockInstruction extends Instruction {
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        enter(virtualMachine, new Label(returnType.isPresent() ? 1 : 0, nextInstruction, nextInstruction), innerInstructions);
+        enter(virtualMachine, new Label(this, returnType.isPresent() ? 1 : 0, nextInstruction, nextInstruction), innerInstructions);
     }
 }

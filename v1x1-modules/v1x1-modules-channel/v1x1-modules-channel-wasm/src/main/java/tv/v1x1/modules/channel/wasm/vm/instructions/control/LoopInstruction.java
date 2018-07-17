@@ -36,6 +36,6 @@ public class LoopInstruction extends Instruction {
 
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
-        enter(virtualMachine, new Label(0, innerInstructions, nextInstruction), innerInstructions);
+        enter(virtualMachine, new Label(this, 0, innerInstructions, nextInstruction), innerInstructions);
     }
 }

@@ -12,12 +12,14 @@ public class Activation implements StackElement {
     private final ModuleInstance module;
     private final int arity;
     private final Instruction nextInstruction;
+    private final int funcIdx;
 
-    public Activation(final List<WebAssemblyType> locals, final ModuleInstance module, final int arity, final Instruction nextInstruction) {
+    public Activation(final List<WebAssemblyType> locals, final ModuleInstance module, final int arity, final Instruction nextInstruction, final int funcIdx) {
         this.locals = locals;
         this.module = module;
         this.arity = arity;
         this.nextInstruction = nextInstruction;
+        this.funcIdx = funcIdx;
     }
 
     @SuppressWarnings("unchecked")
@@ -56,6 +58,7 @@ public class Activation implements StackElement {
                 ", module=" + module +
                 ", arity=" + arity +
                 ", nextInstruction=" + nextInstruction +
+                ", funcIdx=" + funcIdx +
                 '}';
     }
 }

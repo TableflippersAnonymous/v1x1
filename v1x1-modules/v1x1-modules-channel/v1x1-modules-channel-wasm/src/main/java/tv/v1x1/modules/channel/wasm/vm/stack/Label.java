@@ -6,8 +6,10 @@ public class Label implements StackElement {
     private final int arity;
     private final Instruction body;
     private final Instruction end;
+    private final Instruction cause;
 
-    public Label(final int arity, final Instruction body, final Instruction end) {
+    public Label(final Instruction cause, final int arity, final Instruction body, final Instruction end) {
+        this.cause = cause;
         this.arity = arity;
         this.body = body;
         this.end = end;
@@ -28,7 +30,8 @@ public class Label implements StackElement {
     @Override
     public String toString() {
         return "Label{" +
-                "arity=" + arity +
+                "cause=" + cause +
+                ", arity=" + arity +
                 ", body=" + body +
                 ", end=" + end +
                 '}';

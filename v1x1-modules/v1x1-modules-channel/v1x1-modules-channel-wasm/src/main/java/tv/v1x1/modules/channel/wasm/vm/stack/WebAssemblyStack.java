@@ -1,5 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.stack;
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
@@ -66,5 +67,14 @@ public class WebAssemblyStack {
                 "stack=" + stack +
                 ", frames=" + frames +
                 '}';
+    }
+
+    public String dumpString() {
+        return "== WebAssemblyStack ==\n" +
+                "Activations:\n" +
+                "- " + Joiner.on("\n - ").join(frames) + "\n" +
+                "\n" +
+                "Full Stack:\n" +
+                "- " + Joiner.on("\n - ").join(stack);
     }
 }
