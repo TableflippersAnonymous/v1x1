@@ -106,7 +106,10 @@ public class MemoryInstance {
                 throw new TrapException("Segmentation fault: Page " + page + " not mapped");
             if(!memoryPage.isWritable())
                 throw new TrapException("Segmentation fault: Page " + page + " not writable");
-            System.arraycopy(bytes, Math.min(0, (page << 16) - address), memoryPage.getData(), Math.max(address, page << 16) - (page << 16), Math.max(PAGE_SIZE, bytes.length - Math.min(0, (page << 16) - address)));
+            System.arraycopy(
+                    bytes, Math.max(0, (page << 16) - address),
+                    memoryPage.getData(), Math.max(address, page << 16) - (page << 16),
+                    Math.min(PAGE_SIZE, bytes.length - Math.max(0, (page << 16) - address)));
         }
     }
 
@@ -127,7 +130,10 @@ public class MemoryInstance {
                 throw new TrapException("Segmentation fault: Page " + page + " not mapped");
             if(!memoryPage.isReadable())
                 throw new TrapException("Segmentation fault: Page " + page + " not readable");
-            System.arraycopy(memoryPage.getData(), Math.max(address, page << 16) - (page << 16), bytes, Math.min(0, (page << 16) - address), Math.max(PAGE_SIZE, bytes.length - Math.min(0, (page << 16) - address)));
+            System.arraycopy(
+                    memoryPage.getData(), Math.max(address, page << 16) - (page << 16),
+                    bytes, Math.max(0, (page << 16) - address),
+                    Math.min(PAGE_SIZE, bytes.length - Math.max(0, (page << 16) - address)));
         }
     }
 
