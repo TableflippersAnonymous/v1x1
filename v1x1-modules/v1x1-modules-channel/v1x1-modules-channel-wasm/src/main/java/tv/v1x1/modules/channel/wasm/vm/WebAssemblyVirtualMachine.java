@@ -1,10 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ModuleDef;
-import tv.v1x1.modules.channel.wasm.vm.instructions.control.CallIndirectInstruction;
-import tv.v1x1.modules.channel.wasm.vm.instructions.control.CallInstruction;
 import tv.v1x1.modules.channel.wasm.vm.stack.Activation;
 import tv.v1x1.modules.channel.wasm.vm.stack.WebAssemblyStack;
 import tv.v1x1.modules.channel.wasm.vm.store.LinkingException;
@@ -12,10 +8,7 @@ import tv.v1x1.modules.channel.wasm.vm.store.WebAssemblyStore;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
-import java.lang.invoke.MethodHandles;
-
 public class WebAssemblyVirtualMachine {
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private final WebAssemblyStack stack;
     private final WebAssemblyStore store;
     private Instruction nextInstruction;
@@ -67,8 +60,6 @@ public class WebAssemblyVirtualMachine {
             currentInstruction = nextInstruction;
             nextInstruction = currentInstruction.nextInstruction;
             currentInstruction.execute(this);
-            if(currentInstruction instanceof CallInstruction || currentInstruction instanceof CallIndirectInstruction)
-                LOG.info("Debug: {}", dumpString());
         }
         throw new TrapException("Max instruction count exceeded");
     }

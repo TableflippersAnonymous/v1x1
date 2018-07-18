@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BlockInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrIfInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrInstruction;
@@ -181,11 +183,14 @@ import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayDeque;
 import java.util.Arrays;
 import java.util.Deque;
 
 public abstract class Instruction {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     /* See https://webassembly.github.io/spec/core/appendix/index-instructions.html */
     private final static Class[] decodeTable = {
             /* 0x00 */ UnreachableInstruction.class, NopInstruction.class, BlockInstruction.class, LoopInstruction.class,
