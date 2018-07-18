@@ -202,7 +202,8 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             final int need = breakPage - memoryInstance.getBreakPages() + 1;
             memoryInstance.grow(need);
         }
-        memoryInstance.setCurrentBreak(breakAddress);
+        if(breakAddress > curPos)
+            memoryInstance.setCurrentBreak(breakAddress);
         return curPos;
     }
 }
