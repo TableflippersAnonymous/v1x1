@@ -23,11 +23,8 @@ public abstract class StoreInstruction<T extends WebAssemblyType> extends Memory
         final T val = virtualMachine.getStack().pop(getTypeClass());
         final I32 location = virtualMachine.getStack().pop(I32.class);
         final int effectiveAddress = location.add(offset).getVal();
-        if(effectiveAddress + getWidth() / 8 > memoryInstance.getData().length)
-            throw new TrapException("Invalid memory access");
         final byte[] bytes = getBytes(val);
-        for(int i = 0; i < bytes.length; i++)
-            memoryInstance.getData()[effectiveAddress + i] = bytes[i];
+        memoryInstance.write(effectiveAddress, bytes);
     }
 
     protected abstract Class<T> getTypeClass();

@@ -332,9 +332,9 @@ public class ModuleDef {
         }
         for(int i = 0; i < memories.size(); i++) {
             final MemoryDef memoryDef = memories.get(i);
-            final MemoryInstance memoryInstance = new MemoryInstance(new byte[0], memoryDef.getMemoryType().getLimits().getMax());
+            final MemoryInstance memoryInstance = new MemoryInstance(memoryDef.getMemoryType().getLimits().getMax());
             memoryInstance.grow((int) memoryDef.getMemoryType().getLimits().getMin().getValU());
-            memoryInstance.setCurrentPosition(memoryInstance.getData().length);
+            memoryInstance.setCurrentBreak(memoryInstance.getBreakPages() * MemoryInstance.PAGE_SIZE);
             memoryAddresses[resolvedImports.getMemoryAddresses().length + i] = store.allocateMemory(memoryInstance);
         }
         for(int i = 0; i < globals.size(); i++) {
@@ -406,9 +406,7 @@ public class ModuleDef {
             final long memoryIdx = dataSegmentDef.getMemIdx();
             final int memoryAddress = moduleInstance.getMemoryAddresses()[(int) memoryIdx];
             final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(memoryAddress);
-            if(dataSegmentDef.getInit().length + offset.getValU() > memoryInstance.getData().length)
-                throw new TrapException("Invalid data segment offset");
-            System.arraycopy(dataSegmentDef.getInit(), 0, memoryInstance.getData(), (int) offset.getValU(), dataSegmentDef.getInit().length);
+            memoryInstance.write((int) offset.getValU(), dataSegmentDef.getInit());
         }
     }
 

@@ -33,6 +33,7 @@ public class MemoryGrowInstruction extends Instruction {
         final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(memoryAddress);
         final I32 sizeToGrow = virtualMachine.getStack().pop(I32.class);
         final I32 oldSize = new I32(memoryInstance.grow(sizeToGrow.getVal()));
+        memoryInstance.setCurrentBreak(memoryInstance.getBreakPages() * MemoryInstance.MAX_SIZE);
         virtualMachine.getStack().push(oldSize);
     }
 }

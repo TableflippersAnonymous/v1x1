@@ -69,12 +69,12 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final int length = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
         final byte[] event = executionEnvironment.getCurrentEvent(baseAddress);
         final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-        if(baseAddress < 0 || event == null || length < event.length || length + baseAddress > memoryInstance.getData().length) {
+        if(baseAddress < 0 || event == null || length < event.length) {
             virtualMachine.getStack().push(new I32(0));
             LOG.info("VM Native: read_event({}, {}) = 0", baseAddress, length);
             return;
         }
-        System.arraycopy(event, 0, memoryInstance.getData(), baseAddress, event.length);
+        memoryInstance.write(baseAddress, event);
         virtualMachine.getStack().push(new I32(event.length));
         LOG.info("VM Native: read_event({}, {}) = {}", baseAddress, length, event.length);
     }
@@ -192,28 +192,28 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final Tenant tenant = executionEnvironment.getTenant();
         final String channelId = new String(decodeBuffer(memoryInstance, baseAddress));
         final String channelGroupId = new String(decodeBuffer(memoryInstance, baseAddress + 16));
-        final Platform platform = PLATFORM_MAP.get((int) memoryInstance.getData()[baseAddress + 32]);
+        final Platform platform = PLATFORM_MAP.get((int) memoryInstance.readByte(baseAddress + 32));
         return tenant.getChannel(platform, channelGroupId, channelId);
     }
 
     private static Optional<User> decodeUser(final ExecutionEnvironment executionEnvironment, final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {
         final String userId = new String(decodeBuffer(memoryInstance, baseAddress));
-        final Platform platform = PLATFORM_MAP.get((int) memoryInstance.getData()[baseAddress + 8]);
+        final Platform platform = PLATFORM_MAP.get((int) memoryInstance.readByte(baseAddress + 8));
         return executionEnvironment.getUser(platform, userId);
     }
 
     private static byte[] decodeBuffer(final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {
         final byte[] lengthArray = new byte[4];
         final byte[] addressArray = new byte[4];
-        System.arraycopy(memoryInstance.getData(), baseAddress, lengthArray, 0, 4);
-        System.arraycopy(memoryInstance.getData(), baseAddress + 4, addressArray, 0, 4);
+        memoryInstance.read(baseAddress, lengthArray);
+        memoryInstance.read(baseAddress + 4, addressArray);
         final int length = I32.decode(I32.swapEndian(lengthArray)).getVal();
         final int address = I32.decode(I32.swapEndian(addressArray)).getVal();
         LOG.info("decodeBuffer({} => {}/{} => {}/{})", baseAddress, lengthArray, length, addressArray, address);
-        if(address + length > memoryInstance.getData().length || length > 1024*1024 || length < 0)
+        if(length > 1024*1024 || length < 0)
             throw new TrapException("Invalid v1x1_buffer size");
         final byte[] data = new byte[length];
-        System.arraycopy(memoryInstance.getData(), address, data, 0, length);
+        memoryInstance.read(address, data);
         LOG.info("decodeBuffer() = {}", data);
         return data;
     }

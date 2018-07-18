@@ -9,8 +9,6 @@ import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
-import java.util.Arrays;
-
 public abstract class LoadInstruction extends MemoryInstruction {
     @Override
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
@@ -24,10 +22,8 @@ public abstract class LoadInstruction extends MemoryInstruction {
         final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(memoryAddress);
         final I32 location = virtualMachine.getStack().pop(I32.class);
         final int effectiveAddress = location.add(offset).getVal();
-        if(effectiveAddress + getWidth() / 8 > memoryInstance.getData().length)
-            throw new TrapException("Invalid memory access: " + effectiveAddress + "/" + getWidth());
-        final byte[] bytes = Arrays.copyOfRange(memoryInstance.getData(), effectiveAddress,
-                effectiveAddress + getWidth() / 8);
+        final byte[] bytes = new byte[getWidth() / 8];
+        memoryInstance.read(effectiveAddress, bytes);
         virtualMachine.getStack().push(convert(bytes));
     }
 

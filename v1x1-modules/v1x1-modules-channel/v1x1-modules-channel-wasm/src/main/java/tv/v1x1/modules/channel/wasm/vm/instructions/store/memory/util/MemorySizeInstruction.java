@@ -30,6 +30,6 @@ public class MemorySizeInstruction extends Instruction {
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
         final int memoryAddress = virtualMachine.getCurrentActivation().getModule().getMemoryAddresses()[0];
         final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(memoryAddress);
-        virtualMachine.getStack().push(new I32(memoryInstance.getData().length / MemoryInstance.PAGE_SIZE));
+        virtualMachine.getStack().push(new I32(memoryInstance.getBreakPages()));
     }
 }

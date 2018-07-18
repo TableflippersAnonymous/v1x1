@@ -10,6 +10,7 @@ import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
 import tv.v1x1.modules.channel.wasm.vm.store.MemoryInstance;
+import tv.v1x1.modules.channel.wasm.vm.store.MemoryPage;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
 import java.lang.invoke.MethodHandles;
@@ -18,7 +19,22 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private static final int SYS_BRK = 45;
+    private static final int SYS_MUNMAP = 91;
     private static final int SYS_MMAP_PGOFF = 192;
+
+    private static final int EPERM  =  1;
+    private static final int ENOMEM = 12;
+    private static final int EACCES = 13;
+    private static final int EEXIST = 17;
+    private static final int EINVAL = 22;
+
+    private static final int PROT_READ      = 0x1;
+    private static final int PROT_WRITE     = 0x2;
+    private static final int PROT_EXEC      = 0x4;
+
+    private static final int MAP_FIXED      =    0x10;
+    private static final int MAP_ANONYMOUS  =    0x20;
+    private static final int MAP_FIXED_NOREPLACE = 0x100000;
 
     private static final I32 ENOSYS = new I32(-38);
 
@@ -52,9 +68,9 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         switch(syscallId) {
             case SYS_BRK:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-                if(param1 > memoryInstance.getCurrentPosition())
-                    allocate(param1 - memoryInstance.getCurrentPosition(), memoryInstance);
-                virtualMachine.getStack().push(new I32(memoryInstance.getCurrentPosition()));
+                if(param1 > memoryInstance.getCurrentBreak())
+                    brk(param1 - memoryInstance.getCurrentBreak(), memoryInstance);
+                virtualMachine.getStack().push(new I32(memoryInstance.getCurrentBreak()));
                 break;
             default:
                 virtualMachine.getStack().push(ENOSYS);
@@ -66,8 +82,16 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final int syscallId = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
         final int param1 = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
         final int param2 = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
-        virtualMachine.getStack().push(ENOSYS);
-        LOG.info("Unhandled syscall2({}, {}, {})", syscallId, param1, param2);
+        LOG.info("syscall2({}, {}, {})", syscallId, param1, param2);
+        switch(syscallId) {
+            case SYS_MUNMAP:
+                final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+                virtualMachine.getStack().push(new I32(munmap(memoryInstance, param1, param2)));
+                break;
+            default:
+                virtualMachine.getStack().push(ENOSYS);
+                LOG.info("Unhandled syscall2({}, {}, {})", syscallId, param1, param2);
+        }
     }
 
     private static void syscall3(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
@@ -112,8 +136,7 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         switch(syscallId) {
             case SYS_MMAP_PGOFF:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-                final int curPos = allocate(param2, memoryInstance);
-                virtualMachine.getStack().push(new I32(curPos));
+                virtualMachine.getStack().push(new I32(mmap(memoryInstance, param1, param2, param3, param4, param5, param6)));
                 break;
             default:
                 virtualMachine.getStack().push(ENOSYS);
@@ -121,13 +144,65 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
     }
 
-    private static int allocate(final int length, final MemoryInstance memoryInstance) {
-        final int curPos = memoryInstance.getCurrentPosition();
-        if(curPos + length > memoryInstance.getData().length) {
-            final int need = curPos + length - memoryInstance.getData().length;
+    private static int mmap(final MemoryInstance memoryInstance, final int address, final int length, final int protection, final int flags, final int fd, final int offset) {
+        if(length == 0)
+            return -EINVAL;
+        if((flags & MAP_ANONYMOUS) == 0)
+            return -EACCES;
+        if((protection & PROT_EXEC) != 0)
+            return -EPERM;
+        final int pageCount = (length >> 16) + 1;
+        if(memoryInstance.getPageCount() + pageCount > MemoryInstance.MAX_SIZE)
+            return -ENOMEM;
+        final MemoryPage[] pages = new MemoryPage[pageCount];
+        for(int i = 0; i < pageCount; i++)
+            pages[i] = new MemoryPage((protection & PROT_READ) != 0, (protection & PROT_WRITE) != 0);
+        if((flags & MAP_FIXED_NOREPLACE) != 0) {
+            if((address & 0xffff) != 0)
+                return -EINVAL;
+            final int retAddress = memoryInstance.mapAt(address >> 16, pages);
+            if(retAddress == -2)
+                return -EEXIST;
+            if(retAddress < 0)
+                return -ENOMEM;
+            return retAddress;
+        }
+        if((flags & MAP_FIXED) != 0) {
+            if((address & 0xffff) != 0)
+                return -EINVAL;
+            if((address >> 16) < memoryInstance.getBreakPages())
+                return -EINVAL;
+            final int retAddress = memoryInstance.forceMapAt(address >> 16, pages);
+            if(retAddress < 0)
+                return -ENOMEM;
+            return retAddress;
+        }
+        if(address == 0) {
+            final int retAddress = memoryInstance.map(pages);
+            if(retAddress < 0)
+                return -ENOMEM;
+            return retAddress;
+        }
+        final int retAddress = memoryInstance.tryMapAt(address >> 16, pages);
+        if(retAddress < 0)
+            return -ENOMEM;
+        return retAddress;
+    }
+
+    private static int munmap(final MemoryInstance memoryInstance, final int address, final int length) {
+        if((address & 0xffff) != 0)
+            return -EINVAL;
+        memoryInstance.unmap(address >> 16, (length >> 16) + 1);
+        return 0;
+    }
+
+    private static int brk(final int length, final MemoryInstance memoryInstance) {
+        final int curPos = memoryInstance.getCurrentBreak();
+        if(curPos + length > memoryInstance.getBreakPages() * MemoryInstance.MAX_SIZE) {
+            final int need = curPos + length - memoryInstance.getBreakPages() * MemoryInstance.MAX_SIZE;
             memoryInstance.grow((need + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
         }
-        memoryInstance.setCurrentPosition(memoryInstance.getCurrentPosition() + length);
+        memoryInstance.setCurrentBreak(memoryInstance.getCurrentBreak() + length);
         return curPos;
     }
 }
