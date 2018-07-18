@@ -68,8 +68,7 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         switch(syscallId) {
             case SYS_BRK:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-                if(param1 > memoryInstance.getCurrentBreak())
-                    brk(param1 - memoryInstance.getCurrentBreak(), memoryInstance);
+                brk(param1, memoryInstance);
                 virtualMachine.getStack().push(new I32(memoryInstance.getCurrentBreak()));
                 break;
             default:
@@ -196,13 +195,14 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         return 0;
     }
 
-    private static int brk(final int length, final MemoryInstance memoryInstance) {
+    private static int brk(final int breakAddress, final MemoryInstance memoryInstance) {
         final int curPos = memoryInstance.getCurrentBreak();
-        if(curPos + length > memoryInstance.getBreakPages() * MemoryInstance.PAGE_SIZE) {
-            final int need = curPos + length - memoryInstance.getBreakPages() * MemoryInstance.PAGE_SIZE;
-            memoryInstance.grow((need + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
+        final int breakPage = breakAddress >> 16;
+        if(breakPage >= memoryInstance.getBreakPages()) {
+            final int need = breakPage - memoryInstance.getBreakPages() + 1;
+            memoryInstance.grow(need);
         }
-        memoryInstance.setCurrentBreak(memoryInstance.getCurrentBreak() + length);
+        memoryInstance.setCurrentBreak(breakAddress);
         return curPos;
     }
 }
