@@ -198,8 +198,8 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
 
     private static int brk(final int length, final MemoryInstance memoryInstance) {
         final int curPos = memoryInstance.getCurrentBreak();
-        if(curPos + length > memoryInstance.getBreakPages() * MemoryInstance.MAX_SIZE) {
-            final int need = curPos + length - memoryInstance.getBreakPages() * MemoryInstance.MAX_SIZE;
+        if(curPos + length > memoryInstance.getBreakPages() * MemoryInstance.PAGE_SIZE) {
+            final int need = curPos + length - memoryInstance.getBreakPages() * MemoryInstance.PAGE_SIZE;
             memoryInstance.grow((need + MemoryInstance.PAGE_SIZE - 1) / MemoryInstance.PAGE_SIZE);
         }
         memoryInstance.setCurrentBreak(memoryInstance.getCurrentBreak() + length);
