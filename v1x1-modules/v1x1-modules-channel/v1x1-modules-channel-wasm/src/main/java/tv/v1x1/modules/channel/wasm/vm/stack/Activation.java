@@ -55,7 +55,6 @@ public class Activation implements StackElement {
     public String toString() {
         return "Activation{" +
                 "locals=" + locals +
-                ", module=" + module +
                 ", arity=" + arity +
                 ", nextInstruction=" + nextInstruction +
                 ", funcIdx=" + funcIdx +

@@ -3,6 +3,8 @@ package tv.v1x1.modules.channel.wasm.vm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ModuleDef;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.CallIndirectInstruction;
+import tv.v1x1.modules.channel.wasm.vm.instructions.control.CallInstruction;
 import tv.v1x1.modules.channel.wasm.vm.stack.Activation;
 import tv.v1x1.modules.channel.wasm.vm.stack.WebAssemblyStack;
 import tv.v1x1.modules.channel.wasm.vm.store.LinkingException;
@@ -65,7 +67,8 @@ public class WebAssemblyVirtualMachine {
             currentInstruction = nextInstruction;
             nextInstruction = currentInstruction.nextInstruction;
             currentInstruction.execute(this);
-            LOG.info("Debug: {}", dumpString());
+            if(currentInstruction instanceof CallInstruction || currentInstruction instanceof CallIndirectInstruction)
+                LOG.info("Debug: {}", dumpString());
         }
         throw new TrapException("Max instruction count exceeded");
     }

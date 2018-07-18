@@ -205,16 +205,16 @@ public class WebAssemblyStore {
     public String dumpString() {
         return "== WebAssemblyStore ==\n" +
                 "functions:\n" +
-                "- " + Joiner.on("\n - ").join(functions) + "\n" +
+                "- " + Joiner.on("\n- ").join(functions) + "\n" +
                 "\n" +
                 "tables:\n" +
-                "- " + Joiner.on("\n - ").join(tables) + "\n" +
+                "- " + Joiner.on("\n- ").join(tables) + "\n" +
                 "\n" +
                 "memories:\n" +
-                "- " + Joiner.on("\n - ").join(memories) + "\n" +
+                "- " + Joiner.on("\n- ").join(memories) + "\n" +
                 "\n" +
                 "globals:\n" +
-                "- " + Joiner.on("\n - ").join(globals) + "\n" +
+                "- " + Joiner.on("\n- ").join(globals) + "\n" +
                 "\n" +
                 "modules:\n" +
                 Joiner.on("\n").join(modules.entries().stream().map(entry -> entry.getKey() + ": " + entry.getValue()).collect(Collectors.toList()));

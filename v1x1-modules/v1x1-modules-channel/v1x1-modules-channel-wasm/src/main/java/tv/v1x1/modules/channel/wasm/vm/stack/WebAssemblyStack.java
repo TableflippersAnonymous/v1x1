@@ -72,9 +72,9 @@ public class WebAssemblyStack {
     public String dumpString() {
         return "== WebAssemblyStack ==\n" +
                 "Activations:\n" +
-                "- " + Joiner.on("\n - ").join(frames) + "\n" +
+                "- " + Joiner.on("\n- ").join(frames) + "\n" +
                 "\n" +
                 "Full Stack:\n" +
-                "- " + Joiner.on("\n - ").join(stack);
+                "- " + Joiner.on("\n- ").join(stack);
     }
 }
