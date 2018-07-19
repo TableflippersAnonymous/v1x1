@@ -48,7 +48,7 @@ public class CallIndirectInstruction extends Instruction {
     @Override
     public void execute(final WebAssemblyVirtualMachine virtualMachine) throws TrapException {
         final Activation currentFrame = virtualMachine.getCurrentActivation();
-        final int tableAddress = currentFrame.getModule().getFunctionAddresses()[0];
+        final int tableAddress = currentFrame.getModule().getTableAddresses()[0];
         final TableInstance tableInstance = virtualMachine.getStore().getTables().get(tableAddress);
         final FunctionType expectedFunctionType = currentFrame.getModule().getTypes()[(int) typeIdx.getValU()];
         final long idx = virtualMachine.getStack().pop(I32.class).getValU();

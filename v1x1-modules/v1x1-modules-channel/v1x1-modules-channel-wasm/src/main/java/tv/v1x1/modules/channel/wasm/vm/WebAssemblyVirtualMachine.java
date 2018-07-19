@@ -57,16 +57,22 @@ public class WebAssemblyVirtualMachine {
     }
 
     public void execute(final int maxInstructions, final boolean exitFrames) throws TrapException {
-        for(instructionCounter = 0; instructionCounter < maxInstructions; instructionCounter++) {
-            //noinspection StatementWithEmptyBody
-            while(exitFrames && nextInstruction == null && Instruction.exitFrame(this))
-                /* Loop */;
-            if(nextInstruction == null)
-                return;
-            currentInstruction = nextInstruction;
-            nextInstruction = currentInstruction.nextInstruction;
-            LOG.info("Execute: {}", currentInstruction);
-            currentInstruction.execute(this);
+        try {
+            for(instructionCounter = 0; instructionCounter < maxInstructions; instructionCounter++) {
+                //noinspection StatementWithEmptyBody
+                while(exitFrames && nextInstruction == null && Instruction.exitFrame(this))
+                    /* Loop */ ;
+                if(nextInstruction == null)
+                    return;
+                currentInstruction = nextInstruction;
+                nextInstruction = currentInstruction.nextInstruction;
+                LOG.info("Execute: {}", currentInstruction);
+                currentInstruction.execute(this);
+            }
+        } catch(final TrapException e) {
+            throw e;
+        } catch(final Exception e) {
+            throw new TrapException(e);
         }
         throw new TrapException("Max instruction count exceeded");
     }
