@@ -1,5 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ModuleDef;
 import tv.v1x1.modules.channel.wasm.vm.stack.Activation;
 import tv.v1x1.modules.channel.wasm.vm.stack.WebAssemblyStack;
@@ -8,7 +10,11 @@ import tv.v1x1.modules.channel.wasm.vm.store.WebAssemblyStore;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
+import java.lang.invoke.MethodHandles;
+
 public class WebAssemblyVirtualMachine {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final WebAssemblyStack stack;
     private final WebAssemblyStore store;
     private Instruction nextInstruction;
@@ -59,6 +65,7 @@ public class WebAssemblyVirtualMachine {
                 return;
             currentInstruction = nextInstruction;
             nextInstruction = currentInstruction.nextInstruction;
+            LOG.info("Execute: {}", currentInstruction);
             currentInstruction.execute(this);
         }
         throw new TrapException("Max instruction count exceeded");
