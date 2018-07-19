@@ -100,7 +100,7 @@ public class MemoryInstance {
     }
 
     public void write(final int address, final byte[] bytes) throws TrapException {
-        LOG.info("Writing at {}: {}", address, bytes);
+        //LOG.info("Writing at {}: {}", address, bytes);
         for(int page = address >> 16; page <= (address + bytes.length) >> 16; page++) {
             final MemoryPage memoryPage = pages.get(page);
             if(memoryPage == null)
@@ -136,7 +136,7 @@ public class MemoryInstance {
                     bytes, Math.max(0, (page << 16) - address),
                     Math.min(PAGE_SIZE, bytes.length - Math.max(0, (page << 16) - address)));
         }
-        LOG.info("Reading from {}: {}", address, bytes);
+        //LOG.info("Reading from {}: {}", address, bytes);
     }
 
     public boolean matches(final MemoryType memoryType) {
