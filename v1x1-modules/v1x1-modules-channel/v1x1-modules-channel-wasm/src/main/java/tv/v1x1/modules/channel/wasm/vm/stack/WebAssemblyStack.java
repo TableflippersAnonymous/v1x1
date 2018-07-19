@@ -2,19 +2,24 @@ package tv.v1x1.modules.channel.wasm.vm.stack;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.modules.channel.wasm.vm.TrapException;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.NoSuchElementException;
 
 public class WebAssemblyStack {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int MAX_SIZE = 1024;
 
     private Deque<StackElement> stack = new ArrayDeque<>(MAX_SIZE);
     private Deque<Activation> frames = new ArrayDeque<>();
 
     public void push(final StackElement val) throws TrapException {
+        LOG.info("push({})", val);
         if(stack.size() >= MAX_SIZE)
             throw new TrapException("Call stack exhausted");
         stack.push(val);
@@ -27,6 +32,7 @@ public class WebAssemblyStack {
             final StackElement element = stack.pop();
             if(element == getCurrentFrame())
                 frames.pop();
+            LOG.info("pop({})", element);
             return element;
         } catch(final NoSuchElementException e) {
             throw new TrapException(e);
