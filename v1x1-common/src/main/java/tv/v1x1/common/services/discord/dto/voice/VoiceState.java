@@ -1,5 +1,6 @@
 package tv.v1x1.common.services.discord.dto.voice;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -7,6 +8,7 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * Created by cobi on 9/10/2017.
  */
 public class VoiceState extends PartialVoiceState {
+    @JsonProperty("guild_id")
     private String guildId;
 
     public static VoiceState fromProto(final EventOuterClass.DiscordVoiceStateEvent.VoiceState proto) {

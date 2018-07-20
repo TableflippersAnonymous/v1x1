@@ -25,8 +25,9 @@ export class ConfigurationFieldValueFileComponent extends ConfigurableComponent 
     let fileReader = new FileReader();
     fileReader.onload = (e) => {
       let dataUrl = e.target.result;
+      console.log(dataUrl);
       this.configuration = dataUrl.substr(dataUrl.indexOf(',') + 1);
     }
-    fileReader.readAsArrayBuffer(evt.target.files[0]);
+    fileReader.readAsDataURL(evt.target.files[0]);
   }
 }
