@@ -14,11 +14,15 @@ import tv.v1x1.modules.channel.wasm.vm.store.MemoryPage;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Date;
 
 public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
+    private static final int SYS_EXIT = 1;
+    private static final int SYS_TIME = 13;
     private static final int SYS_BRK = 45;
+    private static final int SYS_GETTIMEOFDAY = 78;
     private static final int SYS_MUNMAP = 91;
     private static final int SYS_MMAP_PGOFF = 192;
 
@@ -66,6 +70,16 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final int param1 = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
         LOG.info("syscall1({}, {})", syscallId, param1);
         switch(syscallId) {
+            case SYS_EXIT:
+                throw new TrapException("Exit: " + param1);
+            case SYS_TIME:
+                final I32 time = new I32((int) (new Date().getTime() / 1000));
+                if(param1 != 0) {
+                    final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+                    memoryInstance.write(param1, time.bytes());
+                }
+                virtualMachine.getStack().push(time);
+                break;
             case SYS_BRK:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
                 brk(param1, memoryInstance);
@@ -83,6 +97,25 @@ public class SyscallWebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final int param2 = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
         LOG.info("syscall2({}, {}, {})", syscallId, param1, param2);
         switch(syscallId) {
+            case SYS_GETTIMEOFDAY:
+                if(param1 != 0 || param2 != 0) {
+                    final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+                    if(param1 != 0) {
+                        final long currentTimeMillis = new Date().getTime();
+                        final I32 seconds = new I32((int) (currentTimeMillis / 1000));
+                        final I32 micros = new I32((int) ((currentTimeMillis % 1000) * 1000));
+                        memoryInstance.write(param1, seconds.bytes());
+                        memoryInstance.write(param1 + 4, micros.bytes());
+                    }
+                    if(param2 != 0) {
+                        final I32 minutesWest = I32.ZERO;
+                        final I32 dstTime = I32.ZERO;
+                        memoryInstance.write(param2, minutesWest.bytes());
+                        memoryInstance.write(param2 + 4, dstTime.bytes());
+                    }
+                }
+                virtualMachine.getStack().push(I32.ZERO);
+                break;
             case SYS_MUNMAP:
                 final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
                 virtualMachine.getStack().push(new I32(munmap(memoryInstance, param1, param2)));

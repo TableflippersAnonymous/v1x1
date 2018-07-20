@@ -2,13 +2,19 @@ package tv.v1x1.modules.channel.wasm.api;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.primitives.Ints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.dto.db.Platform;
+import tv.v1x1.common.dto.messages.responses.ScheduleResponse;
+import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.chat.Chat;
+import tv.v1x1.common.services.chat.ChatException;
+import tv.v1x1.common.services.persistence.KeyValueStore;
+import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.wasm.ExecutionEnvironment;
 import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
@@ -21,9 +27,15 @@ import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import java.lang.invoke.MethodHandles;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+
+import static tv.v1x1.common.util.data.CompositeKey.makeKey;
 
 public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+    private static final int MAX_KV_STORE_SIZE = 256 * 1024 * 1024;
 
     private static final Map<Integer, Platform> PLATFORM_MAP = new ImmutableMap.Builder<Integer, Platform>()
             .put(1, Platform.TWITCH)
@@ -70,8 +82,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final byte[] event = executionEnvironment.getCurrentEvent(baseAddress);
         final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
         if(baseAddress < 0 || event == null || length < event.length) {
-            virtualMachine.getStack().push(new I32(0));
-            LOG.info("VM Native: read_event({}, {}) = 0", baseAddress, length);
+            virtualMachine.getStack().push(I32.ZERO);
             return;
         }
         memoryInstance.write(baseAddress, event);
@@ -80,110 +91,225 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     }
 
     private static void sendMessage(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
-        final int channelAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
-        final int messageBufferAddress = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
-        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-        if(channelAddress < 0 || messageBufferAddress < 0) {
-            virtualMachine.getStack().push(new I32(0));
-            LOG.info("VM Native: send_message({}, {}) = 0", channelAddress, messageBufferAddress);
-            return;
-        }
-        final Optional<Channel> channel = decodeChannel(executionEnvironment, memoryInstance, channelAddress);
-        final String message = new String(decodeBuffer(memoryInstance, messageBufferAddress));
-        if(!channel.isPresent()) {
-            virtualMachine.getStack().push(new I32(0));
-            LOG.info("VM Native: send_message({}, {}) = 0", channelAddress, messageBufferAddress);
+        final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final String message = getString(executionEnvironment, virtualMachine, moduleInstance, 1);
+        if(channel == null || message == null) {
+            virtualMachine.getStack().push(I32.ZERO);
             return;
         }
         try {
-            Chat.message(executionEnvironment.getModule(), channel.get(), message);
-            virtualMachine.getStack().push(new I32(message.length()));
-            LOG.info("VM Native: send_message({} = {}, {} = {}) = {}", channelAddress, channel, messageBufferAddress, message, message.length());
+            Chat.message(executionEnvironment.getModule(), channel, message);
+            virtualMachine.getStack().push(I32.ONE);
+            LOG.info("VM Sent Message to {}: {}", channel, message);
         } catch(final IllegalArgumentException e) {
-            virtualMachine.getStack().push(new I32(0));
-            LOG.info("VM Native: send_message({} = {}, {} = {}) = 0", channelAddress, channel, messageBufferAddress, message);
+            virtualMachine.getStack().push(I32.ZERO);
         }
     }
 
     private static void purge(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
-        final int channelAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
-        final int userAddress = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
+        final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
         final int amount = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
-        final int reasonAddress = virtualMachine.getCurrentActivation().getLocal(3, I32.class).getVal();
-        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-        if(channelAddress < 0 || userAddress < 0 || reasonAddress < 0) {
-            virtualMachine.getStack().push(new I32(0));
-            return;
-        }
-        final Optional<Channel> channel = decodeChannel(executionEnvironment, memoryInstance, channelAddress);
-        final Optional<User> user = decodeUser(executionEnvironment, memoryInstance, userAddress);
-        final String reason = new String(decodeBuffer(memoryInstance, reasonAddress));
-        if(!channel.isPresent() || !user.isPresent()) {
-            virtualMachine.getStack().push(new I32(0));
+        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 3);
+        if(channel == null || user == null || reason == null) {
+            virtualMachine.getStack().push(I32.ZERO);
             return;
         }
         try {
-            Chat.purge(executionEnvironment.getModule(), channel.get(), user.get(), amount, reason);
-            virtualMachine.getStack().push(new I32(reason.length()));
+            Chat.purge(executionEnvironment.getModule(), channel, user, amount, reason);
+            virtualMachine.getStack().push(I32.ONE);
         } catch(final IllegalArgumentException e) {
-            virtualMachine.getStack().push(new I32(0));
+            virtualMachine.getStack().push(I32.ZERO);
         }
     }
 
-    private static void timeout(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void timeout(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
+        final int length = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
+        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 3);
+        if(channel == null || user == null || reason == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        try {
+            Chat.timeout(executionEnvironment.getModule(), channel, user, length, reason);
+            virtualMachine.getStack().push(I32.ONE);
+        } catch(final ChatException | IllegalArgumentException e) {
+            virtualMachine.getStack().push(I32.ZERO);
+        }
     }
 
-    private static void untimeout(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void untimeout(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
+        if(channel == null || user == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        try {
+            Chat.untimeout(executionEnvironment.getModule(), channel, user);
+            virtualMachine.getStack().push(I32.ONE);
+        } catch(final ChatException | IllegalArgumentException e) {
+            virtualMachine.getStack().push(I32.ZERO);
+        }
     }
 
-    private static void kick(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void kick(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
+        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 2);
+        if(channel == null || user == null || reason == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        try {
+            Chat.kick(executionEnvironment.getModule(), channel, user, reason);
+            virtualMachine.getStack().push(I32.ONE);
+        } catch(final ChatException | IllegalArgumentException e) {
+            virtualMachine.getStack().push(I32.ZERO);
+        }
     }
 
-    private static void ban(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void ban(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
+        final int length = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
+        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 3);
+        if(channel == null || user == null || reason == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        try {
+            Chat.ban(executionEnvironment.getModule(), channel, user, length, reason);
+            virtualMachine.getStack().push(I32.ONE);
+        } catch(final IllegalArgumentException e) {
+            virtualMachine.getStack().push(I32.ZERO);
+        }
     }
 
-    private static void punish(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void punish(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
+        final int length = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
+        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 3);
+        if(channel == null || user == null || reason == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        try {
+            Chat.punish(executionEnvironment.getModule(), channel, user, length, reason);
+            virtualMachine.getStack().push(I32.ONE);
+        } catch(final IllegalArgumentException e) {
+            virtualMachine.getStack().push(I32.ZERO);
+        }
     }
 
-    private static void scheduleOnce(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void scheduleOnce(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final int minutes = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
+        final byte[] payload = getBytes(executionEnvironment, virtualMachine, moduleInstance, 1);
+        if(minutes < 0 || minutes > 10080 || payload == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        final SchedulerServiceClient schedulerServiceClient = executionEnvironment.getModule().getServiceClient(SchedulerServiceClient.class);
+        final Future<ScheduleResponse> responseFuture = schedulerServiceClient.scheduleWithDelay(
+                minutes * 60000,
+                new tv.v1x1.common.dto.core.UUID(UUID.randomUUID()),
+                makeKey(Tenant.KEY_CODEC.encode(executionEnvironment.getTenant()), payload));
+        try {
+            responseFuture.get();
+            virtualMachine.getStack().push(I32.ONE);
+        } catch (ExecutionException | InterruptedException e) {
+            virtualMachine.getStack().push(I32.ZERO);
+        }
     }
 
-    private static void kvstoreWrite(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void kvstoreWrite(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final byte[] value = getBytes(executionEnvironment, virtualMachine, moduleInstance, 1);
+        if(key == null || value == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
+        final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
+        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] oldValue = keyValueStore.get(compositeKey);
+        final int oldLength = oldValue == null ? 0 : oldValue.length;
+        if(!changeQuota(keyValueStore, tenant, value.length - oldLength)) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        keyValueStore.put(compositeKey, value);
+        virtualMachine.getStack().push(I32.ONE);
     }
 
-    private static void kvstoreHasKey(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void kvstoreHasKey(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        if(key == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
+        final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
+        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] value = keyValueStore.get(compositeKey);
+        virtualMachine.getStack().push(value == null ? I32.ZERO : I32.ONE);
     }
 
-    private static void kvstoreLength(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void kvstoreLength(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        if(key == null) {
+            virtualMachine.getStack().push(new I32(-1));
+            return;
+        }
+        final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
+        final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
+        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] value = keyValueStore.get(compositeKey);
+        virtualMachine.getStack().push(value == null ? new I32(-1) : new I32(value.length));
     }
 
-    private static void kvstoreRead(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void kvstoreRead(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        if(key == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
+        final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
+        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] value = keyValueStore.get(compositeKey);
+        if(!setBytes(executionEnvironment, virtualMachine, moduleInstance, 1, value)) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        virtualMachine.getStack().push(I32.ONE);
     }
 
-    private static void kvstoreDelete(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) {
-        /* TODO */
+    private static void kvstoreDelete(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        if(key == null) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
+        final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
+        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] oldValue = keyValueStore.get(compositeKey);
+        final int oldLength = oldValue == null ? 0 : oldValue.length;
+        changeQuota(keyValueStore, tenant, -oldLength);
+        keyValueStore.delete(compositeKey);
+        virtualMachine.getStack().push(I32.ONE);
     }
 
     private static void log(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
-        final int messageBufferAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
-        LOG.info("VM Native: log({}) = 0", messageBufferAddress);
-        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
-        if(messageBufferAddress < 0) {
-            virtualMachine.getStack().push(new I32(0));
-            LOG.info("VM Native: log({}) = 0", messageBufferAddress);
+        final String message = getString(executionEnvironment, virtualMachine, moduleInstance, 0);
+        if(message == null) {
+            virtualMachine.getStack().push(I32.ZERO);
             return;
         }
-        final String message = new String(decodeBuffer(memoryInstance, messageBufferAddress));
         LOG.info("VM Log: {}", message);
         virtualMachine.getStack().push(new I32(message.length()));
     }
@@ -209,12 +335,76 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         memoryInstance.read(baseAddress + 4, addressArray);
         final int length = I32.decode(I32.swapEndian(lengthArray)).getVal();
         final int address = I32.decode(I32.swapEndian(addressArray)).getVal();
-        LOG.info("decodeBuffer({} => {}/{} => {}/{})", baseAddress, lengthArray, length, addressArray, address);
-        if(length > 1024*1024 || length < 0)
+        if(length > 128*1024 || length < 0)
             throw new TrapException("Invalid v1x1_buffer size");
         final byte[] data = new byte[length];
         memoryInstance.read(address, data);
-        LOG.info("decodeBuffer() = {}", data);
         return data;
+    }
+
+    private static boolean writeBuffer(final MemoryInstance memoryInstance, final int baseAddress, final byte[] data) throws TrapException {
+        final byte[] lengthArray = new byte[4];
+        final byte[] addressArray = new byte[4];
+        memoryInstance.read(baseAddress, lengthArray);
+        memoryInstance.read(baseAddress + 4, addressArray);
+        final int length = I32.decode(I32.swapEndian(lengthArray)).getVal();
+        final int address = I32.decode(I32.swapEndian(addressArray)).getVal();
+        if(length < data.length)
+            return false;
+        memoryInstance.write(address, data);
+        return true;
+    }
+
+    private static Channel getChannel(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx) throws TrapException {
+        final int address = virtualMachine.getCurrentActivation().getLocal(localIdx, I32.class).getVal();
+        if(address < 0)
+            return null;
+        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+        final Optional<Channel> channel = decodeChannel(executionEnvironment, memoryInstance, address);
+        return channel.orElse(null);
+    }
+
+    private static User getUser(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx) throws TrapException {
+        final int address = virtualMachine.getCurrentActivation().getLocal(localIdx, I32.class).getVal();
+        if(address < 0)
+            return null;
+        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+        final Optional<User> user = decodeUser(executionEnvironment, memoryInstance, address);
+        return user.orElse(null);
+    }
+
+    private static String getString(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx) throws TrapException {
+        final byte[] bytes = getBytes(executionEnvironment, virtualMachine, moduleInstance, localIdx);
+        if(bytes == null)
+            return null;
+        return new String(bytes);
+    }
+
+    private static byte[] getBytes(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx) throws TrapException {
+        final int address = virtualMachine.getCurrentActivation().getLocal(localIdx, I32.class).getVal();
+        if(address < 0)
+            return null;
+        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+        return decodeBuffer(memoryInstance, address);
+    }
+
+    private static boolean setBytes(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx, final byte[] bytes) throws TrapException {
+        final int address = virtualMachine.getCurrentActivation().getLocal(localIdx, I32.class).getVal();
+        if(address < 0)
+            return false;
+        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+        return writeBuffer(memoryInstance, address, bytes);
+    }
+
+    private static boolean changeQuota(final KeyValueStore keyValueStore, final byte[] tenantBytes, final int delta) {
+        final byte[] quotaKey = CompositeKey.makeKey("Quota".getBytes(), tenantBytes);
+        final byte[] quotaVal = keyValueStore.get(quotaKey);
+        final int quota = quotaVal == null ? 0 : Ints.fromByteArray(quotaVal);
+        final int newQuota = quota + delta;
+        if(newQuota > MAX_KV_STORE_SIZE) {
+            return false;
+        }
+        keyValueStore.put(quotaKey, Ints.toByteArray(newQuota));
+        return true;
     }
 }
