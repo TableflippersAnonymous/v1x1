@@ -260,8 +260,10 @@ public class ExecutionEnvironment {
         return dynamicAllocations.toByteArray();
     }
 
-    private byte[] writeBuffer(final ByteArrayOutputStream byteArrayOutputStream, final byte[] bytes, final int baseAddress) throws IOException {
+    private byte[] writeBuffer(final ByteArrayOutputStream byteArrayOutputStream, byte[] bytes, final int baseAddress) throws IOException {
         final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
+        if(bytes == null)
+            bytes = new byte[0];
         byteArrayOutputStream.write(new I32(bytes.length).bytes());
         byteArrayOutputStream.write(new I32(baseAddress).bytes());
         dynamicAllocations.write(bytes);
@@ -289,15 +291,15 @@ public class ExecutionEnvironment {
 
     private byte[] writeDiscordVoiceState(final ByteArrayOutputStream byteArrayOutputStream, final VoiceState voiceState, final int baseAddress) throws IOException {
         final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
-        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, voiceState.getGuildId().getBytes(), baseAddress + dynamicAllocations.size()));
-        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, voiceState.getChannelId().getBytes(), baseAddress + dynamicAllocations.size()));
-        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, voiceState.getUserId().getBytes(), baseAddress + dynamicAllocations.size()));
-        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, voiceState.getSessionId().getBytes(), baseAddress + dynamicAllocations.size()));
-        byteArrayOutputStream.write(voiceState.isDeaf() ? 1 : 0);
-        byteArrayOutputStream.write(voiceState.isMute() ? 1 : 0);
-        byteArrayOutputStream.write(voiceState.isSelfDeaf() ? 1 : 0);
-        byteArrayOutputStream.write(voiceState.isSelfMute() ? 1 : 0);
-        byteArrayOutputStream.write(voiceState.isSuppress() ? 1 : 0);
+        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, (voiceState == null || voiceState.getGuildId() == null) ? null : voiceState.getGuildId().getBytes(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, (voiceState == null || voiceState.getChannelId() == null) ? null : voiceState.getChannelId().getBytes(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, (voiceState == null || voiceState.getUserId() == null) ? null : voiceState.getUserId().getBytes(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, (voiceState == null || voiceState.getSessionId() == null) ? null : voiceState.getSessionId().getBytes(), baseAddress + dynamicAllocations.size()));
+        byteArrayOutputStream.write(voiceState == null ? -1 : voiceState.isDeaf() ? 1 : 0);
+        byteArrayOutputStream.write(voiceState == null ? -1 : voiceState.isMute() ? 1 : 0);
+        byteArrayOutputStream.write(voiceState == null ? -1 : voiceState.isSelfDeaf() ? 1 : 0);
+        byteArrayOutputStream.write(voiceState == null ? -1 : voiceState.isSelfMute() ? 1 : 0);
+        byteArrayOutputStream.write(voiceState == null ? -1 : voiceState.isSuppress() ? 1 : 0);
         return dynamicAllocations.toByteArray();
     }
 
