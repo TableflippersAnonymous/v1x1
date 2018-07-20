@@ -18,6 +18,7 @@ import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.DiscordVoiceStateEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.services.discord.dto.voice.VoiceState;
+import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.wasm.api.SyscallWebAssemblyModuleDef;
 import tv.v1x1.modules.channel.wasm.api.V1x1WebAssemblyModuleDef;
 import tv.v1x1.modules.channel.wasm.config.ModuleUserConfiguration;
@@ -125,10 +126,10 @@ public class ExecutionEnvironment {
         return new ExecutionEnvironment(module, tenant, configuration);
     }
 
-    public void handleChatMessageEvent(final ChatMessageEvent chatMessageEvent) {
+    public void handleEvent(final Event event) {
         if(isTrapped())
             return;
-        this.currentEvent = chatMessageEvent;
+        this.currentEvent = event;
         try {
             virtualMachine.callAllExports("event_handler", MAX_INSTRUCTIONS);
         } catch(final TrapException e) {
@@ -185,7 +186,7 @@ public class ExecutionEnvironment {
             final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(EVENT_SIZE);
             final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
             byteArrayOutputStream.write(1);
-            dynamicAllocations.write(writeBuffer(byteArrayOutputStream, currentEvent.getPayload(), baseAddress + EVENT_SIZE + dynamicAllocations.size()));
+            dynamicAllocations.write(writeBuffer(byteArrayOutputStream, CompositeKey.getKeys(currentEvent.getPayload())[1], baseAddress + EVENT_SIZE + dynamicAllocations.size()));
             byteArrayOutputStream.write(new byte[EVENT_SIZE - EVENT_TYPE_SIZE - EVENT_SCHEDULER_NOTIFY_SIZE]);
             byteArrayOutputStream.write(dynamicAllocations.toByteArray());
             return byteArrayOutputStream.toByteArray();

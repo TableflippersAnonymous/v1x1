@@ -9,7 +9,7 @@ import tv.v1x1.common.scanners.config.Type;
 public class ModuleUserConfiguration {
     @JsonProperty("data")
     @DisplayName("WebAssembly Base64 Data")
-    @Type(ConfigType.STRING)
+    @Type(ConfigType.FILE)
     private String data;
 
     public ModuleUserConfiguration() {

@@ -31,8 +31,6 @@ import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import static tv.v1x1.common.util.data.CompositeKey.makeKey;
-
 public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final int MAX_KV_STORE_SIZE = 256 * 1024 * 1024;
@@ -216,7 +214,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final Future<ScheduleResponse> responseFuture = schedulerServiceClient.scheduleWithDelay(
                 minutes * 60000,
                 new tv.v1x1.common.dto.core.UUID(UUID.randomUUID()),
-                makeKey(Tenant.KEY_CODEC.encode(executionEnvironment.getTenant()), payload));
+                CompositeKey.makeKey(Tenant.KEY_CODEC.encode(executionEnvironment.getTenant()), payload));
         try {
             responseFuture.get();
             virtualMachine.getStack().push(I32.ONE);
@@ -234,7 +232,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
         final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
-        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] compositeKey = CompositeKey.makeKey("VMKVS".getBytes(), tenant, key);
         final byte[] oldValue = keyValueStore.get(compositeKey);
         final int oldLength = oldValue == null ? 0 : oldValue.length;
         if(!changeQuota(keyValueStore, tenant, value.length - oldLength)) {
@@ -253,7 +251,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
         final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
-        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] compositeKey = CompositeKey.makeKey("VMKVS".getBytes(), tenant, key);
         final byte[] value = keyValueStore.get(compositeKey);
         virtualMachine.getStack().push(value == null ? I32.ZERO : I32.ONE);
     }
@@ -266,7 +264,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
         final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
-        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] compositeKey = CompositeKey.makeKey("VMKVS".getBytes(), tenant, key);
         final byte[] value = keyValueStore.get(compositeKey);
         virtualMachine.getStack().push(value == null ? new I32(-1) : new I32(value.length));
     }
@@ -279,7 +277,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
         final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
-        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] compositeKey = CompositeKey.makeKey("VMKVS".getBytes(), tenant, key);
         final byte[] value = keyValueStore.get(compositeKey);
         if(!setBytes(executionEnvironment, virtualMachine, moduleInstance, 1, value)) {
             virtualMachine.getStack().push(I32.ZERO);
@@ -296,7 +294,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         final KeyValueStore keyValueStore = executionEnvironment.getModule().getPersistentKeyValueStore();
         final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
-        final byte[] compositeKey = makeKey("VMKVS".getBytes(), tenant, key);
+        final byte[] compositeKey = CompositeKey.makeKey("VMKVS".getBytes(), tenant, key);
         final byte[] oldValue = keyValueStore.get(compositeKey);
         final int oldLength = oldValue == null ? 0 : oldValue.length;
         changeQuota(keyValueStore, tenant, -oldLength);
