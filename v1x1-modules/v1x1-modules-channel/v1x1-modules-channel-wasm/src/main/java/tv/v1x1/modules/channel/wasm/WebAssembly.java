@@ -40,6 +40,8 @@ public class WebAssembly extends DefaultModule<WebAssemblyGlobalConfiguration, W
 
     @Override
     protected void processSchedulerNotifyEvent(final SchedulerNotifyEvent event) {
+        if(!event.getModule().equals(toDto()))
+            return;
         final byte[][] parts = CompositeKey.getKeys(event.getPayload());
         final Tenant partialTenant = Tenant.KEY_CODEC.decode(parts[0]);
         final WebAssemblyUserConfiguration configuration = getConfiguration(partialTenant);
