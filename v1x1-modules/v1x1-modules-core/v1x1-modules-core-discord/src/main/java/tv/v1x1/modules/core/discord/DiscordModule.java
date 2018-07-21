@@ -430,6 +430,8 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
             else
                 oldVoiceStateBytes = voiceStates.remove(CompositeKey.makeKey(voiceState.getGuildId(), voiceState.getUserId()));
             final VoiceState oldVoiceState = oldVoiceStateBytes == null ? null : MAPPER.readValue(oldVoiceStateBytes, VoiceState.class);
+            LOG.info("oldVoiceState: {}", oldVoiceState);
+            LOG.info("newVoiceState: {}", voiceState);
             if(voiceState.equals(oldVoiceState))
                 return;
             sendEvent(new DiscordVoiceStateEvent(toDto(), oldVoiceState, voiceState));

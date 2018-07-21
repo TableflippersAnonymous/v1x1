@@ -1,5 +1,7 @@
 package tv.v1x1.common.dto.messages.events;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.messages.Context;
@@ -7,8 +9,13 @@ import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 import tv.v1x1.common.services.discord.dto.voice.VoiceState;
 
+import java.lang.invoke.MethodHandles;
+
 public class DiscordVoiceStateEvent extends Event {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     public static DiscordVoiceStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.DiscordVoiceStateEvent discordVoiceStateEvent) {
+        LOG.info("Decoding protobuf: {}", discordVoiceStateEvent.toString());
         final VoiceState oldVoiceState = discordVoiceStateEvent.hasOldVoiceState() ? VoiceState.fromProto(discordVoiceStateEvent.getOldVoiceState()) : null;
         final VoiceState newVoiceState = VoiceState.fromProto(discordVoiceStateEvent.getNewVoiceState());
         return new DiscordVoiceStateEvent(module, uuid, timestamp, context, oldVoiceState, newVoiceState);
