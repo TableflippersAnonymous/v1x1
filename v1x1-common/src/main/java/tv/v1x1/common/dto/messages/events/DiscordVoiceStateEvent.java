@@ -48,4 +48,12 @@ public class DiscordVoiceStateEvent extends Event {
                 .setType(EventOuterClass.Event.EventType.DISCORD_VOICE_STATE)
                 .setExtension(EventOuterClass.DiscordVoiceStateEvent.data, discordVoiceStateEvent.build());
     }
+
+    @Override
+    public String toString() {
+        return "DiscordVoiceStateEvent{" +
+                "oldVoiceState=" + oldVoiceState +
+                ", newVoiceState=" + newVoiceState +
+                '}';
+    }
 }

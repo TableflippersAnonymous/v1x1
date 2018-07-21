@@ -77,6 +77,7 @@ public class WebAssembly extends DefaultModule<WebAssemblyGlobalConfiguration, W
 
     @Override
     protected void processDiscordVoiceStateEvent(final DiscordVoiceStateEvent event) {
+        LOG.info("DiscordVoiceStateEvent: {}", event);
         final String guildId = event.getNewVoiceState().getGuildId();
         final DAOTenant daoTenant = getDaoManager().getDaoTenant();
         final ChannelGroup channelGroup = daoTenant.getChannelGroup(Platform.DISCORD, guildId);
