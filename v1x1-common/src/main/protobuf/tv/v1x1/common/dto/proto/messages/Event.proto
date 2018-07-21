@@ -35,6 +35,9 @@ message Event {
         PRIVATE_MESSAGE = 18;
         CONFIG_CHANGE = 19;
         DISCORD_VOICE_STATE = 20;
+        /* I know you forget this, but when you add something here
+         * please also add it to Message.java's registration, or it
+         * will pretend to work but won't. */
     };
 
     extensions 100 to max; /* Convention is to use the same 100 + your EventType ID */

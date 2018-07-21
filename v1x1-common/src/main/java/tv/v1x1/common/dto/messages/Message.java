@@ -53,6 +53,7 @@ public abstract class Message {
         Message.register(EventOuterClass.PrivateMessageEvent.data);
         Message.register(EventOuterClass.TwitchPrivateMessageEvent.data);
         Message.register(EventOuterClass.ConfigChangeEvent.data);
+        Message.register(EventOuterClass.DiscordVoiceStateEvent.data);
 
         /* On independent events */
         Message.register(EventOuterClass.TwitchChatJoinEvent.data);
