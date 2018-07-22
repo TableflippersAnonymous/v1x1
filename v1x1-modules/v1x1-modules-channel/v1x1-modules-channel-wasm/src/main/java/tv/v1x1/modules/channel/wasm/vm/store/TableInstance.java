@@ -1,6 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
-import tv.v1x1.modules.channel.wasm.vm.TableType;
+import tv.v1x1.modules.channel.wasm.vm.validation.TableType;
 
 import java.util.List;
 import java.util.Optional;

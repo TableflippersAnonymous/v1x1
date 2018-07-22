@@ -1,8 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store;
 
-import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.StoreInstruction;
 import tv.v1x1.modules.channel.wasm.vm.types.F32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 
 public class F32StoreInstruction extends StoreInstruction<F32> {
     @Override

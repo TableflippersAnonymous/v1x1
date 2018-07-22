@@ -1,8 +1,8 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.validation;
 
 import com.google.common.base.Objects;
+import tv.v1x1.modules.channel.wasm.vm.decoder.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
-import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;
 import java.io.IOException;

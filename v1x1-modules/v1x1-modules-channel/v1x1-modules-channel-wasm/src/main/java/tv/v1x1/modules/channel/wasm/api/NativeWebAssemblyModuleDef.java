@@ -2,18 +2,18 @@ package tv.v1x1.modules.channel.wasm.api;
 
 import com.google.common.collect.ImmutableList;
 import tv.v1x1.modules.channel.wasm.ExecutionEnvironment;
-import tv.v1x1.modules.channel.wasm.vm.FunctionType;
-import tv.v1x1.modules.channel.wasm.vm.Instruction;
-import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
-import tv.v1x1.modules.channel.wasm.vm.ValType;
-import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ExportDef;
 import tv.v1x1.modules.channel.wasm.vm.decoder.FuncExportDescriptor;
 import tv.v1x1.modules.channel.wasm.vm.decoder.FunctionDef;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ModuleDef;
+import tv.v1x1.modules.channel.wasm.vm.runtime.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.runtime.ModuleInstance;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
+import tv.v1x1.modules.channel.wasm.vm.runtime.WebAssemblyVirtualMachine;
 import tv.v1x1.modules.channel.wasm.vm.store.FunctionInstance;
 import tv.v1x1.modules.channel.wasm.vm.store.NativeFunctionInstance;
+import tv.v1x1.modules.channel.wasm.vm.validation.FunctionType;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 
 import java.util.Arrays;
 import java.util.List;

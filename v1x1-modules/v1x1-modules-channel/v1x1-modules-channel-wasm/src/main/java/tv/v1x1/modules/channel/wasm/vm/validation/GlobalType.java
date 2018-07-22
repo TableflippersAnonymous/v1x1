@@ -1,6 +1,6 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.validation;
 
-import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
+import tv.v1x1.modules.channel.wasm.vm.store.Mutable;
 
 import java.io.DataInputStream;
 import java.io.IOException;

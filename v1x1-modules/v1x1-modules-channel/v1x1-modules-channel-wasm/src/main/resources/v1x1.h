@@ -1,19 +1,37 @@
 #ifndef _V1X1_H
 #define _V1X1_H 1
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #include <stdint.h>
 
-#define MESSAGE 0
-#define SCHEDULER_NOTIFY 1
-#define DISCORD_VOICE_STATE 2
+#define EVENT_MESSAGE 0
+#define EVENT_SCHEDULER_NOTIFY 1
+#define EVENT_DISCORD_VOICE_STATE 2
+#define EVENT_HTTP_RESPONSE 3
 
-#define TWITCH 1
-#define DISCORD 2
-#define SLACK 3
-#define MIXER 4
-#define YOUTUBE 5
-#define CURSE 6
-#define API 7
+#define PLATFORM_TWITCH 1
+#define PLATFORM_DISCORD 2
+#define PLATFORM_SLACK 3
+#define PLATFORM_MIXER 4
+#define PLATFORM_YOUTUBE 5
+#define PLATFORM_CURSE 6
+#define PLATFORM_API 7
+
+#define HTTP_GET 0
+#define HTTP_POST 1
+#define HTTP_PUT 2
+#define HTTP_DELETE 3
+
+#define RATELIMIT_KVSTORE 0
+#define RATELIMIT_CHAT 1
+#define RATELIMIT_LOG 2
+#define RATELIMIT_HTTP 3
+#define RATELIMIT_DISPLAYNAME 4
+
+#define DISPLAYNAME_USER 0
+#define DISPLAYNAME_CHANNEL 1
 
 /* A standard UUID */
 struct v1x1_uuid {
@@ -109,6 +127,21 @@ struct v1x1_event_discord_voice_state {
     struct v1x1_discord_voice_state new_voice_state;
 } __attribute__((__packed__));
 
+/* An http_header is a struct describing a single HTTP header */
+struct v1x1_http_header {
+    struct v1x1_buffer name;
+    struct v1x1_buffer value;
+} __attribute__((__packed__));
+
+/* An event_http_response is an event sent when an http request completes */
+struct v1x1_event_http_response {
+    int32_t response_code;
+    int32_t header_count;
+    struct v1x1_http_header *headers;
+    struct v1x1_buffer body;
+    struct v1x1_buffer event_payload;
+} __attribute__((__packed__));
+
 /* An event is a struct describing the properties of a given change that is observed by v1x1 */
 struct v1x1_event {
     uint8_t event_type;
@@ -116,11 +149,42 @@ struct v1x1_event {
         struct v1x1_event_message message_event;
         struct v1x1_event_scheduler_notify scheduler_notify_event;
         struct v1x1_event_discord_voice_state discord_voice_state_event;
+        struct v1x1_event_http_response http_response_event;
     } data;
 } __attribute__((__packed__));
 
+/* A channel_group_spec is a struct describing the channels that belong to a channel_group */
+struct v1x1_channel_group_spec {
+    struct v1x1_channel_group channel_group;
+    int32_t channel_count;
+    struct v1x1_channel *channels;
+} __attribute__((__packed__));
+
+/* A tenant_spec is a struct describing the channel_groups that belong to a tenant */
+struct v1x1_tenant_spec {
+    struct v1x1_tenant tenant;
+    int32_t channel_group_count;
+    struct v1x1_channel_group_spec *channel_groups;
+} __attribute__((__packed__));
+
+/* An http_request is a struct describing an HTTP request */
+struct v1x1_http_request {
+    int32_t verb;
+    struct v1x1_buffer uri;
+    int32_t header_count;
+    struct v1x1_http_header *headers;
+    struct v1x1_buffer body;
+    struct v1x1_buffer event_payload;
+} __attribute__((__packed__));
+
+/* A rate_limit_desc is a struct describing a particular rate limit in v1x1 */
+struct v1x1_rate_limit_desc {
+    int32_t total;
+    int32_t remaining;
+} __attribute__((__packed__));
+
 /**
- * Get the size of the current event
+ * Get the size of the current event (in bytes)
  * @return size of the current event
  */
 extern int32_t v1x1_event_size(void);
@@ -250,4 +314,47 @@ extern int32_t v1x1_kvstore_delete(struct v1x1_buffer *key);
  */
 extern int32_t v1x1_log(struct v1x1_buffer *message);
 
+/**
+ * Gets the size of the current tenant spec (in bytes)
+ * @return size of tenant spec
+ */
+extern int32_t v1x1_tenant_spec_size(void);
+
+/**
+ * Gets the current tenant spec struct
+ * @param tenant_spec Struct to be filled
+ * @param len Length of allocated struct
+ * @return non-zero on success
+ */
+extern int32_t v1x1_get_tenant_spec(struct v1x1_tenant_spec *tenant_spec, int32_t len);
+
+/**
+ * Makes an HTTP request.  Data will be returned via event
+ * to a random instance of your WebAssembly script.
+ * @param request Struct containing request data
+ * @return non-zero on success
+ */
+extern int32_t v1x1_http(struct v1x1_http_request *request);
+
+/**
+ * Gets information on current rate limit usage
+ * @param rate_limit_type Type of rate-limit
+ * @param rate_limits Struct to be filled with rate-limit data
+ * @return non-zero on success
+ */
+extern int32_t v1x1_rate_limits(int32_t rate_limit_type, struct v1x1_rate_limit_desc *rate_limits);
+
+/**
+ * Gets a display_name for an entity
+ * @param display_name_type Type of entity
+ * @param platform Platform of entity
+ * @param id Buffer containing ID of entity
+ * @param display_name Buffer containing room to write display_name
+ * @return non-zero on success
+ */
+extern int32_t v1x1_get_display_name(int32_t display_name_type, int32_t platform, struct v1x1_buffer *id, struct v1x1_buffer *display_name);
+
+#ifdef __cplusplus
+}
+#endif
 #endif

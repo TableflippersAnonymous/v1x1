@@ -1,4 +1,4 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.validation;
 
 import java.util.ArrayList;
 import java.util.List;

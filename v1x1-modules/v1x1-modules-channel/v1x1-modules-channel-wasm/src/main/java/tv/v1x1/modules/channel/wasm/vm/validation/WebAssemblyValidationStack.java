@@ -1,6 +1,4 @@
-package tv.v1x1.modules.channel.wasm.vm;
-
-import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
+package tv.v1x1.modules.channel.wasm.vm.validation;
 
 import java.util.ArrayDeque;
 import java.util.Arrays;

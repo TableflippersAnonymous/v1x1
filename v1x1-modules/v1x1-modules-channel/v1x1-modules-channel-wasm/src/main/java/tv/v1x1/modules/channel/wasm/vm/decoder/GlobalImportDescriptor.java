@@ -1,7 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
-import tv.v1x1.modules.channel.wasm.vm.Context;
-import tv.v1x1.modules.channel.wasm.vm.GlobalType;
+import tv.v1x1.modules.channel.wasm.vm.validation.Context;
+import tv.v1x1.modules.channel.wasm.vm.validation.GlobalType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;

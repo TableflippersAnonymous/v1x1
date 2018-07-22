@@ -23,9 +23,9 @@ import tv.v1x1.modules.channel.wasm.api.SyscallWebAssemblyModuleDef;
 import tv.v1x1.modules.channel.wasm.api.V1x1WebAssemblyModuleDef;
 import tv.v1x1.modules.channel.wasm.config.ModuleUserConfiguration;
 import tv.v1x1.modules.channel.wasm.config.WebAssemblyUserConfiguration;
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
-import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ModuleDef;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
+import tv.v1x1.modules.channel.wasm.vm.runtime.WebAssemblyVirtualMachine;
 import tv.v1x1.modules.channel.wasm.vm.store.LinkingException;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.types.I64;
@@ -74,6 +74,8 @@ public class ExecutionEnvironment {
     private static final int DISCORD_VOICE_STATE_SIZE = 4 * BUFFER_SIZE + 5 * UINT8_T_SIZE;
     private static final int EVENT_DISCORD_VOICE_STATE_SIZE = 2 * DISCORD_VOICE_STATE_SIZE;
     private static final int EVENT_SIZE = EVENT_TYPE_SIZE + Ints.max(EVENT_MESSAGE_SIZE, EVENT_SCHEDULER_NOTIFY_SIZE, EVENT_DISCORD_VOICE_STATE_SIZE);
+    private static final int TENANT_SPEC_SIZE = TENANT_SIZE + INT32_T_SIZE + PTR_SIZE;
+    private static final int CHANNEL_GROUP_SPEC_SIZE = CHANNEL_GROUP_SIZE + INT32_T_SIZE + PTR_SIZE;
 
     public static class CacheKey {
         private final Tenant tenant;
@@ -126,7 +128,7 @@ public class ExecutionEnvironment {
         return new ExecutionEnvironment(module, tenant, configuration);
     }
 
-    public void handleEvent(final Event event) {
+    public synchronized void handleEvent(final Event event) {
         if(isTrapped())
             return;
         this.currentEvent = event;
@@ -147,6 +149,19 @@ public class ExecutionEnvironment {
         if(currentEvent instanceof DiscordVoiceStateEvent)
             return encode((DiscordVoiceStateEvent) currentEvent, baseAddress);
         return null;
+    }
+
+    public byte[] getCurrentEncodedTenant(final int baseAddress) {
+        try {
+            final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(TENANT_SPEC_SIZE);
+            final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
+            dynamicAllocations.write(writeTenant(byteArrayOutputStream, tenant, baseAddress + TENANT_SPEC_SIZE + dynamicAllocations.size()));
+            dynamicAllocations.write(writeChannelGroups(byteArrayOutputStream, tenant.getChannelGroups(), baseAddress + TENANT_SPEC_SIZE + dynamicAllocations.size()));
+            byteArrayOutputStream.write(dynamicAllocations.toByteArray());
+            return byteArrayOutputStream.toByteArray();
+        } catch(final IOException e) {
+            return null;
+        }
     }
 
     public Tenant getTenant() {
@@ -300,6 +315,37 @@ public class ExecutionEnvironment {
         byteArrayOutputStream.write(voiceState == null ? -1 : voiceState.isSelfDeaf() ? 1 : 0);
         byteArrayOutputStream.write(voiceState == null ? -1 : voiceState.isSelfMute() ? 1 : 0);
         byteArrayOutputStream.write(voiceState == null ? -1 : voiceState.isSuppress() ? 1 : 0);
+        return dynamicAllocations.toByteArray();
+    }
+
+    private byte[] writeChannelGroups(final ByteArrayOutputStream byteArrayOutputStream, final List<ChannelGroup> channelGroups, final int baseAddress) throws IOException {
+        final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
+        byteArrayOutputStream.write(new I32(channelGroups.size()).bytes());
+        byteArrayOutputStream.write(new I32(baseAddress).bytes());
+        final ByteArrayOutputStream subsequentDynamicAllocations = new ByteArrayOutputStream();
+        for(final ChannelGroup channelGroup : channelGroups)
+            subsequentDynamicAllocations.write(writeChannelGroupSpec(dynamicAllocations, channelGroup, baseAddress + (channelGroups.size() + 1) * CHANNEL_GROUP_SPEC_SIZE + subsequentDynamicAllocations.size()));
+        dynamicAllocations.write(new byte[CHANNEL_GROUP_SPEC_SIZE]);
+        dynamicAllocations.write(subsequentDynamicAllocations.toByteArray());
+        return dynamicAllocations.toByteArray();
+    }
+
+    private byte[] writeChannelGroupSpec(final ByteArrayOutputStream byteArrayOutputStream, final ChannelGroup channelGroup, final int baseAddress) throws IOException {
+        final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
+        dynamicAllocations.write(writeChannelGroup(byteArrayOutputStream, channelGroup, baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writeChannels(byteArrayOutputStream, channelGroup.getChannels(), baseAddress + dynamicAllocations.size()));
+        return dynamicAllocations.toByteArray();
+    }
+
+    private byte[] writeChannels(final ByteArrayOutputStream byteArrayOutputStream, final List<Channel> channels, final int baseAddress) throws IOException {
+        final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
+        byteArrayOutputStream.write(new I32(channels.size()).bytes());
+        byteArrayOutputStream.write(new I32(baseAddress).bytes());
+        final ByteArrayOutputStream subsequentDynamicAllocations = new ByteArrayOutputStream();
+        for(final Channel channel : channels)
+            subsequentDynamicAllocations.write(writeChannel(dynamicAllocations, channel, baseAddress + (channels.size() + 1) * CHANNEL_SIZE + subsequentDynamicAllocations.size()));
+        dynamicAllocations.write(new byte[CHANNEL_SIZE]);
+        dynamicAllocations.write(subsequentDynamicAllocations.toByteArray());
         return dynamicAllocations.toByteArray();
     }
 

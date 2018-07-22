@@ -2,7 +2,7 @@ package tv.v1x1.modules.channel.wasm.vm.stack;
 
 import com.google.common.base.Joiner;
 import com.google.common.collect.Iterables;
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 
 import java.util.ArrayDeque;
 import java.util.Deque;

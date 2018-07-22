@@ -1,6 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.stack;
 
-import tv.v1x1.modules.channel.wasm.vm.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.runtime.Instruction;
 
 public class Label implements StackElement {
     private final int arity;

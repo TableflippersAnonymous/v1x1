@@ -2,7 +2,7 @@ package tv.v1x1.modules.channel.wasm.vm.types;
 
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.UnsignedInteger;
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 
 import java.io.DataInputStream;
 import java.io.IOException;

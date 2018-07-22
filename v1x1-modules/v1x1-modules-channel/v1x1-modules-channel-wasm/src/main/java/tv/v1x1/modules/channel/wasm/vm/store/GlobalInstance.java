@@ -1,8 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
-import tv.v1x1.modules.channel.wasm.vm.GlobalType;
-import tv.v1x1.modules.channel.wasm.vm.Mutable;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
+import tv.v1x1.modules.channel.wasm.vm.validation.GlobalType;
 
 public class GlobalInstance {
     private WebAssemblyType value;

@@ -1,4 +1,6 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.store;
+
+import tv.v1x1.modules.channel.wasm.vm.decoder.DecodeException;
 
 import java.io.DataInputStream;
 import java.io.IOException;

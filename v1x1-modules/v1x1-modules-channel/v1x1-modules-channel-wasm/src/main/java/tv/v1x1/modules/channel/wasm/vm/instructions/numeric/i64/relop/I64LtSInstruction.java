@@ -1,7 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.relop;
 
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.I64RelOpInstruction;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.types.I64;
 

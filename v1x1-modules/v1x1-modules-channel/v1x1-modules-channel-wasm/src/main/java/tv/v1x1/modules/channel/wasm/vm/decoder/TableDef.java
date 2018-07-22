@@ -1,7 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
-import tv.v1x1.modules.channel.wasm.vm.TableType;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.TableType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;

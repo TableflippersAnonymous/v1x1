@@ -16,13 +16,13 @@ import tv.v1x1.common.services.chat.ChatException;
 import tv.v1x1.common.services.persistence.KeyValueStore;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.wasm.ExecutionEnvironment;
-import tv.v1x1.modules.channel.wasm.vm.FunctionType;
-import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
-import tv.v1x1.modules.channel.wasm.vm.ValType;
-import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
+import tv.v1x1.modules.channel.wasm.vm.runtime.ModuleInstance;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
+import tv.v1x1.modules.channel.wasm.vm.runtime.WebAssemblyVirtualMachine;
 import tv.v1x1.modules.channel.wasm.vm.store.MemoryInstance;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.FunctionType;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 
 import java.lang.invoke.MethodHandles;
 import java.util.Map;
@@ -61,7 +61,12 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             new NativeFunctionSpec("v1x1_kvstore_length", new FunctionType(ImmutableList.of(ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::kvstoreLength),
             new NativeFunctionSpec("v1x1_kvstore_read", new FunctionType(ImmutableList.of(ValType.I32, ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::kvstoreRead),
             new NativeFunctionSpec("v1x1_kvstore_delete", new FunctionType(ImmutableList.of(ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::kvstoreDelete),
-            new NativeFunctionSpec("v1x1_log", new FunctionType(ImmutableList.of(ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::log)
+            new NativeFunctionSpec("v1x1_log", new FunctionType(ImmutableList.of(ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::log),
+            new NativeFunctionSpec("v1x1_tenant_spec_size", new FunctionType(ImmutableList.of(), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::tenantSpecSize),
+            new NativeFunctionSpec("v1x1_get_tenant_spec", new FunctionType(ImmutableList.of(ValType.I32, ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::getTenantSpec),
+            new NativeFunctionSpec("v1x1_http", new FunctionType(ImmutableList.of(ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::http),
+            new NativeFunctionSpec("v1x1_rate_limits", new FunctionType(ImmutableList.of(ValType.I32, ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::rateLimits),
+            new NativeFunctionSpec("v1x1_get_display_name", new FunctionType(ImmutableList.of(ValType.I32, ValType.I32, ValType.I32, ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::getDisplayName)
     };
 
     public V1x1WebAssemblyModuleDef(final ExecutionEnvironment executionEnvironment) {
@@ -310,6 +315,39 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         LOG.info("VM Log: {}", message);
         virtualMachine.getStack().push(new I32(message.length()));
+    }
+
+    private static void tenantSpecSize(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final byte[] tenant = executionEnvironment.getCurrentEncodedTenant(0);
+        virtualMachine.getStack().push(new I32(tenant.length));
+    }
+
+    private static void getTenantSpec(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        final int baseAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
+        final int length = virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal();
+        final byte[] tenant = executionEnvironment.getCurrentEncodedTenant(baseAddress);
+        final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+        if(baseAddress < 0 || tenant == null || length < tenant.length) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        memoryInstance.write(baseAddress, tenant);
+        virtualMachine.getStack().push(new I32(tenant.length));
+    }
+
+    private static void http(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        /* TODO */
+        virtualMachine.getStack().push(I32.ZERO);
+    }
+
+    private static void rateLimits(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        /* TODO */
+        virtualMachine.getStack().push(I32.ZERO);
+    }
+
+    private static void getDisplayName(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
+        /* TODO */
+        virtualMachine.getStack().push(I32.ZERO);
     }
 
     private static Optional<Channel> decodeChannel(final ExecutionEnvironment executionEnvironment, final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {

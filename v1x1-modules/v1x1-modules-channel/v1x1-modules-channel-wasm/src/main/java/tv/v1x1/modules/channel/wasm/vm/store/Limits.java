@@ -1,5 +1,6 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.store;
 
+import tv.v1x1.modules.channel.wasm.vm.decoder.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 

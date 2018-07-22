@@ -1,7 +1,8 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.runtime;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import tv.v1x1.modules.channel.wasm.vm.decoder.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BlockInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrIfInstruction;
 import tv.v1x1.modules.channel.wasm.vm.instructions.control.BrInstruction;
@@ -179,7 +180,10 @@ import tv.v1x1.modules.channel.wasm.vm.stack.Label;
 import tv.v1x1.modules.channel.wasm.vm.stack.StackElement;
 import tv.v1x1.modules.channel.wasm.vm.store.FunctionInstance;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
+import tv.v1x1.modules.channel.wasm.vm.validation.Context;
+import tv.v1x1.modules.channel.wasm.vm.validation.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
+import tv.v1x1.modules.channel.wasm.vm.validation.WebAssemblyValidationStack;
 
 import java.io.DataInputStream;
 import java.io.IOException;

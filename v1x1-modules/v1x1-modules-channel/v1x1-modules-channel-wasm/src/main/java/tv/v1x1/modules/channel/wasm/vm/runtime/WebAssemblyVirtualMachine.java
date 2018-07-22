@@ -1,4 +1,4 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.runtime;
 
 import tv.v1x1.modules.channel.wasm.vm.decoder.ModuleDef;
 import tv.v1x1.modules.channel.wasm.vm.stack.Activation;

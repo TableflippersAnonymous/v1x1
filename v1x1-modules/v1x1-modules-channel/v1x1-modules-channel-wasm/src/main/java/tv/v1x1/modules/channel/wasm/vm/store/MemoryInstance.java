@@ -2,8 +2,8 @@ package tv.v1x1.modules.channel.wasm.vm.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.decoder.MemoryType;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
 import java.lang.invoke.MethodHandles;

@@ -1,6 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.types;
 
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 
 public abstract class FN extends WebAssemblyType {
     public abstract FN add(final FN other);

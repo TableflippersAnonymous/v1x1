@@ -1,8 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
-import tv.v1x1.modules.channel.wasm.vm.Context;
-import tv.v1x1.modules.channel.wasm.vm.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.Context;
+import tv.v1x1.modules.channel.wasm.vm.validation.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;

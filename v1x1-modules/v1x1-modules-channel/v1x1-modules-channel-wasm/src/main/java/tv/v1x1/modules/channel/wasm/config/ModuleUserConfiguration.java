@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
 import tv.v1x1.common.scanners.config.ConfigType;
 import tv.v1x1.common.scanners.config.DisplayName;
+import tv.v1x1.common.scanners.config.Permission;
+import tv.v1x1.common.scanners.config.TenantPermission;
 import tv.v1x1.common.scanners.config.Type;
 
 public class ModuleUserConfiguration {
     @JsonProperty("data")
     @DisplayName("WebAssembly Base64 Data")
     @Type(ConfigType.FILE)
+    @TenantPermission(Permission.WRITE_ONLY)
     private String data;
 
     public ModuleUserConfiguration() {

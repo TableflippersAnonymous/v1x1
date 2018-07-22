@@ -1,7 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.binop;
 
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i32.I32BinOpInstruction;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 
 public class I32ShlInstruction extends I32BinOpInstruction {

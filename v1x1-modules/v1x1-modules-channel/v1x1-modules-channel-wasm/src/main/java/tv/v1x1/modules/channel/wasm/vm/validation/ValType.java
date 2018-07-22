@@ -1,5 +1,6 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.validation;
 
+import tv.v1x1.modules.channel.wasm.vm.decoder.DecodeException;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 
 import java.io.DataInputStream;

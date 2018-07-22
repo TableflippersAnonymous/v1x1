@@ -1,10 +1,10 @@
 package tv.v1x1.modules.channel.wasm.vm.store;
 
-import tv.v1x1.modules.channel.wasm.vm.FunctionType;
-import tv.v1x1.modules.channel.wasm.vm.Instruction;
-import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
-import tv.v1x1.modules.channel.wasm.vm.ValType;
-import tv.v1x1.modules.channel.wasm.vm.WebAssemblyVirtualMachine;
+import tv.v1x1.modules.channel.wasm.vm.runtime.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.runtime.ModuleInstance;
+import tv.v1x1.modules.channel.wasm.vm.runtime.WebAssemblyVirtualMachine;
+import tv.v1x1.modules.channel.wasm.vm.validation.FunctionType;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 
 import java.util.List;
 

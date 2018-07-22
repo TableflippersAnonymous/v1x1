@@ -1,6 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.decoder;
 
-import tv.v1x1.modules.channel.wasm.vm.Limits;
+import tv.v1x1.modules.channel.wasm.vm.store.Limits;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
 import java.io.DataInputStream;

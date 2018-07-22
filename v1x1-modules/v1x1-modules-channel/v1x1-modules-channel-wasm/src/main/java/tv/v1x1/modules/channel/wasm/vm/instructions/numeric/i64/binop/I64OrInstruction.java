@@ -1,7 +1,7 @@
 package tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.binop;
 
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.instructions.numeric.i64.I64BinOpInstruction;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.types.I64;
 
 public class I64OrInstruction extends I64BinOpInstruction {

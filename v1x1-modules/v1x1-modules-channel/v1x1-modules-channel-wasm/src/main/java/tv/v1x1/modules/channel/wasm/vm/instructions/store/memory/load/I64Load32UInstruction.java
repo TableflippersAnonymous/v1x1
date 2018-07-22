@@ -1,9 +1,9 @@
 package tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.load;
 
-import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.LoadInstruction;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 
 public class I64Load32UInstruction extends LoadInstruction {
     @Override

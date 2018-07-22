@@ -1,9 +1,9 @@
 package tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store;
 
 import com.google.common.primitives.Shorts;
-import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.StoreInstruction;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 
 public class I32Store16Instruction extends StoreInstruction<I32> {
     @Override

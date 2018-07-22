@@ -1,8 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.stack;
 
-import tv.v1x1.modules.channel.wasm.vm.Instruction;
-import tv.v1x1.modules.channel.wasm.vm.ModuleInstance;
-import tv.v1x1.modules.channel.wasm.vm.TrapException;
+import tv.v1x1.modules.channel.wasm.vm.runtime.Instruction;
+import tv.v1x1.modules.channel.wasm.vm.runtime.ModuleInstance;
+import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.types.WebAssemblyType;
 
 import java.util.List;

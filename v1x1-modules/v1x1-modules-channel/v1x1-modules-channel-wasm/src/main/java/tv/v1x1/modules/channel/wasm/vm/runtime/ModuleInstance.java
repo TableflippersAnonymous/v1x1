@@ -1,6 +1,7 @@
-package tv.v1x1.modules.channel.wasm.vm;
+package tv.v1x1.modules.channel.wasm.vm.runtime;
 
 import tv.v1x1.modules.channel.wasm.vm.decoder.ExportDef;
+import tv.v1x1.modules.channel.wasm.vm.validation.FunctionType;
 
 import java.util.Arrays;
 

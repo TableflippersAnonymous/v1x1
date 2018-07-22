@@ -1,12 +1,12 @@
 package tv.v1x1.modules.channel.wasm.vm.instructions.store.memory;
 
 import com.google.common.math.IntMath;
-import tv.v1x1.modules.channel.wasm.vm.Context;
-import tv.v1x1.modules.channel.wasm.vm.Instruction;
-import tv.v1x1.modules.channel.wasm.vm.ValType;
-import tv.v1x1.modules.channel.wasm.vm.WebAssemblyValidationStack;
+import tv.v1x1.modules.channel.wasm.vm.runtime.Instruction;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
+import tv.v1x1.modules.channel.wasm.vm.validation.Context;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
+import tv.v1x1.modules.channel.wasm.vm.validation.WebAssemblyValidationStack;
 
 import java.io.DataInputStream;
 import java.io.IOException;

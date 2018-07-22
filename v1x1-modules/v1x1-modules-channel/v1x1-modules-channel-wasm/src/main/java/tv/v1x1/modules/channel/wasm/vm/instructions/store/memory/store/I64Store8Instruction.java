@@ -1,8 +1,8 @@
 package tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.store;
 
-import tv.v1x1.modules.channel.wasm.vm.ValType;
 import tv.v1x1.modules.channel.wasm.vm.instructions.store.memory.StoreInstruction;
 import tv.v1x1.modules.channel.wasm.vm.types.I64;
+import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 
 public class I64Store8Instruction extends StoreInstruction<I64> {
     @Override
