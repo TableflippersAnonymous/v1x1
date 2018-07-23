@@ -49,6 +49,10 @@ function buildAll() {
   return $?
 }
 
+function followLogs() {
+  docker-compose logs -f $@
+}
+
 function usage() {
   echo "Usage: $0 <help|subcmd> [args]"
 }
@@ -59,11 +63,14 @@ $(usage)
 
 Control the v1x1 dev environment
 
-    start [service[, service2...]]  - start a service. Default: all of them
+    start [service[,service2...]]   - start a service. Default: all of them
     status                          - alias to docker-compose ps
-    stop [service][, service2...]]  - stop a service. Default: all of them
+    logs [service[,service2...]]    - follow logs for a service. Default: all of them
+    restart [service[,service2...]] - runs stop, then start
+    stop [service][,service2...]]   - stop a service. Default: all of them
     build [service [type]]          - build a service; type is core/channel/global. Default: channel
     cqlsh                           - gives you a cql prompt on your Cassandra container
+    rediscli                        - gives you a redis-cli prompt on your Redis container
     encode [string]                 - encodes strings into a C* blob
     help                            - new command, what dis
 EOM
@@ -138,12 +145,25 @@ if [ $# -lt 1 ]; then
   exit 1
 fi
 
+function cmdLogs() {
+  followLogs $@
+}
+
 function cmdCqlsh() {
   local ID=$(docker ps -qf name=v1x1_cass_1 2> /dev/null)
   if [ "x$ID" == "x" ]; then
     echo "Cassandra container doesn't seem to be running"
   else
     docker exec -it v1x1_cass_1 cqlsh
+  fi
+}
+
+function cmdRediscli() {
+  local ID=$(docker ps -qf name=v1x1_redis_1 2> /dev/null)
+  if [ "x$ID" == "x" ]; then
+    echo "Redis container doesn't seem to be running"
+  else
+    docker exec -it v1x1_redis_1 redis-cli
   fi
 }
 
@@ -172,6 +192,10 @@ case $CMD in
   stop)
     cmdStop $@
     ;;
+  restart)
+    cmdStop $@
+    cmdStart $@
+    ;;
   status)
     docker-compose ps
     ;;
@@ -180,6 +204,12 @@ case $CMD in
     ;;
   cqlsh)
     cmdCqlsh $@
+    ;;
+  rediscli)
+    cmdRediscli $@
+    ;;
+  logs)
+    cmdLogs $@
     ;;
   encode)
     cmdEncode $@
