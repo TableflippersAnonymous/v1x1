@@ -2,7 +2,9 @@ package tv.v1x1.modules.channel.wasm.api;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.io.ByteStreams;
 import com.google.common.primitives.Ints;
+import org.glassfish.jersey.internal.util.collection.StringKeyIgnoreCaseMultivaluedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
@@ -24,7 +26,18 @@ import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.validation.FunctionType;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValType;
 
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
+import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
+import java.net.InetAddress;
+import java.net.URI;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -43,6 +56,13 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             .put(5, Platform.YOUTUBE)
             .put(6, Platform.CURSE)
             .put(7, Platform.API)
+            .build();
+
+    private static final Map<Integer, String> HTTP_VERBS = new ImmutableMap.Builder<Integer, String>()
+            .put(0, "GET")
+            .put(1, "POST")
+            .put(2, "PUT")
+            .put(3, "DELETE")
             .build();
 
     private static final NativeFunctionSpec[] FUNCTIONS = {
@@ -336,8 +356,38 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     }
 
     private static void http(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
-        /* TODO */
-        virtualMachine.getStack().push(I32.ZERO);
+        try {
+            final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
+            final int baseAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
+            final String verb = HTTP_VERBS.get(decodeI32(memoryInstance, baseAddress));
+            final URI uri = new URI(new String(decodeBuffer(memoryInstance, baseAddress + 4)));
+            final InetAddress[] addresses = InetAddress.getAllByName(uri.getHost());
+            final MultivaluedMap<String, Object> headers = getHeaders(executionEnvironment, memoryInstance, baseAddress + 12);
+            final byte[] body = decodeBuffer(memoryInstance, baseAddress + 20);
+            final byte[] eventPayload = decodeBuffer(memoryInstance, baseAddress + 28);
+            if(verb == null || Arrays.stream(addresses).anyMatch(InetAddress::isSiteLocalAddress)) {
+                virtualMachine.getStack().push(I32.ZERO);
+                return;
+            }
+            final Client client = ClientBuilder.newClient();
+            client.register(new V1x1RequestFilter(executionEnvironment));
+            final WebTarget webTarget = client.target(uri);
+            final Entity<byte[]> entity;
+            if(body.length > 0)
+                entity = Entity.entity(body, Optional.ofNullable(headers.getFirst("Content-Type"))
+                        .map(Object::toString).orElse(MediaType.APPLICATION_OCTET_STREAM));
+            else
+                entity = null;
+            final Response response = webTarget.request().headers(headers).method(verb, entity);
+            executionEnvironment.handleEvent(new HttpResponseEvent(
+                    executionEnvironment.getModule().toDto(),
+                    response.getStatus(),
+                    response.getHeaders(),
+                    ByteStreams.toByteArray(response.readEntity(InputStream.class)),
+                    eventPayload));
+        } catch(final Exception e) {
+            virtualMachine.getStack().push(I32.ZERO);
+        }
     }
 
     private static void rateLimits(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
@@ -365,12 +415,8 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     }
 
     private static byte[] decodeBuffer(final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {
-        final byte[] lengthArray = new byte[4];
-        final byte[] addressArray = new byte[4];
-        memoryInstance.read(baseAddress, lengthArray);
-        memoryInstance.read(baseAddress + 4, addressArray);
-        final int length = I32.decode(I32.swapEndian(lengthArray)).getVal();
-        final int address = I32.decode(I32.swapEndian(addressArray)).getVal();
+        final int length = decodeI32(memoryInstance, baseAddress);
+        final int address = decodeI32(memoryInstance, baseAddress + 4);
         if(length > 128*1024 || length < 0)
             throw new TrapException("Invalid v1x1_buffer size");
         final byte[] data = new byte[length];
@@ -379,12 +425,8 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     }
 
     private static boolean writeBuffer(final MemoryInstance memoryInstance, final int baseAddress, final byte[] data) throws TrapException {
-        final byte[] lengthArray = new byte[4];
-        final byte[] addressArray = new byte[4];
-        memoryInstance.read(baseAddress, lengthArray);
-        memoryInstance.read(baseAddress + 4, addressArray);
-        final int length = I32.decode(I32.swapEndian(lengthArray)).getVal();
-        final int address = I32.decode(I32.swapEndian(addressArray)).getVal();
+        final int length = decodeI32(memoryInstance, baseAddress);
+        final int address = decodeI32(memoryInstance, baseAddress + 4);
         if(length < data.length)
             return false;
         memoryInstance.write(address, data);
@@ -442,5 +484,23 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         keyValueStore.put(quotaKey, Ints.toByteArray(newQuota));
         return true;
+    }
+
+    private static int decodeI32(final MemoryInstance memoryInstance, final int address) throws TrapException {
+        final byte[] bytes = new byte[4];
+        memoryInstance.read(address, bytes);
+        return I32.decode(I32.swapEndian(bytes)).getVal();
+    }
+
+    private static MultivaluedMap<String, Object> getHeaders(final ExecutionEnvironment executionEnvironment, final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {
+        final MultivaluedMap<String, Object> headers = new StringKeyIgnoreCaseMultivaluedMap<>();
+        final int count = decodeI32(memoryInstance, baseAddress);
+        final int headerBase = decodeI32(memoryInstance, baseAddress + 4);
+        for(int i = 0; i < count; i++) {
+            final String name = new String(decodeBuffer(memoryInstance, headerBase));
+            final String value = new String(decodeBuffer(memoryInstance, headerBase + 8));
+            headers.add(name, value);
+        }
+        return headers;
     }
 }

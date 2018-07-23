@@ -1,8 +1,10 @@
 package tv.v1x1.modules.channel.wasm;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
@@ -19,6 +21,7 @@ import tv.v1x1.common.dto.messages.events.DiscordVoiceStateEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.services.discord.dto.voice.VoiceState;
 import tv.v1x1.common.util.data.CompositeKey;
+import tv.v1x1.modules.channel.wasm.api.HttpResponseEvent;
 import tv.v1x1.modules.channel.wasm.api.SyscallWebAssemblyModuleDef;
 import tv.v1x1.modules.channel.wasm.api.V1x1WebAssemblyModuleDef;
 import tv.v1x1.modules.channel.wasm.config.ModuleUserConfiguration;
@@ -31,12 +34,14 @@ import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.types.I64;
 import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 
+import javax.ws.rs.core.MultivaluedMap;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ExecutionEnvironment {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -73,9 +78,11 @@ public class ExecutionEnvironment {
     private static final int EVENT_SCHEDULER_NOTIFY_SIZE = BUFFER_SIZE;
     private static final int DISCORD_VOICE_STATE_SIZE = 4 * BUFFER_SIZE + 5 * UINT8_T_SIZE;
     private static final int EVENT_DISCORD_VOICE_STATE_SIZE = 2 * DISCORD_VOICE_STATE_SIZE;
-    private static final int EVENT_SIZE = EVENT_TYPE_SIZE + Ints.max(EVENT_MESSAGE_SIZE, EVENT_SCHEDULER_NOTIFY_SIZE, EVENT_DISCORD_VOICE_STATE_SIZE);
+    private static final int EVENT_HTTP_RESPONSE_SIZE = 2 * INT32_T_SIZE + PTR_SIZE + 2 * BUFFER_SIZE;
+    private static final int EVENT_SIZE = EVENT_TYPE_SIZE + Ints.max(EVENT_MESSAGE_SIZE, EVENT_SCHEDULER_NOTIFY_SIZE, EVENT_DISCORD_VOICE_STATE_SIZE, EVENT_HTTP_RESPONSE_SIZE);
     private static final int TENANT_SPEC_SIZE = TENANT_SIZE + INT32_T_SIZE + PTR_SIZE;
     private static final int CHANNEL_GROUP_SPEC_SIZE = CHANNEL_GROUP_SIZE + INT32_T_SIZE + PTR_SIZE;
+    private static final int HEADER_SIZE = 2 * BUFFER_SIZE;
 
     public static class CacheKey {
         private final Tenant tenant;
@@ -131,12 +138,14 @@ public class ExecutionEnvironment {
     public synchronized void handleEvent(final Event event) {
         if(isTrapped())
             return;
+        final Event previousEvent = currentEvent;
         this.currentEvent = event;
         try {
             virtualMachine.callAllExports("event_handler", MAX_INSTRUCTIONS);
         } catch(final TrapException e) {
             handleTrapped(e);
         }
+        this.currentEvent = previousEvent;
     }
 
     public byte[] getCurrentEvent(final int baseAddress) {
@@ -148,6 +157,8 @@ public class ExecutionEnvironment {
             return encode((SchedulerNotifyEvent) currentEvent, baseAddress);
         if(currentEvent instanceof DiscordVoiceStateEvent)
             return encode((DiscordVoiceStateEvent) currentEvent, baseAddress);
+        if(currentEvent instanceof HttpResponseEvent)
+            return encode((HttpResponseEvent) currentEvent, baseAddress);
         return null;
     }
 
@@ -177,6 +188,14 @@ public class ExecutionEnvironment {
 
     public WebAssembly getModule() {
         return module;
+    }
+
+    public String getConfigurationHash() {
+        return hash(Joiner.on("\0").join(configuration.getModules().entrySet().stream().map(entry -> entry.getKey() + "\0" + entry.getValue().getData()).collect(Collectors.toList())));
+    }
+
+    private String hash(final String string) {
+        return DigestUtils.sha512Hex(string);
     }
 
     private byte[] encode(final ChatMessageEvent currentEvent, final int baseAddress) {
@@ -218,6 +237,23 @@ public class ExecutionEnvironment {
             dynamicAllocations.write(writeDiscordVoiceState(byteArrayOutputStream, currentEvent.getOldVoiceState(), baseAddress + EVENT_SIZE + dynamicAllocations.size()));
             dynamicAllocations.write(writeDiscordVoiceState(byteArrayOutputStream, currentEvent.getNewVoiceState(), baseAddress + EVENT_SIZE + dynamicAllocations.size()));
             byteArrayOutputStream.write(new byte[EVENT_SIZE - EVENT_TYPE_SIZE - EVENT_DISCORD_VOICE_STATE_SIZE]);
+            byteArrayOutputStream.write(dynamicAllocations.toByteArray());
+            return byteArrayOutputStream.toByteArray();
+        } catch(final IOException e) {
+            return null;
+        }
+    }
+
+    private byte[] encode(final HttpResponseEvent currentEvent, final int baseAddress) {
+        try {
+            final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream(EVENT_SIZE);
+            final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
+            byteArrayOutputStream.write(3);
+            byteArrayOutputStream.write(new I32(currentEvent.getResponseCode()).bytes());
+            dynamicAllocations.write(writeHeaders(byteArrayOutputStream, currentEvent.getHeaders(), baseAddress + EVENT_SIZE + dynamicAllocations.size()));
+            dynamicAllocations.write(writeBuffer(byteArrayOutputStream, currentEvent.getBody(), baseAddress + EVENT_SIZE + dynamicAllocations.size()));
+            dynamicAllocations.write(writeBuffer(byteArrayOutputStream, currentEvent.getEventPayload(), baseAddress + EVENT_SIZE + dynamicAllocations.size()));
+            byteArrayOutputStream.write(new byte[EVENT_SIZE - EVENT_TYPE_SIZE - EVENT_HTTP_RESPONSE_SIZE]);
             byteArrayOutputStream.write(dynamicAllocations.toByteArray());
             return byteArrayOutputStream.toByteArray();
         } catch(final IOException e) {
@@ -272,6 +308,29 @@ public class ExecutionEnvironment {
     private byte[] writeGlobalUser(final ByteArrayOutputStream byteArrayOutputStream, final GlobalUser globalUser, final int baseAddress) throws IOException {
         final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
         dynamicAllocations.write(writeUuid(byteArrayOutputStream, globalUser.getId(), baseAddress + dynamicAllocations.size()));
+        return dynamicAllocations.toByteArray();
+    }
+
+    private byte[] writeHeaders(final ByteArrayOutputStream byteArrayOutputStream, final MultivaluedMap<String, Object> headers, final int baseAddress) throws IOException {
+        final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
+        int count = 0;
+        for(final Map.Entry<String, List<Object>> entry : headers.entrySet())
+            count += entry.getValue().size();
+        byteArrayOutputStream.write(new I32(count).bytes());
+        byteArrayOutputStream.write(new I32(baseAddress).bytes());
+        final ByteArrayOutputStream subsequentDynamicAllocations = new ByteArrayOutputStream();
+        for(final Map.Entry<String, List<Object>> entry : headers.entrySet())
+            for(final Object object : entry.getValue())
+                subsequentDynamicAllocations.write(writeHeader(dynamicAllocations, entry.getKey(), object.toString(), baseAddress + (count + 1) * HEADER_SIZE + subsequentDynamicAllocations.size()));
+        dynamicAllocations.write(new byte[HEADER_SIZE]);
+        dynamicAllocations.write(subsequentDynamicAllocations.toByteArray());
+        return dynamicAllocations.toByteArray();
+    }
+
+    private byte[] writeHeader(final ByteArrayOutputStream byteArrayOutputStream, final String name, final String value, final int baseAddress) throws IOException {
+        final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
+        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, name.getBytes(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writeBuffer(byteArrayOutputStream, value.getBytes(), baseAddress + dynamicAllocations.size()));
         return dynamicAllocations.toByteArray();
     }
 
