@@ -69,6 +69,34 @@ public class DAOTenant {
         return channelMapper.get(platform, channelId);
     }
 
+    /**
+     * Get a {@link tv.v1x1.common.dto.core.Channel} object
+     * @param platform
+     * @param channelId
+     * @return a Channel
+     * @throws NoSuchChannelException When a channel can't be found
+     */
+    public tv.v1x1.common.dto.core.Channel getChannelAsCore(final Platform platform, final String channelId) throws NoSuchChannelException {
+        final Channel dbChannel = getChannel(platform, channelId);
+        if(dbChannel != null)
+            return dbChannel.toCore(this);
+        throw new NoSuchChannelException("Channel does not exist in any Tenant");
+    }
+
+    /**
+     *  Gets a {@link tv.v1x1.common.dto.core.Channel}, ensuring it comes from the same {@link Tenant} as {@code context}
+     * @param context
+     * @param channelId
+     * @return
+     * @throws NoSuchChannelException
+     */
+    public tv.v1x1.common.dto.core.Channel getChannelInTenant(final tv.v1x1.common.dto.core.Channel context, final String channelId) throws NoSuchChannelException {
+        final tv.v1x1.common.dto.core.Channel channel = getChannelAsCore(context.getPlatform(), channelId);
+        if(channel.getTenant().equals(context.getTenant()))
+            return channel;
+        throw new NoSuchChannelException("Channel is from a different Tenant");
+    }
+
     public Tenant getByChannel(final Platform platform, final String channelId) {
         return getByChannel(getChannel(platform, channelId));
     }
@@ -111,6 +139,10 @@ public class DAOTenant {
         if(tenant == null)
             throw new IllegalStateException("Tenant null but inverse_tenant for: " + channelGroupId + " " + platform);
         return tenant;
+    }
+
+    public tv.v1x1.common.dto.core.Tenant getAsCore(final Platform platform, final String channelGroupId) {
+        return getOrCreate(platform, channelGroupId, null).toCore(this);
     }
 
     public Tenant getOrCreate(final Platform platform, final String channelGroupId, final String channelId, final String displayName) {
@@ -184,5 +216,15 @@ public class DAOTenant {
         for(final ChannelGroup channelGroup : getChannelGroups(tenant))
             removeChannelGroup(tenant, channelGroup.getPlatform(), channelGroup.getId());
         tenantMapper.delete(tenant);
+    }
+
+    public class NoSuchChannelException extends Exception {
+        NoSuchChannelException() {
+            super();
+        }
+
+        NoSuchChannelException(final String message) {
+            super(message);
+        }
     }
 }

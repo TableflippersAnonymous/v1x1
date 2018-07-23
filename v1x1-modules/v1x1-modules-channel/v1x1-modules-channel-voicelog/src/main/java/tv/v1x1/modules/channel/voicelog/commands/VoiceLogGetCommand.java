@@ -26,15 +26,14 @@ public class VoiceLogGetCommand extends Command {
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         final Channel channel = chatMessage.getChannel();
         final String commanderMention = chatMessage.getSender().getMention();
-        final VoiceLogUserConfiguration config = module.getUserConfigProvider().getConfiguration(
-                channel.getChannelGroup());
-        if(config.getChannel() == null) {
+        final Channel target = module.getChannel(channel);
+        if(target == null) {
             Chat.i18nMessage(module, channel, "notset",
                     "commander", commanderMention);
         } else {
             Chat.i18nMessage(module, channel, "get",
                     "commander", commanderMention,
-                    "target", channel.getMention());
+                    "target", target.getMention());
         }
     }
 
@@ -57,7 +56,7 @@ public class VoiceLogGetCommand extends Command {
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         Chat.i18nMessage(module, chatMessage.getChannel(), "invalidargs",
                 "commander", chatMessage.getSender().getMention(),
-                "alias", command,
+                "alias", "voicelog " + command,
                 "syntax", getUsage());
     }
 }

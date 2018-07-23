@@ -87,6 +87,14 @@ public abstract class Channel {
         return "{Channel/" + id + ":" + displayName + "}";
     }
 
+    @Override
+    public boolean equals(final Object obj) {
+        if(this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
+
+        return getId().equals(((Channel)obj).getId());
+    }
+
     public ChannelOuterClass.Channel toProto() {
         return ChannelOuterClass.Channel.newBuilder()
                 .setId(id)

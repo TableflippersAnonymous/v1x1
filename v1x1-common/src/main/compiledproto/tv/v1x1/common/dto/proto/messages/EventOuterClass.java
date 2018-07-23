@@ -21572,6 +21572,30 @@ public final class EventOuterClass {
      * <code>required .tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent.VoiceState new_voice_state = 2;</code>
      */
     tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceStateOrBuilder getNewVoiceStateOrBuilder();
+
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    java.util.List<tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission> 
+        getPermissionsList();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission getPermissions(int index);
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    int getPermissionsCount();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    java.util.List<? extends tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> 
+        getPermissionsOrBuilderList();
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder getPermissionsOrBuilder(
+        int index);
   }
   /**
    * Protobuf type {@code tv.v1x1.common.dto.proto.messages.DiscordVoiceStateEvent}
@@ -21585,6 +21609,7 @@ public final class EventOuterClass {
       super(builder);
     }
     private DiscordVoiceStateEvent() {
+      permissions_ = java.util.Collections.emptyList();
     }
 
     @java.lang.Override
@@ -21641,6 +21666,15 @@ public final class EventOuterClass {
               bitField0_ |= 0x00000002;
               break;
             }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                permissions_ = new java.util.ArrayList<tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              permissions_.add(
+                  input.readMessage(tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -21649,6 +21683,9 @@ public final class EventOuterClass {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          permissions_ = java.util.Collections.unmodifiableList(permissions_);
+        }
         this.unknownFields = unknownFields.build();
         makeExtensionsImmutable();
       }
@@ -23236,6 +23273,41 @@ public final class EventOuterClass {
       return newVoiceState_ == null ? tv.v1x1.common.dto.proto.messages.EventOuterClass.DiscordVoiceStateEvent.VoiceState.getDefaultInstance() : newVoiceState_;
     }
 
+    public static final int PERMISSIONS_FIELD_NUMBER = 3;
+    private java.util.List<tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission> permissions_;
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    public java.util.List<tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission> getPermissionsList() {
+      return permissions_;
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    public java.util.List<? extends tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> 
+        getPermissionsOrBuilderList() {
+      return permissions_;
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    public int getPermissionsCount() {
+      return permissions_.size();
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission getPermissions(int index) {
+      return permissions_.get(index);
+    }
+    /**
+     * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+     */
+    public tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder getPermissionsOrBuilder(
+        int index) {
+      return permissions_.get(index);
+    }
+
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
@@ -23256,6 +23328,12 @@ public final class EventOuterClass {
         memoizedIsInitialized = 0;
         return false;
       }
+      for (int i = 0; i < getPermissionsCount(); i++) {
+        if (!getPermissions(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -23267,6 +23345,9 @@ public final class EventOuterClass {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeMessage(2, getNewVoiceState());
+      }
+      for (int i = 0; i < permissions_.size(); i++) {
+        output.writeMessage(3, permissions_.get(i));
       }
       unknownFields.writeTo(output);
     }
@@ -23283,6 +23364,10 @@ public final class EventOuterClass {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(2, getNewVoiceState());
+      }
+      for (int i = 0; i < permissions_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, permissions_.get(i));
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -23311,6 +23396,8 @@ public final class EventOuterClass {
         result = result && getNewVoiceState()
             .equals(other.getNewVoiceState());
       }
+      result = result && getPermissionsList()
+          .equals(other.getPermissionsList());
       result = result && unknownFields.equals(other.unknownFields);
       return result;
     }
@@ -23329,6 +23416,10 @@ public final class EventOuterClass {
       if (hasNewVoiceState()) {
         hash = (37 * hash) + NEW_VOICE_STATE_FIELD_NUMBER;
         hash = (53 * hash) + getNewVoiceState().hashCode();
+      }
+      if (getPermissionsCount() > 0) {
+        hash = (37 * hash) + PERMISSIONS_FIELD_NUMBER;
+        hash = (53 * hash) + getPermissionsList().hashCode();
       }
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
@@ -23446,6 +23537,7 @@ public final class EventOuterClass {
                 .alwaysUseFieldBuilders) {
           getOldVoiceStateFieldBuilder();
           getNewVoiceStateFieldBuilder();
+          getPermissionsFieldBuilder();
         }
       }
       public Builder clear() {
@@ -23462,6 +23554,12 @@ public final class EventOuterClass {
           newVoiceStateBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000002);
+        if (permissionsBuilder_ == null) {
+          permissions_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+        } else {
+          permissionsBuilder_.clear();
+        }
         return this;
       }
 
@@ -23501,6 +23599,15 @@ public final class EventOuterClass {
           result.newVoiceState_ = newVoiceState_;
         } else {
           result.newVoiceState_ = newVoiceStateBuilder_.build();
+        }
+        if (permissionsBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            permissions_ = java.util.Collections.unmodifiableList(permissions_);
+            bitField0_ = (bitField0_ & ~0x00000004);
+          }
+          result.permissions_ = permissions_;
+        } else {
+          result.permissions_ = permissionsBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -23550,6 +23657,32 @@ public final class EventOuterClass {
         if (other.hasNewVoiceState()) {
           mergeNewVoiceState(other.getNewVoiceState());
         }
+        if (permissionsBuilder_ == null) {
+          if (!other.permissions_.isEmpty()) {
+            if (permissions_.isEmpty()) {
+              permissions_ = other.permissions_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+            } else {
+              ensurePermissionsIsMutable();
+              permissions_.addAll(other.permissions_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.permissions_.isEmpty()) {
+            if (permissionsBuilder_.isEmpty()) {
+              permissionsBuilder_.dispose();
+              permissionsBuilder_ = null;
+              permissions_ = other.permissions_;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              permissionsBuilder_ = 
+                com.google.protobuf.GeneratedMessageV3.alwaysUseFieldBuilders ?
+                   getPermissionsFieldBuilder() : null;
+            } else {
+              permissionsBuilder_.addAllMessages(other.permissions_);
+            }
+          }
+        }
         this.mergeUnknownFields(other.unknownFields);
         onChanged();
         return this;
@@ -23566,6 +23699,11 @@ public final class EventOuterClass {
         }
         if (!getNewVoiceState().isInitialized()) {
           return false;
+        }
+        for (int i = 0; i < getPermissionsCount(); i++) {
+          if (!getPermissions(i).isInitialized()) {
+            return false;
+          }
         }
         return true;
       }
@@ -23824,6 +23962,246 @@ public final class EventOuterClass {
         }
         return newVoiceStateBuilder_;
       }
+
+      private java.util.List<tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission> permissions_ =
+        java.util.Collections.emptyList();
+      private void ensurePermissionsIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          permissions_ = new java.util.ArrayList<tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission>(permissions_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission, tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder, tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> permissionsBuilder_;
+
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public java.util.List<tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission> getPermissionsList() {
+        if (permissionsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(permissions_);
+        } else {
+          return permissionsBuilder_.getMessageList();
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public int getPermissionsCount() {
+        if (permissionsBuilder_ == null) {
+          return permissions_.size();
+        } else {
+          return permissionsBuilder_.getCount();
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission getPermissions(int index) {
+        if (permissionsBuilder_ == null) {
+          return permissions_.get(index);
+        } else {
+          return permissionsBuilder_.getMessage(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder setPermissions(
+          int index, tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission value) {
+        if (permissionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePermissionsIsMutable();
+          permissions_.set(index, value);
+          onChanged();
+        } else {
+          permissionsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder setPermissions(
+          int index, tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder builderForValue) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          permissions_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          permissionsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder addPermissions(tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission value) {
+        if (permissionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePermissionsIsMutable();
+          permissions_.add(value);
+          onChanged();
+        } else {
+          permissionsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder addPermissions(
+          int index, tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission value) {
+        if (permissionsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensurePermissionsIsMutable();
+          permissions_.add(index, value);
+          onChanged();
+        } else {
+          permissionsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder addPermissions(
+          tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder builderForValue) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          permissions_.add(builderForValue.build());
+          onChanged();
+        } else {
+          permissionsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder addPermissions(
+          int index, tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder builderForValue) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          permissions_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          permissionsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder addAllPermissions(
+          java.lang.Iterable<? extends tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission> values) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          com.google.protobuf.AbstractMessageLite.Builder.addAll(
+              values, permissions_);
+          onChanged();
+        } else {
+          permissionsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder clearPermissions() {
+        if (permissionsBuilder_ == null) {
+          permissions_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000004);
+          onChanged();
+        } else {
+          permissionsBuilder_.clear();
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public Builder removePermissions(int index) {
+        if (permissionsBuilder_ == null) {
+          ensurePermissionsIsMutable();
+          permissions_.remove(index);
+          onChanged();
+        } else {
+          permissionsBuilder_.remove(index);
+        }
+        return this;
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder getPermissionsBuilder(
+          int index) {
+        return getPermissionsFieldBuilder().getBuilder(index);
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder getPermissionsOrBuilder(
+          int index) {
+        if (permissionsBuilder_ == null) {
+          return permissions_.get(index);  } else {
+          return permissionsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public java.util.List<? extends tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> 
+           getPermissionsOrBuilderList() {
+        if (permissionsBuilder_ != null) {
+          return permissionsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(permissions_);
+        }
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder addPermissionsBuilder() {
+        return getPermissionsFieldBuilder().addBuilder(
+            tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder addPermissionsBuilder(
+          int index) {
+        return getPermissionsFieldBuilder().addBuilder(
+            index, tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.getDefaultInstance());
+      }
+      /**
+       * <code>repeated .tv.v1x1.common.dto.proto.core.Permission permissions = 3;</code>
+       */
+      public java.util.List<tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder> 
+           getPermissionsBuilderList() {
+        return getPermissionsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilderV3<
+          tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission, tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder, tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder> 
+          getPermissionsFieldBuilder() {
+        if (permissionsBuilder_ == null) {
+          permissionsBuilder_ = new com.google.protobuf.RepeatedFieldBuilderV3<
+              tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission, tv.v1x1.common.dto.proto.core.PermissionOuterClass.Permission.Builder, tv.v1x1.common.dto.proto.core.PermissionOuterClass.PermissionOrBuilder>(
+                  permissions_,
+                  ((bitField0_ & 0x00000004) == 0x00000004),
+                  getParentForChildren(),
+                  isClean());
+          permissions_ = null;
+        }
+        return permissionsBuilder_;
+      }
       public final Builder setUnknownFields(
           final com.google.protobuf.UnknownFieldSet unknownFields) {
         return super.setUnknownFields(unknownFields);
@@ -24029,199 +24407,201 @@ public final class EventOuterClass {
       "messages\032\rMessage.proto\032\021ChatMessage.pro" +
       "to\032\rChannel.proto\032\nUser.proto\032\tIRC.proto" +
       "\032\tBot.proto\032\016Platform.proto\032\014Module.prot" +
-      "o\032\nUUID.proto\"\212\005\n\005Event\022@\n\004type\030\001 \002(\01622." +
-      "tv.v1x1.common.dto.proto.messages.Event." +
-      "EventType\"\320\003\n\tEventType\022\013\n\007UNKNOWN\020\000\022\020\n\014" +
-      "CHAT_MESSAGE\020\001\022\r\n\tCHAT_JOIN\020\002\022\r\n\tCHAT_PA" +
-      "RT\020\003\022\034\n\030TWITCH_BOT_CHANNEL_STATE\020\004\022\030\n\024TW" +
-      "ITCH_BOT_CONNECTED\020\005\022\033\n\027TWITCH_BOT_GLOBA",
-      "L_STATE\020\006\022\030\n\024TWITCH_CHANNEL_EVENT\020\007\022\030\n\024T" +
-      "WITCH_CHANNEL_USERS\020\010\022\017\n\013TWITCH_HOST\020\t\022\017" +
-      "\n\013TWITCH_PING\020\n\022\026\n\022TWITCH_RAW_MESSAGE\020\013\022" +
-      "\024\n\020TWITCH_RECONNECT\020\014\022\025\n\021TWITCH_ROOM_STA" +
-      "TE\020\r\022\022\n\016TWITCH_TIMEOUT\020\016\022\017\n\013TWITCH_USER\020" +
-      "\017\022\032\n\026TWITCH_USER_MOD_CHANGE\020\020\022\024\n\020SCHEDUL" +
-      "ER_NOTIFY\020\021\022\023\n\017PRIVATE_MESSAGE\020\022\022\021\n\rCONF" +
-      "IG_CHANGE\020\023\022\027\n\023DISCORD_VOICE_STATE\020\024*\010\010d" +
-      "\020\200\200\200\200\0022b\n\004data\022*.tv.v1x1.common.dto.prot" +
-      "o.messages.Message\030e \001(\0132(.tv.v1x1.commo",
-      "n.dto.proto.messages.Event\"\202\002\n\020ChatMessa" +
-      "geEvent\022@\n\014chat_message\030\001 \002(\0132*.tv.v1x1." +
-      "common.dto.proto.core.ChatMessage\0225\n\004typ" +
-      "e\030\002 \002(\0162\'.tv.v1x1.common.dto.proto.core." +
-      "Platform*\010\010d\020\200\200\200\200\0022k\n\004data\022(.tv.v1x1.com" +
-      "mon.dto.proto.messages.Event\030e \001(\01323.tv." +
-      "v1x1.common.dto.proto.messages.ChatMessa" +
-      "geEvent\"\246\002\n\rChatJoinEvent\0221\n\004user\030\001 \002(\0132" +
-      "#.tv.v1x1.common.dto.proto.core.User\0227\n\007" +
-      "channel\030\002 \002(\0132&.tv.v1x1.common.dto.proto",
-      ".core.Channel\0225\n\004type\030\003 \002(\0162\'.tv.v1x1.co" +
-      "mmon.dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022h" +
-      "\n\004data\022(.tv.v1x1.common.dto.proto.messag" +
-      "es.Event\030f \001(\01320.tv.v1x1.common.dto.prot" +
-      "o.messages.ChatJoinEvent\"\246\002\n\rChatPartEve" +
-      "nt\0221\n\004user\030\001 \002(\0132#.tv.v1x1.common.dto.pr" +
-      "oto.core.User\0227\n\007channel\030\002 \002(\0132&.tv.v1x1" +
-      ".common.dto.proto.core.Channel\0225\n\004type\030\003" +
-      " \002(\0162\'.tv.v1x1.common.dto.proto.core.Pla" +
-      "tform*\010\010d\020\200\200\200\200\0022h\n\004data\022(.tv.v1x1.common",
-      ".dto.proto.messages.Event\030g \001(\01320.tv.v1x" +
-      "1.common.dto.proto.messages.ChatPartEven" +
-      "t\"\303\002\n\032TwitchBotChannelStateEvent\0227\n\007chan" +
-      "nel\030\001 \002(\0132&.tv.v1x1.common.dto.proto.cor" +
-      "e.Channel\022/\n\003bot\030\002 \002(\0132\".tv.v1x1.common." +
-      "dto.proto.core.Bot\022D\n\022user_state_command" +
-      "\030\003 \002(\0132(.tv.v1x1.common.dto.proto.core.I" +
-      "rcStanza2u\n\004data\022(.tv.v1x1.common.dto.pr" +
-      "oto.messages.Event\030h \001(\0132=.tv.v1x1.commo" +
-      "n.dto.proto.messages.TwitchBotChannelSta",
-      "teEvent\"\211\002\n\027TwitchBotConnectedEvent\022/\n\003b" +
-      "ot\030\001 \002(\0132\".tv.v1x1.common.dto.proto.core" +
-      ".Bot\022I\n\027rpl_end_of_motd_command\030\002 \002(\0132(." +
-      "tv.v1x1.common.dto.proto.core.IrcStanza2" +
-      "r\n\004data\022(.tv.v1x1.common.dto.proto.messa" +
-      "ges.Event\030i \001(\0132:.tv.v1x1.common.dto.pro" +
-      "to.messages.TwitchBotConnectedEvent\"\217\002\n\031" +
-      "TwitchBotGlobalStateEvent\022/\n\003bot\030\001 \002(\0132\"" +
-      ".tv.v1x1.common.dto.proto.core.Bot\022K\n\031gl" +
-      "obal_user_state_command\030\002 \002(\0132(.tv.v1x1.",
-      "common.dto.proto.core.IrcStanza2t\n\004data\022" +
-      "(.tv.v1x1.common.dto.proto.messages.Even" +
-      "t\030j \001(\0132<.tv.v1x1.common.dto.proto.messa" +
-      "ges.TwitchBotGlobalStateEvent\"\217\002\n\022Twitch" +
-      "ChannelEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1." +
-      "common.dto.proto.core.Channel\022\017\n\007message" +
-      "\030\002 \002(\t\022@\n\016notice_command\030\003 \002(\0132(.tv.v1x1" +
-      ".common.dto.proto.core.IrcStanza2m\n\004data" +
-      "\022(.tv.v1x1.common.dto.proto.messages.Eve" +
-      "nt\030k \001(\01325.tv.v1x1.common.dto.proto.mess",
-      "ages.TwitchChannelEvent\"\304\002\n\027TwitchChanne" +
-      "lUsersEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.c" +
-      "ommon.dto.proto.core.Channel\0222\n\005users\030\002 " +
-      "\003(\0132#.tv.v1x1.common.dto.proto.core.User" +
-      "\022H\n\026rpl_name_reply_command\030\003 \002(\0132(.tv.v1" +
-      "x1.common.dto.proto.core.IrcStanza2r\n\004da" +
-      "ta\022(.tv.v1x1.common.dto.proto.messages.E" +
-      "vent\030l \001(\0132:.tv.v1x1.common.dto.proto.me" +
-      "ssages.TwitchChannelUsersEvent\"\315\001\n\023Twitc" +
-      "hChatJoinEvent\022>\n\014join_command\030\001 \002(\0132(.t",
-      "v.v1x1.common.dto.proto.core.IrcStanza2v" +
-      "\n\004data\0220.tv.v1x1.common.dto.proto.messag" +
-      "es.ChatJoinEvent\030e \001(\01326.tv.v1x1.common." +
-      "dto.proto.messages.TwitchChatJoinEvent\"\331" +
-      "\001\n\026TwitchChatMessageEvent\022A\n\017privmsg_com" +
-      "mand\030\001 \002(\0132(.tv.v1x1.common.dto.proto.co" +
-      "re.IrcStanza2|\n\004data\0223.tv.v1x1.common.dt" +
-      "o.proto.messages.ChatMessageEvent\030e \001(\0132" +
-      "9.tv.v1x1.common.dto.proto.messages.Twit" +
-      "chChatMessageEvent\"\315\001\n\023TwitchChatPartEve",
-      "nt\022>\n\014part_command\030\001 \002(\0132(.tv.v1x1.commo" +
-      "n.dto.proto.core.IrcStanza2v\n\004data\0220.tv." +
-      "v1x1.common.dto.proto.messages.ChatPartE" +
-      "vent\030e \001(\01326.tv.v1x1.common.dto.proto.me" +
-      "ssages.TwitchChatPartEvent\"\275\002\n\017TwitchHos" +
-      "tEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common" +
-      ".dto.proto.core.Channel\022>\n\016target_channe" +
-      "l\030\002 \001(\0132&.tv.v1x1.common.dto.proto.core." +
-      "Channel\022E\n\023host_target_command\030\003 \002(\0132(.t" +
-      "v.v1x1.common.dto.proto.core.IrcStanza2j",
-      "\n\004data\022(.tv.v1x1.common.dto.proto.messag" +
-      "es.Event\030m \001(\01322.tv.v1x1.common.dto.prot" +
-      "o.messages.TwitchHostEvent\"\314\001\n\017TwitchPin" +
-      "gEvent\022\r\n\005token\030\001 \002(\t\022>\n\014ping_command\030\002 " +
-      "\002(\0132(.tv.v1x1.common.dto.proto.core.IrcS" +
-      "tanza2j\n\004data\022(.tv.v1x1.common.dto.proto" +
-      ".messages.Event\030n \001(\01322.tv.v1x1.common.d" +
-      "to.proto.messages.TwitchPingEvent\"\370\001\n\025Tw" +
-      "itchRawMessageEvent\022/\n\003bot\030\001 \002(\0132\".tv.v1" +
-      "x1.common.dto.proto.core.Bot\022<\n\nirc_stan",
-      "za\030\002 \002(\0132(.tv.v1x1.common.dto.proto.core" +
-      ".IrcStanza2p\n\004data\022(.tv.v1x1.common.dto." +
-      "proto.messages.Event\030o \001(\01328.tv.v1x1.com" +
-      "mon.dto.proto.messages.TwitchRawMessageE" +
-      "vent\"\375\001\n\024TwitchReconnectEvent\022/\n\003bot\030\001 \002" +
-      "(\0132\".tv.v1x1.common.dto.proto.core.Bot\022C" +
-      "\n\021reconnect_command\030\002 \002(\0132(.tv.v1x1.comm" +
-      "on.dto.proto.core.IrcStanza2o\n\004data\022(.tv" +
-      ".v1x1.common.dto.proto.messages.Event\030p " +
-      "\001(\01327.tv.v1x1.common.dto.proto.messages.",
-      "TwitchReconnectEvent\"\206\002\n\024TwitchRoomState" +
-      "Event\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common." +
-      "dto.proto.core.Channel\022D\n\022room_state_com" +
-      "mand\030\002 \002(\0132(.tv.v1x1.common.dto.proto.co" +
-      "re.IrcStanza2o\n\004data\022(.tv.v1x1.common.dt" +
-      "o.proto.messages.Event\030q \001(\01327.tv.v1x1.c" +
-      "ommon.dto.proto.messages.TwitchRoomState" +
-      "Event\"\265\002\n\022TwitchTimeoutEvent\0227\n\007channel\030" +
-      "\001 \002(\0132&.tv.v1x1.common.dto.proto.core.Ch" +
-      "annel\0221\n\004user\030\002 \002(\0132#.tv.v1x1.common.dto",
-      ".proto.core.User\022D\n\022clear_chat_command\030\003" +
-      " \002(\0132(.tv.v1x1.common.dto.proto.core.Irc" +
-      "Stanza2m\n\004data\022(.tv.v1x1.common.dto.prot" +
-      "o.messages.Event\030r \001(\01325.tv.v1x1.common." +
-      "dto.proto.messages.TwitchTimeoutEvent\"\301\002" +
-      "\n\017TwitchUserEvent\0227\n\007channel\030\001 \002(\0132&.tv." +
-      "v1x1.common.dto.proto.core.Channel\0221\n\004us" +
-      "er\030\002 \002(\0132#.tv.v1x1.common.dto.proto.core" +
-      ".User\022\017\n\007message\030\003 \002(\t\022E\n\023user_notice_co" +
-      "mmand\030\004 \002(\0132(.tv.v1x1.common.dto.proto.c",
-      "ore.IrcStanza2j\n\004data\022(.tv.v1x1.common.d" +
-      "to.proto.messages.Event\030s \001(\01322.tv.v1x1." +
-      "common.dto.proto.messages.TwitchUserEven" +
-      "t\"\317\002\n\030TwitchUserModChangeEvent\0227\n\007channe" +
+      "o\032\nUUID.proto\032\020Permission.proto\"\212\005\n\005Even" +
+      "t\022@\n\004type\030\001 \002(\01622.tv.v1x1.common.dto.pro" +
+      "to.messages.Event.EventType\"\320\003\n\tEventTyp" +
+      "e\022\013\n\007UNKNOWN\020\000\022\020\n\014CHAT_MESSAGE\020\001\022\r\n\tCHAT" +
+      "_JOIN\020\002\022\r\n\tCHAT_PART\020\003\022\034\n\030TWITCH_BOT_CHA" +
+      "NNEL_STATE\020\004\022\030\n\024TWITCH_BOT_CONNECTED\020\005\022\033",
+      "\n\027TWITCH_BOT_GLOBAL_STATE\020\006\022\030\n\024TWITCH_CH" +
+      "ANNEL_EVENT\020\007\022\030\n\024TWITCH_CHANNEL_USERS\020\010\022" +
+      "\017\n\013TWITCH_HOST\020\t\022\017\n\013TWITCH_PING\020\n\022\026\n\022TWI" +
+      "TCH_RAW_MESSAGE\020\013\022\024\n\020TWITCH_RECONNECT\020\014\022" +
+      "\025\n\021TWITCH_ROOM_STATE\020\r\022\022\n\016TWITCH_TIMEOUT" +
+      "\020\016\022\017\n\013TWITCH_USER\020\017\022\032\n\026TWITCH_USER_MOD_C" +
+      "HANGE\020\020\022\024\n\020SCHEDULER_NOTIFY\020\021\022\023\n\017PRIVATE" +
+      "_MESSAGE\020\022\022\021\n\rCONFIG_CHANGE\020\023\022\027\n\023DISCORD" +
+      "_VOICE_STATE\020\024*\010\010d\020\200\200\200\200\0022b\n\004data\022*.tv.v1" +
+      "x1.common.dto.proto.messages.Message\030e \001",
+      "(\0132(.tv.v1x1.common.dto.proto.messages.E" +
+      "vent\"\202\002\n\020ChatMessageEvent\022@\n\014chat_messag" +
+      "e\030\001 \002(\0132*.tv.v1x1.common.dto.proto.core." +
+      "ChatMessage\0225\n\004type\030\002 \002(\0162\'.tv.v1x1.comm" +
+      "on.dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022k\n\004" +
+      "data\022(.tv.v1x1.common.dto.proto.messages" +
+      ".Event\030e \001(\01323.tv.v1x1.common.dto.proto." +
+      "messages.ChatMessageEvent\"\246\002\n\rChatJoinEv" +
+      "ent\0221\n\004user\030\001 \002(\0132#.tv.v1x1.common.dto.p" +
+      "roto.core.User\0227\n\007channel\030\002 \002(\0132&.tv.v1x",
+      "1.common.dto.proto.core.Channel\0225\n\004type\030" +
+      "\003 \002(\0162\'.tv.v1x1.common.dto.proto.core.Pl" +
+      "atform*\010\010d\020\200\200\200\200\0022h\n\004data\022(.tv.v1x1.commo" +
+      "n.dto.proto.messages.Event\030f \001(\01320.tv.v1" +
+      "x1.common.dto.proto.messages.ChatJoinEve" +
+      "nt\"\246\002\n\rChatPartEvent\0221\n\004user\030\001 \002(\0132#.tv." +
+      "v1x1.common.dto.proto.core.User\0227\n\007chann" +
+      "el\030\002 \002(\0132&.tv.v1x1.common.dto.proto.core" +
+      ".Channel\0225\n\004type\030\003 \002(\0162\'.tv.v1x1.common." +
+      "dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022h\n\004dat",
+      "a\022(.tv.v1x1.common.dto.proto.messages.Ev" +
+      "ent\030g \001(\01320.tv.v1x1.common.dto.proto.mes" +
+      "sages.ChatPartEvent\"\303\002\n\032TwitchBotChannel" +
+      "StateEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.co" +
+      "mmon.dto.proto.core.Channel\022/\n\003bot\030\002 \002(\013" +
+      "2\".tv.v1x1.common.dto.proto.core.Bot\022D\n\022" +
+      "user_state_command\030\003 \002(\0132(.tv.v1x1.commo" +
+      "n.dto.proto.core.IrcStanza2u\n\004data\022(.tv." +
+      "v1x1.common.dto.proto.messages.Event\030h \001" +
+      "(\0132=.tv.v1x1.common.dto.proto.messages.T",
+      "witchBotChannelStateEvent\"\211\002\n\027TwitchBotC" +
+      "onnectedEvent\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.com" +
+      "mon.dto.proto.core.Bot\022I\n\027rpl_end_of_mot" +
+      "d_command\030\002 \002(\0132(.tv.v1x1.common.dto.pro" +
+      "to.core.IrcStanza2r\n\004data\022(.tv.v1x1.comm" +
+      "on.dto.proto.messages.Event\030i \001(\0132:.tv.v" +
+      "1x1.common.dto.proto.messages.TwitchBotC" +
+      "onnectedEvent\"\217\002\n\031TwitchBotGlobalStateEv" +
+      "ent\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.common.dto.pr" +
+      "oto.core.Bot\022K\n\031global_user_state_comman",
+      "d\030\002 \002(\0132(.tv.v1x1.common.dto.proto.core." +
+      "IrcStanza2t\n\004data\022(.tv.v1x1.common.dto.p" +
+      "roto.messages.Event\030j \001(\0132<.tv.v1x1.comm" +
+      "on.dto.proto.messages.TwitchBotGlobalSta" +
+      "teEvent\"\217\002\n\022TwitchChannelEvent\0227\n\007channe" +
       "l\030\001 \002(\0132&.tv.v1x1.common.dto.proto.core." +
-      "Channel\0221\n\004user\030\002 \002(\0132#.tv.v1x1.common.d" +
-      "to.proto.core.User\022\022\n\nis_now_mod\030\003 \002(\010\022>" +
-      "\n\014mode_command\030\004 \002(\0132(.tv.v1x1.common.dt" +
-      "o.proto.core.IrcStanza2s\n\004data\022(.tv.v1x1" +
-      ".common.dto.proto.messages.Event\030t \001(\0132;",
-      ".tv.v1x1.common.dto.proto.messages.Twitc" +
-      "hUserModChangeEvent\"\200\002\n\024SchedulerNotifyE" +
-      "vent\0225\n\006module\030\001 \002(\0132%.tv.v1x1.common.dt" +
-      "o.proto.core.Module\022/\n\002id\030\002 \002(\0132#.tv.v1x" +
-      "1.common.dto.proto.core.UUID\022\017\n\007payload\030" +
-      "\003 \002(\0142o\n\004data\022(.tv.v1x1.common.dto.proto" +
-      ".messages.Event\030u \001(\01327.tv.v1x1.common.d" +
-      "to.proto.messages.SchedulerNotifyEvent\"\216" +
-      "\002\n\023PrivateMessageEvent\022F\n\017private_messag" +
-      "e\030\001 \002(\0132-.tv.v1x1.common.dto.proto.core.",
-      "PrivateMessage\0225\n\004type\030\002 \002(\0162\'.tv.v1x1.c" +
-      "ommon.dto.proto.core.Platform*\010\010d\020\200\200\200\200\0022" +
-      "n\n\004data\022(.tv.v1x1.common.dto.proto.messa" +
-      "ges.Event\030v \001(\01326.tv.v1x1.common.dto.pro" +
-      "to.messages.PrivateMessageEvent\"\343\001\n\031Twit" +
-      "chPrivateMessageEvent\022A\n\017whisper_command" +
-      "\030\001 \002(\0132(.tv.v1x1.common.dto.proto.core.I" +
-      "rcStanza2\202\001\n\004data\0226.tv.v1x1.common.dto.p" +
-      "roto.messages.PrivateMessageEvent\030e \001(\0132" +
-      "<.tv.v1x1.common.dto.proto.messages.Twit",
-      "chPrivateMessageEvent\"\225\004\n\021ConfigChangeEv" +
-      "ent\0225\n\006module\030\001 \002(\0132%.tv.v1x1.common.dto" +
-      ".proto.core.Module\022T\n\013config_type\030\002 \002(\0162" +
-      "?.tv.v1x1.common.dto.proto.messages.Conf" +
-      "igChangeEvent.ConfigType\0225\n\006tenant\030\003 \001(\013" +
-      "2%.tv.v1x1.common.dto.proto.core.Tenant\022" +
-      "7\n\007channel\030\004 \001(\0132&.tv.v1x1.common.dto.pr" +
-      "oto.core.Channel\022B\n\rchannel_group\030\005 \001(\0132" +
-      "+.tv.v1x1.common.dto.proto.core.ChannelG" +
-      "roup\"Q\n\nConfigType\022\013\n\007UNKNOWN\020\000\022\n\n\006GLOBA",
-      "L\020\001\022\n\n\006TENANT\020\002\022\013\n\007CHANNEL\020\003\022\021\n\rCHANNEL_" +
-      "GROUP\020\0042l\n\004data\022(.tv.v1x1.common.dto.pro" +
-      "to.messages.Event\030w \001(\01324.tv.v1x1.common" +
-      ".dto.proto.messages.ConfigChangeEvent\"\367\003" +
-      "\n\026DiscordVoiceStateEvent\022]\n\017old_voice_st" +
-      "ate\030\001 \001(\0132D.tv.v1x1.common.dto.proto.mes" +
-      "sages.DiscordVoiceStateEvent.VoiceState\022" +
-      "]\n\017new_voice_state\030\002 \002(\0132D.tv.v1x1.commo" +
-      "n.dto.proto.messages.DiscordVoiceStateEv" +
-      "ent.VoiceState\032\253\001\n\nVoiceState\022\020\n\010guild_i",
-      "d\030\001 \001(\t\022\022\n\nchannel_id\030\002 \001(\t\022\017\n\007user_id\030\003" +
-      " \002(\t\022\022\n\nsession_id\030\004 \002(\t\022\014\n\004deaf\030\005 \002(\010\022\014" +
-      "\n\004mute\030\006 \002(\010\022\021\n\tself_deaf\030\007 \002(\010\022\021\n\tself_" +
-      "mute\030\010 \002(\010\022\020\n\010suppress\030\t \002(\0102q\n\004data\022(.t" +
-      "v.v1x1.common.dto.proto.messages.Event\030x" +
-      " \001(\01329.tv.v1x1.common.dto.proto.messages" +
-      ".DiscordVoiceStateEvent"
+      "Channel\022\017\n\007message\030\002 \002(\t\022@\n\016notice_comma" +
+      "nd\030\003 \002(\0132(.tv.v1x1.common.dto.proto.core" +
+      ".IrcStanza2m\n\004data\022(.tv.v1x1.common.dto." +
+      "proto.messages.Event\030k \001(\01325.tv.v1x1.com",
+      "mon.dto.proto.messages.TwitchChannelEven" +
+      "t\"\304\002\n\027TwitchChannelUsersEvent\0227\n\007channel" +
+      "\030\001 \002(\0132&.tv.v1x1.common.dto.proto.core.C" +
+      "hannel\0222\n\005users\030\002 \003(\0132#.tv.v1x1.common.d" +
+      "to.proto.core.User\022H\n\026rpl_name_reply_com" +
+      "mand\030\003 \002(\0132(.tv.v1x1.common.dto.proto.co" +
+      "re.IrcStanza2r\n\004data\022(.tv.v1x1.common.dt" +
+      "o.proto.messages.Event\030l \001(\0132:.tv.v1x1.c" +
+      "ommon.dto.proto.messages.TwitchChannelUs" +
+      "ersEvent\"\315\001\n\023TwitchChatJoinEvent\022>\n\014join",
+      "_command\030\001 \002(\0132(.tv.v1x1.common.dto.prot" +
+      "o.core.IrcStanza2v\n\004data\0220.tv.v1x1.commo" +
+      "n.dto.proto.messages.ChatJoinEvent\030e \001(\013" +
+      "26.tv.v1x1.common.dto.proto.messages.Twi" +
+      "tchChatJoinEvent\"\331\001\n\026TwitchChatMessageEv" +
+      "ent\022A\n\017privmsg_command\030\001 \002(\0132(.tv.v1x1.c" +
+      "ommon.dto.proto.core.IrcStanza2|\n\004data\0223" +
+      ".tv.v1x1.common.dto.proto.messages.ChatM" +
+      "essageEvent\030e \001(\01329.tv.v1x1.common.dto.p" +
+      "roto.messages.TwitchChatMessageEvent\"\315\001\n",
+      "\023TwitchChatPartEvent\022>\n\014part_command\030\001 \002" +
+      "(\0132(.tv.v1x1.common.dto.proto.core.IrcSt" +
+      "anza2v\n\004data\0220.tv.v1x1.common.dto.proto." +
+      "messages.ChatPartEvent\030e \001(\01326.tv.v1x1.c" +
+      "ommon.dto.proto.messages.TwitchChatPartE" +
+      "vent\"\275\002\n\017TwitchHostEvent\0227\n\007channel\030\001 \002(" +
+      "\0132&.tv.v1x1.common.dto.proto.core.Channe" +
+      "l\022>\n\016target_channel\030\002 \001(\0132&.tv.v1x1.comm" +
+      "on.dto.proto.core.Channel\022E\n\023host_target" +
+      "_command\030\003 \002(\0132(.tv.v1x1.common.dto.prot",
+      "o.core.IrcStanza2j\n\004data\022(.tv.v1x1.commo" +
+      "n.dto.proto.messages.Event\030m \001(\01322.tv.v1" +
+      "x1.common.dto.proto.messages.TwitchHostE" +
+      "vent\"\314\001\n\017TwitchPingEvent\022\r\n\005token\030\001 \002(\t\022" +
+      ">\n\014ping_command\030\002 \002(\0132(.tv.v1x1.common.d" +
+      "to.proto.core.IrcStanza2j\n\004data\022(.tv.v1x" +
+      "1.common.dto.proto.messages.Event\030n \001(\0132" +
+      "2.tv.v1x1.common.dto.proto.messages.Twit" +
+      "chPingEvent\"\370\001\n\025TwitchRawMessageEvent\022/\n" +
+      "\003bot\030\001 \002(\0132\".tv.v1x1.common.dto.proto.co",
+      "re.Bot\022<\n\nirc_stanza\030\002 \002(\0132(.tv.v1x1.com" +
+      "mon.dto.proto.core.IrcStanza2p\n\004data\022(.t" +
+      "v.v1x1.common.dto.proto.messages.Event\030o" +
+      " \001(\01328.tv.v1x1.common.dto.proto.messages" +
+      ".TwitchRawMessageEvent\"\375\001\n\024TwitchReconne" +
+      "ctEvent\022/\n\003bot\030\001 \002(\0132\".tv.v1x1.common.dt" +
+      "o.proto.core.Bot\022C\n\021reconnect_command\030\002 " +
+      "\002(\0132(.tv.v1x1.common.dto.proto.core.IrcS" +
+      "tanza2o\n\004data\022(.tv.v1x1.common.dto.proto" +
+      ".messages.Event\030p \001(\01327.tv.v1x1.common.d",
+      "to.proto.messages.TwitchReconnectEvent\"\206" +
+      "\002\n\024TwitchRoomStateEvent\0227\n\007channel\030\001 \002(\013" +
+      "2&.tv.v1x1.common.dto.proto.core.Channel" +
+      "\022D\n\022room_state_command\030\002 \002(\0132(.tv.v1x1.c" +
+      "ommon.dto.proto.core.IrcStanza2o\n\004data\022(" +
+      ".tv.v1x1.common.dto.proto.messages.Event" +
+      "\030q \001(\01327.tv.v1x1.common.dto.proto.messag" +
+      "es.TwitchRoomStateEvent\"\265\002\n\022TwitchTimeou" +
+      "tEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.common" +
+      ".dto.proto.core.Channel\0221\n\004user\030\002 \002(\0132#.",
+      "tv.v1x1.common.dto.proto.core.User\022D\n\022cl" +
+      "ear_chat_command\030\003 \002(\0132(.tv.v1x1.common." +
+      "dto.proto.core.IrcStanza2m\n\004data\022(.tv.v1" +
+      "x1.common.dto.proto.messages.Event\030r \001(\013" +
+      "25.tv.v1x1.common.dto.proto.messages.Twi" +
+      "tchTimeoutEvent\"\301\002\n\017TwitchUserEvent\0227\n\007c" +
+      "hannel\030\001 \002(\0132&.tv.v1x1.common.dto.proto." +
+      "core.Channel\0221\n\004user\030\002 \002(\0132#.tv.v1x1.com" +
+      "mon.dto.proto.core.User\022\017\n\007message\030\003 \002(\t" +
+      "\022E\n\023user_notice_command\030\004 \002(\0132(.tv.v1x1.",
+      "common.dto.proto.core.IrcStanza2j\n\004data\022" +
+      "(.tv.v1x1.common.dto.proto.messages.Even" +
+      "t\030s \001(\01322.tv.v1x1.common.dto.proto.messa" +
+      "ges.TwitchUserEvent\"\317\002\n\030TwitchUserModCha" +
+      "ngeEvent\0227\n\007channel\030\001 \002(\0132&.tv.v1x1.comm" +
+      "on.dto.proto.core.Channel\0221\n\004user\030\002 \002(\0132" +
+      "#.tv.v1x1.common.dto.proto.core.User\022\022\n\n" +
+      "is_now_mod\030\003 \002(\010\022>\n\014mode_command\030\004 \002(\0132(" +
+      ".tv.v1x1.common.dto.proto.core.IrcStanza" +
+      "2s\n\004data\022(.tv.v1x1.common.dto.proto.mess",
+      "ages.Event\030t \001(\0132;.tv.v1x1.common.dto.pr" +
+      "oto.messages.TwitchUserModChangeEvent\"\200\002" +
+      "\n\024SchedulerNotifyEvent\0225\n\006module\030\001 \002(\0132%" +
+      ".tv.v1x1.common.dto.proto.core.Module\022/\n" +
+      "\002id\030\002 \002(\0132#.tv.v1x1.common.dto.proto.cor" +
+      "e.UUID\022\017\n\007payload\030\003 \002(\0142o\n\004data\022(.tv.v1x" +
+      "1.common.dto.proto.messages.Event\030u \001(\0132" +
+      "7.tv.v1x1.common.dto.proto.messages.Sche" +
+      "dulerNotifyEvent\"\216\002\n\023PrivateMessageEvent" +
+      "\022F\n\017private_message\030\001 \002(\0132-.tv.v1x1.comm",
+      "on.dto.proto.core.PrivateMessage\0225\n\004type" +
+      "\030\002 \002(\0162\'.tv.v1x1.common.dto.proto.core.P" +
+      "latform*\010\010d\020\200\200\200\200\0022n\n\004data\022(.tv.v1x1.comm" +
+      "on.dto.proto.messages.Event\030v \001(\01326.tv.v" +
+      "1x1.common.dto.proto.messages.PrivateMes" +
+      "sageEvent\"\343\001\n\031TwitchPrivateMessageEvent\022" +
+      "A\n\017whisper_command\030\001 \002(\0132(.tv.v1x1.commo" +
+      "n.dto.proto.core.IrcStanza2\202\001\n\004data\0226.tv" +
+      ".v1x1.common.dto.proto.messages.PrivateM" +
+      "essageEvent\030e \001(\0132<.tv.v1x1.common.dto.p",
+      "roto.messages.TwitchPrivateMessageEvent\"" +
+      "\225\004\n\021ConfigChangeEvent\0225\n\006module\030\001 \002(\0132%." +
+      "tv.v1x1.common.dto.proto.core.Module\022T\n\013" +
+      "config_type\030\002 \002(\0162?.tv.v1x1.common.dto.p" +
+      "roto.messages.ConfigChangeEvent.ConfigTy" +
+      "pe\0225\n\006tenant\030\003 \001(\0132%.tv.v1x1.common.dto." +
+      "proto.core.Tenant\0227\n\007channel\030\004 \001(\0132&.tv." +
+      "v1x1.common.dto.proto.core.Channel\022B\n\rch" +
+      "annel_group\030\005 \001(\0132+.tv.v1x1.common.dto.p" +
+      "roto.core.ChannelGroup\"Q\n\nConfigType\022\013\n\007",
+      "UNKNOWN\020\000\022\n\n\006GLOBAL\020\001\022\n\n\006TENANT\020\002\022\013\n\007CHA" +
+      "NNEL\020\003\022\021\n\rCHANNEL_GROUP\020\0042l\n\004data\022(.tv.v" +
+      "1x1.common.dto.proto.messages.Event\030w \001(" +
+      "\01324.tv.v1x1.common.dto.proto.messages.Co" +
+      "nfigChangeEvent\"\267\004\n\026DiscordVoiceStateEve" +
+      "nt\022]\n\017old_voice_state\030\001 \001(\0132D.tv.v1x1.co" +
+      "mmon.dto.proto.messages.DiscordVoiceStat" +
+      "eEvent.VoiceState\022]\n\017new_voice_state\030\002 \002" +
+      "(\0132D.tv.v1x1.common.dto.proto.messages.D" +
+      "iscordVoiceStateEvent.VoiceState\022>\n\013perm",
+      "issions\030\003 \003(\0132).tv.v1x1.common.dto.proto" +
+      ".core.Permission\032\253\001\n\nVoiceState\022\020\n\010guild" +
+      "_id\030\001 \001(\t\022\022\n\nchannel_id\030\002 \001(\t\022\017\n\007user_id" +
+      "\030\003 \002(\t\022\022\n\nsession_id\030\004 \002(\t\022\014\n\004deaf\030\005 \002(\010" +
+      "\022\014\n\004mute\030\006 \002(\010\022\021\n\tself_deaf\030\007 \002(\010\022\021\n\tsel" +
+      "f_mute\030\010 \002(\010\022\020\n\010suppress\030\t \002(\0102q\n\004data\022(" +
+      ".tv.v1x1.common.dto.proto.messages.Event" +
+      "\030x \001(\01329.tv.v1x1.common.dto.proto.messag" +
+      "es.DiscordVoiceStateEvent"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -24243,6 +24623,7 @@ public final class EventOuterClass {
           tv.v1x1.common.dto.proto.core.PlatformOuterClass.getDescriptor(),
           tv.v1x1.common.dto.proto.core.ModuleOuterClass.getDescriptor(),
           tv.v1x1.common.dto.proto.core.UUIDOuterClass.getDescriptor(),
+          tv.v1x1.common.dto.proto.core.PermissionOuterClass.getDescriptor(),
         }, assigner);
     internal_static_tv_v1x1_common_dto_proto_messages_Event_descriptor =
       getDescriptor().getMessageTypes().get(0);
@@ -24393,7 +24774,7 @@ public final class EventOuterClass {
     internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor,
-        new java.lang.String[] { "OldVoiceState", "NewVoiceState", });
+        new java.lang.String[] { "OldVoiceState", "NewVoiceState", "Permissions", });
     internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_descriptor =
       internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_descriptor.getNestedTypes().get(0);
     internal_static_tv_v1x1_common_dto_proto_messages_DiscordVoiceStateEvent_VoiceState_fieldAccessorTable = new
@@ -24409,6 +24790,7 @@ public final class EventOuterClass {
     tv.v1x1.common.dto.proto.core.PlatformOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.ModuleOuterClass.getDescriptor();
     tv.v1x1.common.dto.proto.core.UUIDOuterClass.getDescriptor();
+    tv.v1x1.common.dto.proto.core.PermissionOuterClass.getDescriptor();
   }
 
   // @@protoc_insertion_point(outer_class_scope)

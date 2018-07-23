@@ -131,7 +131,15 @@ public class DisplayNameService {
         throw new IllegalArgumentException("Don't know how to deal with a " + context.getClass().getCanonicalName());
     }
 
-    public String getChannelDisplayNameFromId(final Channel context, final String id) throws NoSuchUserException {
+    /**
+     * Get a channel's display name from its Platform-specific ID
+     * Reliability: High
+     * @param context
+     * @param id
+     * @return
+     * @throws NoSuchTargetException
+     */
+    public String getChannelDisplayNameFromId(final Channel context, final String id) throws NoSuchTargetException {
         if(context instanceof TwitchChannel)
             return twitchDisplayNameService.getDisplayNameFromChannelId(id);
         if(context instanceof DiscordChannel)
@@ -231,7 +239,10 @@ public class DisplayNameService {
         return getIdFromUsername(Channel.emptyFromPlatform(platform), username);
     }
 
-    public String getChannelDisplayNameFromId(Platform platform, String id) throws NoSuchUserException {
+    /**
+     * @see DisplayNameService#getChannelDisplayNameFromId(Channel, String)
+     */
+    public String getChannelDisplayNameFromId(Platform platform, String id) throws NoSuchTargetException {
         return getChannelDisplayNameFromId(Channel.emptyFromPlatform(platform), id);
     }
 }

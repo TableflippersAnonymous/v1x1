@@ -33,13 +33,23 @@ public class VoiceLogSetCommand extends Command {
         final DAOTenant daoTenant = module.getDaoManager().getDaoTenant();
         try {
             final String targetChannelId = displayNameService.getChannelIdFromMention(channel, args.get(0));
-            final Channel targetChannel = daoTenant.getChannel(channel.getPlatform(),
-                    targetChannelId).toCore(daoTenant);
-            module.getUserConfigProvider().getConfiguration(channel.getChannelGroup()).setChannel(targetChannel);
-            Chat.i18nMessage(module, channel, "set",
-                    "commander", commanderMention,
-                    "target", targetChannel.getMention());
-        } catch(NoSuchTargetException ex) {
+            final Channel targetChannel = daoTenant.getChannelInTenant(channel, targetChannelId);
+            final Channel oldChannel = module.setChannel(channel, targetChannel);
+            if(oldChannel == null) {
+                Chat.i18nMessage(module, channel, "set",
+                        "commander", commanderMention,
+                        "target", targetChannel.getMention());
+            } else if(oldChannel.equals(targetChannel)) {
+                Chat.i18nMessage(module, channel, "alreadyset",
+                        "commander", commanderMention,
+                        "target", targetChannel.getMention());
+            } else {
+                Chat.i18nMessage(module, channel, "reset",
+                        "commander", commanderMention,
+                        "target", targetChannel.getMention(),
+                        "oldtarget", oldChannel.getMention());
+            }
+        } catch(NoSuchTargetException|DAOTenant.NoSuchChannelException ex) {
             Chat.i18nMessage(module, channel, "targetnotfound",
                     "commander", commanderMention,
                     "target", args.get(0));
@@ -75,7 +85,7 @@ public class VoiceLogSetCommand extends Command {
     public void handleArgMismatch(final ChatMessage chatMessage, final String command, final List<String> args) {
         Chat.i18nMessage(module, chatMessage.getChannel(), "invalidargs",
                 "commander", chatMessage.getSender().getMention(),
-                "alias", command,
+                "alias", "voicelog " + command,
                 "syntax", getUsage());
     }
 }

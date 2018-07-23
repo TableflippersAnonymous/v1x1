@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
+import tv.v1x1.common.dto.core.User;
 import tv.v1x1.common.dto.db.GlobalUser;
 import tv.v1x1.common.dto.db.InverseGlobalUser;
 import tv.v1x1.common.dto.db.Platform;
@@ -18,6 +19,7 @@ import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -61,6 +63,39 @@ public class DAOGlobalUser {
 
     public GlobalUser getByUser(final Platform platform, final String userId) {
         return getByUser(getUser(platform, userId));
+    }
+
+    /**
+     * Shortcut to get a {@link tv.v1x1.common.dto.core.GlobalUser}
+     * @param platform
+     * @param userId
+     * @return a core GlobalUser
+     * @throws NoSuchUserException when a GlobalUser cannot be found
+     */
+    public tv.v1x1.common.dto.core.GlobalUser getByUserAsCore(final Platform platform, final String userId) throws NoSuchUserException {
+        final GlobalUser globalUser = getByUser(platform, userId);
+        if(globalUser != null)
+            return globalUser.toCore();
+        throw new NoSuchUserException("GlobalUser can't be found");
+    }
+
+    /**
+     * Shortcut to find a User via {@link GlobalUser}
+     * @param platform
+     * @param userId
+     * @return A User
+     * @throws NoSuchUserException when a GlobalUser can't be found, or the platform user isn't linked (shouldn't happen)
+     */
+    public User getPlatformUser(final Platform platform, final String userId) throws NoSuchUserException {
+        final tv.v1x1.common.dto.core.GlobalUser globalUser = getByUserAsCore(platform, userId);
+        if(globalUser != null) {
+            final User user = globalUser.getUser(platform, userId).orElse(null);
+            if(user != null)
+                return user;
+            else
+                throw new NoSuchUserException("User is not linked to GlobalUser");
+        }
+        throw new NoSuchUserException("GlobalUser can't be found");
     }
 
     public GlobalUser getByUser(final InverseGlobalUser inverseGlobalUser) {
@@ -148,5 +183,16 @@ public class DAOGlobalUser {
                 b.add(inverseGlobalUserMapper.deleteQuery(inverseGlobalUser.getPlatform(), inverseGlobalUser.getUserId()));
         }
         session.execute(b);
+    }
+
+    public class NoSuchUserException extends Exception {
+        NoSuchUserException() {
+            super();
+        }
+
+        NoSuchUserException(final String message) {
+            super(message);
+        }
+
     }
 }

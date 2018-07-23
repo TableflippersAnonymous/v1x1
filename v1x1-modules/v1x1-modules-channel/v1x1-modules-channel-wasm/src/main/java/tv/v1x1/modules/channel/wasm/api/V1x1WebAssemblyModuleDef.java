@@ -16,7 +16,7 @@ import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.chat.ChatException;
 import tv.v1x1.common.services.persistence.KeyValueStore;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.wasm.ExecutionEnvironment;
 import tv.v1x1.modules.channel.wasm.vm.runtime.ModuleInstance;
@@ -487,7 +487,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
                     virtualMachine.getStack().push(I32.ZERO);
                     return;
             }
-        } catch(final NoSuchUserException e) {
+        } catch(final NoSuchTargetException e) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }

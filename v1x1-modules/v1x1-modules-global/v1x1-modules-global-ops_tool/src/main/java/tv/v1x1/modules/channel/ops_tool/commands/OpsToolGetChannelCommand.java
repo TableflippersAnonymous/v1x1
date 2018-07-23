@@ -8,8 +8,6 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.NoSuchTargetException;
-import tv.v1x1.common.util.GoGetter;
-import tv.v1x1.common.util.NoSuchThingException;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.ops_tool.OpsTool;
 
@@ -50,11 +48,10 @@ public class OpsToolGetChannelCommand extends Command {
             LOG.debug("Looking for " + mention);
             final String channelId = displayNameService.getChannelIdFromMention(channel, mention);
             LOG.debug("Found channel ID: " + channelId);
-            final Channel targetChannel = GoGetter.getMeAChannel(opsTool.getDaoManager().getDaoTenant(),
-                    channel.getPlatform(), channelId);
+            final Channel targetChannel = opsTool.getDaoManager().getDaoTenant().getChannelAsCore(channel.getPlatform(), channelId);
             opsTool.respond(channel, "Channel info for " + mention + ": " + targetChannel +
                     (!targetChannel.getTenant().equals(channel.getTenant()) ? ". Target not in same Tenant!" : ""));
-        } catch(NoSuchTargetException|NoSuchThingException e) {
+        } catch(NoSuchTargetException|DAOTenant.NoSuchChannelException e) {
             opsTool.respond(channel, "Target not found. " + e.getMessage());
         }
     }

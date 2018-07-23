@@ -6,6 +6,8 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
+import tv.v1x1.common.util.commands.CommandDelegator;
+import tv.v1x1.common.util.commands.ParsedCommand;
 import tv.v1x1.modules.channel.voicelog.VoiceLog;
 import tv.v1x1.modules.channel.voicelog.VoiceLogUserConfiguration;
 
@@ -13,9 +15,14 @@ import java.util.List;
 
 public class VoiceLogCommand extends Command {
     private final VoiceLog module;
+    private final CommandDelegator delegator;
 
     public VoiceLogCommand(final VoiceLog module) {
         this.module = module;
+        this.delegator = new CommandDelegator();
+        delegator.registerCommand(new VoiceLogSetCommand(module));
+        delegator.registerCommand(new VoiceLogGetCommand(module));
+        delegator.registerCommand(new VoiceLogClearCommand(module));
     }
 
     @Override
@@ -63,20 +70,10 @@ public class VoiceLogCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final String subCmd = args.get(0).toLowerCase();
         final Channel channel = chatMessage.getChannel();
         final String commanderMention = chatMessage.getSender().getMention();
-        if(subCmd.equals("set")) {
-
-        } else {
-            if(subCmd.equals("get")) {
-
-            } else {
-                Chat.i18nMessage(module, channel, "invalidsubcmd",
-                "commander", commanderMention,
-                        "subcmd", subCmd,
-                        "syntax", getUsage());
-            }
-        }
+        String subCmd = args.remove(0).toLowerCase();
+        if(!delegator.handleParsedCommand(chatMessage, new ParsedCommand(subCmd, args)))
+            handleArgMismatch(chatMessage, command, args);
     }
 }

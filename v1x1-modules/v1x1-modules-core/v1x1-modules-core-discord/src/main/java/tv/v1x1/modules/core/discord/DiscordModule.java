@@ -38,12 +38,7 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
@@ -423,6 +418,14 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
 
     void handleVoiceState(final VoiceState voiceState) {
         try {
+            final List<Permission> permissions = getPermissions(getTenant(voiceState.getGuildId()),
+                    getGlobalUser(voiceState.getUserId(),
+                    /* FIXME */ "unknown#0000"),
+                    voiceState.getGuildId(),
+                    ImmutableSet.<String>builder().addAll(getRoles(voiceState.getGuildId(), voiceState.getUserId()))
+                        .add("_DEFAULT_")
+                        .build()
+            );
             final byte[] oldVoiceStateBytes;
             final byte[] newVoiceStateBytes = MAPPER.writeValueAsBytes(voiceState);
             if(voiceState.getChannelId() != null)
@@ -430,11 +433,9 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
             else
                 oldVoiceStateBytes = voiceStates.remove(CompositeKey.makeKey(voiceState.getGuildId(), voiceState.getUserId()));
             final VoiceState oldVoiceState = oldVoiceStateBytes == null ? null : MAPPER.readValue(oldVoiceStateBytes, VoiceState.class);
-            LOG.info("oldVoiceState: {}", oldVoiceState);
-            LOG.info("newVoiceState: {}", voiceState);
             if(voiceState.equals(oldVoiceState))
                 return;
-            sendEvent(new DiscordVoiceStateEvent(toDto(), oldVoiceState, voiceState));
+            sendEvent(new DiscordVoiceStateEvent(toDto(), oldVoiceState, voiceState, permissions));
         } catch (final IOException e) {
             throw new RuntimeException(e);
         }

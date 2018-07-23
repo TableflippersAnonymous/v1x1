@@ -1,11 +1,10 @@
 package tv.v1x1.modules.channel.ops_tool.commands;
 
 import com.google.common.collect.ImmutableList;
+import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.NoSuchTargetException;
-import tv.v1x1.common.util.GoGetter;
-import tv.v1x1.common.util.NoSuchThingException;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.ops_tool.OpsTool;
 
@@ -50,9 +49,12 @@ public class OpsToolUserIdCommand extends Command {
             mention = args.get(0);
         try {
             final String userId = displayNameService.getUserIdFromMention(channel, mention);
-            final User user = GoGetter.getMeAUser(opsTool.getDaoManager().getDaoGlobalUser(), channel.getPlatform(), userId);
-            opsTool.respond(channel, "GlobalUser for " + mention + ": " + user);
-        } catch(NoSuchTargetException|NoSuchThingException e) {
+            final User user = opsTool.getDaoManager().getDaoGlobalUser().getPlatformUser(channel.getPlatform(), userId);
+            if(user != null)
+                opsTool.respond(channel, "GlobalUser for " + mention + ": " + user);
+                opsTool.respond(channel,  "AKA: " + opsTool.getDisplayNameService().getDisplayNameFromId(channel, userId)
+                        + " or " + opsTool.getDisplayNameService().getUsernameFromId(channel, userId));
+        } catch(NoSuchTargetException|DAOGlobalUser.NoSuchUserException e) {
             opsTool.respond(channel, "Target not found. " + e.getMessage());
         }
     }
