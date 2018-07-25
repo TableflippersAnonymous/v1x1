@@ -16,6 +16,7 @@ import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.chat.ChatException;
 import tv.v1x1.common.services.persistence.KeyValueStore;
+import tv.v1x1.common.services.state.NoSuchUserException;
 import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.channel.wasm.ExecutionEnvironment;
 import tv.v1x1.modules.channel.wasm.vm.runtime.ModuleInstance;
@@ -65,6 +66,11 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             .put(3, "DELETE")
             .build();
 
+    private static final Map<Integer, DisplayNameType> DISPLAY_NAME_TYPES = new ImmutableMap.Builder<Integer, DisplayNameType>()
+            .put(0, DisplayNameType.USER)
+            .put(1, DisplayNameType.CHANNEL)
+            .build();
+
     private static final NativeFunctionSpec[] FUNCTIONS = {
             new NativeFunctionSpec("v1x1_event_size", new FunctionType(ImmutableList.of(), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::eventSize),
             new NativeFunctionSpec("v1x1_read_event", new FunctionType(ImmutableList.of(ValType.I32, ValType.I32), ImmutableList.of(ValType.I32)), V1x1WebAssemblyModuleDef::readEvent),
@@ -91,6 +97,10 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
 
     public V1x1WebAssemblyModuleDef(final ExecutionEnvironment executionEnvironment) {
         super(executionEnvironment, "v1x1", FUNCTIONS);
+    }
+
+    public enum DisplayNameType {
+        USER, CHANNEL
     }
 
     private static void eventSize(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
@@ -396,8 +406,32 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
     }
 
     private static void getDisplayName(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
-        /* TODO */
-        virtualMachine.getStack().push(I32.ZERO);
+        final DisplayNameType displayNameType = DISPLAY_NAME_TYPES.get(virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal());
+        final Platform platform = PLATFORM_MAP.get(virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal());
+        final String id = getString(executionEnvironment, virtualMachine, moduleInstance, 2);
+        if(displayNameType == null || platform == null || id == null || id.length() == 0) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        final String retValue;
+        try {
+            switch(displayNameType) {
+                case USER:
+                    retValue = executionEnvironment.getModule().getDisplayNameService().getDisplayNameFromId(platform, id);
+                    break;
+                case CHANNEL:
+                    retValue = executionEnvironment.getModule().getDisplayNameService().getChannelDisplayNameFromId(platform, id);
+                    break;
+                default:
+                    virtualMachine.getStack().push(I32.ZERO);
+                    return;
+            }
+        } catch(final NoSuchUserException e) {
+            virtualMachine.getStack().push(I32.ZERO);
+            return;
+        }
+        setBytes(executionEnvironment, virtualMachine, moduleInstance, 3, retValue.getBytes());
+        virtualMachine.getStack().push(I32.ONE);
     }
 
     private static Optional<Channel> decodeChannel(final ExecutionEnvironment executionEnvironment, final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {

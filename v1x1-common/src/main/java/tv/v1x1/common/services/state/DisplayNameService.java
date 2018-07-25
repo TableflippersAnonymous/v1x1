@@ -123,6 +123,14 @@ public class DisplayNameService {
         throw new IllegalArgumentException("Don't know how to deal with a " + context.getClass().getCanonicalName());
     }
 
+    public String getChannelDisplayNameFromId(final Channel context, final String id) throws NoSuchUserException {
+        if(context instanceof TwitchChannel)
+            return twitchDisplayNameService.getDisplayNameFromChannelId(id);
+        if(context instanceof DiscordChannel)
+            return discordDisplayNameService.getDisplayNameFromChannelId(id);
+        throw new IllegalArgumentException("Don't know how to deal with a " + context.getClass().getCanonicalName());
+    }
+
     /**
      * @see DisplayNameService#getIdFromDisplayName(Channel, String)
      */
@@ -163,5 +171,9 @@ public class DisplayNameService {
      */
     public String getIdFromUsername(final Platform platform, final String username) throws NoSuchUserException {
         return getIdFromUsername(Channel.emptyFromPlatform(platform), username);
+    }
+
+    public String getChannelDisplayNameFromId(Platform platform, String id) throws NoSuchUserException {
+        return getChannelDisplayNameFromId(Channel.emptyFromPlatform(platform), id);
     }
 }
