@@ -415,6 +415,7 @@ public class ConfigResource {
                 return jsonElement.isJsonObject();
             case CREDENTIAL:
             case STRING:
+            case FILE:
             case BOT_NAME:
             case TWITCH_OAUTH:
                 return jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString();

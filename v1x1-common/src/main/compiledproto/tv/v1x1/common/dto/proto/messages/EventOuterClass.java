@@ -218,6 +218,12 @@ public final class EventOuterClass {
        */
       CONFIG_CHANGE(19),
       /**
+       * <pre>
+       * I know you forget this, but when you add something here
+       * please also add it to Message.java's registration, or it
+       * will pretend to work but won't. 
+       * </pre>
+       *
        * <code>DISCORD_VOICE_STATE = 20;</code>
        */
       DISCORD_VOICE_STATE(20),
@@ -304,6 +310,12 @@ public final class EventOuterClass {
        */
       public static final int CONFIG_CHANGE_VALUE = 19;
       /**
+       * <pre>
+       * I know you forget this, but when you add something here
+       * please also add it to Message.java's registration, or it
+       * will pretend to work but won't. 
+       * </pre>
+       *
        * <code>DISCORD_VOICE_STATE = 20;</code>
        */
       public static final int DISCORD_VOICE_STATE_VALUE = 20;

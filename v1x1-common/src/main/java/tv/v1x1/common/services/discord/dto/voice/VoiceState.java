@@ -1,5 +1,9 @@
 package tv.v1x1.common.services.discord.dto.voice;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Objects;
 import tv.v1x1.common.dto.proto.messages.EventOuterClass;
 
@@ -7,6 +11,7 @@ import tv.v1x1.common.dto.proto.messages.EventOuterClass;
  * Created by naomi on 9/10/2017.
  */
 public class VoiceState extends PartialVoiceState {
+    @JsonProperty("guild_id")
     private String guildId;
 
     public static VoiceState fromProto(final EventOuterClass.DiscordVoiceStateEvent.VoiceState proto) {
@@ -67,5 +72,15 @@ public class VoiceState extends PartialVoiceState {
         if(getGuildId() != null)
             builder = builder.setGuildId(getGuildId());
         return builder.build();
+    }
+
+    @Override
+    public String toString() {
+        final ObjectMapper MAPPER = new ObjectMapper(new JsonFactory());
+        try {
+            return MAPPER.writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            return e.getMessage();
+        }
     }
 }

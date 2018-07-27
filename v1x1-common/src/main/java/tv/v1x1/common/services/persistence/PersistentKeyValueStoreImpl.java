@@ -31,7 +31,10 @@ public class PersistentKeyValueStoreImpl implements KeyValueStore {
 
     @Override
     public byte[] get(final byte[] key) {
-        return daoKeyValueEntry.get(name, key).valueAsByteArray();
+        final KeyValueEntry entry = daoKeyValueEntry.get(name, key);
+        if(entry == null)
+            return null;
+        return entry.valueAsByteArray();
     }
 
     @Override

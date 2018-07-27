@@ -109,6 +109,15 @@ resources:
       ca_certs:
       - domain: registry.tblflp.zone:5443
         cert: ((v1x1.docker-ca))
+  - name: v1x1-wasm
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-wasm
+      username: tblflp
+      password: ((v1x1.docker-pass))
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: ((v1x1.docker-ca))
 
   # Core Modules:
   - name: v1x1-api
@@ -540,6 +549,47 @@ jobs:
           image_tag: v1x1-source/.git/refs/heads/master
         get_params:
           resource_name: uptime
+
+  - name: v1x1-wasm
+    plan:
+      - aggregate:
+        - get: v1x1-source
+          passed: [v1x1-common, v1x1-base]
+          trigger: true
+        - get: v1x1-base
+          params:
+            save: true
+          passed: [v1x1-base]
+      - task: prep-maven
+        file: v1x1-source/concourse/prep-maven.yml
+        params:
+          NEXUS_PASSWORD: ((v1x1.nexus-pass))
+      - task: build
+        file: v1x1-source/concourse/build-module.yml
+        params:
+          V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-wasm
+      - task: prep-docker
+        file: v1x1-source/concourse/prep-docker.yml
+      - put: v1x1-wasm
+        params:
+          build: v1x1-module-target
+          load_base: v1x1-base-output
+          tag: v1x1-source/.git/refs/heads/master
+          tag_as_latest: true
+        get_params:
+          skip_download: true
+  - name: v1x1-wasm-deploy
+    plan:
+      - get: v1x1-source
+        passed: [v1x1-wasm]
+        trigger: true
+      - put: kubernetes
+        params:
+          resource_name: wasm
+          image_name: registry.tblflp.zone:5443/v1x1-wasm
+          image_tag: v1x1-source/.git/refs/heads/master
+        get_params:
+          resource_name: wasm
 
   - name: v1x1-api
     plan:
