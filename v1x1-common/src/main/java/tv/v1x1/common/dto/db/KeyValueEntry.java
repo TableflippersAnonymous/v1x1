@@ -30,18 +30,18 @@ public class KeyValueEntry {
     }
 
     public synchronized byte[] keyAsByteArray() {
-        final byte[] ret = new byte[key.remaining()];
-        key.mark();
-        key.get(ret);
-        key.reset();
-        return ret;
+        return bufferAsByteArray(key);
     }
 
     public synchronized byte[] valueAsByteArray() {
-        final byte[] ret = new byte[value.remaining()];
-        value.mark();
-        value.get(ret);
-        value.reset();
+        return bufferAsByteArray(value);
+    }
+
+    private synchronized byte[] bufferAsByteArray(final ByteBuffer buffer) {
+        final byte[] ret = new byte[buffer.remaining()];
+        buffer.mark();
+        buffer.get(ret);
+        buffer.reset();
         return ret;
     }
 }

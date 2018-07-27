@@ -23,6 +23,7 @@ import {ConfigurableComponent} from "./configurable";
       <configuration-field-value-permission-list *ngIf="field.configType === configTypes.PERMISSION_LIST" [field]="field" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration" [activeTenant]="activeTenant" [channelGroup]="channelGroup"></configuration-field-value-permission-list>
       <configuration-field-value-group *ngIf="field.configType === configTypes.GROUP" [field]="field" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration" [activeTenant]="activeTenant" [channelGroup]="channelGroup"></configuration-field-value-group>
       <configuration-field-value-platform-group *ngIf="field.configType === configTypes.PLATFORM_GROUP" [field]="field" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration" [activeTenant]="activeTenant" [channelGroup]="channelGroup"></configuration-field-value-platform-group>
+      <configuration-field-value-file *ngIf="field.configType === configTypes.FILE" [field]="field" [originalConfiguration]="originalConfiguration" [(configuration)]="configuration" [activeTenant]="activeTenant" [channelGroup]="channelGroup"></configuration-field-value-file>
     </div>
   `
 })
