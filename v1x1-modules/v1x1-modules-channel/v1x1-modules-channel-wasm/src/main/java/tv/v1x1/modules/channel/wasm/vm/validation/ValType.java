@@ -49,8 +49,8 @@ public enum ValType {
             case 0x7E: return I64;
             case 0x7D: return F32;
             case 0x7C: return F64;
+            default: throw new DecodeException("Invalid valtype");
         }
-        throw new DecodeException("Invalid valtype");
     }
 
     public Class<? extends WebAssemblyType> getTypeClass() {

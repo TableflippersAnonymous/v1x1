@@ -128,7 +128,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             return;
         }
         final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
-        final String message = getString(executionEnvironment, virtualMachine, moduleInstance, 1);
+        final String message = getString(virtualMachine, moduleInstance, 1);
         if(channel == null || message == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -150,7 +150,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
         final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
         final int amount = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
-        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 3);
+        final String reason = getString(virtualMachine, moduleInstance, 3);
         if(channel == null || user == null || reason == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -171,7 +171,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
         final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
         final int length = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
-        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 3);
+        final String reason = getString(virtualMachine, moduleInstance, 3);
         if(channel == null || user == null || reason == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -210,7 +210,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
         final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
-        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 2);
+        final String reason = getString(virtualMachine, moduleInstance, 2);
         if(channel == null || user == null || reason == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -231,7 +231,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
         final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
         final int length = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
-        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 3);
+        final String reason = getString(virtualMachine, moduleInstance, 3);
         if(channel == null || user == null || reason == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -252,7 +252,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
         final User user = getUser(executionEnvironment, virtualMachine, moduleInstance, 1);
         final int length = virtualMachine.getCurrentActivation().getLocal(2, I32.class).getVal();
-        final String reason = getString(executionEnvironment, virtualMachine, moduleInstance, 3);
+        final String reason = getString(virtualMachine, moduleInstance, 3);
         if(channel == null || user == null || reason == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -271,7 +271,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             return;
         }
         final int minutes = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
-        final byte[] payload = getBytes(executionEnvironment, virtualMachine, moduleInstance, 1);
+        final byte[] payload = getBytes(virtualMachine, moduleInstance, 1);
         if(minutes < 0 || minutes > 10080 || payload == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -294,8 +294,8 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
-        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
-        final byte[] value = getBytes(executionEnvironment, virtualMachine, moduleInstance, 1);
+        final byte[] key = getBytes(virtualMachine, moduleInstance, 0);
+        final byte[] value = getBytes(virtualMachine, moduleInstance, 1);
         if(key == null || value == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -318,7 +318,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
-        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final byte[] key = getBytes(virtualMachine, moduleInstance, 0);
         if(key == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -335,7 +335,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             virtualMachine.getStack().push(new I32(-1));
             return;
         }
-        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final byte[] key = getBytes(virtualMachine, moduleInstance, 0);
         if(key == null) {
             virtualMachine.getStack().push(new I32(-1));
             return;
@@ -352,7 +352,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
-        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final byte[] key = getBytes(virtualMachine, moduleInstance, 0);
         if(key == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -361,7 +361,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final byte[] tenant = Tenant.KEY_CODEC.encode(executionEnvironment.getTenant());
         final byte[] compositeKey = CompositeKey.makeKey("VMKVS".getBytes(), tenant, key);
         final byte[] value = keyValueStore.get(compositeKey);
-        if(!setBytes(executionEnvironment, virtualMachine, moduleInstance, 1, value)) {
+        if(!setBytes(virtualMachine, moduleInstance, 1, value)) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
@@ -373,7 +373,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
-        final byte[] key = getBytes(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final byte[] key = getBytes(virtualMachine, moduleInstance, 0);
         if(key == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -393,7 +393,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
-        final String message = getString(executionEnvironment, virtualMachine, moduleInstance, 0);
+        final String message = getString(virtualMachine, moduleInstance, 0);
         if(message == null) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -431,7 +431,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             final String verb = HTTP_VERBS.get(decodeI32(memoryInstance, baseAddress));
             final URI uri = new URI(new String(decodeBuffer(memoryInstance, baseAddress + 4)));
             final InetAddress[] addresses = InetAddress.getAllByName(uri.getHost());
-            final MultivaluedMap<String, Object> headers = getHeaders(executionEnvironment, memoryInstance, baseAddress + 12);
+            final MultivaluedMap<String, Object> headers = getHeaders(memoryInstance, baseAddress + 12);
             final byte[] body = decodeBuffer(memoryInstance, baseAddress + 20);
             final byte[] eventPayload = decodeBuffer(memoryInstance, baseAddress + 28);
             if(verb == null || Arrays.stream(addresses).anyMatch(InetAddress::isSiteLocalAddress)) {
@@ -466,7 +466,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         }
         final DisplayNameType displayNameType = DISPLAY_NAME_TYPES.get(virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal());
         final Platform platform = PLATFORM_MAP.get(virtualMachine.getCurrentActivation().getLocal(1, I32.class).getVal());
-        final String id = getString(executionEnvironment, virtualMachine, moduleInstance, 2);
+        final String id = getString(virtualMachine, moduleInstance, 2);
         if(displayNameType == null || platform == null || id == null || id.length() == 0) {
             virtualMachine.getStack().push(I32.ZERO);
             return;
@@ -488,7 +488,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
-        setBytes(executionEnvironment, virtualMachine, moduleInstance, 3, retValue.getBytes());
+        setBytes(virtualMachine, moduleInstance, 3, retValue.getBytes());
         virtualMachine.getStack().push(I32.ONE);
     }
 
@@ -543,14 +543,14 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         return user.orElse(null);
     }
 
-    private static String getString(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx) throws TrapException {
-        final byte[] bytes = getBytes(executionEnvironment, virtualMachine, moduleInstance, localIdx);
+    private static String getString(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx) throws TrapException {
+        final byte[] bytes = getBytes(virtualMachine, moduleInstance, localIdx);
         if(bytes == null)
             return null;
         return new String(bytes);
     }
 
-    private static byte[] getBytes(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx) throws TrapException {
+    private static byte[] getBytes(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx) throws TrapException {
         final int address = virtualMachine.getCurrentActivation().getLocal(localIdx, I32.class).getVal();
         if(address < 0)
             return null;
@@ -558,7 +558,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         return decodeBuffer(memoryInstance, address);
     }
 
-    private static boolean setBytes(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx, final byte[] bytes) throws TrapException {
+    private static boolean setBytes(final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance, final int localIdx, final byte[] bytes) throws TrapException {
         final int address = virtualMachine.getCurrentActivation().getLocal(localIdx, I32.class).getVal();
         if(address < 0)
             return false;
@@ -584,7 +584,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         return I32.decode(I32.swapEndian(bytes)).getVal();
     }
 
-    private static MultivaluedMap<String, Object> getHeaders(final ExecutionEnvironment executionEnvironment, final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {
+    private static MultivaluedMap<String, Object> getHeaders(final MemoryInstance memoryInstance, final int baseAddress) throws TrapException {
         final MultivaluedMap<String, Object> headers = new StringKeyIgnoreCaseMultivaluedMap<>();
         final int count = decodeI32(memoryInstance, baseAddress);
         final int headerBase = decodeI32(memoryInstance, baseAddress + 4);

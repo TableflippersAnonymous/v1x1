@@ -10,7 +10,6 @@ import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.db.ChannelGroup;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
-import tv.v1x1.common.dto.messages.events.ConfigChangeEvent;
 import tv.v1x1.common.dto.messages.events.DiscordVoiceStateEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.modules.DefaultModule;
@@ -71,11 +70,6 @@ public class WebAssembly extends DefaultModule<WebAssemblyGlobalConfiguration, W
     }
 
     @Override
-    protected void processConfigChangeEvent(final ConfigChangeEvent event) {
-
-    }
-
-    @Override
     protected void processDiscordVoiceStateEvent(final DiscordVoiceStateEvent event) {
         LOG.info("DiscordVoiceStateEvent: {}", event);
         final String guildId = event.getNewVoiceState().getGuildId();
@@ -97,10 +91,5 @@ public class WebAssembly extends DefaultModule<WebAssemblyGlobalConfiguration, W
     @Override
     public String getName() {
         return "wasm";
-    }
-
-    @Override
-    protected void initialize() {
-
     }
 }

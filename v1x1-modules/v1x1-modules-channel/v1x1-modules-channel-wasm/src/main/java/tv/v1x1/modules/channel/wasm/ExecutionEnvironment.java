@@ -10,13 +10,7 @@ import org.redisson.api.RateIntervalUnit;
 import org.redisson.api.RateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import tv.v1x1.common.dto.core.Channel;
-import tv.v1x1.common.dto.core.ChannelGroup;
-import tv.v1x1.common.dto.core.GlobalUser;
-import tv.v1x1.common.dto.core.Permission;
-import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.dto.core.UUID;
-import tv.v1x1.common.dto.core.User;
+import tv.v1x1.common.dto.core.*;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.messages.Event;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
@@ -87,6 +81,20 @@ public class ExecutionEnvironment {
     private static final int CHANNEL_GROUP_SPEC_SIZE = CHANNEL_GROUP_SIZE + INT32_T_SIZE + PTR_SIZE;
     private static final int HEADER_SIZE = 2 * BUFFER_SIZE;
 
+    private final WebAssembly module;
+    private final Tenant tenant;
+    private final WebAssemblyUserConfiguration configuration;
+    private final RRateLimiter kvstoreLimiter;
+    private final RRateLimiter chatLimiter;
+    private final RRateLimiter logLimiter;
+    private final RRateLimiter httpLimiter;
+    private final RRateLimiter displayNameLimiter;
+    private final RRateLimiter schedulerLimiter;
+    private WebAssemblyVirtualMachine virtualMachine;
+    private Event currentEvent;
+    private boolean trapped;
+    private long lastTrapped;
+
     public static class CacheKey {
         private final Tenant tenant;
         private final WebAssemblyUserConfiguration configuration;
@@ -118,20 +126,6 @@ public class ExecutionEnvironment {
             return Objects.hashCode(tenant, configuration);
         }
     }
-
-    private final WebAssembly module;
-    private final Tenant tenant;
-    private final WebAssemblyUserConfiguration configuration;
-    private final RRateLimiter kvstoreLimiter;
-    private final RRateLimiter chatLimiter;
-    private final RRateLimiter logLimiter;
-    private final RRateLimiter httpLimiter;
-    private final RRateLimiter displayNameLimiter;
-    private final RRateLimiter schedulerLimiter;
-    private WebAssemblyVirtualMachine virtualMachine;
-    private Event currentEvent;
-    private boolean trapped;
-    private long lastTrapped;
 
     public ExecutionEnvironment(final WebAssembly module, final Tenant tenant, final WebAssemblyUserConfiguration configuration) {
         this.module = module;
@@ -319,24 +313,24 @@ public class ExecutionEnvironment {
         final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
         dynamicAllocations.write(writeBuffer(byteArrayOutputStream, channelGroup.getId().getBytes(), baseAddress + dynamicAllocations.size()));
         dynamicAllocations.write(writeBuffer(byteArrayOutputStream, channelGroup.getDisplayName().getBytes(), baseAddress + dynamicAllocations.size()));
-        dynamicAllocations.write(writePlatform(byteArrayOutputStream, channelGroup.getPlatform(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writePlatform(byteArrayOutputStream, channelGroup.getPlatform()));
         dynamicAllocations.write(writeTenant(byteArrayOutputStream, channelGroup.getTenant(), baseAddress + dynamicAllocations.size()));
         return dynamicAllocations.toByteArray();
     }
 
-    private byte[] writePlatform(final ByteArrayOutputStream byteArrayOutputStream, final Platform platform, final int baseAddress) throws IOException {
+    private byte[] writePlatform(final ByteArrayOutputStream byteArrayOutputStream, final Platform platform) throws IOException {
         byteArrayOutputStream.write(platformMap.get(platform));
         return new byte[0];
     }
 
     private byte[] writeTenant(final ByteArrayOutputStream byteArrayOutputStream, final Tenant tenant, final int baseAddress) throws IOException {
         final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
-        dynamicAllocations.write(writeUuid(byteArrayOutputStream, tenant.getId(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writeUuid(byteArrayOutputStream, tenant.getId()));
         dynamicAllocations.write(writeBuffer(byteArrayOutputStream, tenant.getDisplayName().getBytes(), baseAddress + dynamicAllocations.size()));
         return dynamicAllocations.toByteArray();
     }
 
-    private byte[] writeUuid(final ByteArrayOutputStream byteArrayOutputStream, final UUID uuid, final int baseAddress) throws IOException {
+    private byte[] writeUuid(final ByteArrayOutputStream byteArrayOutputStream, final UUID uuid) throws IOException {
         byteArrayOutputStream.write(new I64(uuid.getValue().getMostSignificantBits()).bytes());
         byteArrayOutputStream.write(new I64(uuid.getValue().getLeastSignificantBits()).bytes());
         return new byte[0];
@@ -346,14 +340,14 @@ public class ExecutionEnvironment {
         final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
         dynamicAllocations.write(writeBuffer(byteArrayOutputStream, user.getId().getBytes(), baseAddress + dynamicAllocations.size()));
         dynamicAllocations.write(writeBuffer(byteArrayOutputStream, user.getDisplayName().getBytes(), baseAddress + dynamicAllocations.size()));
-        dynamicAllocations.write(writePlatform(byteArrayOutputStream, user.getPlatform(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writePlatform(byteArrayOutputStream, user.getPlatform()));
         dynamicAllocations.write(writeGlobalUser(byteArrayOutputStream, user.getGlobalUser(), baseAddress + dynamicAllocations.size()));
         return dynamicAllocations.toByteArray();
     }
 
     private byte[] writeGlobalUser(final ByteArrayOutputStream byteArrayOutputStream, final GlobalUser globalUser, final int baseAddress) throws IOException {
         final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
-        dynamicAllocations.write(writeUuid(byteArrayOutputStream, globalUser.getId(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writeUuid(byteArrayOutputStream, globalUser.getId()));
         return dynamicAllocations.toByteArray();
     }
 

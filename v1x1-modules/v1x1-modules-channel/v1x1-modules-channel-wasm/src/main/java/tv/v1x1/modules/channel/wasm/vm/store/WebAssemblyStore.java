@@ -3,18 +3,7 @@ package tv.v1x1.modules.channel.wasm.vm.store;
 import com.google.common.base.Joiner;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import tv.v1x1.modules.channel.wasm.vm.decoder.ExportDef;
-import tv.v1x1.modules.channel.wasm.vm.decoder.FuncExportDescriptor;
-import tv.v1x1.modules.channel.wasm.vm.decoder.FuncImportDescriptor;
-import tv.v1x1.modules.channel.wasm.vm.decoder.GlobalExportDescriptor;
-import tv.v1x1.modules.channel.wasm.vm.decoder.GlobalImportDescriptor;
-import tv.v1x1.modules.channel.wasm.vm.decoder.ImportDef;
-import tv.v1x1.modules.channel.wasm.vm.decoder.ImportDescriptor;
-import tv.v1x1.modules.channel.wasm.vm.decoder.MemExportDescriptor;
-import tv.v1x1.modules.channel.wasm.vm.decoder.MemImportDescriptor;
-import tv.v1x1.modules.channel.wasm.vm.decoder.ResolvedImports;
-import tv.v1x1.modules.channel.wasm.vm.decoder.TableExportDescriptor;
-import tv.v1x1.modules.channel.wasm.vm.decoder.TableImportDescriptor;
+import tv.v1x1.modules.channel.wasm.vm.decoder.*;
 import tv.v1x1.modules.channel.wasm.vm.runtime.ModuleInstance;
 import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.validation.FunctionType;
@@ -94,9 +83,8 @@ public class WebAssemblyStore {
             if(!(exportDef.getDescriptor() instanceof FuncExportDescriptor))
                 continue;
             final FuncExportDescriptor funcExportDescriptor = (FuncExportDescriptor) exportDef.getDescriptor();
-            if(!functions.get((int) funcExportDescriptor.getFuncIdx()).getType().equals(types[(int) descriptor.getTypeIdx()]))
-                continue;
-            return (int) funcExportDescriptor.getFuncIdx();
+            if(functions.get((int) funcExportDescriptor.getFuncIdx()).getType().equals(types[(int) descriptor.getTypeIdx()]))
+                return (int) funcExportDescriptor.getFuncIdx();
         }
         throw new LinkingException();
     }
@@ -109,9 +97,8 @@ public class WebAssemblyStore {
             if(!(exportDef.getDescriptor() instanceof TableExportDescriptor))
                 continue;
             final TableExportDescriptor tableExportDescriptor = (TableExportDescriptor) exportDef.getDescriptor();
-            if(!tables.get((int) tableExportDescriptor.getTableIdx()).matches(descriptor.getTableType()))
-                continue;
-            return (int) tableExportDescriptor.getTableIdx();
+            if(tables.get((int) tableExportDescriptor.getTableIdx()).matches(descriptor.getTableType()))
+                return (int) tableExportDescriptor.getTableIdx();
         }
         throw new LinkingException();
     }
@@ -124,9 +111,8 @@ public class WebAssemblyStore {
             if(!(exportDef.getDescriptor() instanceof MemExportDescriptor))
                 continue;
             final MemExportDescriptor memExportDescriptor = (MemExportDescriptor) exportDef.getDescriptor();
-            if(!memories.get((int) memExportDescriptor.getMemIdx()).matches(descriptor.getMemoryType()))
-                continue;
-            return (int) memExportDescriptor.getMemIdx();
+            if(memories.get((int) memExportDescriptor.getMemIdx()).matches(descriptor.getMemoryType()))
+                return (int) memExportDescriptor.getMemIdx();
         }
         throw new LinkingException();
     }
@@ -139,9 +125,8 @@ public class WebAssemblyStore {
             if(!(exportDef.getDescriptor() instanceof GlobalExportDescriptor))
                 continue;
             final GlobalExportDescriptor globalExportDescriptor = (GlobalExportDescriptor) exportDef.getDescriptor();
-            if(!globals.get((int) globalExportDescriptor.getGlobalIdx()).matches(descriptor.getGlobalType()))
-                continue;
-            return (int) globalExportDescriptor.getGlobalIdx();
+            if(globals.get((int) globalExportDescriptor.getGlobalIdx()).matches(descriptor.getGlobalType()))
+                return (int) globalExportDescriptor.getGlobalIdx();
         }
         throw new LinkingException();
     }

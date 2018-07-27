@@ -57,9 +57,8 @@ public class MemoryInstance {
     public int map(final MemoryPage ...memoryPages) {
         for(int pageAddress = Short.MAX_VALUE; pageAddress > 0; pageAddress--) {
             final int address = mapAt(pageAddress, memoryPages);
-            if(address == -2)
-                continue;
-            return address;
+            if(address != -2)
+                return address;
         }
         return -1;
     }
@@ -67,9 +66,8 @@ public class MemoryInstance {
     public int tryMapAt(final int hint, final MemoryPage ...memoryPages) {
         for(int pageAddress = hint; pageAddress < Short.MAX_VALUE; pageAddress++) {
             final int address = mapAt(pageAddress, memoryPages);
-            if(address == -2)
-                continue;
-            return address;
+            if(address != -2)
+                return address;
         }
         return -1;
     }

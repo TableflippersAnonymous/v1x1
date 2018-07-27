@@ -10,6 +10,8 @@ import java.io.IOException;
 public final class I64 extends IN {
     public static final I64 ZERO = new I64(0);
 
+    private final long val;
+
     public static I64 decode(final byte[] bits) {
         return new I64(Longs.fromByteArray(bits));
     }
@@ -36,8 +38,6 @@ public final class I64 extends IN {
         }
         return new I64(result);
     }
-
-    private final long val;
 
     public I64(final long val) {
         this.val = val;
