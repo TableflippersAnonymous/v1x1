@@ -341,11 +341,11 @@ public class ExecutionEnvironment {
         dynamicAllocations.write(writeBuffer(byteArrayOutputStream, user.getId().getBytes(), baseAddress + dynamicAllocations.size()));
         dynamicAllocations.write(writeBuffer(byteArrayOutputStream, user.getDisplayName().getBytes(), baseAddress + dynamicAllocations.size()));
         dynamicAllocations.write(writePlatform(byteArrayOutputStream, user.getPlatform()));
-        dynamicAllocations.write(writeGlobalUser(byteArrayOutputStream, user.getGlobalUser(), baseAddress + dynamicAllocations.size()));
+        dynamicAllocations.write(writeGlobalUser(byteArrayOutputStream, user.getGlobalUser()));
         return dynamicAllocations.toByteArray();
     }
 
-    private byte[] writeGlobalUser(final ByteArrayOutputStream byteArrayOutputStream, final GlobalUser globalUser, final int baseAddress) throws IOException {
+    private byte[] writeGlobalUser(final ByteArrayOutputStream byteArrayOutputStream, final GlobalUser globalUser) throws IOException {
         final ByteArrayOutputStream dynamicAllocations = new ByteArrayOutputStream();
         dynamicAllocations.write(writeUuid(byteArrayOutputStream, globalUser.getId()));
         return dynamicAllocations.toByteArray();
