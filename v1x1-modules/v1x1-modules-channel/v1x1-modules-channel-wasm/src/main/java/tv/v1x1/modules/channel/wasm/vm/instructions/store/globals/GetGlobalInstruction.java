@@ -15,7 +15,6 @@ import java.io.IOException;
 
 public class GetGlobalInstruction extends Instruction {
     private I32 idx;
-    private ValType valType;
 
     @Override
     public void decode(final DataInputStream dataInputStream, final boolean inFunction) throws IOException {
@@ -26,7 +25,7 @@ public class GetGlobalInstruction extends Instruction {
     public void validate(final WebAssemblyValidationStack stack, final Context context) throws ValidationException {
         if(context.getGlobals().size() <= idx.getValU())
             throw new ValidationException();
-        valType = context.getGlobals().get((int) idx.getValU()).getValType();
+        final ValType valType = context.getGlobals().get((int) idx.getValU()).getValType();
         stack.pushOperand(valType);
     }
 

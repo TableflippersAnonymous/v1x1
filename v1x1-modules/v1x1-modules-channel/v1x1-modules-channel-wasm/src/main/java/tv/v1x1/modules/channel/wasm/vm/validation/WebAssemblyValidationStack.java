@@ -1,10 +1,6 @@
 package tv.v1x1.modules.channel.wasm.vm.validation;
 
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.List;
+import java.util.*;
 
 public class WebAssemblyValidationStack {
     private final Deque<ValType> operandStack = new ArrayDeque<>();
@@ -29,7 +25,7 @@ public class WebAssemblyValidationStack {
             return expected;
         if(expected == ValType.UNKNOWN)
             return actual;
-        if(actual != expected)
+        if(!actual.equals(expected))
             throw new ValidationException();
         return actual;
     }

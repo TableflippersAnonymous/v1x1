@@ -11,12 +11,15 @@ public final class I32 extends IN {
     public static final I32 ZERO = new I32(0);
     public static final I32 ONE = new I32(1);
 
+    private final int val;
+
     public static I32 decode(final byte[] bits) {
         return new I32(Ints.fromByteArray(bits));
     }
 
     public static I32 decode(final DataInputStream input) throws IOException {
-        int result = 0, shift;
+        int result = 0;
+        int shift;
         byte val = -1;
         for(shift = 0; shift < 32 && (val >> 7) != 0; shift += 7) {
             val = input.readByte();
@@ -36,8 +39,6 @@ public final class I32 extends IN {
         }
         return new I32(result);
     }
-
-    private final int val;
 
     public I32(final int val) {
         this.val = val;

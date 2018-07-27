@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 public final class F32 extends FN {
     public static final F32 ZERO = new F32(0);
 
+    private final float val;
+
     public static F32 decode(final byte[] bits) {
         return new F32(Float.intBitsToFloat(Ints.fromByteArray(bits)));
     }
@@ -19,8 +21,6 @@ public final class F32 extends FN {
         input.readFully(bits);
         return decode(swapEndian(bits));
     }
-
-    private final float val;
 
     public F32(final float val) {
         this.val = val;

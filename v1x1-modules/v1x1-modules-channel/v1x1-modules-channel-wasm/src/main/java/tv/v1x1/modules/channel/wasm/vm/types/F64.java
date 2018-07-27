@@ -10,6 +10,8 @@ import java.math.BigDecimal;
 public final class F64 extends FN {
     public static final F64 ZERO = new F64(0);
 
+    private final double val;
+
     public static F64 decode(final byte[] bits) {
         return new F64(Double.longBitsToDouble(Longs.fromByteArray(bits)));
     }
@@ -19,8 +21,6 @@ public final class F64 extends FN {
         input.readFully(bits);
         return decode(swapEndian(bits));
     }
-
-    private final double val;
 
     public F64(final double val) {
         this.val = val;
