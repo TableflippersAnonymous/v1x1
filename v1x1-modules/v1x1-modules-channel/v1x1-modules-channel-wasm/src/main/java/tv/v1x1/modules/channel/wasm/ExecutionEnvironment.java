@@ -5,6 +5,9 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.primitives.Ints;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.redisson.api.RRateLimiter;
+import org.redisson.api.RateIntervalUnit;
+import org.redisson.api.RateType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.Channel;
@@ -119,6 +122,12 @@ public class ExecutionEnvironment {
     private final WebAssembly module;
     private final Tenant tenant;
     private final WebAssemblyUserConfiguration configuration;
+    private final RRateLimiter kvstoreLimiter;
+    private final RRateLimiter chatLimiter;
+    private final RRateLimiter logLimiter;
+    private final RRateLimiter httpLimiter;
+    private final RRateLimiter displayNameLimiter;
+    private final RRateLimiter schedulerLimiter;
     private WebAssemblyVirtualMachine virtualMachine;
     private Event currentEvent;
     private boolean trapped;
@@ -128,6 +137,19 @@ public class ExecutionEnvironment {
         this.module = module;
         this.tenant = tenant;
         this.configuration = configuration;
+        final String rateLimitPrefix = "Ratelimiter|Module|" + module.getName() + "|" + tenant.getId();
+        this.kvstoreLimiter = module.getRedisson().getRateLimiter(rateLimitPrefix + "|kvstore");
+        this.kvstoreLimiter.trySetRate(RateType.OVERALL, 300, 1, RateIntervalUnit.MINUTES);
+        this.chatLimiter = module.getRedisson().getRateLimiter(rateLimitPrefix + "|chat");
+        this.chatLimiter.trySetRate(RateType.OVERALL, 10, 1, RateIntervalUnit.MINUTES);
+        this.logLimiter = module.getRedisson().getRateLimiter(rateLimitPrefix + "|log");
+        this.logLimiter.trySetRate(RateType.OVERALL, 1000, 1, RateIntervalUnit.HOURS);
+        this.httpLimiter = module.getRedisson().getRateLimiter(rateLimitPrefix + "|http");
+        this.httpLimiter.trySetRate(RateType.OVERALL, 10, 1, RateIntervalUnit.MINUTES);
+        this.displayNameLimiter = module.getRedisson().getRateLimiter(rateLimitPrefix + "|displayName");
+        this.displayNameLimiter.trySetRate(RateType.OVERALL, 50, 1, RateIntervalUnit.MINUTES);
+        this.schedulerLimiter = module.getRedisson().getRateLimiter(rateLimitPrefix + "|scheduler");
+        this.schedulerLimiter.trySetRate(RateType.OVERALL, 10, 1, RateIntervalUnit.MINUTES);
         reset();
     }
 
@@ -192,6 +214,30 @@ public class ExecutionEnvironment {
 
     public String getConfigurationHash() {
         return hash(Joiner.on("\0").join(configuration.getModules().entrySet().stream().map(entry -> entry.getKey() + "\0" + entry.getValue().getData()).collect(Collectors.toList())));
+    }
+
+    public RRateLimiter getKvstoreLimiter() {
+        return kvstoreLimiter;
+    }
+
+    public RRateLimiter getChatLimiter() {
+        return chatLimiter;
+    }
+
+    public RRateLimiter getLogLimiter() {
+        return logLimiter;
+    }
+
+    public RRateLimiter getHttpLimiter() {
+        return httpLimiter;
+    }
+
+    public RRateLimiter getDisplayNameLimiter() {
+        return displayNameLimiter;
+    }
+
+    public RRateLimiter getSchedulerLimiter() {
+        return schedulerLimiter;
     }
 
     private String hash(final String string) {

@@ -24,12 +24,6 @@ extern "C" {
 #define HTTP_PUT 2
 #define HTTP_DELETE 3
 
-#define RATELIMIT_KVSTORE 0
-#define RATELIMIT_CHAT 1
-#define RATELIMIT_LOG 2
-#define RATELIMIT_HTTP 3
-#define RATELIMIT_DISPLAYNAME 4
-
 #define DISPLAYNAME_USER 0
 #define DISPLAYNAME_CHANNEL 1
 
@@ -175,12 +169,6 @@ struct v1x1_http_request {
     struct v1x1_http_header *headers;
     struct v1x1_buffer body;
     struct v1x1_buffer event_payload;
-} __attribute__((__packed__));
-
-/* A rate_limit_desc is a struct describing a particular rate limit in v1x1 */
-struct v1x1_rate_limit_desc {
-    int32_t total;
-    int32_t remaining;
 } __attribute__((__packed__));
 
 /**
@@ -335,14 +323,6 @@ extern int32_t v1x1_get_tenant_spec(struct v1x1_tenant_spec *tenant_spec, int32_
  * @return non-zero on success
  */
 extern int32_t v1x1_http(struct v1x1_http_request *request);
-
-/**
- * Gets information on current rate limit usage
- * @param rate_limit_type Type of rate-limit
- * @param rate_limits Struct to be filled with rate-limit data
- * @return non-zero on success
- */
-extern int32_t v1x1_rate_limits(int32_t rate_limit_type, struct v1x1_rate_limit_desc *rate_limits);
 
 /**
  * Gets a display_name for an entity
