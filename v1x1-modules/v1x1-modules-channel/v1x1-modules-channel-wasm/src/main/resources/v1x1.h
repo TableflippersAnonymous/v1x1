@@ -334,6 +334,37 @@ extern int32_t v1x1_http(struct v1x1_http_request *request);
  */
 extern int32_t v1x1_get_display_name(int32_t display_name_type, int32_t platform, struct v1x1_buffer *id, struct v1x1_buffer *display_name);
 
+/**
+ * Makes a v1x1_buffer from a length and pointer
+ * @param length Length of buffer
+ * @param data Pointer to data
+ * @return Built v1x1_buffer
+ */
+struct v1x1_buffer v1x1_mkbuffer(int32_t length, char *data);
+
+/**
+ * Makes a v1x1_buffer from a C string
+ * @param str C string
+ * @return Built v1x1_buffer
+ */
+struct v1x1_buffer v1x1_mkstrbuffer(char *str);
+
+/**
+ * Sends a C string message to a channel
+ * @param channel Channel to send message to.
+ * @param message C string containing message.
+ * @return (see v1x1_send_message)
+ */
+int32_t v1x1_send_string_message(struct v1x1_channel *channel, char *message);
+
+/**
+ * Sends a message to a channel with a printf format
+ * @param channel Channel to send message to.
+ * @param format Format (see printf)
+ * @param ... format arguments (see printf)
+ * @return (see v1x1_send_message)
+ */
+int32_t v1x1_printf_message(struct v1x1_channel *channel, char *format, ...);
 #ifdef __cplusplus
 }
 #endif
