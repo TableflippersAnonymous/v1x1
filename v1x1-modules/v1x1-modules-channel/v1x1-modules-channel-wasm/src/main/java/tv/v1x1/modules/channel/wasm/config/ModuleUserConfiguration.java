@@ -2,15 +2,11 @@ package tv.v1x1.modules.channel.wasm.config;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Objects;
-import tv.v1x1.common.scanners.config.ConfigType;
-import tv.v1x1.common.scanners.config.DisplayName;
-import tv.v1x1.common.scanners.config.Permission;
-import tv.v1x1.common.scanners.config.TenantPermission;
-import tv.v1x1.common.scanners.config.Type;
+import tv.v1x1.common.scanners.config.*;
 
 public class ModuleUserConfiguration {
     @JsonProperty("data")
-    @DisplayName("WebAssembly Base64 Data")
+    @DisplayName("WebAssembly File (.wasm)")
     @Type(ConfigType.FILE)
     @TenantPermission(Permission.WRITE_ONLY)
     private String data;

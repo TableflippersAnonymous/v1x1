@@ -9,7 +9,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @ModuleConfig("wasm")
-@DisplayName("WebAssembly")
+@DisplayName("Custom Scripts")
 @Description("Allow your bot to execute custom-written scripts in WebAssembly")
 @Version(0)
 public class WebAssemblyUserConfiguration extends BasicUserConfiguration {
