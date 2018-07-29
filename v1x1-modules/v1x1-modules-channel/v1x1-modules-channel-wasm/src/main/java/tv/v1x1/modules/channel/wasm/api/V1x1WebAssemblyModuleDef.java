@@ -500,6 +500,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final String channelId = new String(decodeBuffer(memoryInstance, baseAddress));
         final String channelGroupId = new String(decodeBuffer(memoryInstance, baseAddress + 16));
         final Platform platform = PLATFORM_MAP.get((int) memoryInstance.readByte(baseAddress + 32));
+        LOG.debug("decodeChannel({}, {}, {}, {})", tenant, channelId, channelGroupId, platform);
         return tenant.getChannel(platform, channelGroupId, channelId);
     }
 
