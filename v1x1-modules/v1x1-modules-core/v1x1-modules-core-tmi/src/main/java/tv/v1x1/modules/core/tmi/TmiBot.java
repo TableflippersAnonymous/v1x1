@@ -472,7 +472,7 @@ public class TmiBot implements Runnable {
     }
 
     private void registerService() {
-        service = new TmiService(tmiModule, String.valueOf(channel.getId()), this);
+        service = new TmiService(tmiModule, String.valueOf(channel.getId() + ":main"), this);
         service.start();
     }
 
