@@ -124,12 +124,14 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
 
     private static void sendMessage(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
         if(!executionEnvironment.getChatLimiter().tryAcquire()) {
+            LOG.warn("VM Message rate limit exceeded.");
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
         final Channel channel = getChannel(executionEnvironment, virtualMachine, moduleInstance, 0);
         final String message = getString(virtualMachine, moduleInstance, 1);
         if(channel == null || message == null) {
+            LOG.warn("VM Message Invalid channel/message: {}/{}", channel, message);
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
@@ -139,6 +141,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             LOG.info("VM Sent Message to {}: {}", channel, message);
         } catch(final IllegalArgumentException e) {
             virtualMachine.getStack().push(I32.ZERO);
+            LOG.warn("VM Message to {} errored: {}", channel, message, e);
         }
     }
 
