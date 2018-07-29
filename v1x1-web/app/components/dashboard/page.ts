@@ -9,10 +9,39 @@ import {Subscription} from "rxjs";
 
 @Component({
   selector: 'dashboard-page',
-  template: `Dashboard goes here
-    <div *ngFor="let line of lines">
-      <p>{{line}}</p>
-    </div>
+  template: `
+    <mat-grid-list [cols]="3" rowHeight="200px" class="dashboard-grid">
+      <mat-grid-tile [colspan]="2" [rowspan]="4">
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title><h1>Chat</h1></mat-card-title>
+            <mat-card-subtitle>Live view of what v1x1 sees</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content class="hard-wrap">
+            <div class="scroll-box">
+              <div *ngFor="let line of lines">
+                <p>{{line}}</p>
+              </div>
+            </div>
+            <div class="cover-bar"></div>
+          </mat-card-content>
+          <mat-card-actions>
+            
+          </mat-card-actions>
+        </mat-card>
+      </mat-grid-tile>
+      <mat-grid-tile>
+        <mat-card class="dashboard-card">
+          <mat-card-header>
+            <mat-card-title><h1>Controls</h1></mat-card-title>
+            <mat-card-subtitle>Use these to turn v1x1 on or off</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            Twitch ...
+          </mat-card-content>
+        </mat-card>
+      </mat-grid-tile>
+    </mat-grid-list>
   `
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {

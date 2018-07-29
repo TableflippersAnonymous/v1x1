@@ -53,6 +53,7 @@ import {
   MatButtonModule,
   MatCardModule,
   MatDividerModule,
+  MatGridListModule,
   MatInputModule,
   MatListModule,
   MatMenuModule,
@@ -137,6 +138,7 @@ const routes: Routes = [
     MatSelectModule,
     MatListModule,
     MatDividerModule,
+    MatGridListModule,
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot(routes, { useHash: true })

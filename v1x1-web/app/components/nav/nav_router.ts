@@ -10,7 +10,7 @@ import {Subscription} from "rxjs";
   template: `
     <top-nav [loggedIn]="loggedIn" [activeTenantUrl]="activeTenantId" (activeTenantChange)="setActiveTenant($event)">
       <top-nav-entry [justify]="'brand'" [title]="" [route]="[activeTenantId, 'welcome']"></top-nav-entry>
-      <top-nav-entry [justify]="'left'" [title]="'Dashboard'" [route]="[activeTenantId, 'dashboard']" *ngIf="loggedIn && false"></top-nav-entry>
+      <top-nav-entry [justify]="'left'" [title]="'Dashboard'" [route]="[activeTenantId, 'dashboard']" *ngIf="loggedIn"></top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Configuration'" [route]="[activeTenantId, 'config']" *ngIf="loggedIn"></top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Permissions'" [route]="[activeTenantId, 'permissions', 'groups']" *ngIf="loggedIn"></top-nav-entry>
       <top-nav-entry [justify]="'left'" [title]="'Logs'" [route]="[activeTenantId, 'logs']" *ngIf="loggedIn && false"></top-nav-entry>
