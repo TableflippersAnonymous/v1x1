@@ -70,9 +70,13 @@ public class DAOGlobalUser {
     }
 
     public GlobalUser getOrCreate(final Platform platform, final String userId, final String displayName) {
+        return getOrCreate(platform, userId, displayName, false);
+    }
+
+    public GlobalUser getOrCreate(final Platform platform, final String userId, final String displayName, final boolean skipDeduplicator) {
         final InverseGlobalUser inverseGlobalUser = getUser(platform, userId);
         if (inverseGlobalUser == null)
-            return createGlobalUser(platform, userId, displayName);
+            return createGlobalUser(platform, userId, displayName, skipDeduplicator);
         final GlobalUser globalUser = getById(inverseGlobalUser.getGlobalUserId());
         if (globalUser == null)
             throw new IllegalStateException("GlobalUser null but InverseGlobalUser for: " + inverseGlobalUser.getGlobalUserId().toString() + " " + inverseGlobalUser.getUserId() + " " + inverseGlobalUser.getPlatform());
@@ -80,13 +84,17 @@ public class DAOGlobalUser {
     }
 
     public GlobalUser createGlobalUser(final Platform platform, final String userId, final String displayName) {
-        if(createDeduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(platform.name(), userId))))) {
+        return createGlobalUser(platform, userId, displayName, false);
+    }
+
+    public GlobalUser createGlobalUser(final Platform platform, final String userId, final String displayName, final boolean skipDeduplicator) {
+        if(!skipDeduplicator && createDeduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(platform.name(), userId))))) {
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return getOrCreate(platform, userId, displayName);
+            return getOrCreate(platform, userId, displayName, true);
         }
         final GlobalUser globalUser = new GlobalUser(UUID.randomUUID(), new ArrayList<>());
         try {
