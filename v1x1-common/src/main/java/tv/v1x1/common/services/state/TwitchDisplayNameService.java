@@ -369,7 +369,7 @@ public class TwitchDisplayNameService {
 
     private Channel fetchChannelByChannelId(final String channelId) throws NoSuchUserException {
         try {
-            final Channel channel = twitchApi.getChannels().getChannel(channelId);
+            final Channel channel = twitchApi.getChannels().getChannel(channelId.split(":")[0]);
             cacheChannel(channel);
             return channel;
         } catch(final NotFoundException e) {
