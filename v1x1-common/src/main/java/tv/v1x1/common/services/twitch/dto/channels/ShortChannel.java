@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.dto.db.ChannelGroup;
 import tv.v1x1.common.dto.db.Platform;
 
 /**
