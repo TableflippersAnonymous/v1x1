@@ -42,7 +42,7 @@ public class DiscordDisplayNameService {
     private final SharedCache<String, Channel> channelByChannelNameCache;
     private final SharedCache<String, Channel> channelByDisplayNameCache;
     private final SharedCache<String, PartialGuild> guildByIdCache;
-    private final CodecCache<String, String> guildNameByIdCache;
+    private final SharedCache<String, String> guildNameByIdCache;
     private final DiscordApi discordApi;
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
