@@ -88,11 +88,7 @@ public class DAOGlobalUser {
     public User getPlatformUser(final Platform platform, final String userId) throws NoSuchUserException {
         final tv.v1x1.common.dto.core.GlobalUser globalUser = getByUserAsCore(platform, userId);
         if(globalUser != null) {
-            final User user = globalUser.getUser(platform, userId).orElse(null);
-            if(user != null)
-                return user;
-            else
-                throw new NoSuchUserException("User is not linked to GlobalUser");
+            final User user = globalUser.getUser(platform, userId).orElseThrow(() -> new NoSuchUserException("User is not linked to GlobalUser"));
         }
         throw new NoSuchUserException("GlobalUser can't be found");
     }

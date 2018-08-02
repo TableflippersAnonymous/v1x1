@@ -12,16 +12,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class DiscordVoiceStateEvent extends Event {
+    private final VoiceState oldVoiceState;
+    private final VoiceState newVoiceState;
+    private final List<Permission> permissions;
+    
     public static DiscordVoiceStateEvent fromProto(final Module module, final UUID uuid, final long timestamp, final Context context, final EventOuterClass.DiscordVoiceStateEvent discordVoiceStateEvent) {
         final VoiceState oldVoiceState = discordVoiceStateEvent.hasOldVoiceState() ? VoiceState.fromProto(discordVoiceStateEvent.getOldVoiceState()) : null;
         final VoiceState newVoiceState = VoiceState.fromProto(discordVoiceStateEvent.getNewVoiceState());
         final List<Permission> perms =  discordVoiceStateEvent.getPermissionsList().stream().map(Permission::fromProto).collect(Collectors.toList());
         return new DiscordVoiceStateEvent(module, uuid, timestamp, context, oldVoiceState, newVoiceState, perms);
     }
-
-    private final VoiceState oldVoiceState;
-    private final VoiceState newVoiceState;
-    private final List<Permission> permissions;
 
     public DiscordVoiceStateEvent(final Module from, final VoiceState oldVoiceState, final VoiceState newVoiceState, final List<Permission> permissionList) {
         super(from);

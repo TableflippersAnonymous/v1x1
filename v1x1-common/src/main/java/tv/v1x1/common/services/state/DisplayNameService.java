@@ -197,6 +197,17 @@ public class DisplayNameService {
         throw new IllegalArgumentException("Don't know how to deal with a " + context.getClass().getCanonicalName());
     }
 
+    public String getChannelGroupDisplayNameFromId(final Platform platform, final String channelGroupId) throws NoSuchTargetException {
+        switch(platform) {
+            case TWITCH:
+                return getDisplayNameFromId(platform, channelGroupId);
+            case DISCORD:
+                return discordDisplayNameService.getGuildNameByGuildId(channelGroupId);
+            default:
+                throw new IllegalArgumentException("Don't know how to handle " + platform.stylize() + " display names yet");
+        }
+    }
+
     /**
      * @see DisplayNameService#getIdFromDisplayName(Channel, String)
      */

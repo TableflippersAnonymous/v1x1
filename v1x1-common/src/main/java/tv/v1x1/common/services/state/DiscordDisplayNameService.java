@@ -6,11 +6,13 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.services.cache.CacheManager;
+import tv.v1x1.common.services.cache.CodecCache;
 import tv.v1x1.common.services.cache.JsonCodec;
 import tv.v1x1.common.services.cache.SharedCache;
 import tv.v1x1.common.services.cache.StringCodec;
 import tv.v1x1.common.services.discord.DiscordApi;
 import tv.v1x1.common.services.discord.dto.channel.Channel;
+import tv.v1x1.common.services.discord.dto.guild.PartialGuild;
 import tv.v1x1.common.services.discord.dto.user.User;
 
 import javax.ws.rs.ForbiddenException;
@@ -39,6 +41,8 @@ public class DiscordDisplayNameService {
     private final SharedCache<String, Channel> channelByChannelIdCache;
     private final SharedCache<String, Channel> channelByChannelNameCache;
     private final SharedCache<String, Channel> channelByDisplayNameCache;
+    private final SharedCache<String, PartialGuild> guildByIdCache;
+    private final CodecCache<String, String> guildNameByIdCache;
     private final DiscordApi discordApi;
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -49,6 +53,7 @@ public class DiscordDisplayNameService {
         final StringCodec stringCodec = StringCodec.INSTANCE;
         final JsonCodec<User> userCodec = new JsonCodec<>(User.class);
         final JsonCodec<Channel> channelCodec = new JsonCodec<>(Channel.class);
+        final JsonCodec<PartialGuild> guildCodec = new JsonCodec<>(PartialGuild.class);
         this.userIdByUsernameCache = cacheManager.codec(cacheManager.redisCache("DiscordDisplayNameService|userIdByUsername", 90, TimeUnit.DAYS, new CacheLoader<byte[], byte[]>() {
             @Override
             public byte[] load(final byte[] bytes) throws Exception {
@@ -159,6 +164,18 @@ public class DiscordDisplayNameService {
                 return channelCodec.encode(fetchChannelByDisplayName(stringCodec.decode(bytes)));
             }
         }), stringCodec, channelCodec);
+        this.guildByIdCache = cacheManager.codec(cacheManager.redisCache("DiscordDisplayNameService|guildById", 1, TimeUnit.DAYS, new CacheLoader<byte[], byte[]>() {
+            @Override
+            public byte[] load(final byte[] bytes) throws Exception {
+                return guildCodec.encode(fetchGuildById(stringCodec.decode(bytes)));
+            }
+        }), stringCodec, guildCodec);
+        this.guildNameByIdCache = cacheManager.codec(cacheManager.redisCache("DiscordDisplayNameService|guildNameById", 1, TimeUnit.DAYS, new CacheLoader<byte[], byte[]>() {
+            @Override
+            public byte[] load(final byte[] bytes) throws Exception {
+                return stringCodec.encode(fetchGuildById(stringCodec.decode(bytes)).getName());
+            }
+        }), stringCodec, stringCodec);
     }
 
     public String getDisplayNameFromUserId(final String userId) throws NoSuchTargetException {
@@ -305,6 +322,22 @@ public class DiscordDisplayNameService {
         }
     }
 
+    public PartialGuild getGuildByGuildId(final String guildId) throws NoSuchTargetException {
+        try {
+            return guildByIdCache.get(guildId);
+        } catch(final ExecutionException e) {
+            throw rethrowUnwrapped(e);
+        }
+    }
+
+    public String getGuildNameByGuildId(final String guildId) throws NoSuchTargetException {
+        try {
+            return guildNameByIdCache.get(guildId);
+        } catch(final ExecutionException e) {
+            throw rethrowUnwrapped(e);
+        }
+    }
+
     public void cache(final String userId, final String username, final String displayName) {
         cacheUser(userId, username, displayName);
         cacheChannel(userId, username, displayName);
@@ -348,6 +381,12 @@ public class DiscordDisplayNameService {
         cache(String.valueOf(channel.getId()), channel.getName(), channel.getName());
     }
 
+    public void cacheGuild(final PartialGuild guild) {
+        if(guild == null)
+            return;
+        guildByIdCache.put(guild.getId(), guild);
+    }
+
     private User fetchUserByUserId(final String userId) throws NoSuchTargetException {
         try {
             final User user = discordApi.getUsers().getUser(userId);
@@ -386,6 +425,18 @@ public class DiscordDisplayNameService {
 
     private Channel fetchChannelByDisplayName(final String displayName) throws NoSuchTargetException {
         throw new NoSuchTargetException();
+    }
+
+    private PartialGuild fetchGuildById(final String guildId) throws NoSuchTargetException {
+        try {
+            final PartialGuild guild = discordApi.getGuilds().getGuild(guildId);
+            if(guild.isUnavailable())
+                throw new NoSuchTargetException("Guild is currently unavailable");
+            cacheGuild(guild);
+            return guild;
+        } catch(ForbiddenException e) {
+            throw new NoSuchTargetException("Forbidden when accessing guild");
+        }
     }
 
     private Throwable unwrapException(final ExecutionException ee) {

@@ -173,12 +173,13 @@ public class DAOTenant {
                 return getOrCreate(platform, channelGroupId, displayName);
             return getOrCreate(platform, channelGroupId, channelId, displayName);
         }
-        if(displayName == null && platform == Platform.TWITCH)
+        if(displayName == null) {
             try {
-                displayName = displayNameService.getDisplayNameFromId(TwitchChannel.EMPTY, channelGroupId);
-            } catch (NoSuchTargetException e) {
+                displayName = displayNameService.getChannelGroupDisplayNameFromId(platform, channelGroupId);
+            } catch(NoSuchTargetException e) {
                 throw new RuntimeException(e);
             }
+        }
         final Tenant tenant = new Tenant(UUID.randomUUID(), displayName);
         final BatchStatement b = new BatchStatement();
         b.add(tenantMapper.saveQuery(tenant));
