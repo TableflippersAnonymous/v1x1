@@ -50,10 +50,11 @@ public class OpsToolUserIdCommand extends Command {
         try {
             final String userId = displayNameService.getUserIdFromMention(channel, mention);
             final User user = opsTool.getDaoManager().getDaoGlobalUser().getPlatformUser(channel.getPlatform(), userId);
-            if(user != null)
+            if(user != null) {
                 opsTool.respond(channel, "GlobalUser for " + mention + ": " + user);
-                opsTool.respond(channel,  "AKA: " + opsTool.getDisplayNameService().getDisplayNameFromId(channel, userId)
-                    + " or " + opsTool.getDisplayNameService().getUsernameFromId(channel, userId));
+                opsTool.respond(channel, "AKA: " + opsTool.getDisplayNameService().getDisplayNameFromId(channel, userId)
+                        + " or " + opsTool.getDisplayNameService().getUsernameFromId(channel, userId));
+            }
         } catch(NoSuchTargetException|DAOGlobalUser.NoSuchUserException e) {
             opsTool.respond(channel, "Target not found. " + e.getMessage());
         }
