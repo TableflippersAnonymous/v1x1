@@ -525,7 +525,9 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         final int address = decodeI32(memoryInstance, baseAddress + 4);
         if(length < data.length)
             return false;
+        memoryInstance.write(baseAddress, new I32(data.length).bytes());
         memoryInstance.write(address, data);
+        memoryInstance.write(address + data.length, new byte[] {0});
         return true;
     }
 
