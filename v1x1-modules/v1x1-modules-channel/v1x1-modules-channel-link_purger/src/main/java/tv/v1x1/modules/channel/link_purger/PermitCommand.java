@@ -55,10 +55,9 @@ public class PermitCommand extends Command {
         final String commanderName = chatMessage.getSender().getMention();
         try {
             // TODO: Create and use a target-finding service, then convert !permit to use it
-            final String targetId = module.getStateManager()
-                    .getDisplayNameService()
+            final String targetId = module.getDisplayNameService()
                     .getIdFromDisplayName(channel, args.get(0));
-            final String targetName = module.getStateManager().getDisplayNameService().getDisplayNameFromId(channel, targetId);
+            final String targetName = module.getDisplayNameService().getDisplayNameFromId(channel, targetId);
             if (module.permitUser(channel, targetId)) {
                 Chat.i18nMessage(module, channel, "permit",
                         "target", targetName
