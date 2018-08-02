@@ -600,6 +600,48 @@ jobs:
         get_params:
           resource_name: wasm
 
+  - name: v1x1-voicelog
+    plan:
+    - aggregate:
+      - get: v1x1-source
+        passed: [v1x1-common, v1x1-base]
+        trigger: true
+      - get: v1x1-base
+        params:
+          save: true
+        passed: [v1x1-base]
+    - task: prep-maven
+      file: v1x1-source/concourse/prep-maven.yml
+      params:
+        NEXUS_PASSWORD: ((v1x1.nexus-pass))
+    - task: build
+      file: v1x1-source/concourse/build-module.yml
+      params:
+        V1X1_MODULE_PATH: v1x1-modules/v1x1-modules-channel/v1x1-modules-channel-voicelog
+    - task: prep-docker
+      file: v1x1-source/concourse/prep-docker.yml
+    - put: v1x1-voicelog
+      params:
+        build: v1x1-module-target
+        load_base: v1x1-base-output
+        tag: v1x1-source/.git/refs/heads/master
+        tag_as_latest: true
+      get_params:
+        skip_download: true
+  - name: v1x1-voicelog-deploy
+    plan:
+    - get: v1x1-source
+      passed: [v1x1-voicelog]
+      trigger: true
+    - put: kubernetes
+      params:
+        resource_name: voicelog
+        image_name: registry.tblflp.zone:5443/v1x1-voicelog
+        image_tag: v1x1-source/.git/refs/heads/master
+      get_params:
+        resource_name: voicelog
+
+
   - name: v1x1-api
     plan:
       - aggregate:
