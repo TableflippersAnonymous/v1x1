@@ -6,7 +6,6 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.voicelog.VoiceLog;
-import tv.v1x1.modules.channel.voicelog.VoiceLogUserConfiguration;
 
 import java.util.List;
 

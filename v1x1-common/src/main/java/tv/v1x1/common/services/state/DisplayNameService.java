@@ -158,7 +158,7 @@ public class DisplayNameService {
     public String getUserIdFromMention(final Channel context, String mention) throws NoSuchTargetException {
         if(context instanceof TwitchChannel) {
             if(mention.startsWith("@"))
-                mention = mention.substring(1, mention.length());
+                mention = mention.substring(1);
             return String.valueOf(twitchDisplayNameService.getUserByDisplayName(mention).getId());
         }
         if(context instanceof DiscordChannel) {
@@ -180,7 +180,7 @@ public class DisplayNameService {
     public String getChannelIdFromMention(final Channel context, String mention) throws NoSuchTargetException {
         if(context instanceof TwitchChannel) {
             if(mention.startsWith("#"))
-                mention = mention.substring(1, mention.length());
+                mention = mention.substring(1);
             return String.valueOf(twitchDisplayNameService.getChannelByDisplayName(mention).getId());
         }
         if(context instanceof DiscordChannel) {

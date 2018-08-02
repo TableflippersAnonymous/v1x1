@@ -1,7 +1,6 @@
 package tv.v1x1.modules.channel.voicelog.commands;
 
 import com.google.common.collect.ImmutableList;
-import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
@@ -9,7 +8,6 @@ import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.common.util.commands.ParsedCommand;
 import tv.v1x1.modules.channel.voicelog.VoiceLog;
-import tv.v1x1.modules.channel.voicelog.VoiceLogUserConfiguration;
 
 import java.util.List;
 
@@ -70,8 +68,6 @@ public class VoiceLogCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final Channel channel = chatMessage.getChannel();
-        final String commanderMention = chatMessage.getSender().getMention();
         String subCmd = args.remove(0).toLowerCase();
         if(!delegator.handleParsedCommand(chatMessage, new ParsedCommand(subCmd, args)))
             handleArgMismatch(chatMessage, command, args);

@@ -6,7 +6,6 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.services.cache.CacheManager;
-import tv.v1x1.common.services.cache.CodecCache;
 import tv.v1x1.common.services.cache.JsonCodec;
 import tv.v1x1.common.services.cache.SharedCache;
 import tv.v1x1.common.services.cache.StringCodec;
@@ -43,6 +42,7 @@ public class DiscordDisplayNameService {
     private final SharedCache<String, Channel> channelByDisplayNameCache;
     private final SharedCache<String, PartialGuild> guildByIdCache;
     private final SharedCache<String, String> guildNameByIdCache;
+    private final SharedCache<String, String> nicknameByUserAndTenantCache;
     private final DiscordApi discordApi;
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
@@ -174,6 +174,13 @@ public class DiscordDisplayNameService {
             @Override
             public byte[] load(final byte[] bytes) throws Exception {
                 return stringCodec.encode(fetchGuildById(stringCodec.decode(bytes)).getName());
+            }
+        }), stringCodec, stringCodec);
+        this.nicknameByUserAndTenantCache = cacheManager.codec(cacheManager.redisCache("DiscordDisplayNameService|nicknameByUserAndTenant", 1, TimeUnit.MINUTES, new CacheLoader<byte[], byte[]>() {
+            @Override
+            public byte[] load(final byte[] bytes) throws Exception {
+                //return stringCodec.encode(fetchUserByUserId(stringCodec.decode(bytes)));
+                return null;
             }
         }), stringCodec, stringCodec);
     }
