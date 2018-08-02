@@ -53,7 +53,7 @@ public class OpsToolUserIdCommand extends Command {
             if(user != null)
                 opsTool.respond(channel, "GlobalUser for " + mention + ": " + user);
                 opsTool.respond(channel,  "AKA: " + opsTool.getDisplayNameService().getDisplayNameFromId(channel, userId)
-                        + " or " + opsTool.getDisplayNameService().getUsernameFromId(channel, userId));
+                    + " or " + opsTool.getDisplayNameService().getUsernameFromId(channel, userId));
         } catch(NoSuchTargetException|DAOGlobalUser.NoSuchUserException e) {
             opsTool.respond(channel, "Target not found. " + e.getMessage());
         }

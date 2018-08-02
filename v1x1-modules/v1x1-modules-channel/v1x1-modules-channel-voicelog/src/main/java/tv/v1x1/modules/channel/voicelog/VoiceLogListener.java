@@ -61,6 +61,7 @@ public class VoiceLogListener implements EventListener {
             LOG.warn("VoiceLog channel set, but not found. Disabling...");
             config.setChannel(null);
             config.setEnabled(false);
+            module.getUserConfigProvider().save(tenant, config);
             return;
         }
         String realDisplayName = null;

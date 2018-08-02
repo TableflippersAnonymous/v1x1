@@ -118,6 +118,15 @@ resources:
       ca_certs:
       - domain: registry.tblflp.zone:5443
         cert: ((v1x1.docker-ca))
+  - name: v1x1-voicelog
+    type: docker-image
+    source:
+      repository: registry.tblflp.zone:5443/v1x1-voicelog
+      username: tblflp
+      password: ((v1x1.docker-pass))
+      ca_certs:
+      - domain: registry.tblflp.zone:5443
+        cert: ((v1x1.docker-ca))
 
   # Core Modules:
   - name: v1x1-api
