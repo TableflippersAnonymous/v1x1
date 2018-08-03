@@ -412,6 +412,7 @@ public class ConfigResource {
                 return jsonElement.isJsonObject() && jsonElement.getAsJsonObject().entrySet().stream().allMatch(e -> validType(e.getValue(), ConfigType.STRING));
             case COMPLEX_STRING_MAP:
             case COMPLEX:
+            case CHANNEL:
                 return jsonElement.isJsonObject();
             case CREDENTIAL:
             case STRING:
