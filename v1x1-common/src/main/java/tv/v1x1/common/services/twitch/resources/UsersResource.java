@@ -41,8 +41,7 @@ public class UsersResource {
     public PrivateUser getUser() {
         return user
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(PrivateUser.class);
+                .get(PrivateUser.class);
     }
 
     /**
@@ -53,8 +52,7 @@ public class UsersResource {
         return users
                 .queryParam("login", Joiner.on(",").join(usernames))
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(UserList.class);
+                .get(UserList.class);
     }
 
     /**
@@ -75,8 +73,7 @@ public class UsersResource {
     public User getUser(final String userId) {
         return users.path(userId)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(User.class);
+                .get(User.class);
     }
 
     /**
@@ -87,8 +84,7 @@ public class UsersResource {
     public EmoticonSetList getEmotes(final String userId) {
         return users.path(userId).path("emotes")
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(EmoticonSetList.class);
+                .get(EmoticonSetList.class);
     }
 
     /**
@@ -99,8 +95,7 @@ public class UsersResource {
     public Subscription getSubscription(final String userId, final String channelId) {
         return users.path(userId).path("subscriptions").path(channelId)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(Subscription.class);
+                .get(Subscription.class);
     }
 
     /**
@@ -116,8 +111,7 @@ public class UsersResource {
                 .queryParam("limit", limit).queryParam("offset", offset)
                 .queryParam("direction", direction == null ? null : direction.name()).queryParam("sortby", sortBy)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(FollowList.class);
+                .get(FollowList.class);
     }
 
     /**
@@ -128,8 +122,7 @@ public class UsersResource {
     public Follow getFollow(final String userId, final String channelId) {
         return users.path(userId).path("follows").path("channels").path(channelId)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(Follow.class);
+                .get(Follow.class);
     }
 
     /**
@@ -142,8 +135,7 @@ public class UsersResource {
     public Follow follow(final String userId, final String channelId, final boolean notifications) {
         return users.path(userId).path("follows").path("channels").path(channelId)
                 .request(TwitchApi.ACCEPT)
-                .put(Entity.entity(new FollowRequest(notifications), MediaType.APPLICATION_JSON))
-                .readEntity(Follow.class);
+                .put(Entity.entity(new FollowRequest(notifications), MediaType.APPLICATION_JSON), Follow.class);
     }
 
     /**
@@ -167,8 +159,7 @@ public class UsersResource {
         return users.path(userId).path("blocks")
                 .queryParam("limit", limit).queryParam("offset", offset)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(BlockList.class);
+                .get(BlockList.class);
     }
 
     /**
@@ -177,7 +168,7 @@ public class UsersResource {
      * @param targetId ID of target user
      */
     public Block block(final String userId, final String targetId) {
-        return users.path(userId).path("blocks").path(targetId).request(TwitchApi.ACCEPT).put(null).readEntity(Block.class);
+        return users.path(userId).path("blocks").path(targetId).request(TwitchApi.ACCEPT).put(null, Block.class);
     }
 
     /**
@@ -209,8 +200,7 @@ public class UsersResource {
     public VhsId getVHS() {
         return user.path("vhs")
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(VhsId.class);
+                .get(VhsId.class);
     }
 
     /**

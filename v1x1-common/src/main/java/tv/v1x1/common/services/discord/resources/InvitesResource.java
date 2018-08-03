@@ -18,21 +18,18 @@ public class InvitesResource {
     public Invite getInvite(final String inviteCode) {
         return invites.path(inviteCode)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(Invite.class);
+                .get(Invite.class);
     }
 
     public Invite deleteInvite(final String inviteCode) {
         return invites.path(inviteCode)
                 .request(DiscordApi.ACCEPT)
-                .delete()
-                .readEntity(Invite.class);
+                .delete(Invite.class);
     }
 
     public Invite acceptInvite(final String inviteCode) {
         return invites.path(inviteCode)
                 .request(DiscordApi.ACCEPT)
-                .post(null)
-                .readEntity(Invite.class);
+                .post(null, Invite.class);
     }
 }

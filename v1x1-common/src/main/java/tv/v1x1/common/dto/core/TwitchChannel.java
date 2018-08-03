@@ -25,4 +25,9 @@ public class TwitchChannel extends Channel {
     public TwitchChannel(final String id, final ChannelGroup channelGroup, final String displayName) {
         super(id, channelGroup, displayName);
     }
+
+    @Override
+    public String getMention() {
+        return getDisplayName();
+    }
 }

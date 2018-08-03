@@ -22,3 +22,6 @@ docker-data/*
 
 # vim temp files, shoo
 *.sw?
+
+# intellij/npm lock
+v1x1-web/package-lock.json

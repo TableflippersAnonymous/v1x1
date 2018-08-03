@@ -9,7 +9,6 @@ import tv.v1x1.common.scanners.i18n.I18nDefaults;
 import tv.v1x1.common.scanners.permission.DefaultGroup;
 import tv.v1x1.common.scanners.permission.Permissions;
 import tv.v1x1.common.scanners.permission.RegisteredPermission;
-import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.util.commands.CommandDelegator;
 
 /**
@@ -75,7 +74,6 @@ public class Caster extends RegisteredThreadedModule<CasterGlobalConfig, CasterU
     protected void initialize() {
         super.initialize();
         instance = this;
-        TwitchApi api = getTwitchApi();
         delegator = new CommandDelegator("!");
         delegator.registerCommand(new CasterCommand(this));
         registerListener(this);

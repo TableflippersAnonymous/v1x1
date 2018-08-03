@@ -11,7 +11,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.redisson.api.RedissonClient;
-import tv.v1x1.common.dto.core.TwitchChannel;
 import tv.v1x1.common.dto.db.Channel;
 import tv.v1x1.common.dto.db.ChannelGroup;
 import tv.v1x1.common.dto.db.ChannelGroupsByTenant;
@@ -20,7 +19,7 @@ import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.services.persistence.Deduplicator;
 import tv.v1x1.common.services.state.DisplayNameService;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.data.CompositeKey;
 
 import java.util.Set;
@@ -69,6 +68,34 @@ public class DAOTenant {
         return channelMapper.get(platform, channelId);
     }
 
+    /**
+     * Get a {@link tv.v1x1.common.dto.core.Channel} object
+     * @param platform
+     * @param channelId
+     * @return a Channel
+     * @throws NoSuchChannelException When a channel can't be found
+     */
+    public tv.v1x1.common.dto.core.Channel getChannelAsCore(final Platform platform, final String channelId) throws NoSuchChannelException {
+        final Channel dbChannel = getChannel(platform, channelId);
+        if(dbChannel != null)
+            return dbChannel.toCore(this);
+        throw new NoSuchChannelException("Channel does not exist in any Tenant");
+    }
+
+    /**
+     *  Gets a {@link tv.v1x1.common.dto.core.Channel}, ensuring it comes from the same {@link Tenant} as {@code context}
+     * @param context
+     * @param channelId
+     * @return
+     * @throws NoSuchChannelException
+     */
+    public tv.v1x1.common.dto.core.Channel getChannelInTenant(final tv.v1x1.common.dto.core.Channel context, final String channelId) throws NoSuchChannelException {
+        final tv.v1x1.common.dto.core.Channel channel = getChannelAsCore(context.getPlatform(), channelId);
+        if(channel.getTenant().equals(context.getTenant()))
+            return channel;
+        throw new NoSuchChannelException("Channel is from a different Tenant");
+    }
+
     public Tenant getByChannel(final Platform platform, final String channelId) {
         return getByChannel(getChannel(platform, channelId));
     }
@@ -113,6 +140,10 @@ public class DAOTenant {
         return tenant;
     }
 
+    public tv.v1x1.common.dto.core.Tenant getAsCore(final Platform platform, final String channelGroupId) {
+        return getOrCreate(platform, channelGroupId, null).toCore(this);
+    }
+
     public Tenant getOrCreate(final Platform platform, final String channelGroupId, final String channelId, final String displayName) {
         final Channel channel = getChannel(platform, channelId);
         ChannelGroup channelGroup;
@@ -141,12 +172,13 @@ public class DAOTenant {
                 return getOrCreate(platform, channelGroupId, displayName);
             return getOrCreate(platform, channelGroupId, channelId, displayName);
         }
-        if(displayName == null && platform == Platform.TWITCH)
+        if(displayName == null) {
             try {
-                displayName = displayNameService.getDisplayNameFromId(TwitchChannel.EMPTY, channelGroupId);
-            } catch (NoSuchUserException e) {
+                displayName = displayNameService.getChannelGroupDisplayNameFromId(platform, channelGroupId);
+            } catch(NoSuchTargetException e) {
                 throw new RuntimeException(e);
             }
+        }
         final Tenant tenant = new Tenant(UUID.randomUUID(), displayName);
         final BatchStatement b = new BatchStatement();
         b.add(tenantMapper.saveQuery(tenant));
@@ -184,5 +216,15 @@ public class DAOTenant {
         for(final ChannelGroup channelGroup : getChannelGroups(tenant))
             removeChannelGroup(tenant, channelGroup.getPlatform(), channelGroup.getId());
         tenantMapper.delete(tenant);
+    }
+
+    public class NoSuchChannelException extends Exception {
+        NoSuchChannelException() {
+            super();
+        }
+
+        NoSuchChannelException(final String message) {
+            super(message);
+        }
     }
 }

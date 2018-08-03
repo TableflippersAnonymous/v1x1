@@ -38,7 +38,6 @@ public class OAuth2Resource {
                         .param("grant_type", "authorization_code")
                         .param("redirect_uri", redirectUri)
                         .param("code", code)
-                        .param("state", state)))
-                .readEntity(TokenResponse.class);
+                        .param("state", state)), TokenResponse.class);
     }
 }

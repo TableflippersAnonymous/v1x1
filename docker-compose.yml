@@ -107,3 +107,9 @@ services:
       - redis
       - zoo
       - cass
+  voicelog:
+    image: v1x1-voicelog:latest
+    depends_on:
+      - redis
+      - zoo
+      - cass

@@ -1,6 +1,9 @@
 package tv.v1x1.common.dto.messages.events;
 
-import tv.v1x1.common.dto.core.*;
+import tv.v1x1.common.dto.core.Channel;
+import tv.v1x1.common.dto.core.Module;
+import tv.v1x1.common.dto.core.TwitchChannel;
+import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.irc.IrcStanza;
 import tv.v1x1.common.dto.irc.commands.NoticeCommand;
 import tv.v1x1.common.dto.messages.Context;

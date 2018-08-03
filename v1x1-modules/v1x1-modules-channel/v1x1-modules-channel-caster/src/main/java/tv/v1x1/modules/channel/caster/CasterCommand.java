@@ -7,7 +7,7 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.chat.Chat;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.common.util.text.CaseChanger;
 import tv.v1x1.modules.channel.caster.streaminfo.StreamInfo;
@@ -94,7 +94,7 @@ class CasterCommand extends Command {
                         "game", info.getGame(),
                         "platform", targetPlatform.stylize());
             }
-        } catch(NoSuchUserException ex) {
+        } catch(NoSuchTargetException ex) {
             Chat.i18nMessage(caster, channel, "notfound",
                     "commander", commander,
                     "target", targetStreamer,

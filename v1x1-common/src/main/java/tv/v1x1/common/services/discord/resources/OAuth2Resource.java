@@ -33,8 +33,7 @@ public class OAuth2Resource {
                         .param("grant_type", "authorization_code")
                         .param("redirect_uri", redirectUri)
                         .param("code", code)
-                        .param("state", state)))
-                .readEntity(TokenResponse.class);
+                        .param("state", state)), TokenResponse.class);
     }
 
     public TokenResponse refreshToken(final String refreshToken) {
@@ -45,14 +44,12 @@ public class OAuth2Resource {
                         .param("client_secret", clientSecret)
                         .param("grant_type", "refresh_token")
                         .param("refresh_token", refreshToken)
-                        .param("redirect_uri", redirectUri)))
-                .readEntity(TokenResponse.class);
+                        .param("redirect_uri", redirectUri)), TokenResponse.class);
     }
 
     public ApplicationInformation getCurrentApplicationInformation() {
         return oauth2.path("applications").path("@me")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(ApplicationInformation.class);
+                .get(ApplicationInformation.class);
     }
 }

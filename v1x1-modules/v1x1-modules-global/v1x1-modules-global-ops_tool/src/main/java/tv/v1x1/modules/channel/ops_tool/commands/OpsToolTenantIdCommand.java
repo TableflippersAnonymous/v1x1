@@ -5,7 +5,7 @@ import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.services.state.DisplayNameService;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.ops_tool.OpsTool;
 
@@ -55,7 +55,7 @@ public class OpsToolTenantIdCommand extends Command {
                 opsTool.respond(chatMessage.getChannel(), "I don't know about that channel");
             else
                 opsTool.respond(chatMessage.getChannel(), "Tenant for " + displayNameService.getDisplayNameFromId(chatMessage.getChannel(), channelId) + "/" + channelId + ": " + t.toString());
-        } catch (final NoSuchUserException e) {
+        } catch (final NoSuchTargetException e) {
             opsTool.respond(chatMessage.getChannel(), "I don't know about that channel");
         }
     }

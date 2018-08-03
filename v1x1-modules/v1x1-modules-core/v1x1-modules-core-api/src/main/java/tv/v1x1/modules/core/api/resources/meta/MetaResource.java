@@ -27,7 +27,7 @@ import tv.v1x1.common.services.discord.dto.user.Connection;
 import tv.v1x1.common.services.discord.dto.user.User;
 import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
-import tv.v1x1.common.services.state.NoSuchUserException;
+import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.auth.TokenResponse;
@@ -137,7 +137,7 @@ public class MetaResource {
                 globalUser = daoGlobalUser.getOrCreate(Platform.DISCORD, user.getId(), user.getUsername());
                 try {
                     globalUser = daoGlobalUser.addUser(globalUser, Platform.TWITCH, twitchConnection.get().getId(), twitchDisplayNameService.getDisplayNameFromUserId(twitchConnection.get().getId()));
-                } catch (final NoSuchUserException e) {
+                } catch (final NoSuchTargetException e) {
                     LOG.warn("Got exception", e);
                 }
             } else if(globalUser == null) {
@@ -147,7 +147,7 @@ public class MetaResource {
                 // Twitch doesn't exist, Discord does.  Add Twitch.
                 try {
                     globalUser = daoGlobalUser.addUser(globalUser, Platform.TWITCH, twitchConnection.get().getId(), twitchDisplayNameService.getDisplayNameFromUserId(twitchConnection.get().getId()));
-                } catch (final NoSuchUserException e) {
+                } catch (final NoSuchTargetException e) {
                     LOG.warn("Got exception", e);
                 }
             }

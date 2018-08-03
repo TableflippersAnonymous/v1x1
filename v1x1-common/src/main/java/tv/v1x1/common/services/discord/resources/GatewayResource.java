@@ -19,14 +19,12 @@ public class GatewayResource {
     public Gateway getGateway() {
         return gateway
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(Gateway.class);
+                .get(Gateway.class);
     }
 
     public BotGateway getGatewayBot() {
         return gateway.path("bot")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(BotGateway.class);
+                .get(BotGateway.class);
     }
 }
