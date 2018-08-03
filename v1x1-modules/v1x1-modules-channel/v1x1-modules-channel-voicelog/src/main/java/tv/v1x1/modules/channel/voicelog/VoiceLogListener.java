@@ -74,6 +74,8 @@ public class VoiceLogListener implements EventListener {
             oldVoiceChannelId = ev.getOldVoiceState().getChannelId();
         if(ev.getNewVoiceState() != null)
             newVoiceChannelId = ev.getNewVoiceState().getChannelId();
+        if(oldVoiceChannelId != null && oldVoiceChannelId.equals(newVoiceChannelId))
+            return; // Bomb early, this is a mute/deaf event
         try {
             realDisplayName = module.getDisplayNameService().getDisplayNameFromId(target, userId);
             realUsername = module.getDisplayNameService().getUsernameFromId(target, userId);
@@ -85,7 +87,6 @@ public class VoiceLogListener implements EventListener {
             LOG.warn("Got a voice state for a user/channel I don't know. User: " + userId + ". OldChan: " + oldVoiceChannelId + ". NewChan: " + newVoiceChannelId);
         }
         sendLogMessage(target, realUsername, realDisplayName, oldVoiceChannelName, newVoiceChannelName);
-
     }
 
     private void sendLogMessage(final Channel channel, final String userName, final String displayName, final String oldChannel, final String newChannel) {
@@ -109,8 +110,6 @@ public class VoiceLogListener implements EventListener {
                     "username", userName,
                     "mention", displayName,
                     "channel", oldChannel);
-        } else {
-            LOG.error("Awkward. Both oldChannel and newChannel are null.");
         }
     }
 }
