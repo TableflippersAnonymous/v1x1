@@ -78,9 +78,21 @@ public abstract class Channel {
         return channelGroup;
     }
 
+    public Tenant getTenant() {
+        return getChannelGroup().getTenant();
+    }
+
     @Override
     public String toString() {
         return "{Channel/" + id + ":" + displayName + "}";
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if(this == obj) return true;
+        if(obj == null || getClass() != obj.getClass()) return false;
+
+        return getId().equals(((Channel)obj).getId());
     }
 
     public ChannelOuterClass.Channel toProto() {
@@ -105,4 +117,6 @@ public abstract class Channel {
     public Platform getPlatform() {
         return channelGroup.getPlatform();
     }
+
+    public abstract String getMention();
 }

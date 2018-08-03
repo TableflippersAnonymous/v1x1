@@ -27,8 +27,7 @@ public class VideosResource {
     public Video getVideo(final String videoId) {
         return videos.path(videoId)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(Video.class);
+                .get(Video.class);
     }
 
     /**
@@ -46,8 +45,7 @@ public class VideosResource {
                 .queryParam("period", period == null ? null : period.name().toLowerCase())
                 .queryParam("broadcast_type", broadcastType == null ? null : broadcastType.name().toLowerCase())
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(VodList.class);
+                .get(VodList.class);
     }
 
     /**
@@ -62,7 +60,6 @@ public class VideosResource {
                 .queryParam("limit", limit).queryParam("offset", offset)
                 .queryParam("broadcast_type", broadcastType == null ? null : broadcastType.name().toLowerCase())
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(VideoList.class);
+                .get(VideoList.class);
     }
 }

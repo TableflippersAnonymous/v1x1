@@ -11,6 +11,7 @@ import "Bot.proto";
 import "Platform.proto";
 import "Module.proto";
 import "UUID.proto";
+import "Permission.proto";
 
 message Event {
     enum EventType {
@@ -302,4 +303,5 @@ message DiscordVoiceStateEvent {
 
     optional VoiceState old_voice_state = 1;
     required VoiceState new_voice_state = 2;
+    repeated core.Permission permissions = 3;
 }

@@ -33,6 +33,7 @@ public class OpsToolCommand extends Command {
         delegator.registerCommand(new OpsToolUserIdCommand(opsTool));
         delegator.registerCommand(new OpsToolPermissionCommand(opsTool));
         delegator.registerCommand(new OpsToolHelpCommand(opsTool, delegator));
+        delegator.registerCommand(new OpsToolGetChannelCommand(opsTool));
     }
 
     @Override

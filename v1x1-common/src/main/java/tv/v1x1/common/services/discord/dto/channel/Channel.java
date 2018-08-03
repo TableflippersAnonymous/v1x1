@@ -1,6 +1,9 @@
 package tv.v1x1.common.services.discord.dto.channel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import tv.v1x1.common.dao.DAOTenant;
+import tv.v1x1.common.dto.core.Tenant;
+import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.services.discord.dto.user.User;
 
 import java.util.ArrayList;
@@ -140,5 +143,22 @@ public class Channel extends PartialChannel {
 
     public void setApplicationId(final String applicationId) {
         this.applicationId = applicationId;
+    }
+
+    public tv.v1x1.common.dto.core.Channel toCore(final DAOTenant daoTenant) {
+        final tv.v1x1.common.dto.db.Tenant dbTenant = daoTenant.getByChannel(Platform.DISCORD, getId());
+        if(dbTenant == null)
+            throw new IllegalArgumentException("Have a PartialChannel that's not part of a Tenant");
+        final Tenant tenant = dbTenant.toCore(daoTenant);
+        return tenant.getChannel(Platform.DISCORD, guildId, getId()).orElse(null);
+    }
+
+    @Override
+    public String toString() {
+        return "Channel{Guild:" + getGuildId()
+                + "/Id:" + getId()
+                + "/Type:" + getType()
+                + "/Name:" + getName()
+                + "}";
     }
 }

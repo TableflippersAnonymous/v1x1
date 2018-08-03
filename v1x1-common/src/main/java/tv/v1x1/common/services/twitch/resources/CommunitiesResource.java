@@ -34,7 +34,7 @@ public class CommunitiesResource {
      * @param communityName The name of the community. It must be 3-25 characters.
      */
     public Community getCommunityByName(final String communityName) {
-        return communities.queryParam("name", communityName).request(TwitchApi.ACCEPT).get().readEntity(Community.class);
+        return communities.queryParam("name", communityName).request(TwitchApi.ACCEPT).get(Community.class);
     }
 
     /**
@@ -42,7 +42,7 @@ public class CommunitiesResource {
      * @param communityId ID of community
      */
     public Community getCommunity(final String communityId) {
-        return communities.path(communityId).request(TwitchApi.ACCEPT).get().readEntity(Community.class);
+        return communities.path(communityId).request(TwitchApi.ACCEPT).get(Community.class);
     }
 
     /**
@@ -57,8 +57,7 @@ public class CommunitiesResource {
      */
     public CommunityId create(final String name, final String summary, final String description, final String rules) {
         return communities.request(TwitchApi.ACCEPT)
-                .post(Entity.entity(new CreateCommunityRequest(name, summary, description, rules), MediaType.APPLICATION_JSON))
-                .readEntity(CommunityId.class);
+                .post(Entity.entity(new CreateCommunityRequest(name, summary, description, rules), MediaType.APPLICATION_JSON), CommunityId.class);
     }
 
     /**
@@ -84,8 +83,7 @@ public class CommunitiesResource {
     public TopCommunityList getTopCommunities(final long limit, final String cursor) {
         return communities.path("top").queryParam("limit", limit).queryParam("cursor", cursor)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(TopCommunityList.class);
+                .get(TopCommunityList.class);
     }
 
     /**
@@ -98,8 +96,7 @@ public class CommunitiesResource {
         return communities.path(communityId).path("bans")
                 .queryParam("limit", limit).queryParam("cursor", cursor)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(CommunityBanList.class);
+                .get(CommunityBanList.class);
     }
 
     /**
@@ -173,8 +170,7 @@ public class CommunitiesResource {
     public CommunityModeratorList getModerators(final String communityId) {
         return communities.path(communityId).path("moderators")
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(CommunityModeratorList.class);
+                .get(CommunityModeratorList.class);
     }
 
     /**
@@ -206,8 +202,7 @@ public class CommunitiesResource {
     public CommunityPermissions getPermissions(final String communityId) {
         return communities.path(communityId).path("permissions")
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(CommunityPermissions.class);
+                .get(CommunityPermissions.class);
     }
 
     /**
@@ -231,8 +226,7 @@ public class CommunitiesResource {
         return communities.path(communityId).path("timeouts")
                 .queryParam("limit", limit).queryParam("cursor", cursor)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(CommunityTimedOutUserList.class);
+                .get(CommunityTimedOutUserList.class);
     }
 
     /**

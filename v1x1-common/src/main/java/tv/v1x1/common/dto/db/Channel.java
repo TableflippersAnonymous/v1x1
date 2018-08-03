@@ -3,8 +3,10 @@ package tv.v1x1.common.dto.db;
 import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
+import tv.v1x1.common.dao.DAOTenant;
 import tv.v1x1.common.dto.core.ChannelGroup;
 import tv.v1x1.common.dto.core.DiscordChannel;
+import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.core.TwitchChannel;
 
 /**
@@ -53,5 +55,10 @@ public class Channel {
             case DISCORD: return new DiscordChannel(id, channelGroup, displayName);
             default: throw new IllegalStateException("Unknown platform " + platform);
         }
+    }
+
+    public tv.v1x1.common.dto.core.Channel toCore(final DAOTenant daoTenant) {
+        final Tenant tenant = daoTenant.getByChannel(this).toCore(daoTenant);
+        return tenant.getChannel(platform, channelGroupId, id).orElse(null);
     }
 }

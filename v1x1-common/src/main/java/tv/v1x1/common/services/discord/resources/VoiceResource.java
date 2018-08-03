@@ -20,7 +20,6 @@ public class VoiceResource {
     public List<VoiceRegion> listVoiceRegions() {
         return voice.path("regions")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<VoiceRegion>>() {});
+                .get(new GenericType<List<VoiceRegion>>() {});
     }
 }

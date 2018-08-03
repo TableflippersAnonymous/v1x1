@@ -30,6 +30,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
+ * Groups of users within a tenant
  * Created by naomi on 10/16/2016.
  */
 @Singleton

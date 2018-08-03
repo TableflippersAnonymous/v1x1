@@ -21,6 +21,6 @@ public class IngestsResource {
      * them for viewers.
      */
     public IngestList getIngests() {
-        return ingests.request(TwitchApi.ACCEPT).get().readEntity(IngestList.class);
+        return ingests.request(TwitchApi.ACCEPT).get(IngestList.class);
     }
 }

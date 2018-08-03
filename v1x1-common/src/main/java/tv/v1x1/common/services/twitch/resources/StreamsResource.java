@@ -26,7 +26,7 @@ public class StreamsResource {
      * @param channelId ID of channel
      */
     public StreamResponse getStream(final String channelId) {
-        return streams.path(channelId).request(TwitchApi.ACCEPT).get().readEntity(StreamResponse.class);
+        return streams.path(channelId).request(TwitchApi.ACCEPT).get(StreamResponse.class);
     }
 
     /**
@@ -39,8 +39,7 @@ public class StreamsResource {
         return streams.path(channelId)
                 .queryParam("stream_type", streamType)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(StreamResponse.class);
+                .get(StreamResponse.class);
     }
 
     /**
@@ -63,8 +62,7 @@ public class StreamsResource {
                 .queryParam("stream_type", streamType == null ? null : streamType.name().toLowerCase())
                 .queryParam("language", language)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(StreamList.class);
+                .get(StreamList.class);
     }
 
     /**
@@ -75,8 +73,7 @@ public class StreamsResource {
         return streams.path("summary")
                 .queryParam("game", game)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(StreamSummary.class);
+                .get(StreamSummary.class);
     }
 
     /**
@@ -88,8 +85,7 @@ public class StreamsResource {
         return streams.path("featured")
                 .queryParam("limit", limit).queryParam("offset", offset)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(FeaturedStreamList.class);
+                .get(FeaturedStreamList.class);
     }
 
     /**
@@ -104,7 +100,6 @@ public class StreamsResource {
                 .queryParam("limit", limit).queryParam("offset", offset)
                 .queryParam("stream_type", streamType == null ? null : streamType.name().toLowerCase())
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(StreamList.class);
+                .get(StreamList.class);
     }
 }

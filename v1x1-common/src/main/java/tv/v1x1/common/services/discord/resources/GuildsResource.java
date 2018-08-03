@@ -43,22 +43,19 @@ public class GuildsResource {
     public Guild createGuild(final CreateGuildRequest createGuildRequest) {
         return guilds
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createGuildRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Guild.class);
+                .post(Entity.entity(createGuildRequest, MediaType.APPLICATION_JSON), Guild.class);
     }
 
     public Guild getGuild(final String guildId) {
         return guilds.path(guildId)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(Guild.class);
+                .get(Guild.class);
     }
 
     public Guild modifyGuild(final String guildId, final ModifyGuildRequest modifyGuildRequest) {
         return guilds.path(guildId)
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(modifyGuildRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Guild.class);
+                .method("PATCH", Entity.entity(modifyGuildRequest, MediaType.APPLICATION_JSON), Guild.class);
     }
 
     public void deleteGuild(final String guildId) {
@@ -70,15 +67,13 @@ public class GuildsResource {
     public List<Channel> getGuildChannels(final String guildId) {
         return guilds.path(guildId).path("channels")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Channel>>() {});
+                .get(new GenericType<List<Channel>>() {});
     }
 
     public Channel createGuildChannel(final String guildId, final CreateGuildChannelRequest createGuildChannelRequest) {
         return guilds.path(guildId).path("channels")
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createGuildChannelRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Channel.class);
+                .post(Entity.entity(createGuildChannelRequest, MediaType.APPLICATION_JSON), Channel.class);
     }
 
     public void modifyGuildChannelPositions(final String guildId,
@@ -91,24 +86,21 @@ public class GuildsResource {
     public GuildMember getGuildMember(final String guildId, final String userId) {
         return guilds.path(guildId).path("members").path(userId)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(GuildMember.class);
+                .get(GuildMember.class);
     }
 
     public List<GuildMember> listGuildMembers(final String guildId, final Integer limit, final String after) {
         return guilds.path(guildId).path("members")
                 .queryParam("limit", limit).queryParam("after", after)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<GuildMember>>() {});
+                .get(new GenericType<List<GuildMember>>() {});
     }
 
     public GuildMember addGuildMember(final String guildId, final String userId,
                                       final AddGuildMemberRequest addGuildMemberRequest) {
         return guilds.path(guildId).path("members").path(userId)
                 .request(DiscordApi.ACCEPT)
-                .put(Entity.entity(addGuildMemberRequest, MediaType.APPLICATION_JSON))
-                .readEntity(GuildMember.class);
+                .put(Entity.entity(addGuildMemberRequest, MediaType.APPLICATION_JSON), GuildMember.class);
     }
 
     public void modifyGuildMember(final String guildId, final String userId,
@@ -122,8 +114,7 @@ public class GuildsResource {
                                          final ModifyCurrentUsersNickRequest modifyCurrentUsersNickRequest) {
         return guilds.path(guildId).path("members").path("@me").path("nick")
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(modifyCurrentUsersNickRequest, MediaType.APPLICATION_JSON))
-                .readEntity(String.class);
+                .method("PATCH", Entity.entity(modifyCurrentUsersNickRequest, MediaType.APPLICATION_JSON), String.class);
     }
 
     public void addGuildMemberRole(final String guildId, final String userId, final String roleId) {
@@ -147,8 +138,7 @@ public class GuildsResource {
     public List<Ban> getGuildBans(final String guildId) {
         return guilds.path(guildId).path("bans")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Ban>>() {});
+                .get(new GenericType<List<Ban>>() {});
     }
 
     public void createGuildBan(final String guildId, final String userId, final Integer deleteMessageDays,
@@ -169,30 +159,26 @@ public class GuildsResource {
     public List<Role> getGuildRoles(final String guildId) {
         return guilds.path(guildId).path("roles")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Role>>() {});
+                .get(new GenericType<List<Role>>() {});
     }
 
     public Role createGuildRole(final String guildId, final CreateGuildRoleRequest createGuildRoleRequest) {
         return guilds.path(guildId).path("roles")
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createGuildRoleRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Role.class);
+                .post(Entity.entity(createGuildRoleRequest, MediaType.APPLICATION_JSON), Role.class);
     }
 
     public List<Role> modifyGuildRolePositions(final String guildId, final List<GuildRolePosition> guildRolePositions) {
         return guilds.path(guildId).path("roles")
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(guildRolePositions, MediaType.APPLICATION_JSON))
-                .readEntity(new GenericType<List<Role>>() {});
+                .method("PATCH", Entity.entity(guildRolePositions, MediaType.APPLICATION_JSON),new GenericType<List<Role>>() {});
     }
 
     public Role modifyGuildRole(final String guildId, final String roleId,
                                 final ModifyGuildRoleRequest modifyGuildRoleRequest) {
         return guilds.path(guildId).path("roles").path(roleId)
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(modifyGuildRoleRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Role.class);
+                .method("PATCH", Entity.entity(modifyGuildRoleRequest, MediaType.APPLICATION_JSON), Role.class);
     }
 
     public void deleteGuildRole(final String guildId, final String roleId) {
@@ -205,37 +191,32 @@ public class GuildsResource {
         return guilds.path(guildId).path("prune")
                 .queryParam("days", days)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(Pruned.class);
+                .get(Pruned.class);
     }
 
     public Pruned beginGuildPrune(final String guildId, final Integer days) {
         return guilds.path(guildId).path("prune")
                 .queryParam("days", days)
                 .request(DiscordApi.ACCEPT)
-                .post(null)
-                .readEntity(Pruned.class);
+                .post(null, Pruned.class);
     }
 
     public List<VoiceRegion> getGuildVoiceRegions(final String guildId) {
         return guilds.path(guildId).path("regions")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<VoiceRegion>>() {});
+                .get(new GenericType<List<VoiceRegion>>() {});
     }
 
     public List<InviteMetadata> getGuildInvites(final String guildId) {
         return guilds.path(guildId).path("invites")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<InviteMetadata>>() {});
+                .get(new GenericType<List<InviteMetadata>>() {});
     }
 
     public List<Integration> getGuildIntegrations(final String guildId) {
         return guilds.path(guildId).path("integrations")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Integration>>() {});
+                .get(new GenericType<List<Integration>>() {});
     }
 
     public void createGuildIntegration(final String guildId,
@@ -267,14 +248,12 @@ public class GuildsResource {
     public GuildEmbed getGuildEmbed(final String guildId) {
         return guilds.path(guildId).path("embed")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(GuildEmbed.class);
+                .get(GuildEmbed.class);
     }
 
     public GuildEmbed modifyGuildEmbed(final String guildId, final GuildEmbed guildEmbed) {
         return guilds.path(guildId).path("embed")
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(guildEmbed, MediaType.APPLICATION_JSON))
-                .readEntity(GuildEmbed.class);
+                .method("PATCH", Entity.entity(guildEmbed, MediaType.APPLICATION_JSON), GuildEmbed.class);
     }
 }

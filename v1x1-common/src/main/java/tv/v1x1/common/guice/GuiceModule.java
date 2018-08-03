@@ -75,7 +75,6 @@ import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.queue.MessageQueueManagerImpl;
 import tv.v1x1.common.services.state.DisplayNameService;
 import tv.v1x1.common.services.state.MembershipService;
-import tv.v1x1.common.services.state.StateManager;
 import tv.v1x1.common.services.stats.StatsCollector;
 import tv.v1x1.common.services.stats.ZipkinStatsCollector;
 import tv.v1x1.common.services.twitch.TwitchApi;
@@ -130,7 +129,6 @@ public class GuiceModule<T extends GlobalConfiguration, U extends UserConfigurat
         bind(DAOManager.class);
         bind(DisplayNameService.class);
         bind(MembershipService.class);
-        bind(StateManager.class);
         bind(ConfigurationProvider.class);
         bind(UserConfigurationProvider.class);
         bind(TopicManager.class).to(TopicManagerImpl.class);

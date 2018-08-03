@@ -28,22 +28,19 @@ public class UsersResource {
     public User getCurrentUser() {
         return users.path("@me")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(User.class);
+                .get(User.class);
     }
 
     public User getUser(final String userId) {
         return users.path(userId)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(User.class);
+                .get(User.class);
     }
 
     public User modifyCurrentUser(final ModifyCurrentUserRequest modifyCurrentUserRequest) {
         return users.path("@me")
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(modifyCurrentUserRequest, MediaType.APPLICATION_JSON))
-                .readEntity(User.class);
+                .method("PATCH", Entity.entity(modifyCurrentUserRequest, MediaType.APPLICATION_JSON), User.class);
     }
 
     public List<PartialGuild> getCurrentUserGuilds(final String before, final String after, final Integer limit) {
@@ -51,8 +48,7 @@ public class UsersResource {
                 .queryParam("before", before).queryParam("after", after)
                 .queryParam("limit", limit)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<PartialGuild>>() {});
+                .get(new GenericType<List<PartialGuild>>() {});
     }
 
     public void leaveGuild(final String guildId) {
@@ -64,28 +60,24 @@ public class UsersResource {
     public List<Channel> getUserDMs() {
         return users.path("@me").path("channels")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Channel>>() {});
+                .get(new GenericType<List<Channel>>() {});
     }
 
     public Channel createDM(final CreateDMRequest createDMRequest) {
         return users.path("@me").path("channels")
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createDMRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Channel.class);
+                .post(Entity.entity(createDMRequest, MediaType.APPLICATION_JSON), Channel.class);
     }
 
     public Channel createGroupDM(final CreateGroupDMRequest createGroupDMRequest) {
         return users.path("@me").path("channels")
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createGroupDMRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Channel.class);
+                .post(Entity.entity(createGroupDMRequest, MediaType.APPLICATION_JSON), Channel.class);
     }
 
     public List<Connection> getUserConnections() {
         return users.path("@me").path("connections")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Connection>>() {});
+                .get(new GenericType<List<Connection>>() {});
     }
 }

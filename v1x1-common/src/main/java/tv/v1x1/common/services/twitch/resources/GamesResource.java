@@ -24,7 +24,6 @@ public class GamesResource {
         return games.path("top")
                 .queryParam("limit", limit).queryParam("offset", offset)
                 .request(TwitchApi.ACCEPT)
-                .get()
-                .readEntity(TopGameList.class);
+                .get(TopGameList.class);
     }
 }

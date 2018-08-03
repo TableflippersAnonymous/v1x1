@@ -64,7 +64,6 @@ import tv.v1x1.common.services.persistence.UserConfigurationProvider;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.services.queue.MessageQueueManager;
 import tv.v1x1.common.services.state.DisplayNameService;
-import tv.v1x1.common.services.state.StateManager;
 import tv.v1x1.common.services.twitch.TwitchApi;
 
 import java.io.IOException;
@@ -277,10 +276,6 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
 
     public RedissonClient getRedisson() {
         return getInjector().getInstance(RedissonClient.class);
-    }
-
-    public StateManager getStateManager() {
-        return getInjector().getInstance(StateManager.class);
     }
 
     protected String getConfigFile() {

@@ -31,18 +31,17 @@ public class ChannelsResource {
     }
 
     public Channel getChannel(final String channelId) {
-        return channels.path(channelId).request(DiscordApi.ACCEPT).get().readEntity(Channel.class);
+        return channels.path(channelId).request(DiscordApi.ACCEPT).get(Channel.class);
     }
 
     public Channel modifyChannel(final String channelId, final ModifyChannelRequest modifyChannelRequest) {
         return channels.path(channelId).request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(modifyChannelRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Channel.class);
+                .method("PATCH", Entity.entity(modifyChannelRequest, MediaType.APPLICATION_JSON), Channel.class);
     }
 
     public Channel deleteChannel(final String channelId) {
         return channels.path(channelId).request(DiscordApi.ACCEPT)
-                .delete().readEntity(Channel.class);
+                .delete(Channel.class);
     }
 
     public List<Message> getChannelMessages(final String channelId, final String around, final String before,
@@ -51,20 +50,19 @@ public class ChannelsResource {
                 .queryParam("around", around).queryParam("before", before)
                 .queryParam("after", after).queryParam("limit", limit)
                 .request(DiscordApi.ACCEPT)
-                .get().readEntity(new GenericType<List<Message>>() {});
+                .get(new GenericType<List<Message>>() {});
     }
 
     public Message getChannelMessage(final String channelId, final String messageId) {
         return channels.path(channelId).path("messages").path(messageId)
                 .request(DiscordApi.ACCEPT)
-                .get().readEntity(Message.class);
+                .get(Message.class);
     }
 
     public Message createMessage(final String channelId, final CreateMessageRequest createMessageRequest) {
         return channels.path(channelId).path("messages")
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createMessageRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Message.class);
+                .post(Entity.entity(createMessageRequest, MediaType.APPLICATION_JSON), Message.class);
     }
 
     public void createReaction(final String channelId, final String messageId, final String emoji) {
@@ -89,8 +87,7 @@ public class ChannelsResource {
     public List<User> getReactions(final String channelId, final String messageId, final String emoji) {
         return channels.path(channelId).path("messages").path(messageId).path("reactions").path(emoji)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<User>>() {});
+                .get(new GenericType<List<User>>() {});
     }
 
     public void deleteAllReactions(final String channelId, final String messageId) {
@@ -103,8 +100,7 @@ public class ChannelsResource {
                                final EditMessageRequest editMessageRequest) {
         return channels.path(channelId).path("messages").path(messageId)
                 .request(DiscordApi.ACCEPT)
-                .method("PATCH", Entity.entity(editMessageRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Message.class);
+                .method("PATCH", Entity.entity(editMessageRequest, MediaType.APPLICATION_JSON), Message.class);
     }
 
     public void deleteMessage(final String channelId, final String messageId) {
@@ -129,15 +125,13 @@ public class ChannelsResource {
     public List<InviteMetadata> getChannelInvites(final String channelId) {
         return channels.path(channelId).path("invites")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<InviteMetadata>>() {});
+                .get(new GenericType<List<InviteMetadata>>() {});
     }
 
     public Invite createChannelInvite(final String channelId, final CreateChannelInviteRequest createChannelInviteRequest) {
         return channels.path(channelId).path("invites")
                 .request(DiscordApi.ACCEPT)
-                .post(Entity.entity(createChannelInviteRequest, MediaType.APPLICATION_JSON))
-                .readEntity(Invite.class);
+                .post(Entity.entity(createChannelInviteRequest, MediaType.APPLICATION_JSON), Invite.class);
     }
 
     public void deleteChannelPermission(final String channelId, final String overwriteId) {
@@ -155,8 +149,7 @@ public class ChannelsResource {
     public List<Message> getPinnedMessages(final String channelId) {
         return channels.path(channelId).path("pins")
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(new GenericType<List<Message>>() {});
+                .get(new GenericType<List<Message>>() {});
     }
 
     public void addPinnedChannelMessage(final String channelId, final String messageId) {

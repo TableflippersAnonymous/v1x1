@@ -23,7 +23,6 @@ public class AuditLogsResource {
                 .queryParam("user_id", userId).queryParam("action_type", auditLogEventType.getValue())
                 .queryParam("before", before).queryParam("limit", limit)
                 .request(DiscordApi.ACCEPT)
-                .get()
-                .readEntity(AuditLog.class);
+                .get(AuditLog.class);
     }
 }

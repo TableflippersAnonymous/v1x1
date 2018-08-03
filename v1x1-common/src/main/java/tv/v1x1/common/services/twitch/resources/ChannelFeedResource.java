@@ -30,7 +30,7 @@ public class ChannelFeedResource {
      * @param limit Maximum number of most-recent objects to return. Default: 10. Maximum: 100.
      */
     public PostList getPosts(final String channelId, final long limit) {
-        return feed.path(channelId).path("posts").queryParam("limit", limit).request(TwitchApi.ACCEPT).get().readEntity(PostList.class);
+        return feed.path(channelId).path("posts").queryParam("limit", limit).request(TwitchApi.ACCEPT).get(PostList.class);
     }
 
     /**
@@ -40,7 +40,7 @@ public class ChannelFeedResource {
      * @param cursor Tells the server where to start fetching the next set of results in a multi-page response.
      */
     public PostList getPosts(final String channelId, final long limit, final String cursor) {
-        return feed.path(channelId).path("posts").queryParam("limit", limit).queryParam("cursor", cursor).request(TwitchApi.ACCEPT).get().readEntity(PostList.class);
+        return feed.path(channelId).path("posts").queryParam("limit", limit).queryParam("cursor", cursor).request(TwitchApi.ACCEPT).get(PostList.class);
     }
 
     /**
@@ -49,7 +49,7 @@ public class ChannelFeedResource {
      * @param postId ID of post
      */
     public Post getPost(final String channelId, final String postId) {
-        return feed.path(channelId).path("posts").path(postId).request(TwitchApi.ACCEPT).get().readEntity(Post.class);
+        return feed.path(channelId).path("posts").path(postId).request(TwitchApi.ACCEPT).get(Post.class);
     }
 
     /**
@@ -59,7 +59,8 @@ public class ChannelFeedResource {
      * @param share When set to true, the post is shared on the channel’s Twitter feed (if connected), with a link to the post’s URL.
      */
     public PostResponse post(final String channelId, final String content, final boolean share) {
-        return feed.path(channelId).path("posts").queryParam("share", share).request(TwitchApi.ACCEPT).post(Entity.entity(new PostRequest(content), MediaType.APPLICATION_JSON)).readEntity(PostResponse.class);
+        return feed.path(channelId).path("posts").queryParam("share", share).request(TwitchApi.ACCEPT).post(
+                Entity.entity(new PostRequest(content), MediaType.APPLICATION_JSON), PostResponse.class);
     }
 
     /**
@@ -81,7 +82,8 @@ public class ChannelFeedResource {
      *             face emote).
      */
     public ReactionResponse react(final String channelId, final String postId, final String emote) {
-        return feed.path(channelId).path("posts").path(postId).path("reactions").queryParam("emote_id", emote).request(TwitchApi.ACCEPT).post(null).readEntity(ReactionResponse.class);
+        return feed.path(channelId).path("posts").path(postId).path("reactions").queryParam("emote_id", emote)
+                .request(TwitchApi.ACCEPT).post(null, ReactionResponse.class);
     }
 
     /**
@@ -103,7 +105,7 @@ public class ChannelFeedResource {
      * @param limit Maximum number of most-recent objects to return. Default: 10. Maximum: 100.
      */
     public CommentList getComments(final String channelId, final String postId, final long limit) {
-        return feed.path(channelId).path("posts").path(postId).path("comments").queryParam("limit", limit).request(TwitchApi.ACCEPT).get().readEntity(CommentList.class);
+        return feed.path(channelId).path("posts").path(postId).path("comments").queryParam("limit", limit).request(TwitchApi.ACCEPT).get(CommentList.class);
     }
 
     /**
@@ -114,7 +116,7 @@ public class ChannelFeedResource {
      * @param cursor Tells the server where to start fetching the next set of results, in a multi-page response.
      */
     public CommentList getComments(final String channelId, final String postId, final long limit, final String cursor) {
-        return feed.path(channelId).path("posts").path(postId).path("comments").queryParam("limit", limit).queryParam("cursor", cursor).request(TwitchApi.ACCEPT).get().readEntity(CommentList.class);
+        return feed.path(channelId).path("posts").path(postId).path("comments").queryParam("limit", limit).queryParam("cursor", cursor).request(TwitchApi.ACCEPT).get(CommentList.class);
     }
 
     /**
@@ -124,7 +126,8 @@ public class ChannelFeedResource {
      * @param content The content of the comment
      */
     public Comment comment(final String channelId, final String postId, final String content) {
-        return feed.path(channelId).path("posts").path(postId).path("comments").request(TwitchApi.ACCEPT).post(Entity.entity(new CommentRequest(content), MediaType.APPLICATION_JSON)).readEntity(Comment.class);
+        return feed.path(channelId).path("posts").path(postId).path("comments").request(TwitchApi.ACCEPT).post(
+                Entity.entity(new CommentRequest(content), MediaType.APPLICATION_JSON), Comment.class);
     }
 
     /**
@@ -148,7 +151,8 @@ public class ChannelFeedResource {
      *             face emote).
      */
     public ReactionResponse reactToComment(final String channelId, final String postId, final String commentId, final String emote) {
-        return feed.path(channelId).path("posts").path(postId).path("comments").path(commentId).path("reactions").queryParam("emote_id", emote).request(TwitchApi.ACCEPT).post(null).readEntity(ReactionResponse.class);
+        return feed.path(channelId).path("posts").path(postId).path("comments").path(commentId).path("reactions")
+                .queryParam("emote_id", emote).request(TwitchApi.ACCEPT).post(null, ReactionResponse.class);
     }
 
     /**
