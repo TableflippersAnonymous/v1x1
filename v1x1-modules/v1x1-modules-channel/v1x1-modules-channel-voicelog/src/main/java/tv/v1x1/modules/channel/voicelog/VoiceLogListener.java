@@ -17,6 +17,7 @@ import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.services.state.NoSuchTargetException;
 
 import java.lang.invoke.MethodHandles;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -74,7 +75,7 @@ public class VoiceLogListener implements EventListener {
             oldVoiceChannelId = ev.getOldVoiceState().getChannelId();
         if(ev.getNewVoiceState() != null)
             newVoiceChannelId = ev.getNewVoiceState().getChannelId();
-        if(oldVoiceChannelId != null && oldVoiceChannelId.equals(newVoiceChannelId))
+        if(Objects.equals(oldVoiceChannelId, newVoiceChannelId))
             return; // Bomb early, this is a mute/deaf event
         try {
             realDisplayName = module.getDisplayNameService().getDisplayNameFromId(target, userId);
