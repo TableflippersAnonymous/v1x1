@@ -36,6 +36,7 @@
     "hammerjs": "2.0.8",
     "json2typescript": "0.9.5",
     "long": "4.0.0",
+    "ngx-page-scroll": "5.0.0",
     "queueing-subject": "tableflippersanonymous/queueing-subject#c8b547bf0c88100287409cadc6ddce8e4c0f4a59",
     "reflect-metadata": "^0.1.0",
     "rxjs": "6.2.2",

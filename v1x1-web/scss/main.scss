@@ -202,3 +202,21 @@ body {
   opacity: 0;
   -webkit-transition: all .5s;
 }
+
+.dashboard-destination {
+  padding-right: .5rem;
+}
+
+.dashboard-destination::after {
+  content: "|";
+  padding-right: .5rem;
+  color: grey;
+}
+
+.dashboard-sender {
+  padding-right: .5rem;
+}
+
+.dashboard-sender::after {
+  content: ": ";
+}

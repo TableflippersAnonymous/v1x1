@@ -18,9 +18,11 @@ import {Subscription} from "rxjs";
             <mat-card-subtitle>Live view of what v1x1 sees</mat-card-subtitle>
           </mat-card-header>
           <mat-card-content class="hard-wrap">
-            <div class="scroll-box">
-              <div *ngFor="let line of lines">
-                <p>{{line}}</p>
+            <div class="scroll-box" #scrollBox [scrollTop]="scrollBox.scrollHeight">
+              <div *ngFor="let message of messages">
+                <span class="dashboard-destination"><platform-formatter [platform]="message.user.platform">{{message.channel.displayName}}</platform-formatter></span>
+                <span class="dashboard-sender"><platform-formatter [platform]="message.user.platform">{{message.user.displayName}}</platform-formatter></span>
+                <span class="dashboard-message">{{message.text}}</span>
               </div>
             </div>
             <div class="cover-bar"></div>
@@ -45,7 +47,7 @@ import {Subscription} from "rxjs";
   `
 })
 export class DashboardPageComponent implements OnInit, OnDestroy {
-  public lines: string[] = [];
+  public messages: V1x1ChatMessage[] = [];
   private pubsubSub: Subscription = null;
   private tenantSub: Subscription = null;
 
@@ -61,7 +63,7 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
         this.pubsubSub.unsubscribe();
       this.pubsubSub = this.pubsub.topic("topic:" + tenant.id + ":api:chat").subscribe(message => {
         let chatMessage: V1x1ChatMessage = JsonConvert.deserializeObject(message, V1x1ChatMessage);
-        this.lines.push("<" + chatMessage.user.displayName + "> " + chatMessage.text);
+        this.messages.push(chatMessage);
       });
     });
   }
