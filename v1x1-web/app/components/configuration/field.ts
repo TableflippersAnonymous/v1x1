@@ -3,7 +3,7 @@ import {
   ConfigType,
   Permission,
   V1x1ConfigurationDefinitionField
-} from "../../model/v1x1_configuration_definition_field";
+} from "../../model/api/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "./configurable";
 
 @Component({

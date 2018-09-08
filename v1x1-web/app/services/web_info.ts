@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {V1x1WebConfig} from "../model/v1x1_web_config";
+import {V1x1WebConfig} from "../model/api/v1x1_web_config";
 import {Observable} from "rxjs";
 import {JsonConvert} from "json2typescript";
 import {map, publishReplay, refCount} from "rxjs/operators";

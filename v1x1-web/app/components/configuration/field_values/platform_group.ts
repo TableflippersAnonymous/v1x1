@@ -3,10 +3,10 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@an
 import {V1x1Api} from "../../../services/api";
 import {V1x1ApiCache} from "../../../services/api_cache";
 import {Subscription} from "rxjs/index";
-import {V1x1ConfigurationDefinitionField} from "../../../model/v1x1_configuration_definition_field";
+import {V1x1ConfigurationDefinitionField} from "../../../model/api/v1x1_configuration_definition_field";
 import {V1x1GlobalState} from "../../../services/global_state";
 import {map, mergeAll} from "rxjs/operators";
-import {V1x1ChannelGroupPlatformGroup} from "../../../model/v1x1_channel_group_platform_group";
+import {V1x1ChannelGroupPlatformGroup} from "../../../model/api/v1x1_channel_group_platform_group";
 
 @Component({
   selector: 'configuration-field-value-platform-group',

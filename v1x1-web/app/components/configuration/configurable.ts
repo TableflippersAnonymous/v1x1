@@ -1,6 +1,6 @@
 import {EventEmitter, Input, Output} from "@angular/core";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
-import {V1x1ChannelGroup} from "../../model/v1x1_channel_group";
+import {V1x1Tenant} from "../../model/api/v1x1_tenant";
+import {V1x1ChannelGroup} from "../../model/api/v1x1_channel_group";
 
 export class ConfigurableComponent {
   public originalConfigurationValue: any;

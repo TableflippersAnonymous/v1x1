@@ -1,36 +1,36 @@
-import {V1x1Module} from "../model/v1x1_module";
+import {Module} from "../model/state/module";
 import {Injectable} from "@angular/core";
-import {V1x1ConfigurationDefinitionSet} from "../model/v1x1_configuration_definition_set";
-import {V1x1ConfigurationDefinition} from "../model/v1x1_configuration_definition";
+import {ConfigurationDefinitionSet} from "../model/state/configuration_definition_set";
+import {V1x1ConfigurationDefinition} from "../model/api/v1x1_configuration_definition";
 import {forkJoin, Observable, of, zip} from "rxjs";
-import {V1x1List} from "../model/v1x1_list";
+import {V1x1List} from "../model/api/v1x1_list";
 import {JsonConvert} from "json2typescript";
-import {V1x1State} from "../model/v1x1_state";
-import {V1x1AuthToken} from "../model/v1x1_auth_token";
-import {V1x1OauthCode} from "../model/v1x1_oauth_code";
-import {V1x1GlobalUser} from "../model/v1x1_global_user";
-import {V1x1User} from "../model/v1x1_user";
-import {V1x1ApiString} from "../model/v1x1_api_string";
-import {V1x1Tenant} from "../model/v1x1_tenant";
-import {V1x1Configuration} from "../model/v1x1_configuration";
-import {V1x1Group} from "../model/v1x1_group";
-import {V1x1GroupMembership} from "../model/v1x1_group_membership";
-import {V1x1DisplayNameRecord} from "../model/v1x1_display_name_record";
+import {V1x1State} from "../model/api/v1x1_state";
+import {V1x1AuthToken} from "../model/api/v1x1_auth_token";
+import {V1x1OauthCode} from "../model/api/v1x1_oauth_code";
+import {V1x1GlobalUser} from "../model/api/v1x1_global_user";
+import {V1x1User} from "../model/api/v1x1_user";
+import {V1x1ApiString} from "../model/api/v1x1_api_string";
+import {V1x1Tenant} from "../model/api/v1x1_tenant";
+import {Configuration} from "../model/state/configuration";
+import {V1x1Group} from "../model/api/v1x1_group";
+import {V1x1GroupMembership} from "../model/api/v1x1_group_membership";
+import {V1x1DisplayNameRecord} from "../model/api/v1x1_display_name_record";
 import {V1x1WebInfo} from "./web_info";
 import {V1x1GlobalState} from "./global_state";
-import {V1x1ConfigurationSet} from "../model/v1x1_configuration_set";
-import {V1x1ChannelGroup} from "../model/v1x1_channel_group";
-import {V1x1ChannelGroupConfiguration} from "../model/v1x1_channel_group_configuration";
-import {V1x1ChannelGroupConfigurationWrapper} from "../model/v1x1_channel_group_configuration_wrapper";
-import {V1x1Channel} from "../model/v1x1_channel";
-import {V1x1ChannelConfigurationWrapper} from "../model/v1x1_channel_configuration_wrapper";
-import {V1x1ChannelGroupPlatformMapping} from "../model/v1x1_channel_group_platform_mapping";
-import {V1x1TenantPlatformMapping} from "../model/v1x1_tenant_platform_mapping";
-import {V1x1ChannelGroupPlatformMappingWrapper} from "../model/v1x1_channel_group_platform_mapping_wrapper";
+import {V1x1ConfigurationSet} from "../model/api/v1x1_configuration_set";
+import {V1x1ChannelGroup} from "../model/api/v1x1_channel_group";
+import {V1x1ChannelGroupConfiguration} from "../model/api/v1x1_channel_group_configuration";
+import {V1x1ChannelGroupConfigurationWrapper} from "../model/api/v1x1_channel_group_configuration_wrapper";
+import {V1x1Channel} from "../model/api/v1x1_channel";
+import {V1x1ChannelConfigurationWrapper} from "../model/api/v1x1_channel_configuration_wrapper";
+import {V1x1ChannelGroupPlatformMapping} from "../model/api/v1x1_channel_group_platform_mapping";
+import {V1x1TenantPlatformMapping} from "../model/api/v1x1_tenant_platform_mapping";
+import {V1x1ChannelGroupPlatformMappingWrapper} from "../model/api/v1x1_channel_group_platform_mapping_wrapper";
 import {HttpClient} from "@angular/common/http";
-import {V1x1PermissionDefinition} from "../model/v1x1_permission_definition";
+import {V1x1PermissionDefinition} from "../model/api/v1x1_permission_definition";
 import {catchError, map, mergeAll} from 'rxjs/operators';
-import {V1x1ChannelGroupPlatformGroup} from "../model/v1x1_channel_group_platform_group";
+import {V1x1ChannelGroupPlatformGroup} from "../model/api/v1x1_channel_group_platform_group";
 
 @Injectable()
 export class V1x1Api {
@@ -49,33 +49,33 @@ export class V1x1Api {
     return [].concat.apply([], moduleNames).filter((v, idx, self) => self.indexOf(v) === idx);
   }
 
-  getConfigurationDefinitions(): Observable<V1x1ConfigurationDefinitionSet[]> {
+  getConfigurationDefinitions(): Observable<ConfigurationDefinitionSet[]> {
     return zip(
       this.getConfigurationDefinitionList("global"),
       this.getConfigurationDefinitionList("user"))
     .pipe(map(
       ([global, user]) => this.getModuleList(global, user)
-        .map((moduleName: string) => new V1x1ConfigurationDefinitionSet(
+        .map((moduleName: string) => new ConfigurationDefinitionSet(
           global.find((configDefinition: V1x1ConfigurationDefinition) => configDefinition.name == moduleName),
           user.find((configDefinition: V1x1ConfigurationDefinition) => configDefinition.name == moduleName)
         ))
     ));
   }
 
-  getModule(configurationDefinitionSet: V1x1ConfigurationDefinitionSet): V1x1Module {
-    return new V1x1Module((configurationDefinitionSet.global || configurationDefinitionSet.user).name, configurationDefinitionSet);
+  getModule(configurationDefinitionSet: ConfigurationDefinitionSet): Module {
+    return new Module((configurationDefinitionSet.global || configurationDefinitionSet.user).name, configurationDefinitionSet);
   }
 
-  getModulesFromConfigurationDefinitions(configurationDefinitionSets: V1x1ConfigurationDefinitionSet[]): V1x1Module[] {
+  getModulesFromConfigurationDefinitions(configurationDefinitionSets: ConfigurationDefinitionSet[]): Module[] {
     return configurationDefinitionSets.map(
-      (configDefinitionSet: V1x1ConfigurationDefinitionSet) =>
+      (configDefinitionSet: ConfigurationDefinitionSet) =>
         this.getModule(configDefinitionSet)
     );
   }
 
-  getModules(): Observable<V1x1Module[]> {
+  getModules(): Observable<Module[]> {
     return this.getConfigurationDefinitions().pipe(map(
-      (configDefinitions: V1x1ConfigurationDefinitionSet[]) =>
+      (configDefinitions: ConfigurationDefinitionSet[]) =>
         this.getModulesFromConfigurationDefinitions(configDefinitions)
     ));
   }
@@ -226,16 +226,16 @@ export class V1x1Api {
     return this.webInfo.getWebConfig().pipe(map((wc) =>
       this.http.get(wc.apiBase + '/tenants/' + tenantId + '/config/' + module + '/all', this.getAuthorization())
         .pipe(map((r: any) => new V1x1ConfigurationSet(
-          new V1x1Configuration(r.tenant_configuration.enabled, JSON.parse(r.tenant_configuration.config_json)),
+          new Configuration(r.tenant_configuration.enabled, JSON.parse(r.tenant_configuration.config_json)),
           r.channel_group_configurations.map(
             channelGroupConfiguration => new V1x1ChannelGroupConfigurationWrapper(
               JsonConvert.deserializeObject(channelGroupConfiguration.channel_group, V1x1ChannelGroup),
               new V1x1ChannelGroupConfiguration(
-                new V1x1Configuration(channelGroupConfiguration.channel_group_configuration.enabled, JSON.parse(channelGroupConfiguration.channel_group_configuration.config_json)),
+                new Configuration(channelGroupConfiguration.channel_group_configuration.enabled, JSON.parse(channelGroupConfiguration.channel_group_configuration.config_json)),
                 channelGroupConfiguration.channel_configurations.map(
                   channelConfiguration => new V1x1ChannelConfigurationWrapper(
                     JsonConvert.deserializeObject(channelConfiguration.channel, V1x1Channel),
-                    new V1x1Configuration(channelConfiguration.channel_configuration.enabled, JSON.parse(channelConfiguration.channel_configuration.config_json))
+                    new Configuration(channelConfiguration.channel_configuration.enabled, JSON.parse(channelConfiguration.channel_configuration.config_json))
                   )
                 )
               )
@@ -245,7 +245,7 @@ export class V1x1Api {
     ), mergeAll());
   }
 
-  putTenantConfiguration(tenantId: string, module: string, config: V1x1Configuration): Observable<V1x1Configuration> {
+  putTenantConfiguration(tenantId: string, module: string, config: Configuration): Observable<Configuration> {
     return this.webInfo.getWebConfig().pipe(map((wc) =>
       this.http.put(
         wc.apiBase + '/tenants/' + tenantId + '/config/' + module,
@@ -258,11 +258,11 @@ export class V1x1Api {
             Authorization: this.globalState.authorization.getCurrent()
           }
         })
-          .pipe(map((r: {enabled: boolean, config_json: string}) => new V1x1Configuration(r.enabled, JSON.parse(r.config_json))))
+          .pipe(map((r: {enabled: boolean, config_json: string}) => new Configuration(r.enabled, JSON.parse(r.config_json))))
     ), mergeAll());
   }
 
-  putChannelGroupConfiguration(tenantId: string, module: string, platform: string, channelGroupId: string, config: V1x1Configuration): Observable<V1x1Configuration> {
+  putChannelGroupConfiguration(tenantId: string, module: string, platform: string, channelGroupId: string, config: Configuration): Observable<Configuration> {
     return this.webInfo.getWebConfig().pipe(map((wc) =>
       this.http.put(
         wc.apiBase + '/tenants/' + tenantId + '/config/' + module + '/' + platform + '/' + channelGroupId,
@@ -276,11 +276,11 @@ export class V1x1Api {
             Authorization: this.globalState.authorization.getCurrent()
           }
         })
-        .pipe(map((r: {enabled: boolean, config_json: string}) => new V1x1Configuration(r.enabled, JSON.parse(r.config_json))))
+        .pipe(map((r: {enabled: boolean, config_json: string}) => new Configuration(r.enabled, JSON.parse(r.config_json))))
     ), mergeAll());
   }
 
-  putChannelConfiguration(tenantId: string, module: string, platform: string, channelGroupId: string, channelId: string, config: V1x1Configuration): Observable<V1x1Configuration> {
+  putChannelConfiguration(tenantId: string, module: string, platform: string, channelGroupId: string, channelId: string, config: Configuration): Observable<Configuration> {
     return this.webInfo.getWebConfig().pipe(map((wc) =>
       this.http.put(
         wc.apiBase + '/tenants/' + tenantId + '/config/' + module + '/' + platform + '/' + channelGroupId + '/' + channelId,
@@ -294,7 +294,7 @@ export class V1x1Api {
             Authorization: this.globalState.authorization.getCurrent()
           }
         })
-        .pipe(map((r: {enabled: boolean, config_json: string}) => new V1x1Configuration(r.enabled, JSON.parse(r.config_json))))
+        .pipe(map((r: {enabled: boolean, config_json: string}) => new Configuration(r.enabled, JSON.parse(r.config_json))))
     ), mergeAll());
   }
 

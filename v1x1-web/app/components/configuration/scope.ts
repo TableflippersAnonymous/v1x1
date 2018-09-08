@@ -1,13 +1,13 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {V1x1Module} from "../../model/v1x1_module";
-import {V1x1ConfigurationDefinition} from "../../model/v1x1_configuration_definition";
+import {Module} from "../../model/state/module";
+import {V1x1ConfigurationDefinition} from "../../model/api/v1x1_configuration_definition";
 import {ConfigurableComponent} from "./configurable";
 import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
-import {V1x1Configuration} from "../../model/v1x1_configuration";
-import {V1x1ChannelGroup} from "../../model/v1x1_channel_group";
-import {V1x1Channel} from "../../model/v1x1_channel";
-import {V1x1ConfigurationDefinitionField} from "../../model/v1x1_configuration_definition_field";
+import {Configuration} from "../../model/state/configuration";
+import {V1x1ChannelGroup} from "../../model/api/v1x1_channel_group";
+import {V1x1Channel} from "../../model/api/v1x1_channel";
+import {V1x1ConfigurationDefinitionField} from "../../model/api/v1x1_configuration_definition_field";
 import {JsonConvert} from "json2typescript";
 
 @Component({
@@ -40,7 +40,7 @@ import {JsonConvert} from "json2typescript";
   `
 })
 export class ConfigurationScopeComponent extends ConfigurableComponent {
-  @Input() public v1x1Module: V1x1Module;
+  @Input() public v1x1Module: Module;
   @Input() public configurationDefinition: V1x1ConfigurationDefinition;
   @Input() public scope: string;
   @Input() public activeChannelGroup: V1x1ChannelGroup;
@@ -67,14 +67,14 @@ export class ConfigurationScopeComponent extends ConfigurableComponent {
 
   saveChanges() {
     if(this.scope === 'tenant')
-      this.api.putTenantConfiguration(this.activeTenant.id, this.v1x1Module.name, new V1x1Configuration(true, this.configuration))
+      this.api.putTenantConfiguration(this.activeTenant.id, this.v1x1Module.name, new Configuration(true, this.configuration))
         .subscribe(v1x1Config => {
           this.originalConfigurationValue = JSON.parse(JSON.stringify(v1x1Config.configuration));
           this.originalConfigurationChange.emit(this.originalConfigurationValue);
           this.configDirtyChange.emit(this.configDirty());
         });
     else if(this.scope === 'channelGroup')
-      this.api.putChannelGroupConfiguration(this.activeTenant.id, this.v1x1Module.name, this.activeChannelGroup.platform, this.activeChannelGroup.id, new V1x1Configuration(this.enabled, this.configuration))
+      this.api.putChannelGroupConfiguration(this.activeTenant.id, this.v1x1Module.name, this.activeChannelGroup.platform, this.activeChannelGroup.id, new Configuration(this.enabled, this.configuration))
         .subscribe(v1x1Config => {
           this.originalEnabled = v1x1Config.enabled;
           this.originalEnabledChange.emit(this.originalEnabled);
@@ -83,7 +83,7 @@ export class ConfigurationScopeComponent extends ConfigurableComponent {
           this.configDirtyChange.emit(this.configDirty());
         });
     else if(this.scope === 'channel')
-      this.api.putChannelConfiguration(this.activeTenant.id, this.v1x1Module.name, this.activeChannelGroup.platform, this.activeChannelGroup.id, this.activeChannel.id, new V1x1Configuration(this.enabled, this.configuration))
+      this.api.putChannelConfiguration(this.activeTenant.id, this.v1x1Module.name, this.activeChannelGroup.platform, this.activeChannelGroup.id, this.activeChannel.id, new Configuration(this.enabled, this.configuration))
         .subscribe(v1x1Config => {
           this.originalEnabled = v1x1Config.enabled;
           this.originalEnabledChange.emit(this.originalEnabled);

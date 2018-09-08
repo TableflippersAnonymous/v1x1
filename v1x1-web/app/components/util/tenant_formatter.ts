@@ -1,5 +1,5 @@
 import {Component, Input} from "@angular/core";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
+import {V1x1Tenant} from "../../model/api/v1x1_tenant";
 
 @Component({
   selector: 'tenant-formatter',

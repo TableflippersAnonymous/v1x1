@@ -1,69 +1,101 @@
+$twitch-color: #6441A4;
+$twitch-alt-color: #FFF;
+$twitch-border-color: $twitch-color;
+
+$discord-color: #7289DA;
+$discord-alt-color: #FFF;
+$discord-border-color: $discord-color;
+
+$slack-color: #FFF;
+$slack-alt-color: #000;
+$slack-border-color: $slack-alt-color;
+
+$youtube-color: #F00;
+$youtube-alt-color: #FFF;
+$youtube-border-color: #A00;
+
+$mixer-color: #006ac1;
+$mixer-alt-color: #FFF;
+$mixer-border-color: $mixer-color;
+
+$clean-color: rgb(238, 238, 238);
+$dirty-color: rgb(82, 160, 256);
+
 body {
   margin: 0;
 }
 
 .config-group {
-  border-left: 2px solid rgb(238, 238, 238);
+  border-left: 2px solid $clean-color;
   padding-left: 10px;
 }
 
 .config-group-dirty {
-  border-left: 2px solid rgb(82, 160, 256);
+  border-left: 2px solid $dirty-color;
 }
 
 .config-dirty-text {
-  color: rgb(82, 160, 256);
+  color: $dirty-color;
 }
 
 .color-twitch {
-  color: #6441A4;
+  color: $twitch-color;
 }
 .btn-twitch {
-  color: #fff !important;
-  background-color: #6441A4;
-  border-color: #6441A4;
+  color: $twitch-alt-color !important;
+  background-color: $twitch-color;
+  border-color: $twitch-border-color;
 }
 a.btn-twitch:hover {
-  color: #fff;
+  color: $twitch-alt-color;
 }
 
 .color-discord {
-  color: #7289DA;
+  color: $discord-color;
 }
 .btn-discord {
-  color: #fff !important;
-  background-color: #7289DA;
-  border-color: #7289DA;
+  color: $discord-alt-color !important;
+  background-color: $discord-color;
+  border-color: $discord-border-color;
 }
 a.btn-discord:hover {
-  color: #fff;
+  color: $discord-alt-color;
 }
 
+.color-slack {
+  color: $slack-alt-color;
+}
 .btn-slack {
-  color: #000 !important;
-  background-color: #fff;
-  border-color: #000;
+  color: $slack-alt-color !important;
+  background-color: $slack-color;
+  border-color: $slack-border-color;
 }
 a.btn-slack:hover {
-  color: #000;
+  color: $slack-alt-color;
 }
 
+.color-youtube {
+  color: $youtube-color
+}
 .btn-youtube {
-  color: #fff !important;
-  background-color: #ff0000;
-  border-color: #aa0000;
+  color: $youtube-alt-color !important;
+  background-color: $youtube-color;
+  border-color: $youtube-border-color;
 }
 a.btn-youtube:hover {
-  color: #fff;
+  color: $youtube-alt-color;
 }
 
+.color-mixer {
+  color: $mixer-color;
+}
 .btn-mixer {
-  color: #fff !important;
-  background-color: #006ac1;
-  border-color: #006ac1;
+  color: $mixer-alt-color !important;
+  background-color: $mixer-color;
+  border-color: $mixer-border-color;
 }
 a.btn-mixer:hover {
-  color: #fff;
+  color: $mixer-alt-color;
 }
 
 .mat-raised-button.mat-small {
@@ -189,7 +221,7 @@ body {
 
 .cover-bar {
   position: absolute;
-  background: #fff;;
+  background: #fff;
   height: 100%;
   top: 0;
   right: 0;
@@ -209,7 +241,7 @@ body {
 
 .dashboard-destination::after {
   content: "|";
-  padding-right: .5rem;
+  padding-left: .5rem;
   color: grey;
 }
 

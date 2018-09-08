@@ -1,11 +1,11 @@
 import {Component, Input, OnDestroy, OnInit} from "@angular/core";
-import {V1x1ConfigurationDefinitionField} from "../../../model/v1x1_configuration_definition_field";
+import {V1x1ConfigurationDefinitionField} from "../../../model/api/v1x1_configuration_definition_field";
 import {ConfigurableComponent} from "../configurable";
 import {V1x1Api} from "../../../services/api";
 import {V1x1ApiCache} from "../../../services/api_cache";
-import {V1x1PermissionDefinition} from "../../../model/v1x1_permission_definition";
+import {V1x1PermissionDefinition} from "../../../model/api/v1x1_permission_definition";
 import {Subscription} from "rxjs";
-import {V1x1PermissionDefinitionEntry} from "../../../model/v1x1_permission_definition_entry";
+import {V1x1PermissionDefinitionEntry} from "../../../model/api/v1x1_permission_definition_entry";
 
 @Component({
   selector: 'configuration-field-value-permission-list',

@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {V1x1Api} from "../../services/api";
 import {V1x1GlobalState} from "../../services/global_state";
 import {Subscription} from "rxjs";
-import {V1x1GlobalUser} from "../../model/v1x1_global_user";
+import {V1x1GlobalUser} from "../../model/api/v1x1_global_user";
 import {first} from "rxjs/operators";
 
 @Component({

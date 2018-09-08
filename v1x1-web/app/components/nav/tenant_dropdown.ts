@@ -2,7 +2,7 @@ import {Component, EventEmitter, Output} from "@angular/core";
 import {V1x1Api} from "../../services/api";
 import {Router} from "@angular/router";
 import {V1x1GlobalState} from "../../services/global_state";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
+import {V1x1Tenant} from "../../model/api/v1x1_tenant";
 import {Observable} from "rxjs";
 import {map} from "rxjs/operators";
 

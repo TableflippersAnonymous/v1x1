@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {V1x1Module} from "../../model/v1x1_module";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
-import {V1x1ChannelGroupConfigurationWrapper} from "../../model/v1x1_channel_group_configuration_wrapper";
+import {Module} from "../../model/state/module";
+import {V1x1Tenant} from "../../model/api/v1x1_tenant";
+import {V1x1ChannelGroupConfigurationWrapper} from "../../model/api/v1x1_channel_group_configuration_wrapper";
 
 @Component({
   selector: 'configuration-channel-group',
@@ -23,7 +23,7 @@ import {V1x1ChannelGroupConfigurationWrapper} from "../../model/v1x1_channel_gro
   `
 })
 export class ConfigurationChannelGroupComponent {
-  public v1x1ModuleValue: V1x1Module;
+  public v1x1ModuleValue: Module;
   @Input() public activeTenant: V1x1Tenant;
   @Input() public activeChannelGroup: V1x1ChannelGroupConfigurationWrapper;
   @Output() public v1x1ModuleChange = new EventEmitter();

@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {V1x1Module} from "../../model/v1x1_module";
-import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
+import {Module} from "../../model/state/module";
+import {V1x1ConfigurationSet} from "../../model/api/v1x1_configuration_set";
+import {V1x1Tenant} from "../../model/api/v1x1_tenant";
 
 @Component({
   selector: 'configuration-module',
@@ -21,7 +21,7 @@ import {V1x1Tenant} from "../../model/v1x1_tenant";
   `
 })
 export class ConfigurationModuleComponent {
-  public v1x1ModuleValue: V1x1Module;
+  public v1x1ModuleValue: Module;
   @Input() public configurationSet: V1x1ConfigurationSet;
   @Input() public activeTenant: V1x1Tenant;
   @Output() public v1x1ModuleChange = new EventEmitter();

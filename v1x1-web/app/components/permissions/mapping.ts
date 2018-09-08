@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
 import {V1x1GlobalState} from "../../services/global_state";
-import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/v1x1_channel_group_platform_mapping_wrapper";
+import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/api/v1x1_channel_group_platform_mapping_wrapper";
 
 @Component({
   selector: 'permissions-mapping-page',

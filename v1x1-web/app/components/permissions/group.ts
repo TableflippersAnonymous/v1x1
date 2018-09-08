@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Input, Output} from "@angular/core";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
-import {V1x1ConfigurationDefinition} from "../../model/v1x1_configuration_definition";
+import {V1x1Tenant} from "../../model/api/v1x1_tenant";
+import {V1x1ConfigurationDefinition} from "../../model/api/v1x1_configuration_definition";
 import {JsonConvert} from "json2typescript";
-import {V1x1GroupMembership} from "../../model/v1x1_group_membership";
+import {V1x1GroupMembership} from "../../model/api/v1x1_group_membership";
 import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
 

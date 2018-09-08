@@ -1,4 +1,4 @@
-import {V1x1GlobalUser} from "../../model/v1x1_global_user";
+import {V1x1GlobalUser} from "../../model/api/v1x1_global_user";
 import {Component, Input} from "@angular/core";
 
 @Component({

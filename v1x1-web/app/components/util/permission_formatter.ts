@@ -2,8 +2,8 @@ import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from "@an
 import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
 import {Subscription} from "rxjs";
-import {V1x1PermissionDefinition} from "../../model/v1x1_permission_definition";
-import {V1x1PermissionDefinitionEntry} from "../../model/v1x1_permission_definition_entry";
+import {V1x1PermissionDefinition} from "../../model/api/v1x1_permission_definition";
+import {V1x1PermissionDefinitionEntry} from "../../model/api/v1x1_permission_definition_entry";
 
 @Component({
   selector: 'permission-formatter',

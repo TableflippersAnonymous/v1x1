@@ -107,7 +107,7 @@ public class BotsResource {
         final String defaultUsername = tmiGlobalConfigProvider.getConfiguration().getDefaultUsername();
         final Map<String, List<String>> ret = new HashMap<>();
         daoJoinedTwitchChannel.list().forEach(joinedTwitchChannel -> {
-            final Tenant tenant = daoTenant.getByChannel(Platform.TWITCH, joinedTwitchChannel.getChannel());
+            final Tenant tenant = daoTenant.getByChannel(Platform.TWITCH, joinedTwitchChannel.getChannel() + ":main");
             if(tenant == null)
                 return;
             final TmiUserConfiguration tmiUserConfiguration = tmiUserConfigProvider.getConfiguration(tenant.toCore(daoTenant));

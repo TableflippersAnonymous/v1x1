@@ -1,14 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {V1x1Module} from "../../model/v1x1_module";
-import {Permission} from "../../model/v1x1_configuration_definition_field";
+import {Module} from "../../model/state/module";
+import {Permission} from "../../model/api/v1x1_configuration_definition_field";
 import {V1x1ApiCache} from "../../services/api_cache";
-import {V1x1Tenant} from "../../model/v1x1_tenant";
-import {V1x1ConfigurationSet} from "../../model/v1x1_configuration_set";
+import {V1x1Tenant} from "../../model/api/v1x1_tenant";
+import {V1x1ConfigurationSet} from "../../model/api/v1x1_configuration_set";
 import {V1x1Api} from "../../services/api";
 import {JsonConvert} from "json2typescript";
 import {V1x1GlobalState} from "../../services/global_state";
 import {V1x1PubSub} from "../../services/pubsub";
-import {V1x1ConfigChange} from "../../model/v1x1_config_change";
+import {V1x1ConfigChange} from "../../model/api/v1x1_config_change";
 import {first, map} from "rxjs/operators";
 import {forkJoin, Subscription} from "rxjs";
 
@@ -24,7 +24,7 @@ import {forkJoin, Subscription} from "rxjs";
   `
 })
 export class ConfigurationPageComponent implements OnInit, OnDestroy {
-  public v1x1Modules: V1x1Module[] = [];
+  public v1x1Modules: Module[] = [];
   public permissions = Permission;
   public json = JSON;
   public activeTenantValue: V1x1Tenant = undefined;
@@ -39,8 +39,8 @@ export class ConfigurationPageComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.subscriptions.push(this.cachedApi.getModules().pipe(first()).subscribe(modules => {
       this.v1x1Modules = modules
-        .filter((v1x1Module: V1x1Module) => v1x1Module.configurationDefinitionSet.user !== null)
-        .filter((v1x1Module: V1x1Module) => v1x1Module.configurationDefinitionSet.user.tenantPermission !== Permission.NONE);
+        .filter((v1x1Module: Module) => v1x1Module.configurationDefinitionSet.user !== null)
+        .filter((v1x1Module: Module) => v1x1Module.configurationDefinitionSet.user.tenantPermission !== Permission.NONE);
       this.recalculateTenantConfiguration();
     }));
     this.subscriptions.push(this.globalState.activeTenant.get().subscribe(tenant => {
