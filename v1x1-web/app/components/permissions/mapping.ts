@@ -1,6 +1,4 @@
-import {Component} from "@angular/core";
-import {V1x1Api} from "../../services/api";
-import {V1x1ApiCache} from "../../services/api_cache";
+import {Component, OnInit} from "@angular/core";
 import {V1x1GlobalState} from "../../services/global_state";
 import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/api/v1x1_channel_group_platform_mapping_wrapper";
 
@@ -17,15 +15,13 @@ import {V1x1ChannelGroupPlatformMappingWrapper} from "../../model/api/v1x1_chann
     </mat-tab-group>
   `
 })
-export class PermissionsMappingComponent {
+export class PermissionsMappingComponent implements OnInit {
   channelGroupPlatformMappings: V1x1ChannelGroupPlatformMappingWrapper[] = [];
 
-  constructor(private cachedApi: V1x1ApiCache, private api: V1x1Api, private globalState: V1x1GlobalState) {
-    this.recalculate();
-  }
+  constructor(private globalState: V1x1GlobalState) {}
 
-  recalculate() {
-    this.globalState.activeTenant.get().subscribe(tenant => {
+  ngOnInit() {
+    this.globalState.webapp.currentTenant.subscribe(tenant => {
       if(tenant === undefined)
         return;
       this.api.getTenantPlatformMappings(tenant)

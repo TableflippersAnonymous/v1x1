@@ -37,8 +37,8 @@ export class UserDropdownNavComponent {
     this.router.navigate(["AAAAAAAAAAAAAAAAAAAAAA", "welcome"]);
     localStorage.removeItem("authorization");
     localStorage.removeItem("auth_expiry");
-    this.globalState.activeTenant.set(undefined);
-    this.globalState.tenants.set([]);
+    this.globalState.webapp.currentTenant.next(undefined);
+    this.globalState.webapp.tenants.next(new Map());
     this.globalState.authorization.set(null);
   }
 

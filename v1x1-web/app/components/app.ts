@@ -25,6 +25,7 @@ export class AppComponent {
 
   constructor(private apiCache: V1x1ApiCache, private api: V1x1Api, private globalState: V1x1GlobalState, private router: Router, private webInfo: V1x1WebInfo) {
     this.apiCache.preload();
+    this.globalState.init();
 
     if(window.location.search) {
       window.location.search.substring(1).split('&').forEach(e => {
@@ -87,9 +88,7 @@ export class AppComponent {
     }
 
     if(this.globalState.loggedIn.getCurrent()) {
-      this.api.getTenants().subscribe(r => {
-        this.globalState.tenants.set(r);
-      });
+      this.globalState.login();
     }
   }
 

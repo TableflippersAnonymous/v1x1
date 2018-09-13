@@ -5,7 +5,7 @@ import {WebApp} from "../model/state/webapp";
 import {V1x1Api} from "./api";
 import {V1x1WebInfo} from "./web_info";
 import {forkJoin} from "rxjs";
-import {map, mergeAll, publishReplay, refCount} from "rxjs/operators";
+import {map, mergeAll, take} from "rxjs/operators";
 import {Module} from "../model/state/module";
 import {V1x1GlobalUser} from "../model/api/v1x1_global_user";
 import {GlobalUser} from "../model/state/global_user";
@@ -28,7 +28,6 @@ import {V1x1ChannelGroupPlatformMapping} from "../model/api/v1x1_channel_group_p
 
 @Injectable()
 export class V1x1GlobalState {
-  activeTenant: ObservableVariable<V1x1Tenant> = new ObservableVariable<V1x1Tenant>(undefined);
   loggedIn: ObservableVariable<boolean> = new ObservableVariable<boolean>(false);
   authorization: ObservableVariable<string> = new ObservableVariable<string>(null);
 
@@ -37,8 +36,8 @@ export class V1x1GlobalState {
   constructor(private api: V1x1Api, private webInfo: V1x1WebInfo) {}
 
   init() {
-    this.webapp.configuration = this.webInfo.getWebConfig().pipe(publishReplay(1), refCount());
-    this.webapp.modules = this.api.getModules().pipe(
+    this.webInfo.getWebConfig().pipe(take(1)).subscribe(this.webapp.configuration);
+    this.api.getModules().pipe(
       map(
         (modules: Module[]) => {
           let moduleMap: Map<string, Module> = new Map<string, Module>();
@@ -46,18 +45,16 @@ export class V1x1GlobalState {
           return moduleMap;
         }
       ),
-      publishReplay(1),
-      refCount()
-    );
+      take(1)
+    ).subscribe(this.webapp.modules);
   }
 
   login() {
-    this.webapp.currentUser = this.api.getSelf().pipe(
+    this.api.getSelf().pipe(
       map((v1x1GlobalUser: V1x1GlobalUser) => this.convertToGlobalUser(v1x1GlobalUser)),
-      publishReplay(1),
-      refCount()
-    );
-    this.webapp.tenants = forkJoin(
+      take(1)
+    ).subscribe(this.webapp.currentUser);
+    forkJoin(
       this.api.getTenants(),
       this.webapp.modules
     ).pipe(
@@ -159,9 +156,8 @@ export class V1x1GlobalState {
         });
         return map;
       }),
-      publishReplay(1),
-      refCount()
-    );
+      take(1)
+    ).subscribe(this.webapp.tenants);
   }
 
   convertToGlobalUser(v1x1GlobalUser: V1x1GlobalUser) {

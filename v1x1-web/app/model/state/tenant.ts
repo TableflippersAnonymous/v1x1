@@ -11,7 +11,6 @@ export class Tenant {
   groups: Map<string, TenantGroup>;
   chatMessages: V1x1ChatMessage[];
 
-
   constructor(id: string, displayName: string, channelGroups: Map<string, ChannelGroup>,
               moduleConfiguration: Map<string, Configuration>, groups: Map<string, TenantGroup>,
               chatMessages: V1x1ChatMessage[]) {
