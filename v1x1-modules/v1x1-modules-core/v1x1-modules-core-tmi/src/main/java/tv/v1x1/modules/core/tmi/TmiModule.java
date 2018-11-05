@@ -1,6 +1,7 @@
 package tv.v1x1.modules.core.tmi;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -52,7 +53,7 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
     private static final UUID SCHEDULER_UPDATE_CHANNELS = new UUID(java.util.UUID.nameUUIDFromBytes("Module|TMI|UpdateChannels".getBytes()));
 
     private final LoadingCache<String, Tenant> tenantCache;
-    private final LoadingCache<String, GlobalUser> globalUserCache;
+    private final LoadingCache<UserCacheKey, GlobalUser> globalUserCache;
     private final LoadingCache<PermissionCacheKey, List<Permission>> permissionCache;
     private LoadBalancingDistributor channelDistributor;
     private final Map<String, TmiBot> bots = new ConcurrentHashMap<>();
@@ -114,6 +115,38 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
         }
     }
 
+    private static class UserCacheKey {
+        private final String id;
+        private final String displayName;
+
+        public UserCacheKey(final String id, final String displayName) {
+            this.id = id;
+            this.displayName = displayName;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public String getDisplayName() {
+            return displayName;
+        }
+
+        @Override
+        public boolean equals(final Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            final UserCacheKey that = (UserCacheKey) o;
+            return Objects.equal(id, that.id) &&
+                    Objects.equal(displayName, that.displayName);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hashCode(id, displayName);
+        }
+    }
+
     public TmiModule() {
         this.tenantCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.SECONDS)
@@ -131,12 +164,12 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
                 });
         this.globalUserCache = CacheBuilder.newBuilder()
                 .expireAfterWrite(30, TimeUnit.SECONDS)
-                .build(new CacheLoader<String, GlobalUser>() {
+                .build(new CacheLoader<UserCacheKey, GlobalUser>() {
                     @Override
-                    public GlobalUser load(final String s) {
+                    public GlobalUser load(final UserCacheKey key) {
                         try {
-                            LOG.debug("Loading global user for {}", s);
-                            return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.TWITCH, s, null).toCore();
+                            LOG.debug("Loading global user for {}/{}", key.id, key.displayName);
+                            return getDaoManager().getDaoGlobalUser().getOrCreate(Platform.TWITCH, key.id, key.displayName).toCore();
                         } catch(final Exception e) {
                             e.printStackTrace();
                             throw e;
@@ -258,9 +291,9 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
         return "tmi";
     }
 
-    GlobalUser getGlobalUser(final String id) {
+    GlobalUser getGlobalUser(final String id, final String displayName) {
         try {
-            return globalUserCache.get(id);
+            return globalUserCache.get(new UserCacheKey(id, displayName));
         } catch (final ExecutionException e) {
             throw new RuntimeException(e);
         }
