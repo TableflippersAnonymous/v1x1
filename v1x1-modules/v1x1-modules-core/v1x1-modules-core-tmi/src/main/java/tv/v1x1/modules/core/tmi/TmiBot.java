@@ -169,7 +169,7 @@ public class TmiBot implements Runnable {
     }
 
     private void requestCaps() throws IOException {
-        sendLine("CAP REQ :twitch.tv/membership");
+        //sendLine("CAP REQ :twitch.tv/membership");
         sendLine("CAP REQ :twitch.tv/commands");
         sendLine("CAP REQ :twitch.tv/tags");
     }
