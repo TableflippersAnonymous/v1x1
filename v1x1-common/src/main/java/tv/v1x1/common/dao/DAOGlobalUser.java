@@ -130,7 +130,7 @@ public class DAOGlobalUser {
             globalUser.getEntries().add(new GlobalUser.Entry(
                     platform,
                     (displayName == null
-                            ? displayNameService.getIdFromDisplayName(platform, userId)
+                            ? displayNameService.getDisplayNameFromId(platform, userId)
                             : displayName),
                     userId));
         } catch (final NoSuchTargetException e) {
