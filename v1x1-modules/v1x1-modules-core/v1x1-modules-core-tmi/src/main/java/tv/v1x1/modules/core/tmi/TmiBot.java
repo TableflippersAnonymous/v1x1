@@ -294,7 +294,7 @@ public class TmiBot implements Runnable {
             return;
         final Set<String> badges = privmsgCommand.getBadges().stream().map(MessageTaggedIrcStanza.Badge::name).collect(Collectors.toSet());
         badges.add("_DEFAULT_");
-        final List<Permission> permissions = tmiModule.getPermissions(channel.getChannelGroup().getTenant(), user.getGlobalUser(), channel.getId(), badges);
+        final List<Permission> permissions = tmiModule.getPermissions(channel.getChannelGroup().getTenant(), user.getGlobalUser(), channel.getChannelGroup().getId(), badges);
         final ChatMessage chatMessage = new ChatMessage(channel, user, privmsgCommand.getMessage(), permissions);
         event(new TwitchChatMessageEvent(module, chatMessage, privmsgCommand), parentSpan);
     }
