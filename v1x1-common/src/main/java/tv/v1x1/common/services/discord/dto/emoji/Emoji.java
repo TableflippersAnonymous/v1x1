@@ -2,7 +2,6 @@ package tv.v1x1.common.services.discord.dto.emoji;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import tv.v1x1.common.services.discord.dto.permissions.Role;
 
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class Emoji {
     @JsonProperty
     private String name;
     @JsonProperty
-    private List<Role> roles;
+    private List<String> roles;
     @JsonProperty("require_colons")
     private boolean requireColons;
     @JsonProperty
@@ -25,7 +24,7 @@ public class Emoji {
     public Emoji() {
     }
 
-    public Emoji(final String id, final String name, final List<Role> roles, final boolean requireColons,
+    public Emoji(final String id, final String name, final List<String> roles, final boolean requireColons,
                  final boolean managed) {
         this.id = id;
         this.name = name;
@@ -50,11 +49,11 @@ public class Emoji {
         this.name = name;
     }
 
-    public List<Role> getRoles() {
+    public List<String> getRoles() {
         return roles;
     }
 
-    public void setRoles(final List<Role> roles) {
+    public void setRoles(final List<String> roles) {
         this.roles = roles;
     }
 
