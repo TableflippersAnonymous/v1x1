@@ -19908,6 +19908,10 @@ public final class IRC {
        * <code>SUB = 2;</code>
        */
       SUB(2),
+      /**
+       * <code>SUBGIFT = 3;</code>
+       */
+      SUBGIFT(3),
       ;
 
       /**
@@ -19922,6 +19926,10 @@ public final class IRC {
        * <code>SUB = 2;</code>
        */
       public static final int SUB_VALUE = 2;
+      /**
+       * <code>SUBGIFT = 3;</code>
+       */
+      public static final int SUBGIFT_VALUE = 3;
 
 
       public final int getNumber() {
@@ -19941,6 +19949,7 @@ public final class IRC {
           case 0: return UNKNOWN;
           case 1: return RESUB;
           case 2: return SUB;
+          case 3: return SUBGIFT;
           default: return null;
         }
       }
@@ -23488,30 +23497,31 @@ public final class IRC {
       "\006Member\022\020\n\010nickname\030\001 \002(\t\022\014\n\004isOp\030\002 \002(\0102" +
       "j\n\004data\022(.tv.v1x1.common.dto.proto.core." +
       "IrcStanza\030q \001(\01322.tv.v1x1.common.dto.pro" +
-      "to.core.RplNameReplyCommand\"\252\003\n\021UserNoti" +
+      "to.core.RplNameReplyCommand\"\267\003\n\021UserNoti" +
       "ceCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 ",
       "\002(\t\022N\n\nmessage_id\030\003 \001(\0162:.tv.v1x1.common" +
       ".dto.proto.core.UserNoticeCommand.Messag" +
       "eId\022\016\n\006months\030\004 \001(\005\022\026\n\016system_message\030\005 " +
       "\001(\t\022\r\n\005login\030\006 \001(\t\022T\n\025message_tagged_sta" +
       "nza\030\007 \002(\01325.tv.v1x1.common.dto.proto.cor" +
-      "e.MessageTaggedIrcStanza\",\n\tMessageId\022\013\n" +
-      "\007UNKNOWN\020\000\022\t\n\005RESUB\020\001\022\007\n\003SUB\020\0022h\n\004data\022(" +
-      ".tv.v1x1.common.dto.proto.core.IrcStanza" +
-      "\030r \001(\01320.tv.v1x1.common.dto.proto.core.U" +
-      "serNoticeCommand\"\330\001\n\020UserStateCommand\022\017\n",
-      "\007channel\030\001 \002(\t\022J\n\020emote_set_stanza\030\002 \002(\013" +
-      "20.tv.v1x1.common.dto.proto.core.EmoteSe" +
-      "tIrcStanza2g\n\004data\022(.tv.v1x1.common.dto." +
-      "proto.core.IrcStanza\030s \001(\0132/.tv.v1x1.com" +
-      "mon.dto.proto.core.UserStateCommand\"\225\002\n\016" +
-      "WhisperCommand\022\016\n\006target\030\001 \002(\t\022\017\n\007messag" +
-      "e\030\002 \002(\t\022\021\n\tthread_id\030\003 \001(\t\022\022\n\nmessage_id" +
-      "\030\004 \001(\004\022T\n\025message_tagged_stanza\030\005 \002(\01325." +
-      "tv.v1x1.common.dto.proto.core.MessageTag" +
-      "gedIrcStanza2e\n\004data\022(.tv.v1x1.common.dt",
-      "o.proto.core.IrcStanza\030t \001(\0132-.tv.v1x1.c" +
-      "ommon.dto.proto.core.WhisperCommand"
+      "e.MessageTaggedIrcStanza\"9\n\tMessageId\022\013\n" +
+      "\007UNKNOWN\020\000\022\t\n\005RESUB\020\001\022\007\n\003SUB\020\002\022\013\n\007SUBGIF" +
+      "T\020\0032h\n\004data\022(.tv.v1x1.common.dto.proto.c" +
+      "ore.IrcStanza\030r \001(\01320.tv.v1x1.common.dto" +
+      ".proto.core.UserNoticeCommand\"\330\001\n\020UserSt",
+      "ateCommand\022\017\n\007channel\030\001 \002(\t\022J\n\020emote_set" +
+      "_stanza\030\002 \002(\01320.tv.v1x1.common.dto.proto" +
+      ".core.EmoteSetIrcStanza2g\n\004data\022(.tv.v1x" +
+      "1.common.dto.proto.core.IrcStanza\030s \001(\0132" +
+      "/.tv.v1x1.common.dto.proto.core.UserStat" +
+      "eCommand\"\225\002\n\016WhisperCommand\022\016\n\006target\030\001 " +
+      "\002(\t\022\017\n\007message\030\002 \002(\t\022\021\n\tthread_id\030\003 \001(\t\022" +
+      "\022\n\nmessage_id\030\004 \001(\004\022T\n\025message_tagged_st" +
+      "anza\030\005 \002(\01325.tv.v1x1.common.dto.proto.co" +
+      "re.MessageTaggedIrcStanza2e\n\004data\022(.tv.v",
+      "1x1.common.dto.proto.core.IrcStanza\030t \001(" +
+      "\0132-.tv.v1x1.common.dto.proto.core.Whispe" +
+      "rCommand"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
