@@ -141,18 +141,18 @@ public class OpsTool extends RegisteredThreadedModule<OpsToolGlobalConfiguration
     public boolean linkGroup(final Channel c, final Platform platform, final String vgroup, final String pgroup) {
         final TenantGroup group = groupByName(c.getChannelGroup().getTenant(), vgroup);
         if(group == null) return false;
-        getDaoManager().getDaoTenantGroup().setChannelGroupPlatformMapping(platform, c.getId(), pgroup, group);
+        getDaoManager().getDaoTenantGroup().setChannelGroupPlatformMapping(platform, c.getChannelGroup().getId(), pgroup, group);
         return true;
     }
 
     public boolean clearLink(final Channel c, final Platform platform, final String vgroup, final String pgroup) {
         final TenantGroup group = groupByName(c.getChannelGroup().getTenant(), vgroup);
         if(group == null) return false;
-        getDaoManager().getDaoTenantGroup().clearChannelGroupPlatformMapping(platform, c.getId(), pgroup);
+        getDaoManager().getDaoTenantGroup().clearChannelGroupPlatformMapping(platform, c.getChannelGroup().getId(), pgroup);
         return true;
     }
 
     public ChannelGroupPlatformMapping getLink(final Channel c, final String pgroup) {
-        return getDaoManager().getDaoTenantGroup().getChannelGroupPlatformMapping(c.getChannelGroup().getPlatform(), c.getId(), pgroup);
+        return getDaoManager().getDaoTenantGroup().getChannelGroupPlatformMapping(c.getChannelGroup().getPlatform(), c.getChannelGroup().getId(), pgroup);
     }
 }
