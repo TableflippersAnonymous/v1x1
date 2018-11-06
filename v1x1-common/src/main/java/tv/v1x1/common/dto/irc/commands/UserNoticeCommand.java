@@ -26,12 +26,14 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
 
     public enum MessageId {
         RESUB,
-        SUB;
+        SUB,
+        SUBGIFT;
 
         public IRC.UserNoticeCommand.MessageId toProto() {
             switch(this) {
                 case RESUB: return IRC.UserNoticeCommand.MessageId.RESUB;
                 case SUB: return IRC.UserNoticeCommand.MessageId.SUB;
+                case SUBGIFT: return IRC.UserNoticeCommand.MessageId.SUBGIFT;
                 default: throw new IllegalStateException("Unknown MessageId: " + this);
             }
         }
