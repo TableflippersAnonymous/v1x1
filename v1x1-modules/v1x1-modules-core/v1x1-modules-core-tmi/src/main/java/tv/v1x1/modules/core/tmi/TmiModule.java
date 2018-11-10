@@ -28,9 +28,9 @@ import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
+import tv.v1x1.common.services.twitch.dto.auth.RootResponse;
 import tv.v1x1.common.services.twitch.dto.channels.Channel;
 import tv.v1x1.common.services.twitch.dto.users.ChatUser;
-import tv.v1x1.common.services.twitch.dto.users.User;
 import tv.v1x1.common.util.ratelimiter.GlobalRateLimiter;
 import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
@@ -357,12 +357,12 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
                     username = getGlobalConfiguration().getDefaultUsername();
                 oauthToken = getGlobalConfiguration().getGlobalBots().get(username).replace("oauth:", "");
             }
-            final User twitchUser = getTwitchApi().withToken(oauthToken).getUsers().getUser();
-            LOG.debug("Connecting to {} with username={} password=<removed>", channel.getDisplayName(), twitchUser.getName());
-            final String userId = String.valueOf(twitchUser.getId());
+            final RootResponse rootResponse = getTwitchApi().withToken(oauthToken).getRoot().get();
+            final String userId = rootResponse.getToken().getUserId();
             final ChatUser chatUser = getTwitchApi().getUsers().getChatUser(userId);
+            LOG.debug("Connecting to {} with username={} password=<removed>", channel.getDisplayName(), chatUser.getLogin());
             final RateLimiter messageLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi-chat/" + userId, chatUser.getChatRateLimit(), 30);
-            final TmiBot tmiBot = new TmiBot(twitchUser.getName(), oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel, twitchDisplayNameService);
+            final TmiBot tmiBot = new TmiBot(chatUser.getLogin(), oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel, twitchDisplayNameService);
             scheduledExecutorService.submit(tmiBot);
             final TmiBot oldTmiBot = bots.put(channelId, tmiBot);
             try {
