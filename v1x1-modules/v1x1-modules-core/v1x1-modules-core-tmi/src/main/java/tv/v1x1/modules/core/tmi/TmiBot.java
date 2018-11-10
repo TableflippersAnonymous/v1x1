@@ -455,7 +455,7 @@ public class TmiBot implements Runnable {
     private void authenticate() throws InterruptedException {
         joinLimiter.submitAndWait(() -> {
             try {
-                sendLine("PASS :" + oauthToken);
+                sendLine("PASS :oauth:" + oauthToken);
                 sendLine("USER " + username + " \"v1x1.tv\" \"irc.chat.twitch.tv\" :" + username);
                 sendLine("NICK " + username);
             } catch (final IOException e) {

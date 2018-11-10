@@ -7,6 +7,7 @@ import tv.v1x1.common.services.twitch.dto.blocks.Block;
 import tv.v1x1.common.services.twitch.dto.blocks.BlockList;
 import tv.v1x1.common.services.twitch.dto.emotes.EmoticonSetList;
 import tv.v1x1.common.services.twitch.dto.misc.SortDirection;
+import tv.v1x1.common.services.twitch.dto.users.ChatUser;
 import tv.v1x1.common.services.twitch.dto.users.Follow;
 import tv.v1x1.common.services.twitch.dto.users.FollowList;
 import tv.v1x1.common.services.twitch.dto.users.FollowRequest;
@@ -74,6 +75,16 @@ public class UsersResource {
         return users.path(userId)
                 .request(TwitchApi.ACCEPT)
                 .get(User.class);
+    }
+
+    /**
+     * Gets a specified chat user object.
+     * @param userId ID of user
+     */
+    public ChatUser getChatUser(final String userId) {
+        return users.path(userId).path("chat")
+                .request(TwitchApi.ACCEPT)
+                .get(ChatUser.class);
     }
 
     /**
