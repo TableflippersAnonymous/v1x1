@@ -18,7 +18,7 @@ import tv.v1x1.common.scanners.config.Version;
 @ModuleConfig("tmi")
 @DisplayName("Twitch")
 @Description("This module controls settings used when connecting to your Twitch Channel.")
-@Version(0)
+@Version(1)
 public class TmiUserConfiguration implements UserConfiguration {
     @DisplayName("Custom Bot?")
     @Description("This allows you to enter your own bot credentials to use.")
@@ -31,7 +31,7 @@ public class TmiUserConfiguration implements UserConfiguration {
     @Description("This allows you to enter a bot name other than v1x1.")
     @Type(ConfigType.BOT_NAME)
     @JsonProperty("bot_name")
-    @TenantPermission(Permission.READ_WRITE)
+    @TenantPermission(Permission.NONE)
     private String botName;
 
     @DisplayName("OAuth Token:")
