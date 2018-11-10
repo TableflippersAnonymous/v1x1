@@ -19,7 +19,10 @@ import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.dto.db.JoinedTwitchChannel;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
+import tv.v1x1.common.dto.messages.events.ChannelConfigChangeEvent;
+import tv.v1x1.common.dto.messages.events.ChannelGroupConfigChangeEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
+import tv.v1x1.common.dto.messages.events.TenantConfigChangeEvent;
 import tv.v1x1.common.modules.ServiceModule;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
@@ -390,7 +393,55 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
         }
     }
 
+    @Override
+    protected void processTenantConfigChangeEvent(final TenantConfigChangeEvent event) {
+        reconfigure(event.getTenant());
+    }
 
+    @Override
+    protected void processChannelGroupConfigChangeEvent(final ChannelGroupConfigChangeEvent event) {
+        reconfigure(event.getChannelGroup());
+    }
+
+    @Override
+    protected void processChannelConfigChangeEvent(final ChannelConfigChangeEvent event) {
+        reconfigure(event.getChannel());
+    }
+
+    private void reconfigure(final Tenant tenant) {
+        tenant.getChannelGroups().forEach(this::reconfigure);
+    }
+
+    private void reconfigure(final ChannelGroup channelGroup) {
+        channelGroup.getChannels().forEach(this::reconfigure);
+    }
+
+    private void reconfigure(final tv.v1x1.common.dto.core.Channel channel) {
+        if(!channel.getPlatform().equals(Platform.TWITCH))
+            return;
+        LOG.info("Configuration update for {} - scheduling rejoin", channel.getId());
+        scheduledExecutorService.schedule(() -> rejoin(channel), 2, TimeUnit.SECONDS);
+    }
+
+    private void rejoin(final tv.v1x1.common.dto.core.Channel channel) {
+        try {
+            LOG.info("Leaving {} for rejoin", channel.getId());
+            channelDistributor.removeEntry(channel.getChannelGroup().getId());
+            LOG.info("Scheduling join for {}", channel.getId());
+            scheduledExecutorService.schedule(() -> rejoinStage2(channel), 10, TimeUnit.SECONDS);
+        } catch (final Exception e) {
+            LOG.error("Got exception during rejoin", e);
+        }
+    }
+
+    private void rejoinStage2(final tv.v1x1.common.dto.core.Channel channel) {
+        try {
+            LOG.info("Joining {} for rejoin", channel.getId());
+            channelDistributor.addEntry(channel.getChannelGroup().getId());
+        } catch (final Exception e) {
+            LOG.error("Got exception during rejoin", e);
+        }
+    }
 
     public static void main(final String[] args) {
         try {
