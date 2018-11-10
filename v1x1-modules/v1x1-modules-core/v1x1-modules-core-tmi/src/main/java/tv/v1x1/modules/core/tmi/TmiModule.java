@@ -26,9 +26,9 @@ import tv.v1x1.common.services.coordination.LoadBalancingDistributor;
 import tv.v1x1.common.services.queue.MessageQueue;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.dto.channels.Channel;
-import tv.v1x1.common.util.network.IPProvider;
+import tv.v1x1.common.services.twitch.dto.users.ChatUser;
+import tv.v1x1.common.services.twitch.dto.users.User;
 import tv.v1x1.common.util.ratelimiter.GlobalRateLimiter;
-import tv.v1x1.common.util.ratelimiter.LocalRateLimiter;
 import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
 import java.io.IOException;
@@ -207,15 +207,9 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
     @Override
     protected void initialize() {
         super.initialize();
-        final String myIp;
-        try {
-            myIp = IPProvider.getMyIp();
-        } catch (final IOException e) {
-            throw new RuntimeException(e);
-        }
         twitchDisplayNameService = getInjector().getInstance(TwitchDisplayNameService.class);
         scheduledExecutorService = Executors.newScheduledThreadPool(getSettings().getMaxConnections());
-        joinLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi/" + myIp, 48, 15);
+        joinLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi-join", 48, 15);
         eventRouter = getMessageQueueManager().forName(getMainQueueForModule(new Module("event_router")));
         channelDistributor = getLoadBalancingDistributor("/v1x1/tmi/channels", getGlobalConfiguration().getConnectionsPerChannel());
         channelDistributor.addListener(new LoadBalancingDistributor.Listener() {
@@ -346,22 +340,26 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
                     .put(MessageTaggedIrcStanza.Badge.SUBSCRIBER.name(), "Subscriber")
                     .put(MessageTaggedIrcStanza.Badge.TURBO.name(), "Twitch Turbo")
                     .put(MessageTaggedIrcStanza.Badge.TWITCHCON2017.name(), "TwitchCon17 Attendee")
+                    .put(MessageTaggedIrcStanza.Badge.PARTNER.name(), "Verified")
                     .build()
             );
             LOG.debug("Getting tenant configuration for {}/{}", channel.getDisplayName(), tenant);
             final TmiUserConfiguration tenantConfiguration = getConfiguration(tenant.getChannel(Platform.TWITCH, channelId, channelId + ":main").get());
             final String oauthToken;
-            String username = tenantConfiguration.getBotName();
             if (tenantConfiguration.isCustomBot()) {
-                oauthToken = tenantConfiguration.getOauthToken();
+                oauthToken = tenantConfiguration.getOauthToken().replace("oauth:", "");
             } else {
+                String username = tenantConfiguration.getBotName();
                 if (username == null || !getGlobalConfiguration().getGlobalBots().containsKey(username))
                     username = getGlobalConfiguration().getDefaultUsername();
-                oauthToken = getGlobalConfiguration().getGlobalBots().get(username);
+                oauthToken = getGlobalConfiguration().getGlobalBots().get(username).replace("oauth:", "");
             }
-            LOG.debug("Connecting to {} with username={} password=<removed>", channel.getDisplayName(), username);
-            final RateLimiter messageLimiter = new LocalRateLimiter(scheduledExecutorService, 18, 30);
-            final TmiBot tmiBot = new TmiBot(username, oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel, twitchDisplayNameService);
+            final User twitchUser = getTwitchApi().withToken(oauthToken).getUsers().getUser();
+            LOG.debug("Connecting to {} with username={} password=<removed>", channel.getDisplayName(), twitchUser.getName());
+            final String userId = String.valueOf(twitchUser.getId());
+            final ChatUser chatUser = getTwitchApi().getUsers().getChatUser(userId);
+            final RateLimiter messageLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi-chat/" + userId, chatUser.getChatRateLimit(), 30);
+            final TmiBot tmiBot = new TmiBot(twitchUser.getName(), oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel, twitchDisplayNameService);
             scheduledExecutorService.submit(tmiBot);
             final TmiBot oldTmiBot = bots.put(channelId, tmiBot);
             try {
@@ -391,6 +389,8 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
             throw e;
         }
     }
+
+
 
     public static void main(final String[] args) {
         try {
