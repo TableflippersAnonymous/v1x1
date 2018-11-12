@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
+import tv.v1x1.common.modules.Module;
+import tv.v1x1.common.services.chat.Chat;
+import tv.v1x1.common.util.text.WordList;
 
 import java.lang.invoke.MethodHandles;
 import java.util.List;
@@ -18,28 +21,45 @@ public class CommandDelegator {
 
     private final String prefix;
     private final CommandProvider commandProvider;
+    final private Module module;
 
     /**
      * CommandDelegator tracks {@link Command Commands} to be run with no prefix;
      * useful for commands with many subcommands
      */
     public CommandDelegator() {
-        this("");
+        this("", null);
     }
+
+    @Deprecated
+    public CommandDelegator(final String prefix) {
+        this(new StaticCommandProvider(), prefix, null);
+    }
+
+    @Deprecated
+    public CommandDelegator(final CommandProvider commandProvider, final String prefix) {
+        this(commandProvider, prefix, null);
+    }
+
     /**
      * CommandDelegator tracks {@link Command Commands} to be run
      * @param prefix The prefix this CommandDelegator looks for
      */
-    public CommandDelegator(final String prefix) {
-        this.prefix = prefix;
-        this.commandProvider = new StaticCommandProvider();
+    public CommandDelegator(final String prefix, final Module module) {
+        this(new StaticCommandProvider(), prefix, module);
     }
 
-    public CommandDelegator(final CommandProvider commandProvider, final String prefix) {
+    /**
+     * CommandDelegator tracks {@link Command Commands} to be run and has better error handling
+     * @param commandProvider
+     * @param prefix
+     * @param module
+     */
+    public CommandDelegator(final CommandProvider commandProvider, final String prefix, final Module module) {
         this.prefix = prefix;
         this.commandProvider = commandProvider;
+        this.module = module;
     }
-
     /**
      * Get the prefix for this command delegator
      * @return
@@ -62,7 +82,7 @@ public class CommandDelegator {
     }
 
     /**
-     * Semi-internal utility to check all the critera on running a command (if it exists/has args/perms ...)
+     * Semi-internal utility to check all the criteria on running a command (if it exists/has args/perms ...)
      * @param chatMessage
      * @param parsedCmd
      * @return true if we ran the command or one of its error handling functions
@@ -104,7 +124,18 @@ public class CommandDelegator {
         }
         // Go go go
         LOG.info("Executing {} from {} in {}...", parsedCmd.getCommand(), chatMessage.getSender(), chatMessage.getChannel());
-        command.run(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
+        try {
+            command.run(chatMessage, parsedCmd.getCommand(), parsedCmd.getArgs());
+        } catch(final Throwable throwable) {
+            if(this.module != null) {
+                final String errorString = WordList.randomWords(4);
+                Chat.i18nMessage(module, chatMessage.getChannel(), "generic.error",
+                        "commander", chatMessage.getSender().getMention(),
+                        "message", throwable.getClass().getSimpleName(),
+                        "errorId", errorString);
+                LOG.error("BLAH! errorId={} Failed to execute command", errorString, throwable);
+            }
+        }
         return true;
     }
 
