@@ -53,6 +53,10 @@ public class Timer {
 
     public Timer() {
         // For Jackson
+        entries = new ArrayList<>();
+        interval = 900000;
+        enabled = false;
+        alwaysOn = false;
     }
 
     public Timer(final long interval) {

@@ -98,7 +98,7 @@ public class TimedMessagesListener implements EventListener {
             module.saveCursor(uuid, cursor);
             for(final Channel channel : tenant.getChannels()) {
                 if(channel.getChannelGroup().getPlatform().equals(Platform.TWITCH)) {
-                    if(t.isAlwaysOn() && !module.isStreaming(channel)) {
+                    if(!(t.isAlwaysOn() || module.isStreaming(channel))) {
                         LOG.trace("Skipping non-streaming channel {}", channel.getDisplayName());
                         continue;
                     }

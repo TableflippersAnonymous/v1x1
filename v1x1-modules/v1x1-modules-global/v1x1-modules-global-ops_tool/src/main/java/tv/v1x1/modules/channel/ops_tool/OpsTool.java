@@ -44,7 +44,8 @@ public class OpsTool extends RegisteredThreadedModule<OpsToolGlobalConfiguration
     @Override
     protected void initialize() {
         super.initialize();
-        delegator = new CommandDelegator("!");
+        delegator = new CommandDelegator("!", this);
+
         delegator.registerCommand(new OpsToolCommand(this));
         registerListener(new OpsToolListener(this));
     }
