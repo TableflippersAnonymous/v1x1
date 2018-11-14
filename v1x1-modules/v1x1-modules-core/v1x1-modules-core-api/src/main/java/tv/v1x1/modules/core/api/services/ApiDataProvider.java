@@ -8,8 +8,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.ChannelGroup;
 import tv.v1x1.common.dto.db.ChannelConfiguration;
@@ -45,7 +43,6 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-@Singleton
 public class ApiDataProvider {
     private static final Gson GSON = new GsonBuilder().serializeNulls().create();
     private static final JsonParser JSON_PARSER = new JsonParser();
@@ -53,7 +50,6 @@ public class ApiDataProvider {
     private final DAOManager daoManager;
     private final ApiModule module;
 
-    @Inject
     public ApiDataProvider(final DAOManager daoManager, final ApiModule module) {
         this.daoManager = daoManager;
         this.module = module;

@@ -2,6 +2,7 @@ package tv.v1x1.modules.core.api;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.google.inject.Singleton;
 import tv.v1x1.common.dao.DAOGlobalUser;
 import tv.v1x1.common.services.cache.CacheManager;
 import tv.v1x1.common.services.coordination.ModuleRegistry;
@@ -29,7 +30,7 @@ public class ApiGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        bind(ApiDataProvider.class);
+
     }
 
     @Provides
@@ -100,5 +101,10 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public TopicManager provideTopicManager() {
         return apiModule.getInjector().getInstance(TopicManager.class);
+    }
+
+    @Provides @Singleton
+    public ApiDataProvider provideApiDataProvider(final DAOManager daoManager) {
+        return new ApiDataProvider(daoManager, apiModule);
     }
 }
