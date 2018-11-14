@@ -15,6 +15,7 @@ import tv.v1x1.common.services.state.DiscordDisplayNameService;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.modules.core.api.auth.Authorizer;
+import tv.v1x1.modules.core.api.services.ApiDataProvider;
 
 /**
  * Created by naomi on 10/24/2016.
@@ -28,7 +29,7 @@ public class ApiGuiceModule extends AbstractModule {
 
     @Override
     protected void configure() {
-        //requestStaticInjection(PubsubResource.class);
+        bind(ApiDataProvider.class);
     }
 
     @Provides

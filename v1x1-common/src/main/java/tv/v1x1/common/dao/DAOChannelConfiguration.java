@@ -7,6 +7,7 @@ import com.google.inject.Singleton;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.db.ChannelConfiguration;
+import tv.v1x1.common.dto.db.Platform;
 
 /**
  * Created by naomi on 11/5/2016.
@@ -21,7 +22,11 @@ public class DAOChannelConfiguration {
     }
 
     public ChannelConfiguration get(final Module module, final Channel channel) {
-        return mapper.get(module.getName(), channel.getChannelGroup().getPlatform(), channel.getChannelGroup().getId(), channel.getId());
+        return get(module.getName(), channel.getChannelGroup().getPlatform(), channel.getChannelGroup().getId(), channel.getId());
+    }
+
+    public ChannelConfiguration get(final String moduleName, final Platform platform, final String channelGroupId, final String channelId) {
+        return mapper.get(moduleName, platform, channelGroupId, channelGroupId);
     }
 
     public void put(final ChannelConfiguration channelConfiguration) {

@@ -35,10 +35,14 @@ import tv.v1x1.common.services.twitch.dto.users.PrivateUser;
 import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.rest.AuthTokenResponse;
 import tv.v1x1.modules.core.api.api.rest.LongTermTokenRequest;
+import tv.v1x1.modules.core.api.api.rest.Module;
 import tv.v1x1.modules.core.api.api.rest.OauthCode;
 import tv.v1x1.modules.core.api.api.rest.StateResponse;
+import tv.v1x1.modules.core.api.api.rest.SyncTenant;
+import tv.v1x1.modules.core.api.api.rest.WebSync;
 import tv.v1x1.modules.core.api.auth.AuthorizationContext;
 import tv.v1x1.modules.core.api.auth.Authorizer;
+import tv.v1x1.modules.core.api.services.ApiDataProvider;
 
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.Consumes;
@@ -54,6 +58,8 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -81,10 +87,13 @@ public class MetaResource {
     private final DiscordApi discordApi;
     private final TwitchDisplayNameService twitchDisplayNameService;
     private final KeyValueStore stateStore;
+    private final ApiDataProvider dataProvider;
     private final SecureRandom secureRandom = new SecureRandom();
 
     @Inject
-    public MetaResource(final DAOManager daoManager, final Authorizer authorizer, final TwitchApi twitchApi, final DiscordApi discordApi, final KeyValueStore stateStore, final TwitchDisplayNameService twitchDisplayNameService) {
+    public MetaResource(final DAOManager daoManager, final Authorizer authorizer, final TwitchApi twitchApi,
+                        final DiscordApi discordApi, final KeyValueStore stateStore,
+                        final TwitchDisplayNameService twitchDisplayNameService, final ApiDataProvider apiDataProvider) {
         this.daoGlobalUser = daoManager.getDaoGlobalUser();
         this.daoTwitchOauthToken = daoManager.getDaoTwitchOauthToken();
         this.daoTenant = daoManager.getDaoTenant();
@@ -95,12 +104,33 @@ public class MetaResource {
         this.discordApi = discordApi;
         this.stateStore = stateStore;
         this.twitchDisplayNameService = twitchDisplayNameService;
+        this.dataProvider = apiDataProvider;
     }
 
     @Path("/self")
     @GET
     public ApiPrimitive<String> getSelf(@HeaderParam("Authorization") final String authorization) {
         return new ApiPrimitive<>(authorizer.forAuthorization(authorization).getGlobalUser().getId().toString());
+    }
+
+    @Path("/sync")
+    @GET
+    public WebSync getFull(@HeaderParam("Authorization") final String authorization) {
+        final AuthorizationContext authorizationContext = authorizer.forAuthorization(authorization);
+        authorizationContext.ensurePermission("api.global_users.read");
+        final tv.v1x1.modules.core.api.api.rest.GlobalUser currentUser = new tv.v1x1.modules.core.api.api.rest.GlobalUser(authorizationContext.getGlobalUser());
+        final Map<String, Module> modules = dataProvider.getModules();
+        final Map<String, SyncTenant> tenants = StreamSupport.stream(daoTenantGroup.getTenantsByUser(authorizationContext.getGlobalUser()).spliterator(), true)
+                .filter(tenantId -> authorizer.tenantAuthorization(tenantId, authorization).hasPermission("api.tenants.read"))
+                .map(tenantId -> dataProvider.getSyncTenant(authorizer.tenantAuthorization(tenantId, authorization), tenantId, modules.keySet()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toMap(SyncTenant::getId, syncTenant -> syncTenant));
+        return new WebSync(
+                dataProvider.getConfiguration(),
+                modules,
+                currentUser,
+                tenants
+        );
     }
 
     @Path("/login/twitch")
