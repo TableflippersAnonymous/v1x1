@@ -1,11 +1,9 @@
 package tv.v1x1.modules.core.api.resources.platform;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.inject.Inject;
 import io.dropwizard.jersey.caching.CacheControl;
-import tv.v1x1.common.dto.db.Platform;
-import tv.v1x1.modules.core.api.ApiModule;
 import tv.v1x1.modules.core.api.api.rest.WebConfig;
+import tv.v1x1.modules.core.api.services.ApiDataProvider;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -21,31 +19,17 @@ import java.util.concurrent.TimeUnit;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class WebResource {
-    private final ApiModule module;
+    private final ApiDataProvider dataProvider;
 
     @Inject
-    public WebResource(final ApiModule module) {
-        this.module = module;
+    public WebResource(final ApiDataProvider dataProvider) {
+        this.dataProvider = dataProvider;
     }
 
     @Path("/config")
     @GET
     @CacheControl(maxAge = 6, maxAgeUnit = TimeUnit.HOURS)
     public WebConfig getConfig() {
-        /* Eventually this should come from the datastore or config.  For now, this allows us to move the basics
-         * out of the client.
-         */
-        return new WebConfig(
-                ImmutableMap.of(
-                        Platform.TWITCH, new String(module.requireCredential("Common|Twitch|ClientId")),
-                        Platform.DISCORD, new String(module.requireCredential("Common|Discord|ClientId"))
-                ),
-                ImmutableMap.of(
-                        Platform.TWITCH, new String(module.requireCredential("Common|Twitch|RedirectUri")),
-                        Platform.DISCORD, new String(module.requireCredential("Common|Discord|RedirectUri"))
-                ),
-                "/api/v1",
-                "wss://pubsub.v1x1.tv"
-        );
+        return dataProvider.getConfiguration();
     }
 }

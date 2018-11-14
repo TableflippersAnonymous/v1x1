@@ -3,7 +3,6 @@ package tv.v1x1.modules.core.api.resources.tenant;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -14,7 +13,6 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Module;
 import tv.v1x1.common.dto.db.ChannelConfiguration;
 import tv.v1x1.common.dto.db.ChannelGroupConfiguration;
-import tv.v1x1.common.dto.db.ConfigurationDefinition;
 import tv.v1x1.common.dto.db.Platform;
 import tv.v1x1.common.dto.db.Tenant;
 import tv.v1x1.common.dto.db.TenantConfiguration;
@@ -22,7 +20,6 @@ import tv.v1x1.common.dto.db.UserConfigurationDefinition;
 import tv.v1x1.common.dto.messages.events.ChannelConfigChangeEvent;
 import tv.v1x1.common.dto.messages.events.ChannelGroupConfigChangeEvent;
 import tv.v1x1.common.dto.messages.events.TenantConfigChangeEvent;
-import tv.v1x1.common.scanners.config.ConfigType;
 import tv.v1x1.common.scanners.config.Permission;
 import tv.v1x1.common.services.cache.SharedCache;
 import tv.v1x1.common.services.persistence.ConfigurationCacheManager;
@@ -34,6 +31,7 @@ import tv.v1x1.modules.core.api.api.rest.ChannelGroupConfigurationTree;
 import tv.v1x1.modules.core.api.api.rest.Configuration;
 import tv.v1x1.modules.core.api.api.rest.ConfigurationTree;
 import tv.v1x1.modules.core.api.auth.Authorizer;
+import tv.v1x1.modules.core.api.services.ApiDataProvider;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -46,13 +44,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 /**
  * Created by cobi on 10/24/2016.
@@ -76,14 +70,18 @@ public class ConfigResource {
     private final Authorizer authorizer;
     private final MessageQueueManager messageQueueManager;
     private final ConfigurationCacheManager configurationCacheManager;
+    private final ApiDataProvider dataProvider;
 
     @Inject
-    public ConfigResource(final ApiModule apiModule, final DAOManager daoManager, final Authorizer authorizer, final MessageQueueManager messageQueueManager, final ConfigurationCacheManager configurationCacheManager) {
+    public ConfigResource(final ApiModule apiModule, final DAOManager daoManager, final Authorizer authorizer,
+                          final MessageQueueManager messageQueueManager, final ConfigurationCacheManager configurationCacheManager,
+                          final ApiDataProvider dataProvider) {
         this.apiModule = apiModule;
         this.daoManager = daoManager;
         this.authorizer = authorizer;
         this.messageQueueManager = messageQueueManager;
         this.configurationCacheManager = configurationCacheManager;
+        this.dataProvider = dataProvider;
     }
 
     @Path("/{module}")
@@ -97,14 +95,7 @@ public class ConfigResource {
         final Tenant tenant = daoManager.getDaoTenant().getById(UUID.fromString(tenantId));
         if(tenant == null)
             throw new NotFoundException();
-        TenantConfiguration tenantConfiguration = daoManager.getDaoTenantConfiguration().get(new Module(moduleName), tenant.toCore(daoManager.getDaoTenant()));
-        if(tenantConfiguration == null)
-            tenantConfiguration = new TenantConfiguration(moduleName, tenant.getId(), "{}");
-        final JsonElement configElement = JSON_PARSER.parse(tenantConfiguration.getJson());
-        if(!configElement.isJsonObject())
-            throw new IllegalStateException("Expected config to be Json Object");
-        final JsonObject config = configElement.getAsJsonObject();
-        return getConfigurationFromJson(sanitizeConfig(config, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), true);
+        return dataProvider.getTenantConfiguration(userConfigurationDefinition, moduleName, tenant.getId());
     }
 
     @Path("/{module}")
@@ -130,7 +121,7 @@ public class ConfigResource {
         if(!newConfigElement.isJsonObject())
             throw new IllegalStateException("Expected config to be Json Object");
         final JsonObject newConfig = newConfigElement.getAsJsonObject();
-        final JsonObject finalConfig = sanitizeConfig(newConfig, config, userConfigurationDefinition, ImmutableSet.of(Permission.WRITE_ONLY, Permission.READ_WRITE));
+        final JsonObject finalConfig = dataProvider.sanitizeConfig(newConfig, config, userConfigurationDefinition, ImmutableSet.of(Permission.WRITE_ONLY, Permission.READ_WRITE));
         final TenantConfiguration newTenantConfiguration = new TenantConfiguration(moduleName, tenant.getId(), GSON.toJson(finalConfig));
         final Module module = new Module(moduleName);
         daoManager.getDaoTenantConfiguration().put(newTenantConfiguration);
@@ -142,7 +133,7 @@ public class ConfigResource {
         final tv.v1x1.common.dto.core.Tenant coreTenant = tenant.toCore(daoManager.getDaoTenant());
         messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new TenantConfigChangeEvent(apiModule.toDto(), module, coreTenant));
         apiModule.handleConfigChangeEvent(coreTenant, module);
-        return getConfigurationFromJson(sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), true);
+        return dataProvider.getConfigurationFromJson(dataProvider.sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), true);
     }
 
     @Path("/{module}/{platform}/{channelgroup}")
@@ -162,14 +153,7 @@ public class ConfigResource {
         if(!optionalChannelGroup.isPresent())
             throw new NotFoundException();
         final tv.v1x1.common.dto.core.ChannelGroup channelGroup = optionalChannelGroup.get();
-        ChannelGroupConfiguration channelGroupConfiguration = daoManager.getDaoChannelGroupConfiguration().get(new Module(moduleName), channelGroup);
-        if(channelGroupConfiguration == null)
-            channelGroupConfiguration = new ChannelGroupConfiguration(moduleName, channelGroup.getTenant().getId().getValue(), channelGroup.getPlatform(), channelGroup.getId(), false, "{}");
-        final JsonElement configElement = JSON_PARSER.parse(channelGroupConfiguration.getJson());
-        if(!configElement.isJsonObject())
-            throw new IllegalStateException("Expected config to be Json Object");
-        final JsonObject config = configElement.getAsJsonObject();
-        return getConfigurationFromJson(sanitizeConfig(config, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), channelGroupConfiguration.isEnabled());
+        return dataProvider.getChannelGroupConfiguration(userConfigurationDefinition, moduleName, tenant.getId().getValue(), channelGroup.getPlatform(), channelGroup.getId());
     }
 
     @Path("/{module}/{platform}/{channelgroup}")
@@ -201,7 +185,7 @@ public class ConfigResource {
         if(!newConfigElement.isJsonObject())
             throw new IllegalStateException("Expected config to be Json Object");
         final JsonObject newConfig = newConfigElement.getAsJsonObject();
-        final JsonObject finalConfig = sanitizeConfig(newConfig, config, userConfigurationDefinition, ImmutableSet.of(Permission.WRITE_ONLY, Permission.READ_WRITE));
+        final JsonObject finalConfig = dataProvider.sanitizeConfig(newConfig, config, userConfigurationDefinition, ImmutableSet.of(Permission.WRITE_ONLY, Permission.READ_WRITE));
         final ChannelGroupConfiguration newChannelGroupConfiguration = new ChannelGroupConfiguration(moduleName, channelGroup.getTenant().getId().getValue(), channelGroup.getPlatform(), channelGroup.getId(), configuration.isEnabled(), GSON.toJson(finalConfig));
         final Module module = new Module(moduleName);
         daoManager.getDaoChannelGroupConfiguration().put(channelGroupConfiguration);
@@ -215,7 +199,7 @@ public class ConfigResource {
         }
         messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new ChannelGroupConfigChangeEvent(apiModule.toDto(), module, channelGroup));
         apiModule.handleConfigChangeEvent(channelGroup.getTenant(), module);
-        return getConfigurationFromJson(sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelGroupConfiguration.isEnabled());
+        return dataProvider.getConfigurationFromJson(dataProvider.sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelGroupConfiguration.isEnabled());
     }
 
     @Path("/{module}/{platform}/{channelgroup}/{channel}")
@@ -236,14 +220,7 @@ public class ConfigResource {
         if(!optionalChannel.isPresent())
             throw new NotFoundException();
         final Channel channel = optionalChannel.get();
-        ChannelConfiguration channelConfiguration = daoManager.getDaoChannelConfiguration().get(new Module(moduleName), channel);
-        if(channelConfiguration == null)
-            channelConfiguration = new ChannelConfiguration(moduleName, channel.getChannelGroup().getPlatform(), channel.getChannelGroup().getId(), channel.getId(), false, "{}");
-        final JsonElement configElement = JSON_PARSER.parse(channelConfiguration.getJson());
-        if(!configElement.isJsonObject())
-            throw new IllegalStateException("Expected config to be Json Object");
-        final JsonObject config = configElement.getAsJsonObject();
-        return getConfigurationFromJson(sanitizeConfig(config, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), channelConfiguration.isEnabled());
+        return dataProvider.getChannelConfiguration(userConfigurationDefinition, moduleName, channel.getChannelGroup().getPlatform(), channel.getChannelGroup().getId(), channel.getId());
     }
 
     @Path("/{module}/{platform}/{channelgroup}/{channel}")
@@ -275,7 +252,7 @@ public class ConfigResource {
         if(!newConfigElement.isJsonObject())
             throw new IllegalStateException("Expected config to be Json Object");
         final JsonObject newConfig = newConfigElement.getAsJsonObject();
-        final JsonObject finalConfig = sanitizeConfig(newConfig, config, userConfigurationDefinition, ImmutableSet.of(Permission.WRITE_ONLY, Permission.READ_WRITE));
+        final JsonObject finalConfig = dataProvider.sanitizeConfig(newConfig, config, userConfigurationDefinition, ImmutableSet.of(Permission.WRITE_ONLY, Permission.READ_WRITE));
         final ChannelConfiguration newChannelConfiguration = new ChannelConfiguration(moduleName, channel.getChannelGroup().getPlatform(), channel.getChannelGroup().getId(), channel.getId(), configuration.isEnabled(), GSON.toJson(finalConfig));
         final Module module = new Module(moduleName);
         daoManager.getDaoChannelConfiguration().put(newChannelConfiguration);
@@ -289,7 +266,7 @@ public class ConfigResource {
         }
         messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new ChannelConfigChangeEvent(apiModule.toDto(), module, channel));
         apiModule.handleConfigChangeEvent(channel.getChannelGroup().getTenant(), module);
-        return getConfigurationFromJson(sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelConfiguration.isEnabled());
+        return dataProvider.getConfigurationFromJson(dataProvider.sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelConfiguration.isEnabled());
     }
 
     @Path("/{module}/all")
@@ -316,117 +293,6 @@ public class ConfigResource {
                         )
                 ).collect(Collectors.toList())
         );
-    }
-
-    private Configuration getConfigurationFromJson(final JsonObject jsonObject, final boolean enabled) {
-        return new Configuration(GSON.toJson(jsonObject), enabled);
-    }
-
-    private JsonObject sanitizeConfig(final JsonObject newConfig, final JsonObject oldConfig,
-                                      final ConfigurationDefinition configurationDefinition,
-                                      final Set<Permission> allowedPermissions) {
-        if(!allowedPermissions.contains(configurationDefinition.getTenantPermission()))
-            return oldConfig;
-        return sanitizeConfig(newConfig, oldConfig, configurationDefinition.getFields(), configurationDefinition.getComplexFields(), allowedPermissions);
-    }
-
-    private JsonObject sanitizeConfig(final JsonObject newConfig, final JsonElement oldConfig,
-                                      final List<ConfigurationDefinition.Field> fields,
-                                      final Map<String, List<ConfigurationDefinition.Field>> complexFields,
-                                      final Set<Permission> allowedPermissions) {
-        return sanitizeConfig(newConfig, (oldConfig != null && oldConfig.isJsonObject()) ? oldConfig.getAsJsonObject() : null, fields, complexFields, allowedPermissions);
-    }
-
-    private JsonObject sanitizeConfig(final JsonObject newConfig, final JsonObject oldConfig,
-                                      final List<ConfigurationDefinition.Field> fields,
-                                      final Map<String, List<ConfigurationDefinition.Field>> complexFields,
-                                      final Set<Permission> allowedPermissions) {
-        final JsonObject ret = new JsonObject();
-        if(oldConfig != null)
-            for(final Map.Entry<String, JsonElement> elem : oldConfig.entrySet())
-                ret.add(elem.getKey(), elem.getValue());
-        for(final ConfigurationDefinition.Field field : fields)
-            sanitizeField(newConfig, ret, field, complexFields, allowedPermissions);
-        return ret;
-    }
-
-    private void sanitizeField(final JsonObject newConfig, final JsonObject ret,
-                               final ConfigurationDefinition.Field field,
-                               final Map<String, List<ConfigurationDefinition.Field>> complexFields,
-                               final Set<Permission> allowedPermissions) {
-        if(!newConfig.has(field.getJsonField()))
-            return;
-        if(!allowedPermissions.contains(field.getTenantPermission()))
-            return;
-        if(!validType(newConfig.get(field.getJsonField()), field.getConfigType()))
-            throw new IllegalStateException("Invalid data found");
-        if(field.getConfigType().isComplex()) {
-            switch(field.getConfigType()) {
-                case COMPLEX:
-                    ret.add(field.getJsonField(), sanitizeConfig(newConfig,
-                            ret.has(field.getJsonField()) ? ret.get(field.getJsonField()) : null,
-                            complexFields.get(field.getComplexType()), complexFields, allowedPermissions));
-                    return;
-                case COMPLEX_LIST:
-                    final JsonArray retAry = new JsonArray();
-                    if(!newConfig.get(field.getJsonField()).isJsonArray())
-                        throw new IllegalArgumentException("Expected Json Array for " + field.getJsonField());
-                    for(final JsonElement elem : newConfig.get(field.getJsonField()).getAsJsonArray()) {
-                        if(!elem.isJsonObject())
-                            throw new IllegalArgumentException("Expected Json Object for element of " + field.getJsonField());
-                        retAry.add(sanitizeConfig(elem.getAsJsonObject(), null,
-                                complexFields.get(field.getComplexType()), complexFields, allowedPermissions));
-                    }
-                    ret.add(field.getJsonField(), retAry);
-                    return;
-                case COMPLEX_STRING_MAP:
-                    final JsonObject retObj = new JsonObject();
-                    if(!newConfig.get(field.getJsonField()).isJsonObject())
-                        throw new IllegalArgumentException("Expected Json Object for " + field.getJsonField());
-                    for(final Map.Entry<String, JsonElement> elem : newConfig.get(field.getJsonField()).getAsJsonObject().entrySet()) {
-                        if(!elem.getValue().isJsonObject())
-                            throw new IllegalArgumentException("Expected Json Object for element of " + field.getJsonField());
-                        retObj.add(elem.getKey(), sanitizeConfig(elem.getValue().getAsJsonObject(), null,
-                                complexFields.get(field.getComplexType()), complexFields, allowedPermissions));
-                    }
-                    ret.add(field.getJsonField(), retObj);
-                    return;
-                default:
-                    throw new IllegalStateException("Unknown complex configType: " + field.getConfigType().name());
-            }
-        } else {
-            ret.add(field.getJsonField(), newConfig.get(field.getJsonField()));
-        }
-    }
-
-    private boolean validType(final JsonElement jsonElement, final ConfigType configType) {
-        switch(configType) {
-            case MASTER_ENABLE:
-            case BOOLEAN:
-                return jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isBoolean();
-            case STRING_LIST:
-                return jsonElement.isJsonArray() && StreamSupport.stream(jsonElement.getAsJsonArray().spliterator(), false).allMatch(x -> validType(x, ConfigType.STRING));
-            case COMPLEX_LIST:
-                return jsonElement.isJsonArray();
-            case STRING_MAP:
-                return jsonElement.isJsonObject() && jsonElement.getAsJsonObject().entrySet().stream().allMatch(e -> validType(e.getValue(), ConfigType.STRING));
-            case COMPLEX_STRING_MAP:
-            case COMPLEX:
-            case CHANNEL:
-                return jsonElement.isJsonObject();
-            case CREDENTIAL:
-            case STRING:
-            case FILE:
-            case BOT_NAME:
-            case TWITCH_OAUTH:
-                return jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString();
-            case INTEGER:
-                return jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isNumber();
-            case PERMISSION:
-                return jsonElement.isJsonNull() || jsonElement.isJsonObject() && jsonElement.getAsJsonObject().has("node");
-            default:
-                throw new IllegalStateException("Unknown configType: " + configType.name());
-        }
     }
 
     private tv.v1x1.common.dto.core.Tenant getTenant(final String tenantId) {

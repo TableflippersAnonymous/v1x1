@@ -10,6 +10,7 @@ import tv.v1x1.modules.core.api.api.rest.ApiList;
 import tv.v1x1.modules.core.api.api.rest.ConfigurationDefinition;
 import tv.v1x1.modules.core.api.api.rest.I18nDefinition;
 import tv.v1x1.modules.core.api.api.rest.PermissionDefinition;
+import tv.v1x1.modules.core.api.services.ApiDataProvider;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -38,20 +39,19 @@ import java.util.stream.StreamSupport;
 @Consumes(MediaType.APPLICATION_JSON)
 public class ConfigDefinitionResource {
     private final DAOManager daoManager;
+    private final ApiDataProvider dataProvider;
 
     @Inject
-    public ConfigDefinitionResource(final DAOManager daoManager) {
+    public ConfigDefinitionResource(final DAOManager daoManager, final ApiDataProvider dataProvider) {
         this.daoManager = daoManager;
+        this.dataProvider = dataProvider;
     }
 
     @Path("/user")
     @GET
     @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
     public ApiList<ConfigurationDefinition> listUserConfigDefinitions() {
-        return new ApiList<>(StreamSupport.stream(daoManager.getDaoConfigurationDefinition().getAllUser().spliterator(), false)
-                .map(UserConfigurationDefinition::toCore)
-                .map(ConfigurationDefinition::fromCore)
-                .collect(Collectors.toList()));
+        return new ApiList<>(dataProvider.getUserConfigDefinitions());
     }
 
     @Path("/user/{name}")
@@ -68,10 +68,7 @@ public class ConfigDefinitionResource {
     @GET
     @CacheControl(maxAge = 15, maxAgeUnit = TimeUnit.MINUTES)
     public ApiList<ConfigurationDefinition> listGlobalConfigDefinitions() {
-        return new ApiList<>(StreamSupport.stream(daoManager.getDaoConfigurationDefinition().getAllGlobal().spliterator(), false)
-                .map(GlobalConfigurationDefinition::toCore)
-                .map(ConfigurationDefinition::fromCore)
-                .collect(Collectors.toList()));
+        return new ApiList<>(dataProvider.getGlobalConfigDefinitions());
     }
 
     @Path("/global/{name}")
