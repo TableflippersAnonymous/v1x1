@@ -33,6 +33,7 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Function;
@@ -114,7 +115,7 @@ public class Authorizer {
     public AuthorizationContext tenantContext(final AuthorizationContext authorizationContext, final UUID tenantId) {
         return getContext(authorizationContext.getPrincipal(),
                 principal -> daoTenantGroup.getAllPermissions(
-                        daoTenant.getById(tenantId).toCore(daoTenant),
+                        Optional.ofNullable(daoTenant.getById(tenantId)).map(tenant -> tenant.toCore(daoTenant)).orElse(null),
                         principal.getGlobalUser(),
                         Platform.API,
                         "__API__",
