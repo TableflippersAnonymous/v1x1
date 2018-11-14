@@ -32,6 +32,7 @@ import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.auth.TokenResponse;
 import tv.v1x1.common.services.twitch.dto.users.PrivateUser;
+import tv.v1x1.modules.core.api.ApiModule;
 import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.rest.AuthTokenResponse;
 import tv.v1x1.modules.core.api.api.rest.LongTermTokenRequest;
@@ -93,7 +94,7 @@ public class MetaResource {
     @Inject
     public MetaResource(final DAOManager daoManager, final Authorizer authorizer, final TwitchApi twitchApi,
                         final DiscordApi discordApi, final KeyValueStore stateStore,
-                        final TwitchDisplayNameService twitchDisplayNameService, final ApiDataProvider apiDataProvider) {
+                        final TwitchDisplayNameService twitchDisplayNameService, final ApiModule module) {
         this.daoGlobalUser = daoManager.getDaoGlobalUser();
         this.daoTwitchOauthToken = daoManager.getDaoTwitchOauthToken();
         this.daoTenant = daoManager.getDaoTenant();
@@ -104,7 +105,7 @@ public class MetaResource {
         this.discordApi = discordApi;
         this.stateStore = stateStore;
         this.twitchDisplayNameService = twitchDisplayNameService;
-        this.dataProvider = apiDataProvider;
+        this.dataProvider = new ApiDataProvider(daoManager, module);
     }
 
     @Path("/self")

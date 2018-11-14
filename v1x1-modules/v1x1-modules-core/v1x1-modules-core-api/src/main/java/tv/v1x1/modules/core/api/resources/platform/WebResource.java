@@ -2,6 +2,8 @@ package tv.v1x1.modules.core.api.resources.platform;
 
 import com.google.inject.Inject;
 import io.dropwizard.jersey.caching.CacheControl;
+import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.modules.core.api.ApiModule;
 import tv.v1x1.modules.core.api.api.rest.WebConfig;
 import tv.v1x1.modules.core.api.services.ApiDataProvider;
 
@@ -22,8 +24,8 @@ public class WebResource {
     private final ApiDataProvider dataProvider;
 
     @Inject
-    public WebResource(final ApiDataProvider dataProvider) {
-        this.dataProvider = dataProvider;
+    public WebResource(final DAOManager daoManager, final ApiModule module) {
+        this.dataProvider = new ApiDataProvider(daoManager, module);
     }
 
     @Path("/config")
