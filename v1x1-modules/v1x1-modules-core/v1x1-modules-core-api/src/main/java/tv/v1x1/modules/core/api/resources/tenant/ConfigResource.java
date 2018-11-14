@@ -74,14 +74,13 @@ public class ConfigResource {
 
     @Inject
     public ConfigResource(final ApiModule apiModule, final DAOManager daoManager, final Authorizer authorizer,
-                          final MessageQueueManager messageQueueManager, final ConfigurationCacheManager configurationCacheManager,
-                          final ApiDataProvider dataProvider) {
+                          final MessageQueueManager messageQueueManager, final ConfigurationCacheManager configurationCacheManager) {
         this.apiModule = apiModule;
         this.daoManager = daoManager;
         this.authorizer = authorizer;
         this.messageQueueManager = messageQueueManager;
         this.configurationCacheManager = configurationCacheManager;
-        this.dataProvider = dataProvider;
+        this.dataProvider = new ApiDataProvider(daoManager, apiModule);
     }
 
     @Path("/{module}")

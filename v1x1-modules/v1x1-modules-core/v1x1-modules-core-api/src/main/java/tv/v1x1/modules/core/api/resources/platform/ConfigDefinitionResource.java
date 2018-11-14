@@ -6,6 +6,7 @@ import tv.v1x1.common.dto.db.GlobalConfigurationDefinition;
 import tv.v1x1.common.dto.db.UserConfigurationDefinition;
 import tv.v1x1.common.scanners.permission.DefaultGroup;
 import tv.v1x1.common.services.persistence.DAOManager;
+import tv.v1x1.modules.core.api.ApiModule;
 import tv.v1x1.modules.core.api.api.rest.ApiList;
 import tv.v1x1.modules.core.api.api.rest.ConfigurationDefinition;
 import tv.v1x1.modules.core.api.api.rest.I18nDefinition;
@@ -42,9 +43,9 @@ public class ConfigDefinitionResource {
     private final ApiDataProvider dataProvider;
 
     @Inject
-    public ConfigDefinitionResource(final DAOManager daoManager, final ApiDataProvider dataProvider) {
+    public ConfigDefinitionResource(final DAOManager daoManager, final ApiModule module) {
         this.daoManager = daoManager;
-        this.dataProvider = dataProvider;
+        this.dataProvider = new ApiDataProvider(daoManager, module);
     }
 
     @Path("/user")
