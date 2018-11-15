@@ -56,9 +56,10 @@ export class DashboardPageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.tenantSub = this.globalState.activeTenant.get().subscribe(tenant => {
+    this.tenantSub = this.globalState.webapp.currentTenant.subscribe(tenant => {
       if(tenant === undefined)
         return;
+      this.messages = tenant.chatMessages;
       if(this.pubsubSub != null)
         this.pubsubSub.unsubscribe();
       this.pubsubSub = this.pubsub.topic("topic:" + tenant.id + ":api:chat").subscribe(message => {

@@ -1,6 +1,6 @@
 import {ConfigurableComponent} from "../configurable";
 import {Component, Input, OnInit} from "@angular/core";
-import {Observable} from "rxjs/index";
+import {Observable} from "rxjs";
 import {V1x1ConfigurationDefinitionField} from "../../../model/api/v1x1_configuration_definition_field";
 import {V1x1GlobalState} from "../../../services/global_state";
 import {map} from "rxjs/operators";

@@ -3,6 +3,7 @@ import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
 import {V1x1GroupMembership} from "../../model/api/v1x1_group_membership";
 import {V1x1GlobalState} from "../../services/global_state";
+import {first} from "rxjs/operators";
 
 @Component({
   selector: 'permissions-groups-page',
@@ -45,7 +46,7 @@ export class PermissionsGroupsComponent {
   }
 
   recalculateGroups() {
-    this.globalState.activeTenant.get().subscribe(tenant => {
+    this.globalState.webapp.currentTenant.subscribe(tenant => {
       this.cachedApi.getGroups(tenant.id)
         .subscribe(groups => this.groups = groups);
     });
@@ -54,9 +55,11 @@ export class PermissionsGroupsComponent {
   createGroup() {
     let newGroupName = this.newGroup;
     this.newGroup = "";
-    this.api.createGroup(this.globalState.activeTenant.getCurrent().id, newGroupName).subscribe(newGroup => {
-      this.cachedApi.clearGroupsCache();
-      this.recalculateGroups();
+    this.globalState.webapp.currentTenant.pipe(first()).subscribe(tenant => {
+      this.api.createGroup(tenant.id, newGroupName).subscribe(newGroup => {
+        this.cachedApi.clearGroupsCache();
+        this.recalculateGroups();
+      });
     });
   }
 }

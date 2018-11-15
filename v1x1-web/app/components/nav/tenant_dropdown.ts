@@ -14,7 +14,7 @@ import {map} from "rxjs/operators";
         Managing: {{displayName() | async}}
       </button>
       <mat-menu #appMenu="matMenu">
-        <button mat-menu-item *ngFor="let tenant of globalState.tenants.get() | async" class="dropdown-item" (click)="setActive(tenant);">
+        <button mat-menu-item *ngFor="let tenant of globalState.webapp.tenants | async" class="dropdown-item" (click)="setActive(tenant);">
           <tenant-formatter [tenant]="tenant"></tenant-formatter>
         </button>
         <hr>
@@ -36,6 +36,6 @@ export class TenantDropdownNavComponent {
   }
 
   displayName(): Observable<string> {
-    return this.globalState.activeTenant.get().pipe(map(tenant => tenant !== undefined ? tenant.displayName : "???"));
+    return this.globalState.webapp.currentTenant.pipe(map(tenant => tenant !== undefined ? tenant.displayName : "???"));
   }
 }

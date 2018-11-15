@@ -31,6 +31,7 @@ import {HttpClient} from "@angular/common/http";
 import {V1x1PermissionDefinition} from "../model/api/v1x1_permission_definition";
 import {catchError, map, mergeAll} from 'rxjs/operators';
 import {V1x1ChannelGroupPlatformGroup} from "../model/api/v1x1_channel_group_platform_group";
+import {ApiWebApp} from "../model/api/api_web_app";
 
 @Injectable()
 export class V1x1Api {
@@ -512,6 +513,13 @@ export class V1x1Api {
         map((r: V1x1List<any>) => r.entries.map(e => JsonConvert.deserializeObject(e, V1x1ChannelGroupPlatformGroup))),
         catchError((err, caught) => of([]))
       )
+    ), mergeAll());
+  }
+
+  getSync(): Observable<ApiWebApp> {
+    return this.webInfo.getWebConfig().pipe(map((wc) =>
+      this.http.get(wc.apiBase + '/meta/sync', this.getAuthorization())
+        .pipe(map((r: ApiWebApp) => r))
     ), mergeAll());
   }
 }

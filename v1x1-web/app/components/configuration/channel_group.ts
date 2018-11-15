@@ -1,7 +1,6 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, Input} from '@angular/core';
 import {Module} from "../../model/state/module";
-import {V1x1Tenant} from "../../model/api/v1x1_tenant";
-import {V1x1ChannelGroupConfigurationWrapper} from "../../model/api/v1x1_channel_group_configuration_wrapper";
+import {ChannelGroup} from "../../model/state/channel_group";
 
 @Component({
   selector: 'configuration-channel-group',
@@ -9,30 +8,20 @@ import {V1x1ChannelGroupConfigurationWrapper} from "../../model/api/v1x1_channel
     <mat-tab-group>
       <mat-tab>
         <ng-template mat-tab-label>
-          Everything{{activeChannelGroup.config.channelGroup.dirty() ? '*' : ''}}
+          Everything{{activeChannelGroup.moduleConfiguration.get(v1x1Module.name).dirty() ? '*' : ''}}
         </ng-template>
-        <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [(originalConfiguration)]="activeChannelGroup.config.channelGroup.originalConfiguration" [(configuration)]="activeChannelGroup.config.channelGroup.configuration" [activeTenant]="activeTenant" [activeChannelGroup]="activeChannelGroup.channelGroup" [activeChannel]="null" [(enabled)]="activeChannelGroup.config.channelGroup.enabled" [(originalEnabled)]="activeChannelGroup.config.channelGroup.originalEnabled" [scope]="'channelGroup'"></configuration-scope>
+        <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [originalConfiguration]="activeChannelGroup.moduleConfiguration.get(v1x1Module.name).originalConfiguration" [configuration]="activeChannelGroup.moduleConfiguration.get(v1x1Module.name).configuration" [activeTenant]="activeChannelGroup.tenant" [activeChannelGroup]="activeChannelGroup" [activeChannel]="null" [(enabled)]="activeChannelGroup.moduleConfiguration.get(v1x1Module.name).enabled" [(originalEnabled)]="activeChannelGroup.moduleConfiguration.get(v1x1Module.name).originalEnabled" [scope]="'channelGroup'"></configuration-scope>
       </mat-tab>
-      <mat-tab *ngFor="let channel of activeChannelGroup.config.channels; let i = index">
+      <mat-tab *ngFor="let channel of activeChannelGroup.channels | keyvalue">
         <ng-template mat-tab-label>
-          <platform-formatter [platform]="activeChannelGroup.channelGroup.platform">{{channel.channel.displayName}}{{channel.config.dirty() ? '*' : ''}}</platform-formatter>
+          <platform-formatter [platform]="activeChannelGroup.platform">{{channel.value.displayName}}{{channel.value.moduleConfiguration.get(v1x1Module.name).dirty() ? '*' : ''}}</platform-formatter>
         </ng-template>
-        <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [(originalConfiguration)]="activeChannelGroup.config.channels[i].config.originalConfiguration" [(configuration)]="activeChannelGroup.config.channels[i].config.configuration" [activeTenant]="activeTenant" [activeChannelGroup]="activeChannelGroup.channelGroup" [activeChannel]="activeChannelGroup.config.channels[i].channel" [(enabled)]="activeChannelGroup.config.channels[i].config.enabled" [(originalEnabled)]="activeChannelGroup.config.channels[i].config.originalEnabled" [scope]="'channel'"></configuration-scope>
+        <configuration-scope [v1x1Module]="v1x1Module" [configurationDefinition]="v1x1Module.configurationDefinitionSet.user" [originalConfiguration]="channel.value.moduleConfiguration.get(v1x1Module.name).originalConfiguration" [configuration]="channel.value.moduleConfiguration.get(v1x1Module.name).configuration" [activeTenant]="activeChannelGroup.tenant" [activeChannelGroup]="activeChannelGroup" [activeChannel]="channel.value" [(enabled)]="channel.value.moduleConfiguration.get(v1x1Module.name).enabled" [(originalEnabled)]="channel.value.moduleConfiguration.get(v1x1Module.name).originalEnabled" [scope]="'channel'"></configuration-scope>
       </mat-tab>
     </mat-tab-group>
   `
 })
 export class ConfigurationChannelGroupComponent {
-  public v1x1ModuleValue: Module;
-  @Input() public activeTenant: V1x1Tenant;
-  @Input() public activeChannelGroup: V1x1ChannelGroupConfigurationWrapper;
-  @Output() public v1x1ModuleChange = new EventEmitter();
-  get v1x1Module() {
-    return this.v1x1ModuleValue;
-  }
-  @Input()
-  set v1x1Module(val) {
-    this.v1x1ModuleValue = val;
-    this.v1x1ModuleChange.emit(this.v1x1ModuleValue);
-  }
+  @Input() public v1x1Module: Module;
+  @Input() public activeChannelGroup: ChannelGroup;
 }

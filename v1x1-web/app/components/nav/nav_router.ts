@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {V1x1GlobalState} from "../../services/global_state";
 import {ActivatedRoute} from "@angular/router";
-import {V1x1Tenant} from "../../model/api/v1x1_tenant";
 import {UrlId} from "../../services/url_id";
 import {Subscription} from "rxjs";
+import {Tenant} from "../../model/state/tenant";
 
 @Component({
   selector: 'nav-router',
@@ -28,7 +28,7 @@ export class NavRouterComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute) {}
 
   ngOnInit() {
-    this.subscriptions.push(this.globalState.activeTenant.get().subscribe(tenant => {
+    this.subscriptions.push(this.globalState.webapp.currentTenant.subscribe(tenant => {
       if(tenant !== undefined)
         this.activeTenantId = UrlId.fromApi(tenant.id).toUrl();
       else
@@ -37,14 +37,14 @@ export class NavRouterComponent implements OnInit, OnDestroy {
     this.subscriptions.push(this.globalState.loggedIn.get().subscribe(loggedIn => {
       this.loggedIn = loggedIn;
     }));
-    this.subscriptions.push(this.globalState.tenants.get().subscribe(tenants => {
+    this.subscriptions.push(this.globalState.webapp.tenants.subscribe(tenants => {
       this.subscriptions.push(this.route.params.subscribe(params => {
         if(params['tenant_id']) {
-          let currentTenant = tenants.find(tenant => tenant.id === UrlId.fromUrl(params['tenant_id']).toApi());
+          let currentTenant = tenants.get(UrlId.fromUrl(params['tenant_id']).toApi());
           if(currentTenant)
             this.setActiveTenant(currentTenant);
-          else if(tenants.length > 0)
-            this.setActiveTenant(tenants[0]);
+          else if(tenants.size > 0)
+            this.setActiveTenant(tenants.values().next().value);
         }
       }));
     }));
@@ -54,7 +54,7 @@ export class NavRouterComponent implements OnInit, OnDestroy {
     this.subscriptions.forEach((subscription: Subscription) => subscription.unsubscribe());
   }
 
-  setActiveTenant(tenant: V1x1Tenant) {
-    this.globalState.activeTenant.set(tenant);
+  setActiveTenant(tenant: Tenant) {
+    this.globalState.webapp.currentTenant.next(tenant);
   }
 }
