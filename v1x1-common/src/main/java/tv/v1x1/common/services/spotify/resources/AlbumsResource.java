@@ -19,22 +19,26 @@ public class AlbumsResource {
         this.albums = albums;
     }
 
-    public Album getAlbum(final String id) {
-        return albums.path(id).request(SpotifyApi.ACCEPT)
+    public Album getAlbum(final String id, final Optional<String> market) {
+        return albums.path(id)
+                .queryParam("market", market.orElse(null))
+                .request(SpotifyApi.ACCEPT)
                 .get(Album.class);
     }
 
     public Paging<SimpleTrack> getAlbumTracks(final String id, final Optional<Integer> limit,
-                                              final Optional<Integer> offset) {
+                                              final Optional<Integer> offset, final Optional<String> market) {
         return albums.path(id).path("tracks")
                 .queryParam("limit", limit.orElse(null))
                 .queryParam("offset", offset.orElse(null))
+                .queryParam("market", market.orElse(null))
                 .request(SpotifyApi.ACCEPT)
                 .get(new GenericType<Paging<SimpleTrack>>() {});
     }
 
-    public Albums getAlbums(final List<String> ids) {
+    public Albums getAlbums(final List<String> ids, final Optional<String> market) {
         return albums.queryParam("ids", Joiner.on(",").join(ids))
+                .queryParam("market", market.orElse(null))
                 .request(SpotifyApi.ACCEPT)
                 .get(Albums.class);
     }
