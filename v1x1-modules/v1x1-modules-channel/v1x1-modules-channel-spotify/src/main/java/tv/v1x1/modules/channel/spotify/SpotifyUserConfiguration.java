@@ -17,25 +17,34 @@ import tv.v1x1.common.scanners.config.Version;
 @TenantPermission(Permission.READ_WRITE)
 @Version(0)
 public class SpotifyUserConfiguration extends BasicUserConfiguration {
-    @DisplayName("Spotify OAuth Token")
-    @Description("Spotify OAuth Token")
+    @DisplayName("OAuth Token")
+    @Description("Spotify Refresh Token")
     @Type(ConfigType.STRING)
     @TenantPermission(Permission.WRITE_ONLY)
-    @JsonProperty("spotify_oauth")
-    private String spotifyOAuth;
+    @JsonProperty("refresh_token")
+    private String refreshToken;
 
-    public SpotifyUserConfiguration() {
+    @DisplayName("Default Playlist")
+    @Description("This is the Spotify URI of the default playlist to play when no songs are queued")
+    @Type(ConfigType.STRING)
+    @TenantPermission(Permission.READ_WRITE)
+    @JsonProperty("default_playlist")
+    private String defaultPlaylist;
+
+    public String getRefreshToken() {
+        return refreshToken;
     }
 
-    public SpotifyUserConfiguration(final String spotifyOAuth) {
-        this.spotifyOAuth = spotifyOAuth;
+    public void setRefreshToken(final String refreshToken) {
+        this.refreshToken = refreshToken;
     }
 
-    public String getSpotifyOAuth() {
-        return spotifyOAuth;
+    public String getDefaultPlaylist() {
+        return defaultPlaylist;
     }
 
-    public void setSpotifyOAuth(final String spotifyOAuth) {
-        this.spotifyOAuth = spotifyOAuth;
+    public void setDefaultPlaylist(final String defaultPlaylist) {
+        this.defaultPlaylist = defaultPlaylist;
     }
+
 }

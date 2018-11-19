@@ -52,6 +52,8 @@ import tv.v1x1.common.util.commands.CommandDelegator;
         )
 })
 public class SpotifyModule extends RegisteredThreadedModule<SpotifyGlobalConfiguration, SpotifyUserConfiguration> {
+    private Injector childInjector;
+
     public static void main(final String[] args) {
         new SpotifyModule().entryPoint(args);
     }
@@ -64,12 +66,16 @@ public class SpotifyModule extends RegisteredThreadedModule<SpotifyGlobalConfigu
     @Override
     protected void initialize() {
         super.initialize();
-        final Injector childInjector = getInjector().createChildInjector(new GuiceModule());
+        childInjector = getInjector().createChildInjector(new GuiceModule());
         final CommandDelegator commandDelegator = new CommandDelegator(new AnnotationCommandProvider(childInjector), "");
         registerListener(new SpotifyListener(this, commandDelegator));
     }
 
     boolean isEnabled(final Channel channel) {
         return getConfiguration(channel).isEnabled();
+    }
+
+    public Injector getChildInjector() {
+        return childInjector;
     }
 }

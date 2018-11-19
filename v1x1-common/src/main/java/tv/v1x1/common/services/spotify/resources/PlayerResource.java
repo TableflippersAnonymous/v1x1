@@ -8,10 +8,12 @@ import tv.v1x1.common.services.spotify.dto.PlayHistory;
 import tv.v1x1.common.services.spotify.dto.PlayRequest;
 import tv.v1x1.common.services.spotify.dto.TransferRequest;
 
+import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.NoContentException;
 import java.util.Optional;
 
 public class PlayerResource {
@@ -28,10 +30,16 @@ public class PlayerResource {
     }
 
     public CurrentlyPlayingContext getCurrentlyPlayingContext(final Optional<String> market) {
-        return player
-                .queryParam("market", market.orElse(null))
-                .request(SpotifyApi.ACCEPT)
-                .get(CurrentlyPlayingContext.class);
+        try {
+            return player
+                    .queryParam("market", market.orElse(null))
+                    .request(SpotifyApi.ACCEPT)
+                    .get(CurrentlyPlayingContext.class);
+        } catch (final ProcessingException e) {
+            if(e.getCause() instanceof NoContentException)
+                return null;
+            throw e;
+        }
     }
 
     public CursorPaging<PlayHistory> getRecentlyPlayed(final Optional<Integer> limit, final Optional<Long> after,
