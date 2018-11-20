@@ -32,7 +32,7 @@ public class SongCommand {
             minArgs = 1,
             maxArgs = 1
     )
-    public void handleSongRequest(final ChatMessage chatMessage, final String command, final List<String> args,
+    public void handleSongRequest(final ChatMessage chatMessage, final List<String> args,
                                   final PlaylistManager playlistManager) {
         final Playlist playlist = playlistManager.getPlaylistFor(chatMessage.getChannel());
         final PlaylistEntry entry = playlist.add(chatMessage.getSender().getGlobalUser(), args.get(0));
@@ -40,5 +40,31 @@ public class SongCommand {
                 "commander", chatMessage.getSender().getMention(),
                 "title", entry.getTitle(),
                 "artist", entry.getArtist());
+    }
+
+    @Command(
+            value = "start",
+            description = "Start playback",
+            permissions = "spotify.start",
+            help = "Enable spotify",
+            minArgs = 0,
+            maxArgs = 0
+    )
+    public void handleSongStart(final ChatMessage chatMessage, final PlaylistManager playlistManager) {
+        final Playlist playlist = playlistManager.getPlaylistFor(chatMessage.getChannel());
+        playlist.start();
+    }
+
+    @Command(
+            value = "stop",
+            description = "Stop playback",
+            permissions = "spotify.stop",
+            help = "Disable spotify",
+            minArgs = 0,
+            maxArgs = 0
+    )
+    public void handleSongStop(final ChatMessage chatMessage, final PlaylistManager playlistManager) {
+        final Playlist playlist = playlistManager.getPlaylistFor(chatMessage.getChannel());
+        playlist.stop();
     }
 }
