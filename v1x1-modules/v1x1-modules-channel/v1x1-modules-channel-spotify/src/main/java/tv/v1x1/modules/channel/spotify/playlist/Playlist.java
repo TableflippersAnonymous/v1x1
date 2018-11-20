@@ -38,7 +38,7 @@ public class Playlist {
     private static final ObjectMapper MAPPER = new ObjectMapper(new JsonFactory());
     private static final int MAX_TIMER_MS = 30000;
     private static final int CHECK_AFTER_START_MS = 15000;
-    private static final int INTER_TRACK_TOLERANCE_MS = 100;
+    private static final int INTER_TRACK_TOLERANCE_MS = 250;
     private static final String SILENT_TRACK_URI = "spotify:track:5XSKC4d0y0DfcGbvDOiL93";
     private static final List<String> DEFAULT_SEED_GENRES = ImmutableList.of("edm");
 

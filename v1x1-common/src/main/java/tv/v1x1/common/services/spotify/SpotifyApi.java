@@ -37,7 +37,7 @@ public class SpotifyApi {
         client.register(spotifyApiRequestFilter);
         // Because Spotify wants empty PUTs.
         client.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
-        client.register(new LoggingFeature());
+        client.register(new LoggingFeature(null, LoggingFeature.Verbosity.PAYLOAD_ANY));
         final WebTarget api = client.target(BASE_URL);
         final WebTarget accountsApi = client.target(ACCOUNTS_BASE_URL);
         albums = new AlbumsResource(api.path("albums"));
