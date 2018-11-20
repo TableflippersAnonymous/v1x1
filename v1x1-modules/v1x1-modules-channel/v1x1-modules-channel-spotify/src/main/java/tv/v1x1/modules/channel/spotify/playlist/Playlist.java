@@ -163,7 +163,7 @@ public class Playlist {
             setEnabled(false);
             return;
         }
-        final int leftMs = currentlyPlayingContext.getItem().getDurationMs() - currentlyPlayingContext.getProgressMs();
+        final long leftMs = currentlyPlayingContext.getItem().getDurationMs() - currentlyPlayingContext.getProgressMs();
         if(leftMs < INTER_TRACK_TOLERANCE_MS || currentlyPlayingContext.getProgressMs() < INTER_TRACK_TOLERANCE_MS
                 || currentlyPlayingContext.getItem().getUri().equals(SILENT_TRACK_URI))
             playNext();
@@ -171,7 +171,7 @@ public class Playlist {
             setTimer(leftMs);
     }
 
-    private void setTimer(int milliseconds) {
+    private void setTimer(long milliseconds) {
         if(milliseconds > MAX_TIMER_MS)
             milliseconds = MAX_TIMER_MS;
         schedulerServiceClient.scheduleWithDelay(milliseconds - INTER_TRACK_TOLERANCE_MS, playlistId,
