@@ -51,7 +51,7 @@
                             <goal>build</goal>
                         </goals>
                         <configuration>
-                            <imageName>v1x1-wasm</imageName>
+                            <imageName>v1x1-spotify</imageName>
                             <dockerDirectory>${basedir}/docker</dockerDirectory>
                             <resources>
                                 <resource>
