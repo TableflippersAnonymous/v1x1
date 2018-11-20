@@ -17,7 +17,9 @@ import tv.v1x1.common.dto.core.UUID;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.spotify.SpotifyApi;
 import tv.v1x1.common.services.spotify.dto.CurrentlyPlayingContext;
+import tv.v1x1.common.services.spotify.dto.Paging;
 import tv.v1x1.common.services.spotify.dto.PlayRequest;
+import tv.v1x1.common.services.spotify.dto.PlaylistTrack;
 import tv.v1x1.common.services.spotify.dto.SimpleArtist;
 import tv.v1x1.common.services.spotify.dto.Track;
 import tv.v1x1.common.services.spotify.dto.Tracks;
@@ -30,12 +32,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class Playlist {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final ObjectMapper MAPPER = new ObjectMapper(new JsonFactory());
+    private static final Random RANDOM = new Random();
     private static final int MAX_TIMER_MS = 30000;
     private static final int CHECK_AFTER_START_MS = 15000;
     private static final int INTER_TRACK_TOLERANCE_MS = 500;
@@ -71,6 +75,8 @@ public class Playlist {
     public void start() {
         final CurrentlyPlayingContext currentlyPlayingContext = api.getPlayer().getCurrentlyPlayingContext(Optional.of("from_token"));
         setEnabled(true);
+        api.getPlayer().shuffle(false, Optional.empty());
+        api.getPlayer().repeat("off", Optional.empty());
         if(currentlyPlayingContext == null || !currentlyPlayingContext.isPlaying())
             playNext();
         else
@@ -121,37 +127,9 @@ public class Playlist {
         } catch(final NoSuchElementException e) {
             spotifyUris = getDefaultNext();
         }
-        if(spotifyUris.size() == 1) {
-            api.getPlayer().shuffle(true, Optional.empty());
-            api.getPlayer().repeat("context", Optional.empty());
-        } else {
-            api.getPlayer().shuffle(false, Optional.empty());
-            api.getPlayer().repeat("off", Optional.empty());
-        }
         LOG.info("Playing: channel={} spotifyQueue={}", channel, spotifyUris);
         api.getPlayer().play(Optional.empty(), new PlayRequest(spotifyUris, 0));
         setTimer(CHECK_AFTER_START_MS);
-    }
-
-    private List<String> getDefaultNext() {
-        if(userConfiguration.getDefaultPlaylist() == null || userConfiguration.getDefaultPlaylist().isEmpty()) {
-            return ImmutableList.of(getRecommendedTrack(), SILENT_TRACK_URI);
-        } else {
-            return ImmutableList.of(userConfiguration.getDefaultPlaylist());
-        }
-    }
-
-    private String getRecommendedTrack() {
-        while(recentlyPlayed.size() > 10)
-            recentlyPlayed.iterator(1).remove();
-        final List<String> recentlyPlayedList = recentlyPlayed.stream().map(String::new).collect(Collectors.toList());
-        final Tracks tracks = api.getBrowse().getRecommendations(Optional.of(1), Optional.of("from_token"),
-                ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of(), Optional.empty(),
-                recentlyPlayedList.isEmpty() ? Optional.of(DEFAULT_SEED_GENRES) :Optional.empty(),
-                recentlyPlayedList.isEmpty() ? Optional.empty() : Optional.of(recentlyPlayedList));
-        if(tracks.getTracks().isEmpty())
-            return SILENT_TRACK_URI;
-        return tracks.getTracks().get(0).getUri();
     }
 
     public void handleTimer() {
@@ -177,6 +155,36 @@ public class Playlist {
             LOG.debug("Not within inter-track, trying again in {}ms", leftMs);
             setTimer(leftMs);
         }
+    }
+
+    private List<String> getDefaultNext() {
+        if(userConfiguration.getDefaultPlaylist() == null || userConfiguration.getDefaultPlaylist().isEmpty()) {
+            return ImmutableList.of(getRecommendedTrack(), SILENT_TRACK_URI);
+        } else {
+            return ImmutableList.of(getRandomPlaylistSong(userConfiguration.getDefaultPlaylist()), SILENT_TRACK_URI);
+        }
+    }
+
+    private String getRandomPlaylistSong(final String playlist) {
+        final Paging<PlaylistTrack> playlistEntries = api.getPlaylists().getPlaylistTracks(playlist, Optional.of(100),
+                Optional.empty(), Optional.of("from_token"));
+        if(playlistEntries.getItems().isEmpty())
+            return getRecommendedTrack();
+        final int idx = RANDOM.nextInt(playlistEntries.getItems().size());
+        return playlistEntries.getItems().get(idx).getTrack().getUri();
+    }
+
+    private String getRecommendedTrack() {
+        while(recentlyPlayed.size() > 10)
+            recentlyPlayed.iterator(1).remove();
+        final List<String> recentlyPlayedList = recentlyPlayed.stream().map(String::new).collect(Collectors.toList());
+        final Tracks tracks = api.getBrowse().getRecommendations(Optional.of(1), Optional.of("from_token"),
+                ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of(), Optional.empty(),
+                recentlyPlayedList.isEmpty() ? Optional.of(DEFAULT_SEED_GENRES) :Optional.empty(),
+                recentlyPlayedList.isEmpty() ? Optional.empty() : Optional.of(recentlyPlayedList));
+        if(tracks.getTracks().isEmpty())
+            return SILENT_TRACK_URI;
+        return tracks.getTracks().get(0).getUri();
     }
 
     private void setTimer(long milliseconds) {

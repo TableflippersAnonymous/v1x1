@@ -1,6 +1,5 @@
 package tv.v1x1.common.services.spotify;
 
-import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.logging.LoggingFeature;
 import org.slf4j.Logger;
@@ -10,6 +9,7 @@ import tv.v1x1.common.services.spotify.resources.ArtistsResource;
 import tv.v1x1.common.services.spotify.resources.BrowseResource;
 import tv.v1x1.common.services.spotify.resources.OAuth2Resource;
 import tv.v1x1.common.services.spotify.resources.PlayerResource;
+import tv.v1x1.common.services.spotify.resources.PlaylistsResource;
 import tv.v1x1.common.services.spotify.resources.TracksResource;
 
 import javax.ws.rs.client.Client;
@@ -28,6 +28,7 @@ public class SpotifyApi {
     private final ArtistsResource artists;
     private final BrowseResource browse;
     private final PlayerResource player;
+    private final PlaylistsResource playlists;
     private final TracksResource tracks;
     private final OAuth2Resource oAuth2;
 
@@ -36,8 +37,6 @@ public class SpotifyApi {
         final Client client = ClientBuilder.newClient();
         client.register(JacksonFeature.class);
         client.register(spotifyApiRequestFilter);
-        // Because Spotify wants empty PUTs.
-        client.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
         client.register(new LoggingFeature(null, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, null));
         final WebTarget api = client.target(BASE_URL);
         final WebTarget accountsApi = client.target(ACCOUNTS_BASE_URL);
@@ -45,6 +44,7 @@ public class SpotifyApi {
         artists = new ArtistsResource(api.path("artists"));
         browse = new BrowseResource(api.path("browse"), api.path("recommendations"));
         player = new PlayerResource(api.path("me").path("player"));
+        playlists = new PlaylistsResource(api.path("playlists"));
         tracks = new TracksResource(api.path("tracks"), api.path("audio-features"), api.path("audio-analysis"));
         oAuth2 = new OAuth2Resource(accountsApi.path("token"), clientId, clientSecret, redirectUri);
     }
@@ -63,6 +63,10 @@ public class SpotifyApi {
 
     public PlayerResource getPlayer() {
         return player;
+    }
+
+    public PlaylistsResource getPlaylists() {
+        return playlists;
     }
 
     public TracksResource getTracks() {
