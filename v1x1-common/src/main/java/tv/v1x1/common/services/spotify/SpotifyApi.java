@@ -34,7 +34,7 @@ public class SpotifyApi {
         albums = new AlbumsResource(api.path("albums"));
         artists = new ArtistsResource(api.path("artists"));
         browse = new BrowseResource(api.path("browse"), api.path("recommendations"));
-        player = new PlayerResource(api.path("player"));
+        player = new PlayerResource(api.path("me").path("player"));
         tracks = new TracksResource(api.path("tracks"), api.path("audio-features"), api.path("audio-analysis"));
         oAuth2 = new OAuth2Resource(accountsApi.path("token"), clientId, clientSecret, redirectUri);
     }

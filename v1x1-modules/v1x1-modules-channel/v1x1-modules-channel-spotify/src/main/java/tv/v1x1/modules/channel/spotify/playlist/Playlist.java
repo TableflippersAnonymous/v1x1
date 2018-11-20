@@ -143,9 +143,10 @@ public class Playlist {
     private String getRecommendedTrack() {
         while(recentlyPlayed.size() > 10)
             recentlyPlayed.iterator(1).remove();
+        final List<String> recentlyPlayedList = recentlyPlayed.stream().map(String::new).collect(Collectors.toList());
         final Tracks tracks = api.getBrowse().getRecommendations(Optional.of(1), Optional.of("from_token"),
                 ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of(), Optional.empty(), Optional.empty(),
-                Optional.of(recentlyPlayed.stream().map(String::new).collect(Collectors.toList())));
+                recentlyPlayedList.isEmpty() ? Optional.empty() : Optional.of(recentlyPlayedList));
         if(tracks.getTracks().isEmpty())
             return SILENT_TRACK_URI;
         return tracks.getTracks().get(0).getUri();
