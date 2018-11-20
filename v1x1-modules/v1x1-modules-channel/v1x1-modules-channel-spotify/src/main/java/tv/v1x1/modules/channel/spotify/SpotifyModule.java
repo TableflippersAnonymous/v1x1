@@ -45,10 +45,10 @@ import tv.v1x1.common.util.commands.CommandDelegator;
 })
 @I18nDefaults(version = 1, value = {
         @I18nDefault(
-                key = "help.blurb",
-                message = "Spotify allows users to request songs via Spotify.",
-                displayName = "Help Blurb",
-                description = "In response to !song help"
+                key = "song.request.added",
+                message = "%commander%, Song added!  %title% by %artist%",
+                displayName = "Song Added",
+                description = "In response to !song request"
         )
 })
 public class SpotifyModule extends RegisteredThreadedModule<SpotifyGlobalConfiguration, SpotifyUserConfiguration> {

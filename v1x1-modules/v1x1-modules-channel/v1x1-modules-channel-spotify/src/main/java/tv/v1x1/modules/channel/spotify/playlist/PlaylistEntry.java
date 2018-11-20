@@ -67,4 +67,15 @@ public class PlaylistEntry {
     public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;
     }
+
+    @Override
+    public String toString() {
+        return "PlaylistEntry{" +
+                "spotifyUri='" + spotifyUri + '\'' +
+                ", title='" + title + '\'' +
+                ", artist='" + artist + '\'' +
+                ", globalUserId='" + globalUserId + '\'' +
+                ", timestamp=" + timestamp +
+                '}';
+    }
 }

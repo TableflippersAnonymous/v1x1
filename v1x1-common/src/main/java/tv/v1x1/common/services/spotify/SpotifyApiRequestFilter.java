@@ -13,6 +13,7 @@ public class SpotifyApiRequestFilter implements ClientRequestFilter {
 
     @Override
     public void filter(final ClientRequestContext requestContext) throws IOException {
-        requestContext.getHeaders().add("Authorization", "Bearer " + oauthToken);
+        if(oauthToken != null)
+            requestContext.getHeaders().add("Authorization", "Bearer " + oauthToken);
     }
 }

@@ -8,10 +8,12 @@ import org.redisson.client.codec.ByteArrayCodec;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
 import tv.v1x1.common.services.spotify.SpotifyApi;
+import tv.v1x1.common.services.spotify.dto.RefreshResponse;
 import tv.v1x1.modules.channel.spotify.SpotifyModule;
 import tv.v1x1.modules.channel.spotify.SpotifyUserConfiguration;
 
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class PlaylistManager {
@@ -33,9 +35,10 @@ public class PlaylistManager {
         final SpotifyApi spotifyApi = new SpotifyApi(new String(module.requireCredential("Common|Spotify|ClientId")),
                 spotifyOAuth, new String(module.requireCredential("Common|Spotify|ClientSecret")),
                 new String(module.requireCredential("Common|Spotify|RedirectUri")));
-        return new Playlist(spotifyApi, channel, userConfiguration, new tv.v1x1.common.dto.core.UUID(playlistId),
+        return new Playlist(spotifyApi, module.getTwitchApi(), channel, userConfiguration, new tv.v1x1.common.dto.core.UUID(playlistId),
                 redisson.getPriorityBlockingDeque("Modules|Channel|Spotify|Playlists|" + playlistId, ByteArrayCodec.INSTANCE),
                 redisson.getMapCache("Modules|Channel|Spotify|Settings|" + playlistId, ByteArrayCodec.INSTANCE),
+                redisson.getSetCache("Modules|Channel|Spotify|RecentlyPlayed|" + playlistId, ByteArrayCodec.INSTANCE),
                 module.getServiceClient(SchedulerServiceClient.class));
     }
 
@@ -44,9 +47,11 @@ public class PlaylistManager {
         if(oauthToken != null)
             return new String(oauthToken);
         final SpotifyApi spotifyApi = new SpotifyApi(new String(module.requireCredential("Common|Spotify|ClientId")),
-                "", new String(module.requireCredential("Common|Spotify|ClientSecret")),
+                null, new String(module.requireCredential("Common|Spotify|ClientSecret")),
                 new String(module.requireCredential("Common|Spotify|RedirectUri")));
-        //TODO: spotifyApi.getOAuth().refreshToken(refreshToken)
-        return null;
+        final RefreshResponse refreshResponse = spotifyApi.getOAuth2().refreshToken(refreshToken);
+        tokenCache.fastPut(refreshToken.getBytes(), refreshResponse.getAccessToken().getBytes(),
+                refreshResponse.getExpiresIn() - 300, TimeUnit.SECONDS);
+        return refreshResponse.getAccessToken();
     }
 }

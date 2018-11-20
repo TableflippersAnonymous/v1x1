@@ -31,6 +31,13 @@ public class SpotifyUserConfiguration extends BasicUserConfiguration {
     @JsonProperty("default_playlist")
     private String defaultPlaylist;
 
+    @DisplayName("Always On")
+    @Description("If this is enabled, play queue will not stop after going offline")
+    @Type(ConfigType.BOOLEAN)
+    @TenantPermission(Permission.READ_WRITE)
+    @JsonProperty("always_on")
+    private boolean alwaysOn;
+
     public String getRefreshToken() {
         return refreshToken;
     }
@@ -47,4 +54,11 @@ public class SpotifyUserConfiguration extends BasicUserConfiguration {
         this.defaultPlaylist = defaultPlaylist;
     }
 
+    public boolean isAlwaysOn() {
+        return alwaysOn;
+    }
+
+    public void setAlwaysOn(final boolean alwaysOn) {
+        this.alwaysOn = alwaysOn;
+    }
 }
