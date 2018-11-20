@@ -2,6 +2,9 @@ package tv.v1x1.common.services.spotify;
 
 import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.logging.LoggingFeature;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.services.spotify.resources.AlbumsResource;
 import tv.v1x1.common.services.spotify.resources.ArtistsResource;
 import tv.v1x1.common.services.spotify.resources.BrowseResource;
@@ -12,8 +15,10 @@ import tv.v1x1.common.services.spotify.resources.TracksResource;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import java.lang.invoke.MethodHandles;
 
 public class SpotifyApi {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     public static final String ACCEPT = "application/json";
     public static final String BASE_URL = "https://api.spotify.com/v1";
     public static final String ACCOUNTS_BASE_URL = "https://accounts.spotify.com/api";
@@ -32,6 +37,7 @@ public class SpotifyApi {
         client.register(spotifyApiRequestFilter);
         // Because Spotify wants empty PUTs.
         client.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
+        client.register(new LoggingFeature());
         final WebTarget api = client.target(BASE_URL);
         final WebTarget accountsApi = client.target(ACCOUNTS_BASE_URL);
         albums = new AlbumsResource(api.path("albums"));

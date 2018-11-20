@@ -100,7 +100,7 @@ public class Playlist {
                 globalUser.getId().toString(),
                 new Date().getTime()
         );
-        priorityBlockingDeque.addLast(serialize(playlistEntry));
+        priorityBlockingDeque.add(serialize(playlistEntry));
         LOG.info("Added song to playlist: channel={} song={}", channel, playlistEntry);
         return playlistEntry;
     }
@@ -155,22 +155,28 @@ public class Playlist {
     }
 
     public void handleTimer() {
+        LOG.info("Got timer interrupt for {}", channel);
         final CurrentlyPlayingContext currentlyPlayingContext = api.getPlayer().getCurrentlyPlayingContext(Optional.of("from_token"));
         if(currentlyPlayingContext == null || !currentlyPlayingContext.isPlaying()) {
+            LOG.debug("Not currently playing, disabling for {}", channel);
             setEnabled(false);
             return;
         }
         if(channel instanceof TwitchChannel && !userConfiguration.isAlwaysOn()
                 && twitchApi.getStreams().getStream(channel.getChannelGroup().getId()).getStream() == null) {
+            LOG.debug("Stream went offline, disabling for {}", channel);
             setEnabled(false);
             return;
         }
         final long leftMs = currentlyPlayingContext.getItem().getDurationMs() - currentlyPlayingContext.getProgressMs();
         if(leftMs < INTER_TRACK_TOLERANCE_MS || currentlyPlayingContext.getProgressMs() < INTER_TRACK_TOLERANCE_MS
-                || currentlyPlayingContext.getItem().getUri().equals(SILENT_TRACK_URI))
+                || currentlyPlayingContext.getItem().getUri().equals(SILENT_TRACK_URI)) {
+            LOG.info("Within inter-track, injecting next song.");
             playNext();
-        else
+        } else {
+            LOG.debug("Not within inter-track, trying again in {}ms", leftMs);
             setTimer(leftMs);
+        }
     }
 
     private void setTimer(long milliseconds) {
