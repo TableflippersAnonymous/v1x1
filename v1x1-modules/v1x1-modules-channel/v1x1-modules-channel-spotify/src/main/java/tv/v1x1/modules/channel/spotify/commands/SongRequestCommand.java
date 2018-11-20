@@ -23,6 +23,6 @@ public class SongRequestCommand {
     public void handleSongRequest(final ChatMessage chatMessage, final String command, final List<String> args,
                                   final PlaylistManager playlistManager, final SongCommand songCommand) {
         // Alias to !song request
-        songCommand.handleSongRequest(chatMessage, command, args, playlistManager);
+        songCommand.handleSongRequest(chatMessage, args, playlistManager);
     }
 }
