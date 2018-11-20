@@ -165,8 +165,10 @@ public class Playlist {
         }
     }
 
-    private String getRandomPlaylistSong(final String playlist) {
-        final Paging<PlaylistTrack> playlistEntries = api.getPlaylists().getPlaylistTracks(playlist, Optional.of(100),
+    private String getRandomPlaylistSong(final String playlistUri) {
+        final String[] parts = playlistUri.split(":");
+        final String playlistId = parts[parts.length - 1];
+        final Paging<PlaylistTrack> playlistEntries = api.getPlaylists().getPlaylistTracks(playlistId, Optional.of(100),
                 Optional.empty(), Optional.of("from_token"));
         if(playlistEntries.getItems().isEmpty())
             return getRecommendedTrack();
