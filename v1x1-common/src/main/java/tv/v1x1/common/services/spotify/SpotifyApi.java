@@ -1,5 +1,6 @@
 package tv.v1x1.common.services.spotify;
 
+import org.glassfish.jersey.client.ClientProperties;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import tv.v1x1.common.services.spotify.resources.AlbumsResource;
 import tv.v1x1.common.services.spotify.resources.ArtistsResource;
@@ -29,6 +30,8 @@ public class SpotifyApi {
         final Client client = ClientBuilder.newClient();
         client.register(JacksonFeature.class);
         client.register(spotifyApiRequestFilter);
+        // Because Spotify wants empty PUTs.
+        client.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
         final WebTarget api = client.target(BASE_URL);
         final WebTarget accountsApi = client.target(ACCOUNTS_BASE_URL);
         albums = new AlbumsResource(api.path("albums"));

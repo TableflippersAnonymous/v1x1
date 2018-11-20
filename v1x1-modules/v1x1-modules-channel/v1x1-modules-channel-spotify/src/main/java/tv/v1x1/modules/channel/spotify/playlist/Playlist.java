@@ -40,6 +40,7 @@ public class Playlist {
     private static final int CHECK_AFTER_START_MS = 15000;
     private static final int INTER_TRACK_TOLERANCE_MS = 100;
     private static final String SILENT_TRACK_URI = "spotify:track:5XSKC4d0y0DfcGbvDOiL93";
+    private static final List<String> DEFAULT_SEED_GENRES = ImmutableList.of("edm");
 
     private final SpotifyApi api;
     private final TwitchApi twitchApi;
@@ -145,7 +146,8 @@ public class Playlist {
             recentlyPlayed.iterator(1).remove();
         final List<String> recentlyPlayedList = recentlyPlayed.stream().map(String::new).collect(Collectors.toList());
         final Tracks tracks = api.getBrowse().getRecommendations(Optional.of(1), Optional.of("from_token"),
-                ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of(), Optional.empty(), Optional.empty(),
+                ImmutableMap.of(), ImmutableMap.of(), ImmutableMap.of(), Optional.empty(),
+                recentlyPlayedList.isEmpty() ? Optional.of(DEFAULT_SEED_GENRES) :Optional.empty(),
                 recentlyPlayedList.isEmpty() ? Optional.empty() : Optional.of(recentlyPlayedList));
         if(tracks.getTracks().isEmpty())
             return SILENT_TRACK_URI;
