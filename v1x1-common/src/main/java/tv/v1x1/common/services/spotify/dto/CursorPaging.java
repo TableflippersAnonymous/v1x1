@@ -12,19 +12,19 @@ public class CursorPaging<T> {
     @JsonProperty
     private List<T> items;
     @JsonProperty
-    private int limit;
+    private long limit;
     @JsonProperty
     private String next;
     @JsonProperty
     private Cursor cursors;
     @JsonProperty
-    private int total;
+    private long total;
 
     public CursorPaging() {
     }
 
-    public CursorPaging(final String href, final List<T> items, final int limit, final String next,
-                        final Cursor cursors, final int total) {
+    public CursorPaging(final String href, final List<T> items, final long limit, final String next,
+                        final Cursor cursors, final long total) {
         this.href = href;
         this.items = items;
         this.limit = limit;
@@ -49,11 +49,11 @@ public class CursorPaging<T> {
         this.items = items;
     }
 
-    public int getLimit() {
+    public long getLimit() {
         return limit;
     }
 
-    public void setLimit(final int limit) {
+    public void setLimit(final long limit) {
         this.limit = limit;
     }
 
@@ -73,11 +73,11 @@ public class CursorPaging<T> {
         this.cursors = cursors;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(final int total) {
+    public void setTotal(final long total) {
         this.total = total;
     }
 }

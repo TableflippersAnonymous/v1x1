@@ -6,23 +6,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RecommendationSeed {
     @JsonProperty("after_filtering_size")
-    private int afterFilteringSize;
+    private long afterFilteringSize;
     @JsonProperty("after_relinking_size")
-    private int afterRelinkingSize;
+    private long afterRelinkingSize;
     @JsonProperty
     private String href;
     @JsonProperty
     private String id;
     @JsonProperty("initial_pool_size")
-    private int initialPoolSize;
+    private long initialPoolSize;
     @JsonProperty
     private String type;
 
     public RecommendationSeed() {
     }
 
-    public RecommendationSeed(final int afterFilteringSize, final int afterRelinkingSize, final String href,
-                              final String id, final int initialPoolSize, final String type) {
+    public RecommendationSeed(final long afterFilteringSize, final long afterRelinkingSize, final String href,
+                              final String id, final long initialPoolSize, final String type) {
         this.afterFilteringSize = afterFilteringSize;
         this.afterRelinkingSize = afterRelinkingSize;
         this.href = href;
@@ -31,19 +31,19 @@ public class RecommendationSeed {
         this.type = type;
     }
 
-    public int getAfterFilteringSize() {
+    public long getAfterFilteringSize() {
         return afterFilteringSize;
     }
 
-    public void setAfterFilteringSize(final int afterFilteringSize) {
+    public void setAfterFilteringSize(final long afterFilteringSize) {
         this.afterFilteringSize = afterFilteringSize;
     }
 
-    public int getAfterRelinkingSize() {
+    public long getAfterRelinkingSize() {
         return afterRelinkingSize;
     }
 
-    public void setAfterRelinkingSize(final int afterRelinkingSize) {
+    public void setAfterRelinkingSize(final long afterRelinkingSize) {
         this.afterRelinkingSize = afterRelinkingSize;
     }
 
@@ -63,11 +63,11 @@ public class RecommendationSeed {
         this.id = id;
     }
 
-    public int getInitialPoolSize() {
+    public long getInitialPoolSize() {
         return initialPoolSize;
     }
 
-    public void setInitialPoolSize(final int initialPoolSize) {
+    public void setInitialPoolSize(final long initialPoolSize) {
         this.initialPoolSize = initialPoolSize;
     }
 

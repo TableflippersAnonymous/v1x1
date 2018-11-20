@@ -12,7 +12,7 @@ public class AudioFeatures {
     @JsonProperty
     private float danceability;
     @JsonProperty("duration_ms")
-    private int durationMs;
+    private long durationMs;
     @JsonProperty
     private float energy;
     @JsonProperty
@@ -20,19 +20,19 @@ public class AudioFeatures {
     @JsonProperty
     private float instrumentalness;
     @JsonProperty
-    private int key;
+    private long key;
     @JsonProperty
     private float liveness;
     @JsonProperty
     private float loudness;
     @JsonProperty
-    private int mode;
+    private long mode;
     @JsonProperty
     private float speechiness;
     @JsonProperty
     private float tempo;
     @JsonProperty("time_signature")
-    private int timeSignature;
+    private long timeSignature;
     @JsonProperty("track_href")
     private String trackHref;
     @JsonProperty
@@ -46,9 +46,9 @@ public class AudioFeatures {
     }
 
     public AudioFeatures(final float acousticness, final String analysisUrl, final float danceability,
-                         final int durationMs, final float energy, final String id, final float instrumentalness,
-                         final int key, final float liveness, final float loudness, final int mode,
-                         final float speechiness, final float tempo, final int timeSignature, final String trackHref,
+                         final long durationMs, final float energy, final String id, final float instrumentalness,
+                         final long key, final float liveness, final float loudness, final long mode,
+                         final float speechiness, final float tempo, final long timeSignature, final String trackHref,
                          final String type, final String uri, final float valence) {
         this.acousticness = acousticness;
         this.analysisUrl = analysisUrl;
@@ -94,11 +94,11 @@ public class AudioFeatures {
         this.danceability = danceability;
     }
 
-    public int getDurationMs() {
+    public long getDurationMs() {
         return durationMs;
     }
 
-    public void setDurationMs(final int durationMs) {
+    public void setDurationMs(final long durationMs) {
         this.durationMs = durationMs;
     }
 
@@ -126,11 +126,11 @@ public class AudioFeatures {
         this.instrumentalness = instrumentalness;
     }
 
-    public int getKey() {
+    public long getKey() {
         return key;
     }
 
-    public void setKey(final int key) {
+    public void setKey(final long key) {
         this.key = key;
     }
 
@@ -150,11 +150,11 @@ public class AudioFeatures {
         this.loudness = loudness;
     }
 
-    public int getMode() {
+    public long getMode() {
         return mode;
     }
 
-    public void setMode(final int mode) {
+    public void setMode(final long mode) {
         this.mode = mode;
     }
 
@@ -174,11 +174,11 @@ public class AudioFeatures {
         this.tempo = tempo;
     }
 
-    public int getTimeSignature() {
+    public long getTimeSignature() {
         return timeSignature;
     }
 
-    public void setTimeSignature(final int timeSignature) {
+    public void setTimeSignature(final long timeSignature) {
         this.timeSignature = timeSignature;
     }
 

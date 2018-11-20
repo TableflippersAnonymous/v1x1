@@ -15,14 +15,14 @@ public class Artist extends SimpleArtist {
     @JsonProperty
     private List<Image> images;
     @JsonProperty
-    private int popularity;
+    private long popularity;
 
     public Artist() {
     }
 
     public Artist(final String type, final String href, final Map<String, String> externalUrls, final String uri,
                   final String id, final String name, final Followers followers, final List<String> genres,
-                  final List<Image> images, final int popularity) {
+                  final List<Image> images, final long popularity) {
         super(type, href, externalUrls, uri, id, name);
         this.followers = followers;
         this.genres = genres;
@@ -54,11 +54,11 @@ public class Artist extends SimpleArtist {
         this.images = images;
     }
 
-    public int getPopularity() {
+    public long getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(final int popularity) {
+    public void setPopularity(final long popularity) {
         this.popularity = popularity;
     }
 }

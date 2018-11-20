@@ -14,9 +14,9 @@ public class CurrentlyPlayingContext {
     @JsonProperty
     private Context context;
     @JsonProperty
-    private int timestamp;
+    private long timestamp;
     @JsonProperty("progress_ms")
-    private int progressMs;
+    private long progressMs;
     @JsonProperty("is_playing")
     private boolean isPlaying;
     @JsonProperty
@@ -28,7 +28,7 @@ public class CurrentlyPlayingContext {
     }
 
     public CurrentlyPlayingContext(final Device device, final String repeatState, final boolean shuffleState,
-                                   final Context context, final int timestamp, final int progressMs,
+                                   final Context context, final long timestamp, final long progressMs,
                                    final boolean isPlaying, final Track item, final String currentlyPlayingType) {
         this.device = device;
         this.repeatState = repeatState;
@@ -73,19 +73,19 @@ public class CurrentlyPlayingContext {
         this.context = context;
     }
 
-    public int getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(final int timestamp) {
+    public void setTimestamp(final long timestamp) {
         this.timestamp = timestamp;
     }
 
-    public int getProgressMs() {
+    public long getProgressMs() {
         return progressMs;
     }
 
-    public void setProgressMs(final int progressMs) {
+    public void setProgressMs(final long progressMs) {
         this.progressMs = progressMs;
     }
 

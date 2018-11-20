@@ -18,13 +18,13 @@ public class Device {
     @JsonProperty
     private String type;
     @JsonProperty("volume_percent")
-    private int volumePercent;
+    private long volumePercent;
 
     public Device() {
     }
 
     public Device(final String id, final boolean isActive, final boolean isPrivateSession, final boolean isRestricted,
-                  final String name, final String type, final int volumePercent) {
+                  final String name, final String type, final long volumePercent) {
         this.id = id;
         this.isActive = isActive;
         this.isPrivateSession = isPrivateSession;
@@ -82,11 +82,11 @@ public class Device {
         this.type = type;
     }
 
-    public int getVolumePercent() {
+    public long getVolumePercent() {
         return volumePercent;
     }
 
-    public void setVolumePercent(final int volumePercent) {
+    public void setVolumePercent(final long volumePercent) {
         this.volumePercent = volumePercent;
     }
 }

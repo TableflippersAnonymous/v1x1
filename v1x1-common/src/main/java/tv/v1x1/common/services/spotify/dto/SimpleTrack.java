@@ -13,9 +13,9 @@ public class SimpleTrack extends TrackLink {
     @JsonProperty("available_markets")
     private List<String> availableMarkets;
     @JsonProperty("disc_number")
-    private int discNumber;
+    private long discNumber;
     @JsonProperty("duration_ms")
-    private int durationMs;
+    private long durationMs;
     @JsonProperty
     private boolean explicit;
     @JsonProperty("is_playable")
@@ -29,7 +29,7 @@ public class SimpleTrack extends TrackLink {
     @JsonProperty("preview_url")
     private String previewUrl;
     @JsonProperty("track_number")
-    private int trackNumber;
+    private long trackNumber;
     @JsonProperty("is_local")
     private boolean isLocal;
 
@@ -38,9 +38,9 @@ public class SimpleTrack extends TrackLink {
 
     public SimpleTrack(final String type, final String href, final Map<String, String> externalUrls, final String uri,
                        final String id, final List<SimpleArtist> artists, final List<String> availableMarkets,
-                       final int discNumber, final int durationMs, final boolean explicit, final boolean isPlayable,
+                       final long discNumber, final long durationMs, final boolean explicit, final boolean isPlayable,
                        final TrackLink linkedFrom, final Restrictions restrictions, final String name,
-                       final String previewUrl, final int trackNumber, final boolean isLocal) {
+                       final String previewUrl, final long trackNumber, final boolean isLocal) {
         super(type, href, externalUrls, uri, id);
         this.artists = artists;
         this.availableMarkets = availableMarkets;
@@ -72,19 +72,19 @@ public class SimpleTrack extends TrackLink {
         this.availableMarkets = availableMarkets;
     }
 
-    public int getDiscNumber() {
+    public long getDiscNumber() {
         return discNumber;
     }
 
-    public void setDiscNumber(final int discNumber) {
+    public void setDiscNumber(final long discNumber) {
         this.discNumber = discNumber;
     }
 
-    public int getDurationMs() {
+    public long getDurationMs() {
         return durationMs;
     }
 
-    public void setDurationMs(final int durationMs) {
+    public void setDurationMs(final long durationMs) {
         this.durationMs = durationMs;
     }
 
@@ -136,11 +136,11 @@ public class SimpleTrack extends TrackLink {
         this.previewUrl = previewUrl;
     }
 
-    public int getTrackNumber() {
+    public long getTrackNumber() {
         return trackNumber;
     }
 
-    public void setTrackNumber(final int trackNumber) {
+    public void setTrackNumber(final long trackNumber) {
         this.trackNumber = trackNumber;
     }
 

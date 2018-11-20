@@ -18,15 +18,15 @@ public class Section {
     @JsonProperty("tempo_confidence")
     private float tempoConfidence;
     @JsonProperty
-    private int key;
+    private long key;
     @JsonProperty("key_confidence")
     private float keyConfidence;
     @JsonProperty
-    private int mode;
+    private long mode;
     @JsonProperty("mode_confidence")
     private float modeConfidence;
     @JsonProperty("time_signature")
-    private int timeSignature;
+    private long timeSignature;
     @JsonProperty("time_signature_confidence")
     private float timeSignatureConfidence;
 
@@ -34,8 +34,8 @@ public class Section {
     }
 
     public Section(final float start, final float duration, final float confidence, final float loudness,
-                   final float tempo, final float tempoConfidence, final int key, final float keyConfidence,
-                   final int mode, final float modeConfidence, final int timeSignature,
+                   final float tempo, final float tempoConfidence, final long key, final float keyConfidence,
+                   final long mode, final float modeConfidence, final long timeSignature,
                    final float timeSignatureConfidence) {
         this.start = start;
         this.duration = duration;
@@ -99,11 +99,11 @@ public class Section {
         this.tempoConfidence = tempoConfidence;
     }
 
-    public int getKey() {
+    public long getKey() {
         return key;
     }
 
-    public void setKey(final int key) {
+    public void setKey(final long key) {
         this.key = key;
     }
 
@@ -115,11 +115,11 @@ public class Section {
         this.keyConfidence = keyConfidence;
     }
 
-    public int getMode() {
+    public long getMode() {
         return mode;
     }
 
-    public void setMode(final int mode) {
+    public void setMode(final long mode) {
         this.mode = mode;
     }
 
@@ -131,11 +131,11 @@ public class Section {
         this.modeConfidence = modeConfidence;
     }
 
-    public int getTimeSignature() {
+    public long getTimeSignature() {
         return timeSignature;
     }
 
-    public void setTimeSignature(final int timeSignature) {
+    public void setTimeSignature(final long timeSignature) {
         this.timeSignature = timeSignature;
     }
 

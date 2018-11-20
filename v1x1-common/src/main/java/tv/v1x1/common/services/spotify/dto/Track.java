@@ -13,17 +13,17 @@ public class Track extends SimpleTrack {
     @JsonProperty("external_ids")
     private Map<String, String> externalIds;
     @JsonProperty
-    private int popularity;
+    private long popularity;
 
     public Track() {
     }
 
     public Track(final String type, final String href, final Map<String, String> externalUrls, final String uri,
                  final String id, final List<SimpleArtist> artists, final List<String> availableMarkets,
-                 final int discNumber, final int durationMs, final boolean explicit, final boolean isPlayable,
+                 final long discNumber, final long durationMs, final boolean explicit, final boolean isPlayable,
                  final TrackLink linkedFrom, final Restrictions restrictions, final String name,
-                 final String previewUrl, final int trackNumber, final boolean isLocal, final SimpleAlbum album,
-                 final Map<String, String> externalIds, final int popularity) {
+                 final String previewUrl, final long trackNumber, final boolean isLocal, final SimpleAlbum album,
+                 final Map<String, String> externalIds, final long popularity) {
         super(type, href, externalUrls, uri, id, artists, availableMarkets, discNumber, durationMs, explicit,
                 isPlayable, linkedFrom, restrictions, name, previewUrl, trackNumber, isLocal);
         this.album = album;
@@ -47,11 +47,11 @@ public class Track extends SimpleTrack {
         this.externalIds = externalIds;
     }
 
-    public int getPopularity() {
+    public long getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(final int popularity) {
+    public void setPopularity(final long popularity) {
         this.popularity = popularity;
     }
 }

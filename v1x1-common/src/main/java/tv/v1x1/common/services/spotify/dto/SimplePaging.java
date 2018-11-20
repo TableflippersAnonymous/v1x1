@@ -8,12 +8,12 @@ public class SimplePaging {
     @JsonProperty
     private String href;
     @JsonProperty
-    private int total;
+    private long total;
 
     public SimplePaging() {
     }
 
-    public SimplePaging(final String href, final int total) {
+    public SimplePaging(final String href, final long total) {
         this.href = href;
         this.total = total;
     }
@@ -26,11 +26,11 @@ public class SimplePaging {
         this.href = href;
     }
 
-    public int getTotal() {
+    public long getTotal() {
         return total;
     }
 
-    public void setTotal(final int total) {
+    public void setTotal(final long total) {
         this.total = total;
     }
 }

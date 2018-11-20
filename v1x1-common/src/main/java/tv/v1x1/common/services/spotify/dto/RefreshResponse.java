@@ -12,12 +12,12 @@ public class RefreshResponse {
     @JsonProperty
     private String scope;
     @JsonProperty("expires_in")
-    private int expiresIn;
+    private long expiresIn;
 
     public RefreshResponse() {
     }
 
-    public RefreshResponse(final String accessToken, final String tokenType, final String scope, final int expiresIn) {
+    public RefreshResponse(final String accessToken, final String tokenType, final String scope, final long expiresIn) {
         this.accessToken = accessToken;
         this.tokenType = tokenType;
         this.scope = scope;
@@ -48,11 +48,11 @@ public class RefreshResponse {
         this.scope = scope;
     }
 
-    public int getExpiresIn() {
+    public long getExpiresIn() {
         return expiresIn;
     }
 
-    public void setExpiresIn(final int expiresIn) {
+    public void setExpiresIn(final long expiresIn) {
         this.expiresIn = expiresIn;
     }
 }

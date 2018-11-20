@@ -17,7 +17,7 @@ public class Album extends SimpleAlbum {
     @JsonProperty
     private String label;
     @JsonProperty
-    private int popularity;
+    private long popularity;
     @JsonProperty
     private Paging<SimpleTrack> tracks;
 
@@ -29,7 +29,7 @@ public class Album extends SimpleAlbum {
                  final List<String> availableMarkets, final String id, final List<Image> images, final String name,
                  final String releaseDate, final String releaseDatePrecision, final Restrictions restrictions,
                  final List<Copyright> copyrights, final Map<String, String> externalIds, final List<String> genres,
-                 final String label, final int popularity, final Paging<SimpleTrack> tracks) {
+                 final String label, final long popularity, final Paging<SimpleTrack> tracks) {
         super(type, href, externalUrls, uri, albumGroup, albumType, artists, availableMarkets, id, images, name,
                 releaseDate, releaseDatePrecision, restrictions);
         this.copyrights = copyrights;
@@ -72,11 +72,11 @@ public class Album extends SimpleAlbum {
         this.label = label;
     }
 
-    public int getPopularity() {
+    public long getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(final int popularity) {
+    public void setPopularity(final long popularity) {
         this.popularity = popularity;
     }
 

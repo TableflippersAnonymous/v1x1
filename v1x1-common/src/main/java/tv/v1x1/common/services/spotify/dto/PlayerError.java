@@ -11,7 +11,7 @@ public class PlayerError extends Error {
     public PlayerError() {
     }
 
-    public PlayerError(final int status, final String message, final String reason) {
+    public PlayerError(final long status, final String message, final String reason) {
         super(status, message);
         this.reason = reason;
     }

@@ -10,19 +10,19 @@ public class Paging<T> extends SimplePaging {
     @JsonProperty
     private List<T> items;
     @JsonProperty
-    private int limit;
+    private long limit;
     @JsonProperty
     private String next;
     @JsonProperty
-    private int offset;
+    private long offset;
     @JsonProperty
     private String previous;
 
     public Paging() {
     }
 
-    public Paging(final String href, final List<T> items, final int limit, final String next, final int offset,
-                  final String previous, final int total) {
+    public Paging(final String href, final List<T> items, final long limit, final String next, final long offset,
+                  final String previous, final long total) {
         super(href, total);
         this.items = items;
         this.limit = limit;
@@ -39,11 +39,11 @@ public class Paging<T> extends SimplePaging {
         this.items = items;
     }
 
-    public int getLimit() {
+    public long getLimit() {
         return limit;
     }
 
-    public void setLimit(final int limit) {
+    public void setLimit(final long limit) {
         this.limit = limit;
     }
 
@@ -55,11 +55,11 @@ public class Paging<T> extends SimplePaging {
         this.next = next;
     }
 
-    public int getOffset() {
+    public long getOffset() {
         return offset;
     }
 
-    public void setOffset(final int offset) {
+    public void setOffset(final long offset) {
         this.offset = offset;
     }
 

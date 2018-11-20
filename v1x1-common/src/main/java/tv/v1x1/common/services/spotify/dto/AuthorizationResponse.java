@@ -12,7 +12,7 @@ public class AuthorizationResponse extends RefreshResponse {
     }
 
     public AuthorizationResponse(final String accessToken, final String tokenType, final String scope,
-                                 final int expiresIn, final String refreshToken) {
+                                 final long expiresIn, final String refreshToken) {
         super(accessToken, tokenType, scope, expiresIn);
         this.refreshToken = refreshToken;
     }
