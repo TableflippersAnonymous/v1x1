@@ -79,8 +79,12 @@ public class DelayScheduler implements Runnable {
                     final UUID id = UUID.fromProto(UUIDOuterClass.UUID.parseFrom(keyParts[1]));
                     final byte[] payload = keyParts[2];
                     final long timestamp = Longs.fromByteArray(keyParts[3]);
-                    if (new Date().getTime() < timestamp)
+                    final long timeDifference = timestamp - new Date().getTime();
+                    if (timeDifference > 0) {
+                        if (timeDifference < 50)
+                            mainLoop.schedule(this, timeDifference, TimeUnit.MILLISECONDS);
                         break;
+                    }
                     LOG.debug("Processing {}", id.getValue());
                     if (set.remove(key))
                         messageQueue.add(new SchedulerNotifyEvent(source, module, id, payload));
