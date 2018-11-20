@@ -2,8 +2,8 @@ package tv.v1x1.modules.channel.spotify.playlist;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.redisson.Redisson;
 import org.redisson.api.RMapCache;
+import org.redisson.api.RedissonClient;
 import org.redisson.client.codec.ByteArrayCodec;
 import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.rpc.client.SchedulerServiceClient;
@@ -17,12 +17,12 @@ import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class PlaylistManager {
-    private final Redisson redisson;
+    private final RedissonClient redisson;
     private final SpotifyModule module;
     private final RMapCache<byte[], byte[]> tokenCache;
 
     @Inject
-    public PlaylistManager(final Redisson redisson, final SpotifyModule module) {
+    public PlaylistManager(final RedissonClient redisson, final SpotifyModule module) {
         this.redisson = redisson;
         this.tokenCache = redisson.getMapCache("Modules|Channel|Spotify|OAuthTokens", ByteArrayCodec.INSTANCE);
         this.module = module;

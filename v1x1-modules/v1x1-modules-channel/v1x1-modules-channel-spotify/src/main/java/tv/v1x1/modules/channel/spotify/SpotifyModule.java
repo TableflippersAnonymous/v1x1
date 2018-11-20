@@ -67,7 +67,7 @@ public class SpotifyModule extends RegisteredThreadedModule<SpotifyGlobalConfigu
     protected void initialize() {
         super.initialize();
         childInjector = getInjector().createChildInjector(new GuiceModule());
-        final CommandDelegator commandDelegator = new CommandDelegator(new AnnotationCommandProvider(childInjector), "");
+        final CommandDelegator commandDelegator = new CommandDelegator(new AnnotationCommandProvider(childInjector), "!");
         registerListener(new SpotifyListener(this, commandDelegator));
     }
 
