@@ -112,6 +112,8 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
     private void loadConfig(final String filename) throws IOException {
         final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
+        LOG.info("Loading config file {}", filename);
+
         /* Redisson support */
         mapper.addMixIn(MasterSlaveServersConfig.class, ConfigSupport.MasterSlaveServersConfigMixIn.class);
         mapper.addMixIn(SingleServerConfig.class, ConfigSupport.SingleSeverConfigMixIn.class);
@@ -129,6 +131,8 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         for(final Map.Entry<String, String> entry : System.getenv().entrySet())
             fixedSettings = fixedSettings.replace("{{ENV:" + entry.getKey() + "}}", entry.getValue());
         settings = mapper.readValue(fixedSettings, getGlobalConfigurationClass());
+        LOG.info("Loaded config file {}: {}", configFile, settings);
+        LOG.info("Creating Guice Injector.");
         injector = Guice.createInjector(new GuiceModule<>(settings, this));
     }
 
@@ -196,8 +200,10 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
 
     /* ******************************* TEAR-DOWN ******************************* */
     private void cleanup() {
-        getInjector().getInstance(Session.class).close();
-        getInjector().getInstance(Cluster.class).close();
+        if(injector != null) {
+            getInjector().getInstance(Session.class).close();
+            getInjector().getInstance(Cluster.class).close();
+        }
         for(final Map.Entry<String, LoadBalancingDistributor> entry : loadBalancingDistributorMap.entrySet())
             try {
                 entry.getValue().shutdown();
@@ -206,12 +212,14 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
             }
         for(final Map.Entry<Class<? extends ServiceClient>, ServiceClient> entry : serviceClientMap.entrySet())
             entry.getValue().shutdown();
-        try {
-            getModuleRegistry().shutdown();
-        } catch (final IOException e) {
-            e.printStackTrace();
+        if(injector != null) {
+            try {
+                getModuleRegistry().shutdown();
+            } catch (final IOException e) {
+                e.printStackTrace();
+            }
+            getCuratorFramework().close();
         }
-        getCuratorFramework().close();
     }
 
     /* ******************************* SIMPLE GETTERS ******************************* */
