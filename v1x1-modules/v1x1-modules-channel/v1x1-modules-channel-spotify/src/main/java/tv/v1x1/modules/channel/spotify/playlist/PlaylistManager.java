@@ -36,7 +36,7 @@ public class PlaylistManager {
                 spotifyOAuth, new String(module.requireCredential("Common|Spotify|ClientSecret")),
                 new String(module.requireCredential("Common|Spotify|RedirectUri")));
         return new Playlist(spotifyApi, module.getTwitchApi(), channel, userConfiguration, new tv.v1x1.common.dto.core.UUID(playlistId),
-                redisson.getPriorityBlockingDeque("Modules|Channel|Spotify|Playlists|" + playlistId, ByteArrayCodec.INSTANCE),
+                redisson.getDeque("Modules|Channel|Spotify|Playlists2|" + playlistId, ByteArrayCodec.INSTANCE),
                 redisson.getMapCache("Modules|Channel|Spotify|Settings|" + playlistId, ByteArrayCodec.INSTANCE),
                 redisson.getSetCache("Modules|Channel|Spotify|RecentlyPlayed|" + playlistId, ByteArrayCodec.INSTANCE),
                 module.getServiceClient(SchedulerServiceClient.class));

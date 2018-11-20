@@ -5,8 +5,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import org.redisson.api.RDeque;
 import org.redisson.api.RMapCache;
-import org.redisson.api.RPriorityBlockingDeque;
 import org.redisson.api.RSetCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +38,7 @@ public class Playlist {
     private static final ObjectMapper MAPPER = new ObjectMapper(new JsonFactory());
     private static final int MAX_TIMER_MS = 30000;
     private static final int CHECK_AFTER_START_MS = 15000;
-    private static final int INTER_TRACK_TOLERANCE_MS = 250;
+    private static final int INTER_TRACK_TOLERANCE_MS = 500;
     private static final String SILENT_TRACK_URI = "spotify:track:5XSKC4d0y0DfcGbvDOiL93";
     private static final List<String> DEFAULT_SEED_GENRES = ImmutableList.of("edm");
 
@@ -47,14 +47,14 @@ public class Playlist {
     private final Channel channel;
     private final SpotifyUserConfiguration userConfiguration;
     private final UUID playlistId;
-    private final RPriorityBlockingDeque<byte[]> priorityBlockingDeque;
+    private final RDeque<byte[]> deque;
     private final RMapCache<byte[], byte[]> settings;
     private final RSetCache<byte[]> recentlyPlayed;
     private final SchedulerServiceClient schedulerServiceClient;
 
     public Playlist(final SpotifyApi api, final TwitchApi twitchApi, final Channel channel,
                     final SpotifyUserConfiguration userConfiguration, final UUID playlistId,
-                    final RPriorityBlockingDeque<byte[]> priorityBlockingDeque,
+                    final RDeque<byte[]> deque,
                     final RMapCache<byte[], byte[]> settings, final RSetCache<byte[]> recentlyPlayed,
                     final SchedulerServiceClient schedulerServiceClient) {
         this.api = api;
@@ -62,7 +62,7 @@ public class Playlist {
         this.channel = channel;
         this.userConfiguration = userConfiguration;
         this.playlistId = playlistId;
-        this.priorityBlockingDeque = priorityBlockingDeque;
+        this.deque = deque;
         this.settings = settings;
         this.recentlyPlayed = recentlyPlayed;
         this.schedulerServiceClient = schedulerServiceClient;
@@ -88,7 +88,7 @@ public class Playlist {
     }
 
     public void purge() {
-        priorityBlockingDeque.clear();
+        deque.clear();
     }
 
     public PlaylistEntry add(final GlobalUser globalUser, final String spotifyUri) {
@@ -100,13 +100,13 @@ public class Playlist {
                 globalUser.getId().toString(),
                 new Date().getTime()
         );
-        priorityBlockingDeque.add(serialize(playlistEntry));
+        deque.add(serialize(playlistEntry));
         LOG.info("Added song to playlist: channel={} song={}", channel, playlistEntry);
         return playlistEntry;
     }
 
     public PlaylistEntry getNext() {
-        return deserialize(priorityBlockingDeque.getFirst());
+        return deserialize(deque.getFirst());
     }
 
     public void playNext() {
@@ -114,7 +114,7 @@ public class Playlist {
             return;
         List<String> spotifyUris;
         try {
-            final PlaylistEntry playlistEntry = deserialize(priorityBlockingDeque.removeFirst());
+            final PlaylistEntry playlistEntry = deserialize(deque.removeFirst());
             final String spotifyUri = playlistEntry.getSpotifyUri();
             recentlyPlayed.add(api.getIdFromUri(spotifyUri).getBytes(), 15, TimeUnit.MINUTES);
             spotifyUris = ImmutableList.<String>builder().add(spotifyUri).add(SILENT_TRACK_URI).addAll(getDefaultNext()).build();
