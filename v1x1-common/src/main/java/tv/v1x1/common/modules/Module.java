@@ -129,6 +129,7 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         for(final Map.Entry<String, String> entry : System.getenv().entrySet())
             fixedSettings = fixedSettings.replace("{{ENV:" + entry.getKey() + "}}", entry.getValue());
         settings = mapper.readValue(fixedSettings, getGlobalConfigurationClass());
+        injector = Guice.createInjector(new GuiceModule<>(settings, this));
     }
 
     private void initializeInternal() {
@@ -291,9 +292,14 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
     }
 
     public Injector getInjector() {
-        if(injector == null)
-            injector = Guice.createInjector(new GuiceModule<>(settings, this));
-        return injector;
+        try {
+            if (injector == null)
+                throw new IllegalStateException("Trying to use Guice before initialization complete.");
+            return injector;
+        } catch(final IllegalStateException e) {
+            LOG.error("Attempting to use an uninitialized Guice.", e);
+            throw e;
+        }
     }
 
     /* ******************************* COMPLEX GETTERS ******************************* */
