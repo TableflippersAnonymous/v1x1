@@ -16,6 +16,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import java.lang.invoke.MethodHandles;
+import java.util.logging.Level;
 
 public class SpotifyApi {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
@@ -37,7 +38,7 @@ public class SpotifyApi {
         client.register(spotifyApiRequestFilter);
         // Because Spotify wants empty PUTs.
         client.property(ClientProperties.SUPPRESS_HTTP_COMPLIANCE_VALIDATION, true);
-        client.register(new LoggingFeature(null, LoggingFeature.Verbosity.PAYLOAD_ANY));
+        client.register(new LoggingFeature(null, Level.INFO, LoggingFeature.Verbosity.PAYLOAD_ANY, null));
         final WebTarget api = client.target(BASE_URL);
         final WebTarget accountsApi = client.target(ACCOUNTS_BASE_URL);
         albums = new AlbumsResource(api.path("albums"));

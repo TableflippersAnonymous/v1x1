@@ -56,7 +56,7 @@ public class PlayerResource {
         player.path("pause")
                 .queryParam("device_id", deviceId.orElse(null))
                 .request(SpotifyApi.ACCEPT)
-                .put(null);
+                .put(Entity.text(""));
     }
 
     public void seek(final int positionMs, final Optional<String> deviceId) {
@@ -64,7 +64,7 @@ public class PlayerResource {
                 .queryParam("position_ms", positionMs)
                 .queryParam("device_id", deviceId.orElse(null))
                 .request(SpotifyApi.ACCEPT)
-                .put(null);
+                .put(Entity.text(""));
     }
 
     public void repeat(final String state, final Optional<String> deviceId) {
@@ -72,7 +72,7 @@ public class PlayerResource {
                 .queryParam("state", state)
                 .queryParam("device_id", deviceId.orElse(null))
                 .request(SpotifyApi.ACCEPT)
-                .put(null);
+                .put(Entity.text(""));
     }
 
     public void volume(final int volumePercent, final Optional<String> deviceId) {
@@ -80,21 +80,21 @@ public class PlayerResource {
                 .queryParam("volume_percent", volumePercent)
                 .queryParam("device_id", deviceId.orElse(null))
                 .request(SpotifyApi.ACCEPT)
-                .put(null);
+                .put(Entity.text(""));
     }
 
     public void next(final Optional<String> deviceId) {
         player.path("next")
                 .queryParam("device_id", deviceId.orElse(null))
                 .request(SpotifyApi.ACCEPT)
-                .post(null);
+                .post(Entity.text(""));
     }
 
     public void previous(final Optional<String> deviceId) {
         player.path("previous")
                 .queryParam("device_id", deviceId.orElse(null))
                 .request(SpotifyApi.ACCEPT)
-                .post(null);
+                .post(Entity.text(""));
     }
 
     public void play(final Optional<String> deviceId, final PlayRequest playRequest) {
@@ -109,7 +109,7 @@ public class PlayerResource {
                 .queryParam("state", state)
                 .queryParam("device_id", deviceId.orElse(null))
                 .request(SpotifyApi.ACCEPT)
-                .put(null);
+                .put(Entity.text(""));
     }
 
     public void transfer(final TransferRequest transferRequest) {
