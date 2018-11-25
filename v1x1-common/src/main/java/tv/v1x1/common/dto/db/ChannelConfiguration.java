@@ -5,13 +5,11 @@ import com.datastax.driver.mapping.annotations.Column;
 import com.datastax.driver.mapping.annotations.PartitionKey;
 import com.datastax.driver.mapping.annotations.Table;
 
-import java.util.UUID;
-
 /**
  * Created by cobi on 11/5/2016.
  */
 @Table(name = "channel_configuration_v2")
-public class ChannelConfiguration {
+public class ChannelConfiguration implements Configuration {
     @PartitionKey(0)
     private String module;
     @PartitionKey(1)

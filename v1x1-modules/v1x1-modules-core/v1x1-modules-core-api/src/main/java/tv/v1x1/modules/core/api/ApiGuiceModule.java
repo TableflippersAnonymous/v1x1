@@ -58,7 +58,7 @@ public class ApiGuiceModule extends AbstractModule {
 
     @Provides
     public KeyValueStore provideKeyValueStore() {
-        return apiModule.getTemporaryGlobalKeyValueStore();
+        return apiModule.getTemporaryKeyValueStore();
     }
 
     @Provides

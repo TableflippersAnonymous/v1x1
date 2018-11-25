@@ -239,7 +239,7 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         return getInjector().getInstance(UserConfigurationProvider.class);
     }
 
-    protected KeyValueStore getTemporaryKeyValueStore() {
+    public KeyValueStore getTemporaryKeyValueStore() {
         return getInjector().getInstance(Key.get(KeyValueStore.class, TemporaryModule.class));
     }
 
@@ -251,7 +251,7 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         return getInjector().getInstance(Key.get(KeyValueStore.class, PersistentModule.class));
     }
 
-    protected KeyValueStore getPersistentGlobalKeyValueStore() {
+    public KeyValueStore getPersistentGlobalKeyValueStore() {
         return getInjector().getInstance(Key.get(KeyValueStore.class, PersistentGlobal.class));
     }
 

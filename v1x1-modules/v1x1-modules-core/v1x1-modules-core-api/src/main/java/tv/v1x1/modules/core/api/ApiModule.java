@@ -184,20 +184,20 @@ public class ApiModule extends ServiceModule<ApiGlobalConfiguration, ApiUserConf
                 chatMessageEvent.getChatMessage().getText(),
                 chatMessageEvent.getChatMessage().getPermissions().stream().map(Permission::getNode).collect(Collectors.toList())
         );
-        try {
-            final PubSubMessage pubSubMessage = new PubSubMessage(toDto(), topic.getFullTopicName(), mapper.writeValueAsString(chatMessagePubSub));
-            topicManager.publish(topic.getFullTopicName(), pubSubMessage);
-        } catch (final JsonProcessingException e) {
-            LOG.error("Caught JsonProcessingException while serializing a ChatMessagePubSub", e);
-        }
+        publish(topicManager, topic, chatMessagePubSub);
     }
 
     public void handleConfigChangeEvent(final Tenant tenant, final Module module) {
         final TopicManager topicManager = getInjector().getInstance(TopicManager.class);
         final TopicName topic = new TopicName(tenant.getId().getValue(), toDto(), "config");
         final ConfigChangePubSub configChangePubSub = new ConfigChangePubSub(module.getName());
+        publish(topicManager, topic, configChangePubSub);
+    }
+
+    private void publish(final TopicManager topicManager, final TopicName topic, final Object message) {
         try {
-            final PubSubMessage pubSubMessage = new PubSubMessage(toDto(), topic.getFullTopicName(), mapper.writeValueAsString(configChangePubSub));
+            final PubSubMessage pubSubMessage = new PubSubMessage(toDto(), topic.getFullTopicName(),
+                    mapper.writeValueAsString(message));
             topicManager.publish(topic.getFullTopicName(), pubSubMessage);
         } catch (final JsonProcessingException e) {
             LOG.error("Caught JsonProcessingException while serializing a ChatMessagePubSub", e);
