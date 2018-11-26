@@ -433,13 +433,20 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
             final int baseAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
             final int verbInt = decodeI32(memoryInstance, baseAddress);
-            final String verb = HTTP_VERBS.getOrDefault(verbInt, "GET");
-            final URI uri = new URI(new String(decodeBuffer(memoryInstance, baseAddress + 4)));
+            final String verb = HTTP_VERBS.get(verbInt);
+            if(verb == null) {
+                LOG.info("Got unknown HTTP verb {}", verbInt);
+                virtualMachine.getStack().push(I32.ZERO);
+                return;
+            }
+            final String uriString = new String(decodeBuffer(memoryInstance, baseAddress + 4));
+            LOG.debug("Got URI for HTTP: {}", uriString);
+            final URI uri = new URI(uriString);
             final InetAddress[] addresses = InetAddress.getAllByName(uri.getHost());
             final MultivaluedMap<String, Object> headers = getHeaders(memoryInstance, baseAddress + 12);
             final byte[] body = decodeBuffer(memoryInstance, baseAddress + 20);
             final byte[] eventPayload = decodeBuffer(memoryInstance, baseAddress + 28);
-            if(verb == null || Arrays.stream(addresses).anyMatch(InetAddress::isSiteLocalAddress)) {
+            if(Arrays.stream(addresses).anyMatch(InetAddress::isSiteLocalAddress)) {
                 LOG.info("HTTP Local blocked.");
                 virtualMachine.getStack().push(I32.ZERO);
                 return;
