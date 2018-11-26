@@ -432,7 +432,8 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
         try {
             final MemoryInstance memoryInstance = virtualMachine.getStore().getMemories().get(moduleInstance.getMemoryAddresses()[0]);
             final int baseAddress = virtualMachine.getCurrentActivation().getLocal(0, I32.class).getVal();
-            final String verb = HTTP_VERBS.get(Integer.valueOf(decodeI32(memoryInstance, baseAddress)));
+            final int verbInt = decodeI32(memoryInstance, baseAddress);
+            final String verb = HTTP_VERBS.getOrDefault(verbInt, "GET");
             final URI uri = new URI(new String(decodeBuffer(memoryInstance, baseAddress + 4)));
             final InetAddress[] addresses = InetAddress.getAllByName(uri.getHost());
             final MultivaluedMap<String, Object> headers = getHeaders(memoryInstance, baseAddress + 12);
