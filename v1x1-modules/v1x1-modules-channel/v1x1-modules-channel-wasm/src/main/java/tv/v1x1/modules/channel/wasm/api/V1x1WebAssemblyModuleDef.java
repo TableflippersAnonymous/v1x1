@@ -425,6 +425,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
 
     private static void http(final ExecutionEnvironment executionEnvironment, final WebAssemblyVirtualMachine virtualMachine, final ModuleInstance moduleInstance) throws TrapException {
         if(!executionEnvironment.getHttpLimiter().tryAcquire()) {
+            LOG.info("HTTP Ratelimited.");
             virtualMachine.getStack().push(I32.ZERO);
             return;
         }
@@ -438,6 +439,7 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
             final byte[] body = decodeBuffer(memoryInstance, baseAddress + 20);
             final byte[] eventPayload = decodeBuffer(memoryInstance, baseAddress + 28);
             if(verb == null || Arrays.stream(addresses).anyMatch(InetAddress::isSiteLocalAddress)) {
+                LOG.info("HTTP Local blocked.");
                 virtualMachine.getStack().push(I32.ZERO);
                 return;
             }
@@ -457,7 +459,9 @@ public class V1x1WebAssemblyModuleDef extends NativeWebAssemblyModuleDef {
                     response.getHeaders(),
                     ByteStreams.toByteArray(response.readEntity(InputStream.class)),
                     eventPayload));
+            virtualMachine.getStack().push(I32.ONE);
         } catch(final Exception e) {
+            LOG.info("HTTP Error", e);
             virtualMachine.getStack().push(I32.ZERO);
         }
     }
