@@ -69,7 +69,7 @@ public class ApiDataProvider {
                         Platform.DISCORD, new String(module.requireCredential("Common|Discord|RedirectUri"))
                 ),
                 "/api/v1",
-                "wss://pubsub.v1x1.tv"
+                "wss://v1x1.tv"
         );
     }
 
