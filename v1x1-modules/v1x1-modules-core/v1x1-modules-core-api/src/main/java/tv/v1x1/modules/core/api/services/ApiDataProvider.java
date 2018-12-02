@@ -1,5 +1,7 @@
 package tv.v1x1.modules.core.api.services;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.gson.Gson;
@@ -69,8 +71,38 @@ public class ApiDataProvider {
                         Platform.DISCORD, new String(module.requireCredential("Common|Discord|RedirectUri"))
                 ),
                 "/api/v1",
-                "wss://pubsub.v1x1.tv"
+                "wss://pubsub.v1x1.tv",
+                ImmutableMap.of(
+                        "TMI", getOauthUrl("https://api.twitch.tv/kraken/oauth2/authorize",
+                                module.requireCredential("Common|TMI|ClientId"),
+                                module.requireCredential("Common|TMI|RedirectUri"),
+                                ImmutableList.of("user_read", "channel:moderate", "chat:edit", "chat:read",
+                                        "whispers:read", "whispers:edit")),
+                        "SPOTIFY", getOauthUrl("https://accounts.spotify.com/authorize",
+                                module.requireCredential("Common|Spotify|ClientId"),
+                                module.requireCredential("Common|Spotify|RedirectUri"),
+                                ImmutableList.of("user-read-recently-played", "user-top-read",
+                                        "user-modify-playback-state", "user-read-playback-state",
+                                        "user-read-currently-playing", "playlist-read-private",
+                                        "playlist-read-collaborative"))
+                )
         );
+    }
+
+    private String getOauthUrl(final String authorizeUrl, final byte[] clientId, final byte[] redirectUri,
+                               final List<String> scopes) {
+        return getOauthUrl(authorizeUrl, new String(clientId), new String(redirectUri), scopes);
+    }
+
+    private String getOauthUrl(final String authorizeUrl, final String clientId, final String redirectUri,
+                               final List<String> scopes) {
+        return authorizeUrl
+                + "?response_type=code"
+                + "&client_id=" + clientId
+                + "&redirect_uri=" + redirectUri
+                + "&scope=" + Joiner.on("+").join(scopes)
+                + "&force_verify=true"
+                + "&state=";
     }
 
     public Map<String, Module> getModules() {

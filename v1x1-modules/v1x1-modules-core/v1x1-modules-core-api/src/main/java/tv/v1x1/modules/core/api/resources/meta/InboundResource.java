@@ -79,13 +79,15 @@ public class InboundResource {
 
     @Inject
     public InboundResource(final KeyValueStore stateStore, final Authorizer authorizer, final SpotifyApi spotifyApi,
-                           final DAOManager daoManager, final ApiModule apiModule, final TwitchApi twitchApi,
+                           final DAOManager daoManager, final ApiModule apiModule,
                            final MessageQueueManager messageQueueManager,
                            final ConfigurationCacheManager configurationCacheManager) {
         this.stateStore = stateStore;
         this.authorizer = authorizer;
         this.spotifyApi = spotifyApi; //FIXME: Guicify.
-        this.twitchApi = twitchApi;
+        this.twitchApi = new TwitchApi(new String(apiModule.requireCredential("Common|TMI|ClientId")),
+                "", new String(apiModule.requireCredential("Common|TMI|ClientSecret")),
+                new String(apiModule.requireCredential("Common|TMI|RedirectUri")));
         this.daoManager = daoManager;
         this.apiModule = apiModule;
         this.messageQueueManager = messageQueueManager;
@@ -112,7 +114,7 @@ public class InboundResource {
         if(error != null || code == null || state == null)
             return Response.temporaryRedirect(URI.create("/")).build();
         final byte[][] decodedStateData = CompositeKey.getKeys(useState(state, "twitch"));
-        final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(code, state); //FIXME: redirectUri.
+        final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(code, state);
         writeUserConfigEntry(decodedStateData, "tmi", "oauth_token", tokenResponse.getAccessToken());
         return Response.temporaryRedirect(URI.create("/")).build();
     }
