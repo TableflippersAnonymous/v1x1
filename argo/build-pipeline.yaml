@@ -4,6 +4,7 @@ metadata:
   generateName: build-v1x1-
 spec:
   entrypoint: entrypoint
+  onExit: exitHandler
   arguments:
     parameters:
       - name: ref
@@ -508,3 +509,24 @@ spec:
           securityContext:
             privileged: true
           mirrorVolumeMounts: true
+    - name: exitHandler
+      steps:
+        - - name: notifyStatus
+            template: notifyStatus
+    - name: notifyStatus
+      container:
+        image: maven:3-jdk-8
+        command: ["/bin/sh", "-exc"]
+        env:
+          - name: BUILD_SHA
+            value: "{{workflow.parameters.revision}}"
+          - name: BUILD_STATUS
+            value: "{{workflow.status}}"
+          - name: WEBHOOK_URL
+            valueFrom:
+              secretKeyRef:
+                name: v1x1-ci
+                key: discord-webhook
+        args:
+          - |
+            curl -X POST -H 'Content-Type: application/json' -d '{"content":"v1x1 Deployment of '"${BUILD_SHA}"': '"${BUILD_STATUS}"'"}' "${WEBHOOK_URL}"
