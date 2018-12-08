@@ -3,7 +3,7 @@ kind: Workflow
 metadata:
   generateName: build-v1x1-
 spec:
-  entrypoint: entrypoint
+  entrypoint: preinit
   onExit: exitHandler
   arguments:
     parameters:
