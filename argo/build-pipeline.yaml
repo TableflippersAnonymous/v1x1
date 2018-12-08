@@ -3,26 +3,23 @@ kind: Workflow
 metadata:
   generateName: build-v1x1-
 spec:
-  entrypoint: preinit
+  entrypoint: entrypoint
   onExit: exitHandler
   arguments:
     parameters:
       - name: ref
-        value: ref/heads/master
+        value: refs/heads/master
       - name: revision
         value: master
   templates:
-    - name: preinit
-      steps:
-        - - name: entrypoint
-            template: entrypoint
-            when: "{{workflow.parameters.ref}} == master"
     - name: entrypoint
       steps:
         - - name: checkout
             template: checkout
+            when: "{{workflow.parameters.ref}} == refs/heads/master"
           - name: setupCaBundle
             template: setupCaBundle
+            when: "{{workflow.parameters.ref}} == refs/heads/master"
         - - name: buildJava
             template: buildJava
             arguments:
@@ -31,11 +28,13 @@ spec:
               artifacts:
                 - {name: source, from: "{{steps.checkout.outputs.artifacts.source}}"}
                 - {name: certsDir, from: "{{steps.setupCaBundle.outputs.artifacts.certsDir}}"}
+            when: "{{workflow.parameters.ref}} == refs/heads/master"
           - name: web
             template: web
             arguments:
               artifacts:
                 - {name: source, from: "{{steps.checkout.outputs.artifacts.source}}"}
+            when: "{{workflow.parameters.ref}} == refs/heads/master"
     - name: checkout
       inputs:
         artifacts:
