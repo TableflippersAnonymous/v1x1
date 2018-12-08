@@ -7,8 +7,6 @@ spec:
   onExit: exitHandler
   arguments:
     parameters:
-      - name: ref
-        value: refs/heads/master
       - name: revision
         value: master
   templates:
@@ -16,25 +14,21 @@ spec:
       steps:
         - - name: checkout
             template: checkout
-            when: "{{workflow.parameters.ref}} == refs/heads/master"
           - name: setupCaBundle
             template: setupCaBundle
-            when: "{{workflow.parameters.ref}} == refs/heads/master"
         - - name: buildJava
             template: buildJava
             arguments:
               parameters:
-                - {name: sha, value: "{{steps.checkout.outputs.result}}"}
+                - {name: sha, value: "{{steps.checkout.outputs.result}}", globalName: sha}
               artifacts:
                 - {name: source, from: "{{steps.checkout.outputs.artifacts.source}}"}
                 - {name: certsDir, from: "{{steps.setupCaBundle.outputs.artifacts.certsDir}}"}
-            when: "{{workflow.parameters.ref}} == refs/heads/master"
           - name: web
             template: web
             arguments:
               artifacts:
                 - {name: source, from: "{{steps.checkout.outputs.artifacts.source}}"}
-            when: "{{workflow.parameters.ref}} == refs/heads/master"
     - name: checkout
       inputs:
         artifacts:
@@ -518,7 +512,7 @@ spec:
         command: ["/bin/sh", "-exc"]
         env:
           - name: BUILD_SHA
-            value: "{{workflow.parameters.revision}}"
+            value: "{{workflow.outputs.parameters.sha}}"
           - name: BUILD_STATUS
             value: "{{workflow.status}}"
           - name: WEBHOOK_URL
