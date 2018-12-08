@@ -20,7 +20,7 @@ spec:
             template: buildJava
             arguments:
               parameters:
-                - {name: sha, value: "{{steps.checkout.outputs.result}}", globalName: sha}
+                - {name: sha, value: "{{steps.checkout.outputs.result}}"}
               artifacts:
                 - {name: source, from: "{{steps.checkout.outputs.artifacts.source}}"}
                 - {name: certsDir, from: "{{steps.setupCaBundle.outputs.artifacts.certsDir}}"}
@@ -512,7 +512,7 @@ spec:
         command: ["/bin/sh", "-exc"]
         env:
           - name: BUILD_SHA
-            value: "{{workflow.status.outputs.parameters.sha}}"
+            value: "{{workflow.parameters.revision}}"
           - name: BUILD_STATUS
             value: "{{workflow.status}}"
           - name: WEBHOOK_URL
