@@ -512,7 +512,7 @@ spec:
         command: ["/bin/sh", "-exc"]
         env:
           - name: BUILD_SHA
-            value: "{{workflow.outputs.parameters.sha}}"
+            value: "{{workflow.status.outputs.parameters.sha}}"
           - name: BUILD_STATUS
             value: "{{workflow.status}}"
           - name: WEBHOOK_URL
