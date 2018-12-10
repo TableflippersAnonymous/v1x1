@@ -79,6 +79,6 @@
     "node-sass": "4.9.3",
     "url-loader": "1.0.1",
     "webpack-subresource-integrity": "1.1.0-rc.4",
-    "html-webpack-include-assets-plugin": "1.0.4"
+    "html-webpack-include-assets-plugin": "1.0.6"
   }
 }
