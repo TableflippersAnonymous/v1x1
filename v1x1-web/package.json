@@ -38,7 +38,7 @@
     "long": "4.0.0",
     "queueing-subject": "tableflippersanonymous/queueing-subject#c8b547bf0c88100287409cadc6ddce8e4c0f4a59",
     "reflect-metadata": "^0.1.0",
-    "rxjs": "6.2.2",
+    "rxjs": "6.3.3",
     "rxjs-websockets": "tableflippersanonymous/rxjs-websockets#d016d17b967fee5f4b244085768c01853ffe2ab1",
     "uuid": "3.3.2",
     "zone.js": "0.8.26"
