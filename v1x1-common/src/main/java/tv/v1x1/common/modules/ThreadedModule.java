@@ -3,10 +3,10 @@ package tv.v1x1.common.modules;
 import brave.propagation.CurrentTraceContext;
 import org.slf4j.MDC;
 import tv.v1x1.common.dto.messages.Message;
+import tv.v1x1.common.util.ThreadBlockingQueue;
 
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -17,15 +17,15 @@ public abstract class ThreadedModule<T extends GlobalConfiguration, U extends Us
     private final ExecutorService executorService;
 
     protected ThreadedModule() {
-        executorService = new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
+        executorService = new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new ThreadBlockingQueue<>(100));
     }
 
     protected ThreadedModule(final int count) {
-        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
+        this(count, 100);
     }
 
     protected ThreadedModule(final int count, final int queueDepth) {
-        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth), new ThreadPoolExecutor.CallerRunsPolicy());
+        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new ThreadBlockingQueue<>(queueDepth));
     }
 
     private void processMessageWrapper(final Message message) {
