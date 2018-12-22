@@ -37,5 +37,5 @@ server:
       port: 8081
       bindHost: 127.0.0.1
 zipkin_config:
-  enabled: true
+  enabled: false
   uri: http://zipkin.tblflp.svc.cluster.local:9411/api/v1/spans
