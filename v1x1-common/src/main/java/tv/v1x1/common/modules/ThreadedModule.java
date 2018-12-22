@@ -17,15 +17,15 @@ public abstract class ThreadedModule<T extends GlobalConfiguration, U extends Us
     private final ExecutorService executorService;
 
     protected ThreadedModule() {
-        executorService = new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
+        executorService = new ThreadPoolExecutor(5, 100, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     protected ThreadedModule(final int count) {
-        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100));
+        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(100), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     protected ThreadedModule(final int count, final int queueDepth) {
-        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth));
+        executorService = new ThreadPoolExecutor(count, count, 30, TimeUnit.SECONDS, new LinkedBlockingQueue<>(queueDepth), new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
     private void processMessageWrapper(final Message message) {
