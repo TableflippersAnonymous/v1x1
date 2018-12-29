@@ -23,12 +23,8 @@ public class TmiService extends Service<SendMessageRequest, SendMessageResponse>
 
     @Override
     protected SendMessageResponse call(final SendMessageRequest request) {
-        try {
-            LOG.info("SendMessageRequest: {}: {}", request.getDestination().getId(), request.getText());
-            bot.sendMessage(request.getDestination().getId(), request.getText());
-            return new SendMessageResponse(getModule().toDto(), request.getMessageId());
-        } catch (final InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        LOG.info("SendMessageRequest: {}: {}", request.getDestination().getId(), request.getText());
+        bot.sendMessage(request.getDestination().getId(), request.getText());
+        return new SendMessageResponse(getModule().toDto(), request.getMessageId());
     }
 }
