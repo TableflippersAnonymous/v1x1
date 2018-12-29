@@ -32,9 +32,6 @@ import tv.v1x1.common.dto.messages.events.TwitchRoomStateEvent;
 import tv.v1x1.common.dto.messages.events.TwitchTimeoutEvent;
 import tv.v1x1.common.dto.messages.events.TwitchUserEvent;
 import tv.v1x1.common.dto.messages.events.TwitchUserModChangeEvent;
-import tv.v1x1.common.dto.messages.requests.SendMessageRequest;
-import tv.v1x1.common.dto.messages.responses.ModuleShutdownResponse;
-import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
 
 /**
  * Created by cobi on 10/6/16.
@@ -45,10 +42,8 @@ public abstract class EasyThreadedModule<T extends GlobalConfiguration, U extend
     protected void processMessage(final Message message) {
         if(message instanceof Event)
             processEvent((Event) message);
-        else if(message instanceof Request)
-            processRequest((Request) message);
-        else if(message instanceof Response)
-            processResponse((Response) message);
+        else if(message instanceof Request || message instanceof Response)
+            /* Ignore */;
         else
             throw new IllegalStateException("Unknown message type " + message.getClass().getCanonicalName());
     }
@@ -169,26 +164,4 @@ public abstract class EasyThreadedModule<T extends GlobalConfiguration, U extend
     protected abstract void processChannelConfigChangeEvent(ChannelConfigChangeEvent event);
 
     protected abstract void processDiscordVoiceStateEvent(final DiscordVoiceStateEvent event);
-
-    protected void processRequest(final Request request) {
-        if(request instanceof SendMessageRequest) /* ModuleShutdownRequest is handled elsewhere */
-            processSendMessageRequest((SendMessageRequest) request);
-        else
-            throw new IllegalStateException("Unknown request type " + request.getClass().getCanonicalName());
-    }
-
-    protected abstract void processSendMessageRequest(SendMessageRequest sendMessageRequest);
-
-    protected void processResponse(final Response response) {
-        if(response instanceof ModuleShutdownResponse)
-            processModuleShutdownResponse((ModuleShutdownResponse) response);
-        else if(response instanceof SendMessageResponse)
-            processSendMessageResponse((SendMessageResponse) response);
-        else
-            throw new IllegalStateException("Unknown response type " + response.getClass().getCanonicalName());
-    }
-
-    protected abstract void processModuleShutdownResponse(ModuleShutdownResponse moduleShutdownResponse);
-
-    protected abstract void processSendMessageResponse(SendMessageResponse sendMessageResponse);
 }
