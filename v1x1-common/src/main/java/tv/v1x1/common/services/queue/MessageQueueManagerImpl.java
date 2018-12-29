@@ -22,6 +22,6 @@ public class MessageQueueManagerImpl implements MessageQueueManager {
 
     @Override
     public MessageQueue forName(final String name) {
-        return new MessageQueueImpl(redissonClient.getBlockingQueue(name, ByteArrayCodec.INSTANCE), tracer);
+        return new MessageQueueImpl(redissonClient.getBlockingQueue("{MQ}" + name, ByteArrayCodec.INSTANCE), tracer);
     }
 }
