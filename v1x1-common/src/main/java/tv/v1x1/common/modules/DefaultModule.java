@@ -28,9 +28,6 @@ import tv.v1x1.common.dto.messages.events.TwitchRoomStateEvent;
 import tv.v1x1.common.dto.messages.events.TwitchTimeoutEvent;
 import tv.v1x1.common.dto.messages.events.TwitchUserEvent;
 import tv.v1x1.common.dto.messages.events.TwitchUserModChangeEvent;
-import tv.v1x1.common.dto.messages.requests.SendMessageRequest;
-import tv.v1x1.common.dto.messages.responses.ModuleShutdownResponse;
-import tv.v1x1.common.dto.messages.responses.SendMessageResponse;
 
 /**
  * Created by cobi on 10/6/16.
@@ -131,21 +128,6 @@ public abstract class DefaultModule<T extends GlobalConfiguration, U extends Use
         /* No action */
     }
 
-
-    @Override
-    protected void processSendMessageRequest(final SendMessageRequest sendMessageRequest) {
-        /* No action */
-    }
-
-    @Override
-    protected void processModuleShutdownResponse(final ModuleShutdownResponse moduleShutdownResponse) {
-        /* No action */
-    }
-
-    @Override
-    protected void processSendMessageResponse(final SendMessageResponse sendMessageResponse) {
-        /* No action */
-    }
 
     @Override
     protected void processTwitchPrivateMessageEvent(final TwitchPrivateMessageEvent event) {
