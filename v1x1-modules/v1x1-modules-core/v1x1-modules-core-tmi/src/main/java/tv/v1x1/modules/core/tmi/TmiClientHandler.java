@@ -316,10 +316,11 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
         }
     }
 
-    private TwitchChannel getChannelByName(String channelName) throws NoSuchTargetException {
+    private TwitchChannel getChannelByName(final String channelName) throws NoSuchTargetException {
+        String effectiveChannelName = channelName;
         if(channelName.startsWith("#"))
-            channelName = channelName.substring(1);
-        return getChannel(twitchDisplayNameService.getChannelIdByChannelName(channelName));
+            effectiveChannelName = channelName.substring(1);
+        return getChannel(twitchDisplayNameService.getChannelIdByChannelName(effectiveChannelName));
     }
 
     private TwitchChannel getChannel(final String id) throws NoSuchTargetException {
