@@ -48,6 +48,6 @@ public class LocalRateLimiter implements RateLimiter {
     }
 
     private void scheduleRelease() {
-        scheduledExecutorService.schedule(() -> semaphore.release(), interval, TimeUnit.SECONDS);
+        scheduledExecutorService.schedule((Runnable) semaphore::release, interval, TimeUnit.SECONDS);
     }
 }

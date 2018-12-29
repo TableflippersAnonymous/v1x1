@@ -8,6 +8,8 @@ import com.google.common.cache.LoadingCache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
+import io.netty.channel.EventLoopGroup;
+import io.netty.channel.nio.NioEventLoopGroup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.ChannelGroup;
@@ -34,7 +36,6 @@ import tv.v1x1.common.services.twitch.dto.users.ChatUser;
 import tv.v1x1.common.util.ratelimiter.GlobalRateLimiter;
 import tv.v1x1.common.util.ratelimiter.RateLimiter;
 
-import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.Collection;
 import java.util.HashSet;
@@ -64,6 +65,7 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
     private RateLimiter joinLimiter;
     private MessageQueue eventRouter;
     private TwitchDisplayNameService twitchDisplayNameService;
+    private EventLoopGroup eventLoopGroup;
 
     private static class PermissionCacheKey {
         private final Tenant tenant;
@@ -101,10 +103,10 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
 
             final PermissionCacheKey that = (PermissionCacheKey) o;
 
-            if (tenant != null ? !tenant.equals(that.tenant) : that.tenant != null) return false;
-            if (globalUser != null ? !globalUser.equals(that.globalUser) : that.globalUser != null) return false;
-            if (channelId != null ? !channelId.equals(that.channelId) : that.channelId != null) return false;
-            return channelGroups != null ? channelGroups.equals(that.channelGroups) : that.channelGroups == null;
+            if (!Objects.equal(tenant, that.tenant)) return false;
+            if (!Objects.equal(globalUser, that.globalUser)) return false;
+            if (!Objects.equal(channelId, that.channelId)) return false;
+            return Objects.equal(channelGroups, that.channelGroups);
 
         }
 
@@ -210,8 +212,9 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
     @Override
     protected void initialize() {
         super.initialize();
+        eventLoopGroup = new NioEventLoopGroup();
         twitchDisplayNameService = getInjector().getInstance(TwitchDisplayNameService.class);
-        scheduledExecutorService = Executors.newScheduledThreadPool(getSettings().getMaxConnections());
+        scheduledExecutorService = Executors.newScheduledThreadPool(3);
         joinLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi-join", 48, 15);
         eventRouter = getMessageQueueManager().forName(getMainQueueForModule(new Module("event_router")));
         channelDistributor = getLoadBalancingDistributor("/v1x1/tmi/channels", getGlobalConfiguration().getConnectionsPerChannel());
@@ -244,11 +247,8 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
             e.printStackTrace();
         }
         for(final Map.Entry<String, TmiBot> entry : bots.entrySet())
-            try {
-                entry.getValue().shutdown();
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
+            entry.getValue().shutdown();
+        eventLoopGroup.shutdownGracefully();
         super.shutdown();
     }
 
@@ -362,15 +362,12 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
             final ChatUser chatUser = getTwitchApi().getUsers().getChatUser(userId);
             LOG.debug("Connecting to {} with username={} password=<removed>", channel.getDisplayName(), chatUser.getLogin());
             final RateLimiter messageLimiter = new GlobalRateLimiter(getCuratorFramework(), scheduledExecutorService, "tmi-chat/" + userId, chatUser.getChatRateLimit(), 30);
-            final TmiBot tmiBot = new TmiBot(chatUser.getLogin(), oauthToken, eventRouter, toDto(), joinLimiter, messageLimiter, getDeduplicator(), this, channel, twitchDisplayNameService);
-            scheduledExecutorService.submit(tmiBot);
+            final TmiBot tmiBot = new TmiBot(chatUser.getLogin(), oauthToken, eventRouter, toDto(), joinLimiter,
+                    messageLimiter, getDeduplicator(), this, channel, twitchDisplayNameService, eventLoopGroup);
+            tmiBot.connect();
             final TmiBot oldTmiBot = bots.put(channelId, tmiBot);
-            try {
-                if (oldTmiBot != null)
-                    oldTmiBot.shutdown();
-            } catch (final IOException e) {
-                LOG.warn("IOException", e);
-            }
+            if (oldTmiBot != null)
+                oldTmiBot.shutdown();
         } catch (final Exception e) {
             LOG.warn("Exception", e);
             throw new RuntimeException(e);
@@ -381,12 +378,8 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
         try {
             LOG.info("Leaving {}", channelId);
             final TmiBot oldTmiBot = bots.remove(channelId);
-            try {
-                if (oldTmiBot != null)
-                    oldTmiBot.shutdown();
-            } catch (final IOException e) {
-                e.printStackTrace();
-            }
+            if (oldTmiBot != null)
+                oldTmiBot.shutdown();
         } catch (final Exception e) {
             e.printStackTrace();
             throw e;
