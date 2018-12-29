@@ -78,10 +78,6 @@ public class TmiBot {
         quit();
     }
 
-    void requestCaps() {
-        sendLine("CAP REQ :twitch.tv/commands twitch.tv/tags");
-    }
-
     void event(final Event event, final Span parentSpan) {
         final TraceContext ctx = parentSpan.context();
         event.setContext(new Context(
@@ -125,14 +121,6 @@ public class TmiBot {
             channelFuture.channel().writeAndFlush(line + "\r\n");
     }
 
-    void authenticate() {
-        joinLimiter.submit(() -> {
-            sendLine("PASS :oauth:" + oauthToken);
-            sendLine("USER " + username + " \"v1x1.tv\" \"irc.chat.twitch.tv\" :" + username);
-            sendLine("NICK " + username);
-        });
-    }
-
     void joinChannels() {
         join("#" + channel.getName());
     }
@@ -143,6 +131,8 @@ public class TmiBot {
 
     private void quit() {
         sendLine("QUIT :Disconnecting.");
+        if(channelFuture != null && channelFuture.channel().isOpen())
+            channelFuture.channel().close();
     }
 
     public void shutdown() {
@@ -176,5 +166,15 @@ public class TmiBot {
 
     public boolean isRunning() {
         return running;
+    }
+
+    void login() {
+        joinLimiter.submit(() -> {
+            sendLine("PASS :oauth:" + oauthToken);
+            sendLine("USER " + username + " \"v1x1.tv\" \"irc.chat.twitch.tv\" :" + username);
+            sendLine("NICK " + username);
+            sendLine("CAP REQ :twitch.tv/commands twitch.tv/tags");
+            this.joinChannels();
+        });
     }
 }

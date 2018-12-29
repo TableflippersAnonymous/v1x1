@@ -4,6 +4,8 @@ import brave.Span;
 import brave.Tracer;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.PrivateMessage;
@@ -52,12 +54,15 @@ import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.dto.channels.Channel;
 import tv.v1x1.common.util.data.CompositeKey;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class TmiClientHandler extends ChannelInboundHandlerAdapter {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final TmiBot tmiBot;
     private final String username;
     private final Channel channel;
@@ -114,9 +119,7 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void channelActive(final ChannelHandlerContext ctx) {
-        tmiBot.authenticate();
-        tmiBot.requestCaps();
-        tmiBot.joinChannels();
+        tmiBot.login();
     }
 
     @Override
@@ -128,7 +131,7 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-        log("Got exception: " + cause.getMessage());
+        LOG.error("[{}] [{}] Got exception: ", username, channel.getDisplayName(), cause);
         tmiBot.disconnect();
     }
 
