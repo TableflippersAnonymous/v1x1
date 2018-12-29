@@ -42,9 +42,7 @@ public abstract class EasyThreadedModule<T extends GlobalConfiguration, U extend
     protected void processMessage(final Message message) {
         if(message instanceof Event)
             processEvent((Event) message);
-        else if(message instanceof Request || message instanceof Response)
-            /* Ignore */;
-        else
+        else if(!(message instanceof Request || message instanceof Response))
             throw new IllegalStateException("Unknown message type " + message.getClass().getCanonicalName());
     }
 

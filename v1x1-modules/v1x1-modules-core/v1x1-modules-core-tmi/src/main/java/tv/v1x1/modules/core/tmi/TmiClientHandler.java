@@ -77,7 +77,7 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelRead(final ChannelHandlerContext ctx, final Object message) throws Exception {
+    public void channelRead(final ChannelHandlerContext ctx, final Object message) {
         final Span rootSpan = tracer.newTrace()
                 .name("TMI recv")
                 .start();
@@ -90,13 +90,13 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
             log("Read: " + stanza.getRawLine());
             if (stanza instanceof PingCommand)
                 tmiBot.sendLine("PONG :" + ((PingCommand) stanza).getToken());
-            if (stanza instanceof JoinCommand)
+            else if (stanza instanceof JoinCommand)
                 handleJoin((JoinCommand) stanza);
-            if (stanza instanceof PartCommand)
+            else if (stanza instanceof PartCommand)
                 handlePart((PartCommand) stanza);
-            if (stanza.getTags().containsKey("id") && deduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.fromString(stanza.getTags().get("id")))))
+            else if (stanza.getTags().containsKey("id") && deduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.fromString(stanza.getTags().get("id")))))
                 return;
-            if (stanza instanceof WhisperCommand && stanza.getTags().containsKey("thread-id") && stanza.getTags().containsKey("message-id")
+            else if (stanza instanceof WhisperCommand && stanza.getTags().containsKey("thread-id") && stanza.getTags().containsKey("message-id")
                     && deduplicator.seenAndAdd(new tv.v1x1.common.dto.core.UUID(UUID.nameUUIDFromBytes(CompositeKey.makeKey(stanza.getTags().get("thread-id"), stanza.getTags().get("message-id"))))))
                 return;
             final Span span = tracer.newChild(rootSpan.context()).name("TMI event stanza").start();
@@ -113,21 +113,21 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     @Override
-    public void channelActive(final ChannelHandlerContext ctx) throws Exception {
+    public void channelActive(final ChannelHandlerContext ctx) {
         tmiBot.authenticate();
         tmiBot.requestCaps();
         tmiBot.joinChannels();
     }
 
     @Override
-    public void channelInactive(final ChannelHandlerContext ctx) throws Exception {
+    public void channelInactive(final ChannelHandlerContext ctx) {
         tmiBot.cleanup();
         if(tmiBot.isRunning())
             tmiBot.connect();
     }
 
     @Override
-    public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) throws Exception {
+    public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
         log("Got exception: " + cause.getMessage());
         tmiBot.disconnect();
     }
