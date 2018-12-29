@@ -15,7 +15,6 @@ import tv.v1x1.common.services.twitch.dto.channels.Channel;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLParameters;
-import javax.net.ssl.TrustManagerFactory;
 
 
 public class TmiClientInitializer extends ChannelInitializer<SocketChannel> {
@@ -40,7 +39,6 @@ public class TmiClientInitializer extends ChannelInitializer<SocketChannel> {
     @Override
     protected void initChannel(final SocketChannel ch) throws Exception {
         final SslContext sslContext = SslContextBuilder.forClient()
-                .trustManager(TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm()))
                 .build();
         final ChannelPipeline channelPipeline = ch.pipeline();
         /* Set up SSLEngine */
