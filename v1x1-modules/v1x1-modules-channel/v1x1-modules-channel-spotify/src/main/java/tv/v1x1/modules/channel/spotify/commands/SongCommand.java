@@ -53,6 +53,8 @@ public class SongCommand {
     public void handleSongStart(final ChatMessage chatMessage, final PlaylistManager playlistManager) {
         final Playlist playlist = playlistManager.getPlaylistFor(chatMessage.getChannel());
         playlist.start();
+        Chat.i18nMessage(module, chatMessage.getChannel(), "song.start",
+                "commander", chatMessage.getSender().getMention());
     }
 
     @Command(
@@ -66,5 +68,56 @@ public class SongCommand {
     public void handleSongStop(final ChatMessage chatMessage, final PlaylistManager playlistManager) {
         final Playlist playlist = playlistManager.getPlaylistFor(chatMessage.getChannel());
         playlist.stop();
+        Chat.i18nMessage(module, chatMessage.getChannel(), "song.stop",
+                "commander", chatMessage.getSender().getMention());
+    }
+
+    @Command(
+            value = "delete",
+            description = "Remove a song from the queue",
+            permissions = "spotify.dequeue",
+            help = "Remove song",
+            minArgs = 1,
+            maxArgs = 1
+    )
+    public void handleSongDequeue(final ChatMessage chatMessage, final List<String> args,
+                                  final PlaylistManager playlistManager) {
+        final Playlist playlist = playlistManager.getPlaylistFor(chatMessage.getChannel());
+        if(playlist.remove(args.get(0)))
+            Chat.i18nMessage(module, chatMessage.getChannel(), "song.dequeue.success",
+                    "commander", chatMessage.getSender().getMention());
+        else
+            Chat.i18nMessage(module, chatMessage.getChannel(), "song.dequeue.error",
+                    "commander", chatMessage.getSender().getMention());
+    }
+
+    @Command(
+            value = "purge",
+            description = "Empty song queue",
+            permissions = "spotify.purge",
+            help = "Remove all songs",
+            minArgs = 0,
+            maxArgs = 0
+    )
+    public void handleSongPurge(final ChatMessage chatMessage, final PlaylistManager playlistManager) {
+        final Playlist playlist = playlistManager.getPlaylistFor(chatMessage.getChannel());
+        playlist.purge();
+        Chat.i18nMessage(module, chatMessage.getChannel(), "song.purge",
+                "commander", chatMessage.getSender().getMention());
+    }
+
+    @Command(
+            value = "pause",
+            description = "Stop without purging queue",
+            permissions = "spotify.stop",
+            help = "Stop Spotify without purging queue",
+            minArgs = 0,
+            maxArgs = 0
+    )
+    public void handleSongPause(final ChatMessage chatMessage, final PlaylistManager playlistManager) {
+        final Playlist playlist = playlistManager.getPlaylistFor(chatMessage.getChannel());
+        playlist.pause();
+        Chat.i18nMessage(module, chatMessage.getChannel(), "song.stop",
+                "commander", chatMessage.getSender().getMention());
     }
 }

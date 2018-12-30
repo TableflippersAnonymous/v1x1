@@ -16,7 +16,9 @@ import {ConfigurableComponent} from "../configurable";
           </div>
         </div>
         <div class="col config-group" style="margin-bottom: 1rem;" [class.config-group-dirty]="configFieldDirty(elem)">
-          <configuration-field-value-string [field]="field" [originalConfiguration]="originalConfiguration[elem]" [configuration]="configuration[elem]" (configurationChange)="setConfigField(elem, $event)" [activeTenant]="activeTenant" [channelGroup]="channelGroup"></configuration-field-value-string>
+          <configuration-field-value-string [field]="field" [originalConfiguration]="originalConfiguration[elem]" [configuration]="configuration[elem]"
+                                            (configurationChange)="setConfigField(elem, $event)"
+                                            [activeTenant]="activeTenant" [activeChannelGroup]="activeChannelGroup" [activeChannel]="activeChannel"></configuration-field-value-string>
         </div>
       </div>
       <div class="row">

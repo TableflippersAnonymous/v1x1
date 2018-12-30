@@ -17,9 +17,9 @@ import tv.v1x1.common.scanners.config.Version;
 @TenantPermission(Permission.READ_WRITE)
 @Version(0)
 public class SpotifyUserConfiguration extends BasicUserConfiguration {
-    @DisplayName("OAuth Token")
-    @Description("Spotify Refresh Token")
-    @Type(ConfigType.STRING)
+    @DisplayName("Spotify Account")
+    @Description("SPOTIFY")
+    @Type(ConfigType.OAUTH)
     @TenantPermission(Permission.WRITE_ONLY)
     @JsonProperty("refresh_token")
     private String refreshToken;

@@ -1,5 +1,6 @@
 package tv.v1x1.modules.core.api.resources.meta;
 
+import com.google.common.base.Strings;
 import com.google.common.io.BaseEncoding;
 import com.google.common.primitives.Longs;
 import com.google.gson.Gson;
@@ -84,7 +85,7 @@ public class InboundResource {
                            final ConfigurationCacheManager configurationCacheManager) {
         this.stateStore = stateStore;
         this.authorizer = authorizer;
-        this.spotifyApi = spotifyApi; //FIXME: Guicify.
+        this.spotifyApi = spotifyApi;
         this.twitchApi = new TwitchApi(new String(apiModule.requireCredential("Common|TMI|ClientId")),
                 "", new String(apiModule.requireCredential("Common|TMI|ClientSecret")),
                 new String(apiModule.requireCredential("Common|TMI|RedirectUri")));
@@ -100,7 +101,7 @@ public class InboundResource {
                                        @QueryParam("error") final String error) {
         if(error != null || code == null || state == null)
             return Response.temporaryRedirect(URI.create("/")).build();
-        final byte[][] decodedStateData = CompositeKey.getKeys(useState(state, "spotify"));
+        final byte[][] decodedStateData = CompositeKey.getKeys(useState(state, "SPOTIFY"));
         final AuthorizationResponse authorizationResponse = spotifyApi.getOAuth2().authorize(code);
         writeUserConfigEntry(decodedStateData, "spotify", "refresh_token",
                 authorizationResponse.getRefreshToken());
@@ -113,7 +114,7 @@ public class InboundResource {
                                       @QueryParam("error") final String error) {
         if(error != null || code == null || state == null)
             return Response.temporaryRedirect(URI.create("/")).build();
-        final byte[][] decodedStateData = CompositeKey.getKeys(useState(state, "twitch"));
+        final byte[][] decodedStateData = CompositeKey.getKeys(useState(state, "TMI"));
         final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(code, state);
         writeUserConfigEntry(decodedStateData, "tmi", "oauth_token", tokenResponse.getAccessToken());
         return Response.temporaryRedirect(URI.create("/")).build();
@@ -132,17 +133,17 @@ public class InboundResource {
         final Tenant tenant = Optional.ofNullable(daoManager.getDaoTenant().getById(UUID.fromString(tenantId)))
                 .map(x -> x.toCore(daoManager.getDaoTenant()))
                 .orElseThrow(NotFoundException::new);
-        if(platform != null) {
-            if(channelGroupId == null)
+        if(!Strings.isNullOrEmpty(platform)) {
+            if(Strings.isNullOrEmpty(channelGroupId))
                 throw new BadRequestException("Expected cgid when platform specified.");
             final Optional<ChannelGroup> channelGroup = tenant.getChannelGroup(Platform.valueOf(platform), channelGroupId);
             if(!channelGroup.isPresent())
                 throw new BadRequestException("Invalid platform/cgid.");
-            if(channelId != null && !channelGroup.get().getChannel(channelId).isPresent())
+            if(!Strings.isNullOrEmpty(channelId) && !channelGroup.get().getChannel(channelId).isPresent())
                 throw new BadRequestException("Invalid cid.");
-        } else if(channelGroupId != null)
+        } else if(!Strings.isNullOrEmpty(channelGroupId))
             throw new BadRequestException("Expected platform when cgid specified.");
-        else if(channelId != null)
+        else if(!Strings.isNullOrEmpty(channelId))
             throw new BadRequestException("Expected cgid/platform when cid specified.");
         final String state = makeState(service, CompositeKey.makeKey(tenantId,
                 Optional.ofNullable(platform).orElse(""),

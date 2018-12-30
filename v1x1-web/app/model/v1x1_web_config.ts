@@ -1,4 +1,5 @@
 import {JsonObject, JsonProperty} from "json2typescript";
+
 @JsonObject
 export class V1x1WebConfig {
   @JsonProperty("client_ids")
@@ -9,4 +10,6 @@ export class V1x1WebConfig {
   apiBase: string = undefined;
   @JsonProperty("pubsub_base")
   pubsubBase: string = undefined;
+  @JsonProperty("config_oauth_urls")
+  configOauthUrls: {[key: string]: string} = undefined;
 }

@@ -5,7 +5,9 @@ import tv.v1x1.common.dto.messages.events.ChatMessageEvent;
 import tv.v1x1.common.dto.messages.events.SchedulerNotifyEvent;
 import tv.v1x1.common.modules.eventhandler.EventHandler;
 import tv.v1x1.common.modules.eventhandler.EventListener;
+import tv.v1x1.common.services.chat.Chat;
 import tv.v1x1.common.util.commands.CommandDelegator;
+import tv.v1x1.modules.channel.spotify.playlist.PlaylistEntry;
 import tv.v1x1.modules.channel.spotify.playlist.PlaylistManager;
 
 public class SpotifyListener implements EventListener {
@@ -28,7 +30,13 @@ public class SpotifyListener implements EventListener {
         if(!ev.getModule().equals(module.toDto()))
             return;
         final Channel channel = Channel.VAL_CODEC.decode(ev.getPayload());
-        if(module.isEnabled(channel))
-            module.getChildInjector().getInstance(PlaylistManager.class).getPlaylistFor(channel).handleTimer();
+        if(module.isEnabled(channel)) {
+            final PlaylistEntry playlistEntry = module.getChildInjector().getInstance(PlaylistManager.class)
+                    .getPlaylistFor(channel).handleTimer();
+            if(playlistEntry != null)
+                Chat.i18nMessage(module, channel, "song.nowplaying",
+                        "title", playlistEntry.getTitle(),
+                        "artist", playlistEntry.getArtist());
+        }
     }
 }

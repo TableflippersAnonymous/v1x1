@@ -46,9 +46,45 @@ import tv.v1x1.common.util.commands.CommandDelegator;
 @I18nDefaults(version = 1, value = {
         @I18nDefault(
                 key = "song.request.added",
-                message = "%commander%, Song added!  %title% by %artist%",
+                message = "%commander%, song added!  %title% by %artist%",
                 displayName = "Song Added",
                 description = "In response to !song request"
+        ),
+        @I18nDefault(
+                key = "song.nowplaying",
+                message = "%title% by %artist%",
+                displayName = "Now Playing",
+                description = "Sent when a song is played"
+        ),
+        @I18nDefault(
+                key = "song.start",
+                message = "%commander%, starting tunes ...",
+                displayName = "Spotify Enabled",
+                description = "In response to !song start"
+        ),
+        @I18nDefault(
+                key = "song.stop",
+                message = "%commander%, stopping tunes.",
+                displayName = "Spotify Disabled",
+                description = "In response to !song stop"
+        ),
+        @I18nDefault(
+                key = "song.dequeue.success",
+                message = "%commander%, song removed!",
+                displayName = "Song Removed",
+                description = "In response to !song delete"
+        ),
+        @I18nDefault(
+                key = "song.dequeue.error",
+                message = "%commander%, I couldn't find that song in the queue",
+                displayName = "Song Not Removed",
+                description = "In response to !song delete with unknown song"
+        ),
+        @I18nDefault(
+                key = "song.purge",
+                message = "%commander%, queue purged!",
+                displayName = "Spotify Purged",
+                description = "In response to !song purge"
         )
 })
 public class SpotifyModule extends RegisteredThreadedModule<SpotifyGlobalConfiguration, SpotifyUserConfiguration> {

@@ -11,6 +11,7 @@ import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
 import tv.v1x1.common.services.pubsub.TopicManager;
 import tv.v1x1.common.services.queue.MessageQueueManager;
+import tv.v1x1.common.services.spotify.SpotifyApi;
 import tv.v1x1.common.services.state.DiscordDisplayNameService;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
@@ -49,6 +50,11 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public TwitchApi provideTwitchApi() {
         return apiModule.getTwitchApi();
+    }
+
+    @Provides
+    public SpotifyApi provideSpotifyApi() {
+        return apiModule.getInjector().getInstance(SpotifyApi.class);
     }
 
     @Provides

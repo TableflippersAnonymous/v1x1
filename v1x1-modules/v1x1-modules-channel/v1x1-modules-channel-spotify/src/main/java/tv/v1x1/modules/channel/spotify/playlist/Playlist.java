@@ -93,19 +93,16 @@ public class Playlist {
         purge();
     }
 
+    public boolean remove(final String spotifyUri) {
+        return deque.removeIf(entry -> deserialize(entry).getSpotifyUri().equals(spotifyUri));
+    }
+
     public void purge() {
         deque.clear();
     }
 
     public PlaylistEntry add(final GlobalUser globalUser, final String spotifyUri) {
-        final Track track = api.getTracks().getTrack(api.getIdFromUri(spotifyUri), Optional.of("from_token"));
-        final PlaylistEntry playlistEntry = new PlaylistEntry(
-                track.getUri(),
-                track.getName(),
-                track.getArtists().stream().map(SimpleArtist::getName).collect(Collectors.joining(", ")),
-                globalUser.getId().toString(),
-                new Date().getTime()
-        );
+        final PlaylistEntry playlistEntry = getPlaylistEntryFromSpotifyUri(Optional.of(globalUser), spotifyUri);
         deque.add(serialize(playlistEntry));
         LOG.info("Added song to playlist: channel={} song={}", channel, playlistEntry);
         return playlistEntry;
@@ -115,9 +112,9 @@ public class Playlist {
         return deserialize(deque.getFirst());
     }
 
-    public void playNext() {
+    public PlaylistEntry playNext() {
         if(!isEnabled())
-            return;
+            return null;
         List<String> spotifyUris;
         try {
             final PlaylistEntry playlistEntry = deserialize(deque.removeFirst());
@@ -130,31 +127,44 @@ public class Playlist {
         LOG.info("Playing: channel={} spotifyQueue={}", channel, spotifyUris);
         api.getPlayer().play(Optional.empty(), new PlayRequest(spotifyUris, 0));
         setTimer(CHECK_AFTER_START_MS);
+        return getPlaylistEntryFromSpotifyUri(Optional.empty(), spotifyUris.get(0));
     }
 
-    public void handleTimer() {
+    public PlaylistEntry handleTimer() {
         LOG.info("Got timer interrupt for {}", channel);
         final CurrentlyPlayingContext currentlyPlayingContext = api.getPlayer().getCurrentlyPlayingContext(Optional.of("from_token"));
         if(currentlyPlayingContext == null || !currentlyPlayingContext.isPlaying()) {
             LOG.debug("Not currently playing, disabling for {}", channel);
             setEnabled(false);
-            return;
+            return null;
         }
         if(channel instanceof TwitchChannel && !userConfiguration.isAlwaysOn()
                 && twitchApi.getStreams().getStream(channel.getChannelGroup().getId()).getStream() == null) {
             LOG.debug("Stream went offline, disabling for {}", channel);
             setEnabled(false);
-            return;
+            return null;
         }
         final long leftMs = currentlyPlayingContext.getItem().getDurationMs() - currentlyPlayingContext.getProgressMs();
         if(leftMs < INTER_TRACK_TOLERANCE_MS || currentlyPlayingContext.getProgressMs() < INTER_TRACK_TOLERANCE_MS
                 || currentlyPlayingContext.getItem().getUri().equals(SILENT_TRACK_URI)) {
             LOG.info("Within inter-track, injecting next song.");
-            playNext();
+            return playNext();
         } else {
             LOG.debug("Not within inter-track, trying again in {}ms", leftMs);
             setTimer(leftMs);
         }
+        return null;
+    }
+
+    private PlaylistEntry getPlaylistEntryFromSpotifyUri(final Optional<GlobalUser> globalUser, final String spotifyUri) {
+        final Track track = api.getTracks().getTrack(api.getIdFromUri(spotifyUri), Optional.of("from_token"));
+        return new PlaylistEntry(
+                track.getUri(),
+                track.getName(),
+                track.getArtists().stream().map(SimpleArtist::getName).collect(Collectors.joining(", ")),
+                globalUser.map(GlobalUser::getId).map(UUID::toString).orElse(""),
+                new Date().getTime()
+        );
     }
 
     private List<String> getDefaultNext() {

@@ -339,7 +339,7 @@ public class ApiDataProvider {
             case STRING:
             case FILE:
             case BOT_NAME:
-            case TWITCH_OAUTH:
+            case OAUTH:
                 return jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isString();
             case INTEGER:
                 return jsonElement.isJsonPrimitive() && jsonElement.getAsJsonPrimitive().isNumber();
