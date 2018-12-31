@@ -15,7 +15,7 @@ import {ConfigurableComponent} from "./configurable";
         <configuration-field-value [field]="field" [complexFields]="complexFields"
                                    [activeTenant]="activeTenant" [activeChannelGroup]="activeChannelGroup" [activeChannel]="activeChannel"
                                    [originalConfiguration]="originalConfiguration" [(configuration)]="configuration"></configuration-field-value>
-        <small class="form-text text-muted" *ngIf="field.description !== '<no description>' ">{{field.description}}</small>
+        <small class="form-text text-muted" *ngIf="field.description !== '<no description>' && shouldShowDescription(field.configType)">{{field.description}}</small>
         <small class="form-text text-muted config-dirty-text" *ngIf="configDirty() && originalConfigPrimitive()">Was: {{originalConfiguration}}</small>
       </div>
       <configuration-field-value *ngIf="complex(field.configType)" [field]="field" [complexFields]="complexFields"
@@ -46,5 +46,9 @@ export class ConfigurationFieldComponent extends ConfigurableComponent {
       type !== ConfigType.STRING &&
       type !== ConfigType.INTEGER &&
       type !== ConfigType.PERMISSION;
+  }
+
+  shouldShowDescription(type: ConfigType): boolean {
+    return type !== ConfigType.OAUTH;
   }
 }

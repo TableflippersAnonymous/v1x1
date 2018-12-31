@@ -8,9 +8,7 @@ import {take} from "rxjs/operators";
 @Component({
   selector: 'configuration-field-value-oauth',
   template: `
-    <span>
-      <button mat-raised-button class="btn-{{field.description}}" (click)="doLogin()"><i class="fab fa-{{getFaIcon(field.description)}}"></i> Sign In</button>
-    </span>
+    <button mat-raised-button class="btn-{{field.description}}" (click)="doLogin()"><i class="fab fa-{{getFaIcon(field.description)}}"></i> Sign In</button>
   `
 })
 export class ConfigurationFieldValueOauthComponent extends ConfigurableComponent {

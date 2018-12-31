@@ -89,7 +89,7 @@ export class V1x1Api {
   getSpecializedState(service, tenantId, platform, channelGroupId, channelId): Observable<V1x1State> {
     return this.webInfo.getWebConfig().pipe(map((wc) =>
       this.http.get(wc.apiBase + '/meta/inbound/state/' + service + '/' + tenantId
-        + '?platform=' + platform + '&cgid=' + channelGroupId + '&cid=' + channelId)
+        + '?platform=' + platform + '&cgid=' + channelGroupId + '&cid=' + channelId, this.getAuthorization())
         .pipe(map((r) => JsonConvert.deserializeObject(r, V1x1State)))
     ), mergeAll());
   }
