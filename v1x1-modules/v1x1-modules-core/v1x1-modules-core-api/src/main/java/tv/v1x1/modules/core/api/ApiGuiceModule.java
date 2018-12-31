@@ -55,7 +55,7 @@ public class ApiGuiceModule extends AbstractModule {
     @Provides
     public SpotifyApi provideSpotifyApi() {
         return new SpotifyApi(new String(apiModule.requireCredential("Common|Spotify|ClientId")),
-                "", new String(apiModule.requireCredential("Common|Spotify|ClientSecret")),
+                null, new String(apiModule.requireCredential("Common|Spotify|ClientSecret")),
                 new String(apiModule.requireCredential("Common|Spotify|RedirectUri")));
     }
 
