@@ -137,6 +137,7 @@ spec:
               - {type: channel, moduleName: hello_world}
               - {type: channel, moduleName: link_purger}
               - {type: channel, moduleName: quotes}
+              - {type: channel, moduleName: spotify}
               - {type: channel, moduleName: timed_messages}
               - {type: channel, moduleName: uptime}
               - {type: channel, moduleName: voicelog}
