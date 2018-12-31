@@ -9,9 +9,7 @@ import {take} from "rxjs/operators";
   selector: 'configuration-field-value-oauth',
   template: `
     <span>
-      <mat-form-field class="input-group">
-        <button mat-raised-button class="btn-{{field.description}}" (click)="doLogin()"><i class="fab fa-{{getFaIcon(field.description)}}"></i> Sign In</button>
-      </mat-form-field>
+      <button mat-raised-button class="btn-{{field.description}}" (click)="doLogin()"><i class="fab fa-{{getFaIcon(field.description)}}"></i> Sign In</button>
     </span>
   `
 })
