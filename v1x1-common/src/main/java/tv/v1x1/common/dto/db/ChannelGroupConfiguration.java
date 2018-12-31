@@ -53,7 +53,7 @@ public class ChannelGroupConfiguration implements Configuration {
         return channelGroupId;
     }
 
-    public boolean isEnabled() {
+    public boolean enabled() {
         return enabled;
     }
 

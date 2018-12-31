@@ -361,7 +361,7 @@ public class ApiDataProvider {
             throw new IllegalStateException("Expected config to be Json Object");
         final JsonObject config = configElement.getAsJsonObject();
         return getConfigurationFromJson(sanitizeConfig(config, new JsonObject(), userConfigurationDefinition,
-                ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), channelGroupConfiguration.isEnabled());
+                ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), channelGroupConfiguration.enabled());
     }
 
     public Configuration getChannelConfiguration(final tv.v1x1.common.dto.db.ConfigurationDefinition userConfigurationDefinition,
@@ -375,6 +375,6 @@ public class ApiDataProvider {
         if(!configElement.isJsonObject())
             throw new IllegalStateException("Expected config to be Json Object");
         final JsonObject config = configElement.getAsJsonObject();
-        return getConfigurationFromJson(sanitizeConfig(config, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), channelConfiguration.isEnabled());
+        return getConfigurationFromJson(sanitizeConfig(config, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), channelConfiguration.enabled());
     }
 }

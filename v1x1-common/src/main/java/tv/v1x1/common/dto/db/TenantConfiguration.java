@@ -40,7 +40,7 @@ public class TenantConfiguration implements Configuration {
     }
 
     @Override
-    public boolean isEnabled() {
+    public boolean enabled() {
         return true;
     }
 }

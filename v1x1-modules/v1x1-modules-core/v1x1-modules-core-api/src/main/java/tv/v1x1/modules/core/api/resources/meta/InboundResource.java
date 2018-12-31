@@ -209,7 +209,7 @@ public class InboundResource {
                 channelGroupConfiguration.getTenantId(),
                 channelGroupConfiguration.getPlatform(),
                 channelGroupConfiguration.getChannelGroupId(),
-                channelGroupConfiguration.isEnabled(),
+                channelGroupConfiguration.enabled(),
                 setConfigEntry(channelGroupConfiguration.getJson(), key, value)
         );
         daoManager.getDaoChannelGroupConfiguration().put(newChannelGroupConfiguration);
@@ -229,7 +229,7 @@ public class InboundResource {
                 channelConfiguration.getPlatform(),
                 channelConfiguration.getChannelGroupId(),
                 channelConfiguration.getChannelId(),
-                channelConfiguration.isEnabled(),
+                channelConfiguration.enabled(),
                 setConfigEntry(channelConfiguration.getJson(), key, value)
         );
         daoManager.getDaoChannelConfiguration().put(newChannelConfiguration);
@@ -250,7 +250,7 @@ public class InboundResource {
     private void save(final Module module, final Configuration configuration, final SharedCache<byte[], byte[]> cache,
                       final Tenant tenant, final byte[] cacheKey, final ConfigChangeEvent event) {
         try (final SharedCache<byte[], byte[]> localCache = cache) {
-            if(configuration.isEnabled())
+            if(configuration.enabled())
                 localCache.put(cacheKey, configuration.getJson().getBytes());
             else
                 localCache.invalidate(cacheKey);

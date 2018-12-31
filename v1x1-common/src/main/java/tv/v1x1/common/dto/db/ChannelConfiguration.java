@@ -55,7 +55,7 @@ public class ChannelConfiguration implements Configuration {
         return channelId;
     }
 
-    public boolean isEnabled() {
+    public boolean enabled() {
         return enabled;
     }
 }
