@@ -57,8 +57,13 @@ public abstract class Service<T extends Request, U extends Response<T>> implemen
         return serviceName.compareTo(o.serviceName);
     }
 
+    @SuppressWarnings("unchecked")
     public boolean canHandle(final Request request) {
-        return requestClass.isInstance(request);
+        return requestClass.isInstance(request) && childCanHandle((T) request);
+    }
+
+    protected boolean childCanHandle(final T request) {
+        return true;
     }
 
     public void handle(final Request m) {

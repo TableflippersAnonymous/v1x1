@@ -27,4 +27,9 @@ public class TmiService extends Service<SendMessageRequest, SendMessageResponse>
         bot.sendMessage(request.getDestination().getId(), request.getText());
         return new SendMessageResponse(getModule().toDto(), request.getMessageId());
     }
+
+    @Override
+    protected boolean childCanHandle(final SendMessageRequest request) {
+        return request.getDestination().getChannelGroup().getId().equals(String.valueOf(bot.getChannel().getId()));
+    }
 }
