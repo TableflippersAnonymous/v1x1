@@ -1,0 +1,525 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Workflow
+metadata:
+  generateName: build-v1x1-
+spec:
+  entrypoint: entrypoint
+  onExit: exitHandler
+  arguments:
+    parameters:
+      - name: revision
+        value: master
+  templates:
+    - name: entrypoint
+      steps:
+        - - name: checkout
+            template: checkout
+          - name: setupCaBundle
+            template: setupCaBundle
+        - - name: buildJava
+            template: buildJava
+            arguments:
+              parameters:
+                - {name: sha, value: "{{steps.checkout.outputs.result}}"}
+              artifacts:
+                - {name: source, from: "{{steps.checkout.outputs.artifacts.source}}"}
+                - {name: certsDir, from: "{{steps.setupCaBundle.outputs.artifacts.certsDir}}"}
+          - name: web
+            template: web
+            arguments:
+              artifacts:
+                - {name: source, from: "{{steps.checkout.outputs.artifacts.source}}"}
+    - name: checkout
+      inputs:
+        artifacts:
+          - name: source
+            path: /git
+            git:
+              repo: "https://github.com/TableflippersAnonymous/v1x1"
+              revision: "{{workflow.parameters.revision}}"
+      outputs:
+        artifacts:
+          - name: source
+            path: /git
+      script:
+        image: alpine/git
+        command: ["sh"]
+        source: |
+          git rev-list HEAD --max-count=1
+    - name: setupCaBundle
+      inputs:
+        artifacts:
+          - name: tblflpRootCa
+            path: /usr/local/share/ca-certificates/Tableflippers_Anonymous_Root_CA.crt
+            http:
+              url: http://pki.tblflp.zone/Tableflippers-Anonymous-Root-CA.pem
+      outputs:
+        artifacts:
+          - name: certsDir
+            path: /etc/ssl/certs
+      container:
+        image: docker:17.10
+        command: ["/usr/sbin/update-ca-certificates"]
+    - name: buildJava
+      inputs:
+        parameters:
+          - name: sha
+        artifacts:
+          - name: source
+          - name: certsDir
+      steps:
+        - - name: common
+            template: common
+            arguments:
+              parameters:
+                - {name: sha, value: "{{inputs.parameters.sha}}"}
+              artifacts:
+                - {name: source, from: "{{inputs.artifacts.source}}"}
+          - name: buildBase
+            template: buildBase
+            arguments:
+              parameters:
+                - {name: sha, value: "{{inputs.parameters.sha}}"}
+              artifacts:
+                - {name: source, from: "{{inputs.artifacts.source}}"}
+                - {name: certsDir, from: "{{inputs.artifacts.certsDir}}"}
+        - - name: modules
+            template: modules
+            arguments:
+              parameters:
+                - {name: sha, value: "{{inputs.parameters.sha}}"}
+              artifacts:
+                - {name: source, from: "{{inputs.artifacts.source}}"}
+                - {name: mavenCache, from: "{{steps.common.outputs.artifacts.mavenCache}}"}
+                - {name: certsDir, from: "{{inputs.artifacts.certsDir}}"}
+          - name: saveMavenCache
+            template: saveMavenCache
+            arguments:
+              artifacts:
+                - {name: mavenCache, from: "{{steps.common.outputs.artifacts.mavenCache}}"}
+    - name: modules
+      inputs:
+        parameters:
+          - name: sha
+        artifacts:
+          - name: source
+          - name: mavenCache
+          - name: certsDir
+      steps:
+        - - name: module
+            template: module
+            arguments:
+              parameters:
+                - name: type
+                  value: "{{item.type}}"
+                - name: moduleName
+                  value: "{{item.moduleName}}"
+                - name: sha
+                  value: "{{inputs.parameters.sha}}"
+              artifacts:
+                - name: source
+                  from: "{{inputs.artifacts.source}}"
+                - name: mavenCache
+                  from: "{{inputs.artifacts.mavenCache}}"
+                - name: certsDir
+                  from: "{{inputs.artifacts.certsDir}}"
+            withItems:
+              - {type: core,    moduleName: api}
+              - {type: core,    moduleName: chat_router}
+              - {type: core,    moduleName: discord}
+              - {type: core,    moduleName: event_router}
+              - {type: core,    moduleName: scheduler}
+              - {type: core,    moduleName: tmi}
+              - {type: global,  moduleName: ops_tool}
+              - {type: channel, moduleName: caster}
+              - {type: channel, moduleName: echo}
+              - {type: channel, moduleName: factoids}
+              - {type: channel, moduleName: hello_world}
+              - {type: channel, moduleName: link_purger}
+              - {type: channel, moduleName: quotes}
+              - {type: channel, moduleName: timed_messages}
+              - {type: channel, moduleName: uptime}
+              - {type: channel, moduleName: voicelog}
+              - {type: channel, moduleName: wasm}
+    - name: web
+      inputs:
+        artifacts:
+          - name: source
+      steps:
+        - - name: buildWeb
+            template: buildWeb
+            arguments:
+              artifacts:
+                - {name: source, from: "{{inputs.artifacts.source}}"}
+        - - name: deployWeb
+            template: deployWeb
+            arguments:
+              artifacts:
+                - {name: target, from: "{{steps.buildWeb.outputs.artifacts.target}}"}
+    - name: buildWeb
+      inputs:
+        artifacts:
+          - name: source
+            path: /source
+      outputs:
+        artifacts:
+          - name: target
+            path: /target
+      container:
+        image: node:8
+        command: ["/bin/sh", "-exc"]
+        args:
+          - |
+            ( cd /source/v1x1-web && npm install && npm run build )
+            mkdir -p /target
+            cp -rvf /source/v1x1-web/dist/. /target/
+    - name: deployWeb
+      inputs:
+        artifacts:
+          - name: target
+            path: /target
+      container:
+        image: python:3
+        command: ["/bin/sh", "-exc"]
+        env:
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: s3-creds
+                key: accesskey
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: s3-creds
+                key: secretkey
+        args:
+          - |
+            pip install awscli
+            aws configure set preview.cloudfront true
+            cd /target
+            for i in *.js ; do
+              aws --region us-east-1 s3 cp --content-type application/javascript "${i}" "s3://v1x1-web/${i}"
+            done
+            for i in *.css ; do
+              aws --region us-east-1 s3 cp --content-type text/css "${i}" "s3://v1x1-web/${i}"
+            done
+            for i in *.html ; do
+              aws --region us-east-1 s3 cp --content-type text/html "${i}" "s3://v1x1-web/${i}"
+            done
+            aws cloudfront create-invalidation --distribution-id E1ES20CHGVRXZB --paths '/index.html' '/*.html' '/'
+    - name: buildBase
+      inputs:
+        parameters:
+          - name: sha
+        artifacts:
+          - name: source
+          - name: certsDir
+      steps:
+        - - name: prepBaseDocker
+            template: prepBaseDocker
+            arguments:
+              artifacts:
+                - {name: source, from: "{{inputs.artifacts.source}}"}
+        - - name: dockerBuild
+            template: dockerBuild
+            arguments:
+              parameters:
+                - {name: imageName, value: "v1x1-base"}
+                - {name: imageTag, value: "{{inputs.parameters.sha}}"}
+              artifacts:
+                - {name: dockerDir, from: "{{steps.prepBaseDocker.outputs.artifacts.target}}"}
+                - {name: certsDir, from: "{{inputs.artifacts.certsDir}}"}
+    - name: common
+      inputs:
+        parameters:
+          - name: sha
+        artifacts:
+          - name: source
+      outputs:
+        artifacts:
+          - name: mavenCache
+            from: "{{steps.buildCommon.outputs.artifacts.mavenCache}}"
+      steps:
+        - - name: prepMaven
+            template: prepMaven
+        - - name: buildCommon
+            template: buildCommon
+            arguments:
+              parameters:
+                - {name: sha, value: "{{inputs.parameters.sha}}"}
+              artifacts:
+                - {name: source, from: "{{inputs.artifacts.source}}"}
+                - {name: mavenCache, from: "{{steps.prepMaven.outputs.artifacts.mavenCache}}"}
+    - name: prepMaven
+      inputs:
+        artifacts:
+          - name: mavenCache
+            path: /root/.m2
+            s3:
+              endpoint: s3.ca-central-1.amazonaws.com
+              bucket: tblflp-argo
+              key: "caches/v1x1-mvn.tgz"
+              accessKeySecret: {name: s3-creds, key: accesskey}
+              secretKeySecret: {name: s3-creds, key: secretkey}
+      outputs:
+        artifacts:
+          - name: mavenCache
+            path: /root/.m2
+      container:
+        image: maven:3-jdk-8
+        command: ["/bin/sh", "-exc"]
+        env:
+          - name: NEXUS_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: v1x1-ci
+                key: nexus-password
+        args:
+          - |
+            mkdir -p /root/.m2
+            echo "<settings><servers><server><id>tblflp</id><username>concourseci</username><password>${NEXUS_PASSWORD}</password></server><server><id>tblflp-releases</id><username>concourseci</username><password>${NEXUS_PASSWORD}</password></server><server><id>tblflp-snapshots</id><username>concourseci</username><password>${NEXUS_PASSWORD}</password></server></servers></settings>" > /root/.m2/settings.xml
+    - name: saveMavenCache
+      inputs:
+        artifacts:
+          - name: mavenCache
+            path: /root/.m2
+      outputs:
+        artifacts:
+          - name: mavenCache
+            path: /root/.m2
+            s3:
+              endpoint: s3.ca-central-1.amazonaws.com
+              bucket: tblflp-argo
+              key: "caches/v1x1-mvn.tgz"
+              accessKeySecret: {name: s3-creds, key: accesskey}
+              secretKeySecret: {name: s3-creds, key: secretkey}
+      container:
+        image: maven:3-jdk-8
+        command: ["/bin/sh", "-exc"]
+        args:
+          - |
+            echo "Preparing to upload maven cache"
+    - name: buildCommon
+      inputs:
+        parameters:
+          - name: sha
+        artifacts:
+          - name: source
+            path: /source
+          - name: mavenCache
+            path: /root/.m2
+      outputs:
+        artifacts:
+          - name: mavenCache
+            path: /root/.m2
+      container:
+        image: maven:3-jdk-8
+        command: ["/bin/sh", "-exc"]
+        env:
+          - name: HOME
+            value: /root
+          - name: M2_HOME
+            value: /root/.m2
+          - name: SHA
+            value: "{{inputs.parameters.sha}}"
+        args:
+          - |
+            sed -i -r "s/DEVELOPMENT-SNAPSHOT/git-${SHA}/g" /source/pom.xml
+            ( cd /source && mvn -s $M2_HOME/settings.xml -Dmaven.repo.local=$M2_HOME/repository -pl . -DskipDocker deploy )
+            ( cd /source && mvn -s $M2_HOME/settings.xml -Dmaven.repo.local=$M2_HOME/repository -pl v1x1-common -DskipDocker deploy )
+    - name: module
+      inputs:
+        parameters:
+          - name: type
+          - name: moduleName
+          - name: sha
+        artifacts:
+          - name: source
+          - name: mavenCache
+          - name: certsDir
+      steps:
+        - - name: buildModule
+            template: buildModule
+            arguments:
+              parameters:
+                - {name: type, value: "{{inputs.parameters.type}}"}
+                - {name: moduleName, value: "{{inputs.parameters.moduleName}}"}
+                - {name: sha, value: "{{inputs.parameters.sha}}"}
+              artifacts:
+                - {name: source, from: "{{inputs.artifacts.source}}"}
+                - {name: mavenCache, from: "{{inputs.artifacts.mavenCache}}"}
+        - - name: dockerBuild
+            template: dockerBuild
+            arguments:
+              parameters:
+                - {name: imageName, value: "v1x1-{{inputs.parameters.moduleName}}"}
+                - {name: imageTag, value: "{{inputs.parameters.sha}}"}
+              artifacts:
+                - {name: dockerDir, from: "{{steps.buildModule.outputs.artifacts.target}}"}
+                - {name: certsDir, from: "{{inputs.artifacts.certsDir}}"}
+        - - name: deployModule
+            template: deployModule
+            arguments:
+              parameters:
+                - {name: moduleName, value: "{{inputs.parameters.moduleName}}"}
+                - {name: sha, value: "{{inputs.parameters.sha}}"}
+    - name: buildModule
+      inputs:
+        parameters:
+          - name: type
+          - name: moduleName
+          - name: sha
+        artifacts:
+          - name: source
+            path: /source
+          - name: mavenCache
+            path: /root/.m2
+      outputs:
+        artifacts:
+          - name: target
+            path: /target
+      container:
+        image: maven:3-jdk-8
+        command: ["/bin/sh", "-exc"]
+        env:
+          - name: HOME
+            value: /root
+          - name: M2_HOME
+            value: /root/.m2
+          - name: V1X1_MODULE_PATH
+            value: "v1x1-modules/v1x1-modules-{{inputs.parameters.type}}/v1x1-modules-{{inputs.parameters.type}}-{{inputs.parameters.moduleName}}"
+          - name: SHA
+            value: "{{inputs.parameters.sha}}"
+        args:
+          - |
+            sed -i -r "s/DEVELOPMENT-SNAPSHOT/git-${SHA}/g" /source/pom.xml
+            ( cd /source && mvn -s $M2_HOME/settings.xml -Dmaven.repo.local=$M2_HOME/repository -pl $V1X1_MODULE_PATH -DskipDocker deploy )
+            mkdir -p /target
+            cp /source/$V1X1_MODULE_PATH/target/v1x1-modules-*.jar /target/
+            cp /source/$V1X1_MODULE_PATH/docker/* /target/
+            sed -i -r "s/FROM v1x1-base/FROM registry.tblflp.zone:5443\/v1x1-base:${SHA}/g" /target/Dockerfile
+    - name: deployModule
+      inputs:
+        parameters:
+          - name: moduleName
+          - name: sha
+      container:
+        image: alpine/git
+        command: ["/bin/sh", "-exc"]
+        env:
+          - name: MODULE_NAME
+            value: "{{inputs.parameters.moduleName}}"
+          - name: MODULE_SHA
+            value: "{{inputs.parameters.sha}}"
+          - name: GIT_BRANCH
+            value: "{{workflow.parameters.revision}}"
+          - name: GIT_DEPLOY_KEY
+            valueFrom:
+              secretKeyRef:
+                name: v1x1-ci
+                key: ssh-deploy-key
+          - name: HOME
+            value: "/root"
+        args:
+          - |
+            export KUBERNETES_NAME="${MODULE_NAME//_/-}"
+            mkdir -p $HOME/.ssh
+            chmod 700 $HOME/.ssh
+            echo "${GIT_DEPLOY_KEY}" > $HOME/.ssh/id_rsa
+            chmod 600 $HOME/.ssh/id_rsa
+            echo "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==" > $HOME/.ssh/known_hosts
+            chmod 600 $HOME/.ssh/known_hosts
+            echo -e "[user]\nname = Argo CI\nemail = argo@tblflp.zone" > $HOME/.gitconfig
+            git clone git@github.com:TableflippersAnonymous/infrastructure
+            cd infrastructure
+            while true; do
+              git fetch
+              git reset --hard
+              git clean -fdx
+              git checkout "origin/${GIT_BRANCH}" || git checkout origin/master
+              git checkout -B "${GIT_BRANCH}"
+              if [ ! -f "kubernetes/v1x1/${KUBERNETES_NAME}.yaml" ]; then
+                if [ -f "kubernetes/v1x1/MODULE_TEMPLATE" ]; then
+                  sed "s/KUBERNETES_NAME/${KUBERNETES_NAME}/g" "kubernetes/v1x1/MODULE_TEMPLATE" > "kubernetes/v1x1/${KUBERNETES_NAME}.yaml"
+                else
+                  exit 0
+                fi
+              fi
+              sed -i "s/image: .*/image: registry.tblflp.zone:5443\/v1x1-${MODULE_NAME}:${MODULE_SHA}/g" "kubernetes/v1x1/${KUBERNETES_NAME}.yaml"
+              git add "kubernetes/v1x1/${KUBERNETES_NAME}.yaml"
+              git commit -m "Version bump ${MODULE_NAME} (${KUBERNETES_NAME}) to version ${MODULE_SHA}"
+              git push origin "${GIT_BRANCH}" && exit 0 || true
+              sleep 3
+            done
+    - name: prepBaseDocker
+      inputs:
+        artifacts:
+          - name: source
+            path: /source
+      outputs:
+        artifacts:
+          - name: target
+            path: /target
+      container:
+        image: maven:3-jdk-8
+        command: ["/bin/sh", "-exc"]
+        args:
+          - |
+            mkdir -p /target
+            cp /source/docker/* /target/
+    - name: dockerBuild
+      inputs:
+        parameters:
+          - name: imageName
+          - name: imageTag
+        artifacts:
+          - name: dockerDir
+            path: /build
+          - name: certsDir
+            path: /etc/ssl/certs
+      container:
+        image: docker:17.10
+        command: ["/bin/sh", "-exc"]
+        env:
+          - name: DOCKER_TAG
+            value: "registry.tblflp.zone:5443/{{inputs.parameters.imageName}}:{{inputs.parameters.imageTag}}"
+          - name: DOCKER_HOST
+            value: 127.0.0.1
+          - name: DOCKER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: v1x1-ci
+                key: docker-password
+        args:
+          - |
+            until docker ps; do sleep 3; done
+            docker login -u tblflp -p "${DOCKER_PASSWORD}" registry.tblflp.zone:5443
+            cd /build && docker build --build-arg APP_ENV=prod -t $DOCKER_TAG .
+            docker push $DOCKER_TAG
+      sidecars:
+        - name: dind
+          image: docker:17.10-dind
+          securityContext:
+            privileged: true
+          mirrorVolumeMounts: true
+    - name: exitHandler
+      steps:
+        - - name: notifyStatus
+            template: notifyStatus
+    - name: notifyStatus
+      container:
+        image: maven:3-jdk-8
+        command: ["/bin/sh", "-exc"]
+        env:
+          - name: BUILD_SHA
+            value: "{{workflow.parameters.revision}}"
+          - name: BUILD_STATUS
+            value: "{{workflow.status}}"
+          - name: WEBHOOK_URL
+            valueFrom:
+              secretKeyRef:
+                name: v1x1-ci
+                key: discord-webhook
+        args:
+          - |
+            curl -X POST -H 'Content-Type: application/json' -d '{"content":"v1x1 Deployment of '"${BUILD_SHA}"': '"${BUILD_STATUS}"'"}' "${WEBHOOK_URL}"

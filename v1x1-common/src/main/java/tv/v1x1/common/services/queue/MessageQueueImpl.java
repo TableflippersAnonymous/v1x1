@@ -9,8 +9,11 @@ import tv.v1x1.common.dto.messages.Context;
 import tv.v1x1.common.dto.messages.Message;
 import zipkin.Endpoint;
 
+import java.util.Arrays;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author Cobi
@@ -26,9 +29,16 @@ public class MessageQueueImpl implements MessageQueue {
     }
 
     @Override
-    public Message get() throws InterruptedException, InvalidProtocolBufferException {
+    public Message get() throws Exception {
+        return getWithOthers(() -> new String[] {});
+    }
+
+    @Override
+    public Message getWithOthers(final Callable<String[]> otherQueueNames) throws Exception {
         while (!Thread.interrupted()) {
-            final byte[] bytes = blockingQueue.poll(50, TimeUnit.MILLISECONDS);
+            final byte[] bytes = blockingQueue.pollFromAny(50, TimeUnit.MILLISECONDS,
+                    Arrays.stream(otherQueueNames.call()).map(queue -> "{MQ}" + queue).collect(Collectors.toList())
+                            .toArray(new String[] {}));
             if (bytes == null)
                 continue;
             final Message message = Message.fromBytes(bytes);

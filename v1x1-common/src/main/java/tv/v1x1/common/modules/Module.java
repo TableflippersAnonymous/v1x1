@@ -8,10 +8,12 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
+import com.google.common.collect.ObjectArrays;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import io.dropwizard.util.Generics;
+import io.netty.util.internal.ConcurrentSet;
 import io.sentry.Sentry;
 import org.apache.curator.framework.CuratorFramework;
 import org.redisson.api.RedissonClient;
@@ -49,6 +51,7 @@ import tv.v1x1.common.guice.TemporaryGlobal;
 import tv.v1x1.common.guice.TemporaryModule;
 import tv.v1x1.common.i18n.I18n;
 import tv.v1x1.common.rpc.client.ServiceClient;
+import tv.v1x1.common.rpc.services.Service;
 import tv.v1x1.common.scanners.config.ConfigScanner;
 import tv.v1x1.common.scanners.i18n.I18nScanner;
 import tv.v1x1.common.scanners.permission.PermissionScanner;
@@ -72,6 +75,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -90,6 +94,9 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
     private final Map<Class<? extends ServiceClient>, ServiceClient> serviceClientMap = new ConcurrentHashMap<>();
     private final Map<String, LoadBalancingDistributor> loadBalancingDistributorMap = new ConcurrentHashMap<>();
     private Injector injector;
+    private final Set<String> serviceQueues = new ConcurrentSet<>();
+    private final Set<Service<?, ?>> services = new ConcurrentSet<>();
+    private final Map<tv.v1x1.common.dto.core.UUID, ServiceClient<?, ?>> outstandingServiceRequests = new ConcurrentHashMap<>();
 
     /* Designed to be overridden */
     public abstract String getName();
@@ -179,7 +186,7 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         final MessageQueue mq = mqm.forName(getQueueName());
         for(;;) {
             try {
-                final Message message = mq.get();
+                final Message message = mq.getWithOthers(() -> ObjectArrays.concat(getInstanceQueueName(), getServiceQueueNames()));
                 if(getDeduplicator().seenAndAdd(message.getMessageId()))
                     continue;
                 if(message instanceof ModuleShutdownRequest) {
@@ -189,13 +196,39 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
                 }
 
                 try (AutoCloseable messageId = MDC.putCloseable("messageId", message.getMessageId().getValue().toString())) {
-                    handle(message);
+                    if(message instanceof Request)
+                        handleRequest((Request) message);
+                    else if(message instanceof Response)
+                        handleResponse((Response) message);
+                    else
+                        handle(message);
                 }
             } catch (final Exception e) {
                 e.printStackTrace();
                 throw e;
             }
         }
+    }
+
+    private void handleRequest(final Request message) {
+        services.stream()
+                .filter(service -> service.canHandle(message))
+                .findFirst()
+                .ifPresent(service -> service.handle(message));
+    }
+
+    private void handleResponse(final Response message) {
+        final ServiceClient<?, ?> serviceClient = outstandingServiceRequests.remove(message.getRequestMessageId());
+        if(serviceClient != null)
+            serviceClient.handle(message);
+    }
+
+    private String[] getServiceQueueNames() {
+        return serviceQueues.toArray(new String[] {});
+    }
+
+    public String getInstanceQueueName() {
+        return "ModuleInstance|" + instanceId.toString();
     }
 
     /* ******************************* TEAR-DOWN ******************************* */
@@ -438,6 +471,24 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
         return twitchOauthToken.getOauthToken();
     }
 
+    public void registerService(final String serviceQueue, final Service<?, ?> service) {
+        this.serviceQueues.add(serviceQueue);
+        this.services.add(service);
+    }
+
+    public void unregisterService(final String serviceQueue, final Service<?, ?> service) {
+        this.serviceQueues.remove(serviceQueue);
+        this.services.remove(service);
+    }
+
+    public void expectResponseTo(final tv.v1x1.common.dto.core.UUID messageId, final ServiceClient<?, ?> serviceClient) {
+        outstandingServiceRequests.put(messageId, serviceClient);
+    }
+
+    public void clearResponseTo(final tv.v1x1.common.dto.core.UUID messageId) {
+        outstandingServiceRequests.remove(messageId);
+    }
+
     /* ******************************* PRIVATE METHODS ******************************* */
     public Class<T> getGlobalConfigurationClass() {
         return Generics.getTypeParameter(getClass(), GlobalConfiguration.class);
@@ -465,9 +516,8 @@ public abstract class Module<T extends GlobalConfiguration, U extends UserConfig
     private void registerGlobalMessages() {
         final tv.v1x1.common.dto.core.Module module = new tv.v1x1.common.dto.core.Module("_GLOBAL_");
         I18n.registerDefault(module, "generic.error",
-                "Sorry %commander%, I've run into an internal problem... BibleThump My Bot Operators have been " +
-                        "alerted. If you need help, please contact them with the time, date, your timezone, what happene" +
-                        "d leading up to this, and this message: %message%. My apologies for the inconvenience!");
+                "%commander%, you broke me! :'[ I've told my keepers about this. Want to make a report? " +
+                        "Send them a message with this info: Error ID: %errorId%. Type: %message%");
         I18n.registerDefault(module, "generic.noperms",
                 "%commander%, sorry, looks like you don't have permission to do that.");
         I18n.registerDefault(module, "generic.twitchapi.error",

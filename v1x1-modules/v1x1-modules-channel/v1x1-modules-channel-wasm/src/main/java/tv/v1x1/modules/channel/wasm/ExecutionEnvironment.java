@@ -26,6 +26,7 @@ import tv.v1x1.modules.channel.wasm.config.WebAssemblyUserConfiguration;
 import tv.v1x1.modules.channel.wasm.vm.decoder.ModuleDef;
 import tv.v1x1.modules.channel.wasm.vm.runtime.TrapException;
 import tv.v1x1.modules.channel.wasm.vm.runtime.WebAssemblyVirtualMachine;
+import tv.v1x1.modules.channel.wasm.vm.stack.WebAssemblyStack;
 import tv.v1x1.modules.channel.wasm.vm.store.LinkingException;
 import tv.v1x1.modules.channel.wasm.vm.types.I32;
 import tv.v1x1.modules.channel.wasm.vm.types.I64;
@@ -156,11 +157,14 @@ public class ExecutionEnvironment {
             return;
         final Event previousEvent = currentEvent;
         this.currentEvent = event;
+        final WebAssemblyStack previousStack = virtualMachine.getStack();
+        virtualMachine.setStack(new WebAssemblyStack());
         try {
             virtualMachine.callAllExports("event_handler", MAX_INSTRUCTIONS);
         } catch(final TrapException e) {
             handleTrapped(e);
         }
+        virtualMachine.setStack(previousStack);
         this.currentEvent = previousEvent;
     }
 

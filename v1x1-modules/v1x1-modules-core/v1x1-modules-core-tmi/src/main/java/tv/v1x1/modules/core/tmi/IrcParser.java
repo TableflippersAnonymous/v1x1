@@ -1,7 +1,5 @@
 package tv.v1x1.modules.core.tmi;
 
-import brave.Span;
-import brave.Tracer;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import tv.v1x1.common.dto.irc.IrcServer;
@@ -36,22 +34,17 @@ import java.util.stream.Collectors;
  * Created by cobi on 10/8/2016.
  */
 public class IrcParser {
-    public static IrcStanza parse(final String line, final Tracer tracer, final Span rootSpan) {
-        final Span span = tracer.newChild(rootSpan.context()).name("TMI parse").start();
-        try {
-            final String[] tagParts = splitTagFromIrc(line);
-            final Map<String, String> tagMap = parseTags(tagParts[0]);
-            final String[] parts = splitIrcLine(tagParts[1]);
-            final IrcSource source = parseSource(parts[0]);
-            final IrcStanza.IrcCommand command = parseCommand(parts[1]);
-            if (command == null)
-                return null;
-            final String rawArgs = parts.length > 2 ? parts[2] : null;
-            final List<String> args = parseArgs(rawArgs);
-            return buildStanza(line, tagMap, source, command, rawArgs, args.toArray(new String[]{}));
-        } finally {
-            span.finish();
-        }
+    public static IrcStanza parse(final String line) {
+        final String[] tagParts = splitTagFromIrc(line);
+        final Map<String, String> tagMap = parseTags(tagParts[0]);
+        final String[] parts = splitIrcLine(tagParts[1]);
+        final IrcSource source = parseSource(parts[0]);
+        final IrcStanza.IrcCommand command = parseCommand(parts[1]);
+        if (command == null)
+            return null;
+        final String rawArgs = parts.length > 2 ? parts[2] : null;
+        final List<String> args = parseArgs(rawArgs);
+        return buildStanza(line, tagMap, source, command, rawArgs, args.toArray(new String[]{}));
     }
 
     private static IrcStanza buildStanza(final String rawLine, final Map<String, String> tags, final IrcSource source, final IrcStanza.IrcCommand command, final String rawArgs, final String[] args) {

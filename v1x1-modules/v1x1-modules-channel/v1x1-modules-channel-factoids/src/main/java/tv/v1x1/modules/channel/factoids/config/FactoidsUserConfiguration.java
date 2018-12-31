@@ -11,9 +11,9 @@ import tv.v1x1.common.scanners.config.Type;
 import tv.v1x1.common.scanners.config.Version;
 import tv.v1x1.modules.channel.factoids.Factoid;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 /**
  * @author Josh
@@ -28,7 +28,7 @@ public class FactoidsUserConfiguration extends BasicUserConfiguration {
     @JsonProperty("factoids")
     @Type(ConfigType.COMPLEX_STRING_MAP)
     @ComplexType(Factoid.class)
-    private final HashMap<String, Factoid> factoids = new HashMap<>();
+    private final Map<String, Factoid> factoids = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     /**
      * get the factoid for tenant

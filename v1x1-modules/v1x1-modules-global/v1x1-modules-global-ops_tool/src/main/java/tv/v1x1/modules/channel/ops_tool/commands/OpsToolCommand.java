@@ -1,8 +1,6 @@
 package tv.v1x1.modules.channel.ops_tool.commands;
 
 import com.google.common.collect.ImmutableList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.services.chat.Chat;
@@ -11,14 +9,12 @@ import tv.v1x1.common.util.commands.CommandDelegator;
 import tv.v1x1.common.util.commands.ParsedCommand;
 import tv.v1x1.modules.channel.ops_tool.OpsTool;
 
-import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 /**
  * @author Josh
  */
 public class OpsToolCommand extends Command {
-    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     protected OpsTool opsTool;
     protected CommandDelegator delegator;
 
@@ -73,14 +69,7 @@ public class OpsToolCommand extends Command {
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
         String subCmd = args.remove(0).toLowerCase();
-        try {
-            if(!delegator.handleParsedCommand(chatMessage, new ParsedCommand(subCmd, args)))
-                handleArgMismatch(chatMessage, command, args);
-        } catch(Exception ex) {
-            Chat.i18nMessage(opsTool, chatMessage.getChannel(), "generic.error",
-                    "commander", chatMessage.getSender().getMention(),
-                    "message", ex.getClass().getSimpleName());
-            LOG.info("OpsTool broke...", ex);
-        }
+        if(!delegator.handleParsedCommand(chatMessage, new ParsedCommand(subCmd, args)))
+            handleArgMismatch(chatMessage, command, args);
     }
 }

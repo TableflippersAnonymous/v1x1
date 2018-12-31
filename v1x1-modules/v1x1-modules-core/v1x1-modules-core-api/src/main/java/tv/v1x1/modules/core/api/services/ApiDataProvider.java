@@ -71,7 +71,7 @@ public class ApiDataProvider {
                         Platform.DISCORD, new String(module.requireCredential("Common|Discord|RedirectUri"))
                 ),
                 "/api/v1",
-                "wss://pubsub.v1x1.tv",
+                "wss://v1x1.tv",
                 ImmutableMap.of(
                         "TMI", getOauthUrl("https://api.twitch.tv/kraken/oauth2/authorize",
                                 module.requireCredential("Common|TMI|ClientId"),

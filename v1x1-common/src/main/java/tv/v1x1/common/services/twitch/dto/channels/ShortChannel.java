@@ -7,6 +7,8 @@ import tv.v1x1.common.dto.core.Channel;
 import tv.v1x1.common.dto.core.Tenant;
 import tv.v1x1.common.dto.db.Platform;
 
+import java.util.Optional;
+
 /**
  * Created by cobi on 10/30/2016.
  */
@@ -31,7 +33,7 @@ public class ShortChannel {
     }
 
     public String getDisplayName() {
-        return displayName;
+        return Optional.ofNullable(displayName).orElse(name);
     }
 
     public void setDisplayName(final String displayName) {

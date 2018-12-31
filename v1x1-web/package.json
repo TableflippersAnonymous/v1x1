@@ -38,7 +38,7 @@
     "long": "4.0.0",
     "queueing-subject": "tableflippersanonymous/queueing-subject#c8b547bf0c88100287409cadc6ddce8e4c0f4a59",
     "reflect-metadata": "^0.1.0",
-    "rxjs": "6.2.2",
+    "rxjs": "6.3.3",
     "rxjs-websockets": "tableflippersanonymous/rxjs-websockets#d016d17b967fee5f4b244085768c01853ffe2ab1",
     "uuid": "3.3.2",
     "zone.js": "0.8.26"
@@ -52,7 +52,7 @@
     "tslint": "^5.10.0",
     "lodash": "^4.16.4",
     "jasmine-core": "~3.1.0",
-    "karma": "^2.0.2",
+    "karma": "^3.0.0",
     "karma-chrome-launcher": "^2.2.0",
     "karma-cli": "^1.0.1",
     "karma-jasmine": "^1.0.2",
@@ -64,21 +64,21 @@
     "webpack": "4.16.5",
     "webpack-dev-server": "3.1.5",
     "webpack-cli": "3.1.0",
-    "webpack-merge": "4.1.4",
+    "webpack-merge": "4.1.5",
     "angular2-template-loader": "0.6.2",
     "awesome-typescript-loader": "5.2.0",
     "css-loader": "1.0.0",
     "extract-text-webpack-plugin": "4.0.0-beta.0",
-    "file-loader": "1.1.11",
+    "file-loader": "2.0.0",
     "html-loader": "0.5.5",
     "html-webpack-plugin": "3.2.0",
     "null-loader": "0.1.1",
     "raw-loader": "0.5.1",
-    "style-loader": "0.21.0",
+    "style-loader": "0.22.1",
     "sass-loader": "7.0.3",
     "node-sass": "4.9.3",
     "url-loader": "1.0.1",
     "webpack-subresource-integrity": "1.1.0-rc.4",
-    "html-webpack-include-assets-plugin": "1.0.4"
+    "html-webpack-include-assets-plugin": "1.0.6"
   }
 }

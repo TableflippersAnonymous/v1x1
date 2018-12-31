@@ -11,7 +11,7 @@ import tv.v1x1.modules.channel.wasm.vm.validation.ValidationException;
 public class WebAssemblyVirtualMachine {
     //private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private final WebAssemblyStack stack;
+    private WebAssemblyStack stack;
     private final WebAssemblyStore store;
     private Instruction nextInstruction;
     private Instruction currentInstruction;
@@ -28,6 +28,10 @@ public class WebAssemblyVirtualMachine {
 
     public WebAssemblyStack getStack() {
         return stack;
+    }
+
+    public void setStack(final WebAssemblyStack stack) {
+        this.stack = stack;
     }
 
     public WebAssemblyStore getStore() {

@@ -4,8 +4,6 @@ import com.google.common.collect.ImmutableList;
 import tv.v1x1.common.dto.core.ChatMessage;
 import tv.v1x1.common.dto.core.Permission;
 import tv.v1x1.common.dto.core.Tenant;
-import tv.v1x1.common.services.state.DisplayNameService;
-import tv.v1x1.common.services.state.NoSuchTargetException;
 import tv.v1x1.common.util.commands.Command;
 import tv.v1x1.modules.channel.ops_tool.OpsTool;
 
@@ -43,20 +41,13 @@ public class OpsToolTenantIdCommand extends Command {
 
     @Override
     public void run(final ChatMessage chatMessage, final String command, final List<String> args) {
-        final DisplayNameService displayNameService = opsTool.getInjector().getInstance(DisplayNameService.class);
-        final String channelId;
-        try {
-            if (args.size() > 0)
-                channelId = displayNameService.getIdFromDisplayName(chatMessage.getChannel(), args.get(0));
-            else
-                channelId = chatMessage.getChannel().getId();
-            final Tenant t = opsTool.getTenantByChannel(chatMessage.getChannel().getChannelGroup().getPlatform(), channelId);
-            if (t == null)
-                opsTool.respond(chatMessage.getChannel(), "I don't know about that channel");
-            else
-                opsTool.respond(chatMessage.getChannel(), "Tenant for " + displayNameService.getDisplayNameFromId(chatMessage.getChannel(), channelId) + "/" + channelId + ": " + t.toString());
-        } catch (final NoSuchTargetException e) {
+        final Tenant t = chatMessage.getChannel().getTenant();
+        if(t == null) {
             opsTool.respond(chatMessage.getChannel(), "I don't know about that channel");
+        } else {
+            opsTool.respond(chatMessage.getChannel(), chatMessage.getChannel().getMention() + " is part of " +
+                    t.getDisplayName() + ", tenant ID: " +
+                    t.getId());
         }
     }
 }
