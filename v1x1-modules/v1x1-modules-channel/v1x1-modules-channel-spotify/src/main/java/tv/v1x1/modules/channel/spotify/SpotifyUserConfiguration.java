@@ -1,6 +1,6 @@
 package tv.v1x1.modules.channel.spotify;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import tv.v1x1.common.modules.BasicUserConfiguration;
 import tv.v1x1.common.scanners.config.ConfigType;
 import tv.v1x1.common.scanners.config.Description;
@@ -43,7 +43,6 @@ public class SpotifyUserConfiguration extends BasicUserConfiguration {
     }
 
     public void setRefreshToken(final String refreshToken) {
-        System.out.println("Setting refreshToken: " + refreshToken);
         this.refreshToken = refreshToken;
     }
 
@@ -61,15 +60,5 @@ public class SpotifyUserConfiguration extends BasicUserConfiguration {
 
     public void setAlwaysOn(final boolean alwaysOn) {
         this.alwaysOn = alwaysOn;
-    }
-
-    @Override
-    public String toString() {
-        return "SpotifyUserConfiguration{" +
-                "refreshToken='" + refreshToken + '\'' +
-                ", defaultPlaylist='" + defaultPlaylist + '\'' +
-                ", alwaysOn=" + alwaysOn +
-                ", enabled=" + isEnabled() +
-                '}';
     }
 }
