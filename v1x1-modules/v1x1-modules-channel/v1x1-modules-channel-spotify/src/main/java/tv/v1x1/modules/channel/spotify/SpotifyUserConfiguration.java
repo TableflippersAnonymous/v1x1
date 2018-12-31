@@ -43,6 +43,7 @@ public class SpotifyUserConfiguration extends BasicUserConfiguration {
     }
 
     public void setRefreshToken(final String refreshToken) {
+        System.out.println("Setting refreshToken: " + refreshToken);
         this.refreshToken = refreshToken;
     }
 
@@ -60,5 +61,15 @@ public class SpotifyUserConfiguration extends BasicUserConfiguration {
 
     public void setAlwaysOn(final boolean alwaysOn) {
         this.alwaysOn = alwaysOn;
+    }
+
+    @Override
+    public String toString() {
+        return "SpotifyUserConfiguration{" +
+                "refreshToken='" + refreshToken + '\'' +
+                ", defaultPlaylist='" + defaultPlaylist + '\'' +
+                ", alwaysOn=" + alwaysOn +
+                ", enabled=" + isEnabled() +
+                '}';
     }
 }
