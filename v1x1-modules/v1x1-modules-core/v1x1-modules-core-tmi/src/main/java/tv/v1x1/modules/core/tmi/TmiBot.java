@@ -177,4 +177,8 @@ public class TmiBot {
             this.joinChannels();
         });
     }
+
+    public Channel getChannel() {
+        return channel;
+    }
 }
