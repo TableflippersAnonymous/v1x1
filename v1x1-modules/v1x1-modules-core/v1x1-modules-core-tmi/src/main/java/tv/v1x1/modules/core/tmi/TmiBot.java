@@ -32,6 +32,7 @@ public class TmiBot {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
     private volatile boolean running;
+    private volatile boolean connecting;
     private volatile ChannelFuture channelFuture;
     private final String oauthToken;
     private final String username;
@@ -107,7 +108,12 @@ public class TmiBot {
         }
     }
 
-    void connect() {
+    synchronized void connect() {
+        if(connecting)
+            return;
+        connecting = true;
+        if(channelFuture != null && channelFuture.channel().isOpen())
+            channelFuture.channel().close();
         final Bootstrap b = new Bootstrap();
         b.group(eventLoopGroup)
                 .channel(NioSocketChannel.class)
@@ -133,6 +139,8 @@ public class TmiBot {
         sendLine("QUIT :Disconnecting.");
         if(channelFuture != null && channelFuture.channel().isOpen())
             channelFuture.channel().close();
+        if(running)
+            connect();
     }
 
     public void shutdown() {
@@ -169,6 +177,7 @@ public class TmiBot {
     }
 
     void login() {
+        clearConnecting();
         joinLimiter.submit(() -> {
             sendLine("PASS :oauth:" + oauthToken);
             sendLine("USER " + username + " \"v1x1.tv\" \"irc.chat.twitch.tv\" :" + username);
@@ -176,6 +185,10 @@ public class TmiBot {
             sendLine("CAP REQ :twitch.tv/commands twitch.tv/tags");
             this.joinChannels();
         });
+    }
+
+    public void clearConnecting() {
+        connecting = false;
     }
 
     public Channel getChannel() {

@@ -1,7 +1,10 @@
 package tv.v1x1.common.dto.irc;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.proto.core.IRC;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -15,6 +18,7 @@ import java.util.stream.Collectors;
  * Created by cobi on 10/9/2016.
  */
 public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private Set<Badge> badges = new HashSet<>();
     private List<Emote> emotes = new ArrayList<>();
     private int roomId, userId;
@@ -78,7 +82,8 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
         STAFF, ADMIN, GLOBAL_MOD,
         MODERATOR, SUBSCRIBER, TURBO,
         PREMIUM, BITS, BROADCASTER, TWITCHCON2017,
-        PARTNER;
+        PARTNER, CLIP_CHAMP, BITS_CHARITY, SUB_GIFTER, BITS_LEADER,
+        OVERWATCH_LEAGUE_INSIDER_1, VIP, TWITCHCON2018;
 
         public IRC.MessageTaggedIrcStanza.Badge toProto() {
             switch(this) {
@@ -93,6 +98,13 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
                 case BROADCASTER: return IRC.MessageTaggedIrcStanza.Badge.BROADCASTER;
                 case TWITCHCON2017: return IRC.MessageTaggedIrcStanza.Badge.TWITCHCON2017;
                 case PARTNER: return IRC.MessageTaggedIrcStanza.Badge.PARTNER;
+                case CLIP_CHAMP: return IRC.MessageTaggedIrcStanza.Badge.CLIP_CHAMP;
+                case BITS_CHARITY: return IRC.MessageTaggedIrcStanza.Badge.BITS_CHARITY;
+                case SUB_GIFTER: return IRC.MessageTaggedIrcStanza.Badge.SUB_GIFTER;
+                case BITS_LEADER: return IRC.MessageTaggedIrcStanza.Badge.BITS_LEADER;
+                case OVERWATCH_LEAGUE_INSIDER_1: return IRC.MessageTaggedIrcStanza.Badge.OVERWATCH_LEAGUE_INSIDER_1;
+                case VIP: return IRC.MessageTaggedIrcStanza.Badge.VIP;
+                case TWITCHCON2018: return IRC.MessageTaggedIrcStanza.Badge.TWITCHCON2018;
                 default: throw new IllegalStateException("Unknown Badge: " + this);
             }
         }
@@ -103,9 +115,9 @@ public abstract class MessageTaggedIrcStanza extends TaggedIrcStanza {
         if(tags.containsKey("badges") && !tags.get("badges").isEmpty())
             badges = Arrays.stream(tags.get("badges").split(",")).map(String::toUpperCase).map(s -> s.split("/")[0]).map(s -> {
                 try {
-                    return Badge.valueOf(s);
+                    return Badge.valueOf(s.replaceAll("-", "_"));
                 } catch(IllegalArgumentException e) {
-                    e.printStackTrace();
+                    LOG.warn("Unknown Badge: {}", s.replaceAll("-", "_"));
                     return null;
                 }
             }).filter(Objects::nonNull).collect(Collectors.toSet());

@@ -132,6 +132,7 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
         LOG.error("[{}] [{}] Got exception: ", username, channel.getDisplayName(), cause);
+        tmiBot.clearConnecting();
         tmiBot.disconnect();
     }
 

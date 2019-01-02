@@ -101,6 +101,13 @@ message MessageTaggedIrcStanza {
         BROADCASTER = 9;
         TWITCHCON2017 = 10;
         PARTNER = 11;
+        CLIP_CHAMP = 12;
+        BITS_CHARITY = 13;
+        SUB_GIFTER = 14;
+        BITS_LEADER = 15;
+        OVERWATCH_LEAGUE_INSIDER_1 = 16;
+        VIP = 17;
+        TWITCHCON2018 = 18;
     }
 
     message Emote {
@@ -295,6 +302,8 @@ message UserNoticeCommand {
         RESUB = 1;
         SUB = 2;
         SUBGIFT = 3;
+        RAID = 4;
+        CHARITY = 5;
     }
 
     required string channel = 1;
