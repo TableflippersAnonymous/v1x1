@@ -53,7 +53,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.net.URI;
 import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Date;
@@ -100,12 +99,12 @@ public class InboundResource {
     public Response handleSpotifyOAuth(@QueryParam("code") final String code, @QueryParam("state") final String state,
                                        @QueryParam("error") final String error) {
         if(error != null || code == null || state == null)
-            return Response.temporaryRedirect(URI.create("/")).build();
+            return relativeRedirect("/");
         final byte[][] decodedStateData = CompositeKey.getKeys(useState(state, "SPOTIFY"));
         final AuthorizationResponse authorizationResponse = spotifyApi.getOAuth2().authorize(code);
         writeUserConfigEntry(decodedStateData, "spotify", "refresh_token",
                 authorizationResponse.getRefreshToken());
-        return Response.temporaryRedirect(URI.create("/")).build();
+        return relativeRedirect("/");
     }
 
     @Path("/twitch")
@@ -113,11 +112,11 @@ public class InboundResource {
     public Response handleTwitchOAuth(@QueryParam("code") final String code, @QueryParam("state") final String state,
                                       @QueryParam("error") final String error) {
         if(error != null || code == null || state == null)
-            return Response.temporaryRedirect(URI.create("/")).build();
+            return relativeRedirect("/");
         final byte[][] decodedStateData = CompositeKey.getKeys(useState(state, "TMI"));
         final TokenResponse tokenResponse = twitchApi.getOauth2().getToken(code, state);
         writeUserConfigEntry(decodedStateData, "tmi", "oauth_token", tokenResponse.getAccessToken());
-        return Response.temporaryRedirect(URI.create("/")).build();
+        return relativeRedirect("/");
     }
 
     @Path("/state/{service}/{tenantid}")
@@ -150,6 +149,15 @@ public class InboundResource {
                 Optional.ofNullable(channelGroupId).orElse(""),
                 Optional.ofNullable(channelId).orElse("")));
         return new StateResponse(state, 3600000);
+    }
+
+    private Response relativeRedirect(final String location) {
+        return Response.status(Response.Status.TEMPORARY_REDIRECT)
+            .header("Content-Type", "text/html")
+            .header("Location", location)
+            .entity("<!doctype html>\n<html><head><script>window.location.href='" + location + "';</script></head>" +
+                    "<body>Redirecting you back to v1x1.  <a href=\"" + location + "\">Click here</a> if you don't get redirected.</body></html>")
+            .build();
     }
 
     private void writeUserConfigEntry(final byte[][] decodedStateData, final String moduleName, final String key,
