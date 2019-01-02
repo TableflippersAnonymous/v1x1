@@ -6119,6 +6119,34 @@ public final class IRC {
        * <code>PARTNER = 11;</code>
        */
       PARTNER(11),
+      /**
+       * <code>CLIP_CHAMP = 12;</code>
+       */
+      CLIP_CHAMP(12),
+      /**
+       * <code>BITS_CHARITY = 13;</code>
+       */
+      BITS_CHARITY(13),
+      /**
+       * <code>SUB_GIFTER = 14;</code>
+       */
+      SUB_GIFTER(14),
+      /**
+       * <code>BITS_LEADER = 15;</code>
+       */
+      BITS_LEADER(15),
+      /**
+       * <code>OVERWATCH_LEAGUE_INSIDER_1 = 16;</code>
+       */
+      OVERWATCH_LEAGUE_INSIDER_1(16),
+      /**
+       * <code>VIP = 17;</code>
+       */
+      VIP(17),
+      /**
+       * <code>TWITCHCON2018 = 18;</code>
+       */
+      TWITCHCON2018(18),
       ;
 
       /**
@@ -6169,6 +6197,34 @@ public final class IRC {
        * <code>PARTNER = 11;</code>
        */
       public static final int PARTNER_VALUE = 11;
+      /**
+       * <code>CLIP_CHAMP = 12;</code>
+       */
+      public static final int CLIP_CHAMP_VALUE = 12;
+      /**
+       * <code>BITS_CHARITY = 13;</code>
+       */
+      public static final int BITS_CHARITY_VALUE = 13;
+      /**
+       * <code>SUB_GIFTER = 14;</code>
+       */
+      public static final int SUB_GIFTER_VALUE = 14;
+      /**
+       * <code>BITS_LEADER = 15;</code>
+       */
+      public static final int BITS_LEADER_VALUE = 15;
+      /**
+       * <code>OVERWATCH_LEAGUE_INSIDER_1 = 16;</code>
+       */
+      public static final int OVERWATCH_LEAGUE_INSIDER_1_VALUE = 16;
+      /**
+       * <code>VIP = 17;</code>
+       */
+      public static final int VIP_VALUE = 17;
+      /**
+       * <code>TWITCHCON2018 = 18;</code>
+       */
+      public static final int TWITCHCON2018_VALUE = 18;
 
 
       public final int getNumber() {
@@ -6197,6 +6253,13 @@ public final class IRC {
           case 9: return BROADCASTER;
           case 10: return TWITCHCON2017;
           case 11: return PARTNER;
+          case 12: return CLIP_CHAMP;
+          case 13: return BITS_CHARITY;
+          case 14: return SUB_GIFTER;
+          case 15: return BITS_LEADER;
+          case 16: return OVERWATCH_LEAGUE_INSIDER_1;
+          case 17: return VIP;
+          case 18: return TWITCHCON2018;
           default: return null;
         }
       }
@@ -19912,6 +19975,14 @@ public final class IRC {
        * <code>SUBGIFT = 3;</code>
        */
       SUBGIFT(3),
+      /**
+       * <code>RAID = 4;</code>
+       */
+      RAID(4),
+      /**
+       * <code>CHARITY = 5;</code>
+       */
+      CHARITY(5),
       ;
 
       /**
@@ -19930,6 +20001,14 @@ public final class IRC {
        * <code>SUBGIFT = 3;</code>
        */
       public static final int SUBGIFT_VALUE = 3;
+      /**
+       * <code>RAID = 4;</code>
+       */
+      public static final int RAID_VALUE = 4;
+      /**
+       * <code>CHARITY = 5;</code>
+       */
+      public static final int CHARITY_VALUE = 5;
 
 
       public final int getNumber() {
@@ -19950,6 +20029,8 @@ public final class IRC {
           case 1: return RESUB;
           case 2: return SUB;
           case 3: return SUBGIFT;
+          case 4: return RAID;
+          case 5: return CHARITY;
           default: return null;
         }
       }
@@ -23404,7 +23485,7 @@ public final class IRC {
       "\t\n\005STAFF\020\004\"m\n\021EmoteSetIrcStanza\022\021\n\temote" +
       "_set\030\001 \003(\005\022E\n\rtagged_stanza\030\002 \002(\0132..tv.v" +
       "1x1.common.dto.proto.core.TaggedIrcStanz" +
-      "a\"\344\004\n\026MessageTaggedIrcStanza\022K\n\006badges\030\001" +
+      "a\"\343\005\n\026MessageTaggedIrcStanza\022K\n\006badges\030\001" +
       " \003(\0162;.tv.v1x1.common.dto.proto.core.Mes" +
       "sageTaggedIrcStanza.Badge\022K\n\006emotes\030\002 \003(" +
       "\0132;.tv.v1x1.common.dto.proto.core.Messag" +
@@ -23415,113 +23496,116 @@ public final class IRC {
       "\002 \003(\0132A.tv.v1x1.common.dto.proto.core.Me" +
       "ssageTaggedIrcStanza.Emote.Range\032/\n\005Rang" +
       "e\022\023\n\013begin_index\030\001 \002(\005\022\021\n\tend_index\030\002 \002(" +
-      "\005\"\254\001\n\005Badge\022\013\n\007UNKNOWN\020\000\022\t\n\005STAFF\020\001\022\t\n\005A" +
+      "\005\"\253\002\n\005Badge\022\013\n\007UNKNOWN\020\000\022\t\n\005STAFF\020\001\022\t\n\005A" +
       "DMIN\020\002\022\016\n\nGLOBAL_MOD\020\003\022\r\n\tMODERATOR\020\004\022\016\n" +
       "\nSUBSCRIBER\020\005\022\t\n\005TURBO\020\006\022\013\n\007PREMIUM\020\007\022\010\n" +
       "\004BITS\020\010\022\017\n\013BROADCASTER\020\t\022\021\n\rTWITCHCON201",
-      "7\020\n\022\013\n\007PARTNER\020\013\"\310\001\n\020ClearChatCommand\022\017\n" +
-      "\007channel\030\001 \002(\t\022\020\n\010nickname\030\002 \001(\t\022\024\n\014ban_" +
-      "duration\030\003 \001(\005\022\022\n\nban_reason\030\004 \001(\t2g\n\004da" +
-      "ta\022(.tv.v1x1.common.dto.proto.core.IrcSt" +
-      "anza\030e \001(\0132/.tv.v1x1.common.dto.proto.co" +
-      "re.ClearChatCommand\"\344\001\n\026GlobalUserStateC" +
-      "ommand\022\017\n\007user_id\030\001 \002(\005\022J\n\020emote_set_sta" +
-      "nza\030\002 \002(\01320.tv.v1x1.common.dto.proto.cor" +
-      "e.EmoteSetIrcStanza2m\n\004data\022(.tv.v1x1.co" +
-      "mmon.dto.proto.core.IrcStanza\030f \001(\01325.tv",
-      ".v1x1.common.dto.proto.core.GlobalUserSt" +
-      "ateCommand\"\246\001\n\021HostTargetCommand\022\017\n\007chan" +
-      "nel\030\001 \002(\t\022\026\n\016target_channel\030\002 \001(\t2h\n\004dat" +
+      "7\020\n\022\013\n\007PARTNER\020\013\022\016\n\nCLIP_CHAMP\020\014\022\020\n\014BITS" +
+      "_CHARITY\020\r\022\016\n\nSUB_GIFTER\020\016\022\017\n\013BITS_LEADE" +
+      "R\020\017\022\036\n\032OVERWATCH_LEAGUE_INSIDER_1\020\020\022\007\n\003V" +
+      "IP\020\021\022\021\n\rTWITCHCON2018\020\022\"\310\001\n\020ClearChatCom" +
+      "mand\022\017\n\007channel\030\001 \002(\t\022\020\n\010nickname\030\002 \001(\t\022" +
+      "\024\n\014ban_duration\030\003 \001(\005\022\022\n\nban_reason\030\004 \001(" +
+      "\t2g\n\004data\022(.tv.v1x1.common.dto.proto.cor" +
+      "e.IrcStanza\030e \001(\0132/.tv.v1x1.common.dto.p" +
+      "roto.core.ClearChatCommand\"\344\001\n\026GlobalUse" +
+      "rStateCommand\022\017\n\007user_id\030\001 \002(\005\022J\n\020emote_",
+      "set_stanza\030\002 \002(\01320.tv.v1x1.common.dto.pr" +
+      "oto.core.EmoteSetIrcStanza2m\n\004data\022(.tv." +
+      "v1x1.common.dto.proto.core.IrcStanza\030f \001" +
+      "(\01325.tv.v1x1.common.dto.proto.core.Globa" +
+      "lUserStateCommand\"\246\001\n\021HostTargetCommand\022" +
+      "\017\n\007channel\030\001 \002(\t\022\026\n\016target_channel\030\002 \001(\t" +
+      "2h\n\004data\022(.tv.v1x1.common.dto.proto.core" +
+      ".IrcStanza\030g \001(\01320.tv.v1x1.common.dto.pr" +
+      "oto.core.HostTargetCommand\"\202\001\n\013JoinComma" +
+      "nd\022\017\n\007channel\030\001 \002(\t2b\n\004data\022(.tv.v1x1.co",
+      "mmon.dto.proto.core.IrcStanza\030h \001(\0132*.tv" +
+      ".v1x1.common.dto.proto.core.JoinCommand\"" +
+      "\252\001\n\013ModeCommand\022\017\n\007channel\030\001 \002(\t\022\023\n\013mode" +
+      "_string\030\002 \001(\t\022\021\n\tnicknames\030\003 \003(\t2b\n\004data" +
+      "\022(.tv.v1x1.common.dto.proto.core.IrcStan" +
+      "za\030i \001(\0132*.tv.v1x1.common.dto.proto.core" +
+      ".ModeCommand\"\213\007\n\rNoticeCommand\022\017\n\007channe" +
+      "l\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022J\n\nmessage_id\030\003" +
+      " \001(\01626.tv.v1x1.common.dto.proto.core.Not" +
+      "iceCommand.MessageId\"\245\005\n\tMessageId\022\013\n\007UN",
+      "KNOWN\020\000\022\013\n\007SUBS_ON\020\001\022\023\n\017ALREADY_SUBS_ON\020" +
+      "\002\022\014\n\010SUBS_OFF\020\003\022\024\n\020ALREADY_SUBS_OFF\020\004\022\013\n" +
+      "\007SLOW_ON\020\005\022\014\n\010SLOW_OFF\020\006\022\n\n\006R9K_ON\020\007\022\022\n\016" +
+      "ALREADY_R9K_ON\020\010\022\013\n\007R9K_OFF\020\t\022\023\n\017ALREADY" +
+      "_R9K_OFF\020\n\022\013\n\007HOST_ON\020\013\022\024\n\020BAD_HOST_HOST" +
+      "ING\020\014\022\014\n\010HOST_OFF\020\r\022\023\n\017HOSTS_REMAINING\020\016" +
+      "\022\021\n\rEMOTE_ONLY_ON\020\017\022\031\n\025ALREADY_EMOTE_ONL" +
+      "Y_ON\020\020\022\022\n\016EMOTE_ONLY_OFF\020\021\022\032\n\026ALREADY_EM" +
+      "OTE_ONLY_OFF\020\022\022\031\n\025MSG_CHANNEL_SUSPENDED\020" +
+      "\023\022\023\n\017TIMEOUT_SUCCESS\020\024\022\017\n\013BAN_SUCCESS\020\025\022",
+      "\021\n\rUNBAN_SUCCESS\020\026\022\024\n\020BAD_UNBAN_NO_BAN\020\027" +
+      "\022\022\n\016ALREADY_BANNED\020\030\022\030\n\024UNRECOGNIZED_COM" +
+      "MAND\020\031\022\021\n\rMSG_DUPLICATE\020\032\022\021\n\rMSG_RATELIM" +
+      "IT\020\033\022\033\n\027BAD_TIMEOUT_BROADCASTER\020\034\022\023\n\017BAD" +
+      "_TIMEOUT_MOD\020\035\022\034\n\030HOST_TARGET_WENT_OFFLI" +
+      "NE\020\036\022\021\n\rNO_PERMISSION\020\037\022\021\n\rFOLLOWERS_OFF" +
+      "\020 \022\020\n\014FOLLOWERS_ON\020!2d\n\004data\022(.tv.v1x1.c" +
+      "ommon.dto.proto.core.IrcStanza\030j \001(\0132,.t" +
+      "v.v1x1.common.dto.proto.core.NoticeComma" +
+      "nd\"\202\001\n\013PartCommand\022\017\n\007channel\030\001 \002(\t2b\n\004d",
+      "ata\022(.tv.v1x1.common.dto.proto.core.IrcS" +
+      "tanza\030k \001(\0132*.tv.v1x1.common.dto.proto.c" +
+      "ore.PartCommand\"\200\001\n\013PingCommand\022\r\n\005token" +
+      "\030\001 \001(\t2b\n\004data\022(.tv.v1x1.common.dto.prot" +
+      "o.core.IrcStanza\030l \001(\0132*.tv.v1x1.common." +
+      "dto.proto.core.PingCommand\"\256\002\n\016PrivmsgCo" +
+      "mmand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022" +
+      "/\n\002id\030\003 \001(\0132#.tv.v1x1.common.dto.proto.c" +
+      "ore.UUID\022\014\n\004bits\030\004 \001(\005\022T\n\025message_tagged" +
+      "_stanza\030\005 \002(\01325.tv.v1x1.common.dto.proto",
+      ".core.MessageTaggedIrcStanza2e\n\004data\022(.t" +
+      "v.v1x1.common.dto.proto.core.IrcStanza\030m" +
+      " \001(\0132-.tv.v1x1.common.dto.proto.core.Pri" +
+      "vmsgCommand\"{\n\020ReconnectCommand2g\n\004data\022" +
+      "(.tv.v1x1.common.dto.proto.core.IrcStanz" +
+      "a\030n \001(\0132/.tv.v1x1.common.dto.proto.core." +
+      "ReconnectCommand\"\330\001\n\020RoomStateCommand\022\017\n" +
+      "\007channel\030\001 \002(\t\022\034\n\024broadcaster_language\030\002" +
+      " \001(\t\022\013\n\003r9k\030\003 \001(\010\022\021\n\tsubs_only\030\004 \001(\010\022\014\n\004" +
+      "slow\030\005 \001(\0052g\n\004data\022(.tv.v1x1.common.dto.",
+      "proto.core.IrcStanza\030o \001(\0132/.tv.v1x1.com" +
+      "mon.dto.proto.core.RoomStateCommand\"\201\001\n\023" +
+      "RplEndOfMotdCommand2j\n\004data\022(.tv.v1x1.co" +
+      "mmon.dto.proto.core.IrcStanza\030p \001(\01322.tv" +
+      ".v1x1.common.dto.proto.core.RplEndOfMotd" +
+      "Command\"\210\002\n\023RplNameReplyCommand\022\017\n\007chann" +
+      "el\030\001 \002(\t\022J\n\007members\030\002 \003(\01329.tv.v1x1.comm" +
+      "on.dto.proto.core.RplNameReplyCommand.Me" +
+      "mber\032(\n\006Member\022\020\n\010nickname\030\001 \002(\t\022\014\n\004isOp" +
+      "\030\002 \002(\0102j\n\004data\022(.tv.v1x1.common.dto.prot",
+      "o.core.IrcStanza\030q \001(\01322.tv.v1x1.common." +
+      "dto.proto.core.RplNameReplyCommand\"\316\003\n\021U" +
+      "serNoticeCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007mes" +
+      "sage\030\002 \002(\t\022N\n\nmessage_id\030\003 \001(\0162:.tv.v1x1" +
+      ".common.dto.proto.core.UserNoticeCommand" +
+      ".MessageId\022\016\n\006months\030\004 \001(\005\022\026\n\016system_mes" +
+      "sage\030\005 \001(\t\022\r\n\005login\030\006 \001(\t\022T\n\025message_tag" +
+      "ged_stanza\030\007 \002(\01325.tv.v1x1.common.dto.pr" +
+      "oto.core.MessageTaggedIrcStanza\"P\n\tMessa" +
+      "geId\022\013\n\007UNKNOWN\020\000\022\t\n\005RESUB\020\001\022\007\n\003SUB\020\002\022\013\n",
+      "\007SUBGIFT\020\003\022\010\n\004RAID\020\004\022\013\n\007CHARITY\020\0052h\n\004dat" +
       "a\022(.tv.v1x1.common.dto.proto.core.IrcSta" +
-      "nza\030g \001(\01320.tv.v1x1.common.dto.proto.cor" +
-      "e.HostTargetCommand\"\202\001\n\013JoinCommand\022\017\n\007c" +
-      "hannel\030\001 \002(\t2b\n\004data\022(.tv.v1x1.common.dt" +
-      "o.proto.core.IrcStanza\030h \001(\0132*.tv.v1x1.c" +
-      "ommon.dto.proto.core.JoinCommand\"\252\001\n\013Mod" +
-      "eCommand\022\017\n\007channel\030\001 \002(\t\022\023\n\013mode_string",
-      "\030\002 \001(\t\022\021\n\tnicknames\030\003 \003(\t2b\n\004data\022(.tv.v" +
-      "1x1.common.dto.proto.core.IrcStanza\030i \001(" +
-      "\0132*.tv.v1x1.common.dto.proto.core.ModeCo" +
-      "mmand\"\213\007\n\rNoticeCommand\022\017\n\007channel\030\001 \002(\t" +
-      "\022\017\n\007message\030\002 \002(\t\022J\n\nmessage_id\030\003 \001(\01626." +
-      "tv.v1x1.common.dto.proto.core.NoticeComm" +
-      "and.MessageId\"\245\005\n\tMessageId\022\013\n\007UNKNOWN\020\000" +
-      "\022\013\n\007SUBS_ON\020\001\022\023\n\017ALREADY_SUBS_ON\020\002\022\014\n\010SU" +
-      "BS_OFF\020\003\022\024\n\020ALREADY_SUBS_OFF\020\004\022\013\n\007SLOW_O" +
-      "N\020\005\022\014\n\010SLOW_OFF\020\006\022\n\n\006R9K_ON\020\007\022\022\n\016ALREADY",
-      "_R9K_ON\020\010\022\013\n\007R9K_OFF\020\t\022\023\n\017ALREADY_R9K_OF" +
-      "F\020\n\022\013\n\007HOST_ON\020\013\022\024\n\020BAD_HOST_HOSTING\020\014\022\014" +
-      "\n\010HOST_OFF\020\r\022\023\n\017HOSTS_REMAINING\020\016\022\021\n\rEMO" +
-      "TE_ONLY_ON\020\017\022\031\n\025ALREADY_EMOTE_ONLY_ON\020\020\022" +
-      "\022\n\016EMOTE_ONLY_OFF\020\021\022\032\n\026ALREADY_EMOTE_ONL" +
-      "Y_OFF\020\022\022\031\n\025MSG_CHANNEL_SUSPENDED\020\023\022\023\n\017TI" +
-      "MEOUT_SUCCESS\020\024\022\017\n\013BAN_SUCCESS\020\025\022\021\n\rUNBA" +
-      "N_SUCCESS\020\026\022\024\n\020BAD_UNBAN_NO_BAN\020\027\022\022\n\016ALR" +
-      "EADY_BANNED\020\030\022\030\n\024UNRECOGNIZED_COMMAND\020\031\022" +
-      "\021\n\rMSG_DUPLICATE\020\032\022\021\n\rMSG_RATELIMIT\020\033\022\033\n",
-      "\027BAD_TIMEOUT_BROADCASTER\020\034\022\023\n\017BAD_TIMEOU" +
-      "T_MOD\020\035\022\034\n\030HOST_TARGET_WENT_OFFLINE\020\036\022\021\n" +
-      "\rNO_PERMISSION\020\037\022\021\n\rFOLLOWERS_OFF\020 \022\020\n\014F" +
-      "OLLOWERS_ON\020!2d\n\004data\022(.tv.v1x1.common.d" +
-      "to.proto.core.IrcStanza\030j \001(\0132,.tv.v1x1." +
-      "common.dto.proto.core.NoticeCommand\"\202\001\n\013" +
-      "PartCommand\022\017\n\007channel\030\001 \002(\t2b\n\004data\022(.t" +
-      "v.v1x1.common.dto.proto.core.IrcStanza\030k" +
-      " \001(\0132*.tv.v1x1.common.dto.proto.core.Par" +
-      "tCommand\"\200\001\n\013PingCommand\022\r\n\005token\030\001 \001(\t2",
-      "b\n\004data\022(.tv.v1x1.common.dto.proto.core." +
-      "IrcStanza\030l \001(\0132*.tv.v1x1.common.dto.pro" +
-      "to.core.PingCommand\"\256\002\n\016PrivmsgCommand\022\017" +
-      "\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 \002(\t\022/\n\002id\030\003" +
-      " \001(\0132#.tv.v1x1.common.dto.proto.core.UUI" +
-      "D\022\014\n\004bits\030\004 \001(\005\022T\n\025message_tagged_stanza" +
-      "\030\005 \002(\01325.tv.v1x1.common.dto.proto.core.M" +
-      "essageTaggedIrcStanza2e\n\004data\022(.tv.v1x1." +
-      "common.dto.proto.core.IrcStanza\030m \001(\0132-." +
-      "tv.v1x1.common.dto.proto.core.PrivmsgCom",
-      "mand\"{\n\020ReconnectCommand2g\n\004data\022(.tv.v1" +
-      "x1.common.dto.proto.core.IrcStanza\030n \001(\013" +
-      "2/.tv.v1x1.common.dto.proto.core.Reconne" +
-      "ctCommand\"\330\001\n\020RoomStateCommand\022\017\n\007channe" +
-      "l\030\001 \002(\t\022\034\n\024broadcaster_language\030\002 \001(\t\022\013\n" +
-      "\003r9k\030\003 \001(\010\022\021\n\tsubs_only\030\004 \001(\010\022\014\n\004slow\030\005 " +
-      "\001(\0052g\n\004data\022(.tv.v1x1.common.dto.proto.c" +
-      "ore.IrcStanza\030o \001(\0132/.tv.v1x1.common.dto" +
-      ".proto.core.RoomStateCommand\"\201\001\n\023RplEndO" +
-      "fMotdCommand2j\n\004data\022(.tv.v1x1.common.dt",
-      "o.proto.core.IrcStanza\030p \001(\01322.tv.v1x1.c" +
-      "ommon.dto.proto.core.RplEndOfMotdCommand" +
-      "\"\210\002\n\023RplNameReplyCommand\022\017\n\007channel\030\001 \002(" +
-      "\t\022J\n\007members\030\002 \003(\01329.tv.v1x1.common.dto." +
-      "proto.core.RplNameReplyCommand.Member\032(\n" +
-      "\006Member\022\020\n\010nickname\030\001 \002(\t\022\014\n\004isOp\030\002 \002(\0102" +
-      "j\n\004data\022(.tv.v1x1.common.dto.proto.core." +
-      "IrcStanza\030q \001(\01322.tv.v1x1.common.dto.pro" +
-      "to.core.RplNameReplyCommand\"\267\003\n\021UserNoti" +
-      "ceCommand\022\017\n\007channel\030\001 \002(\t\022\017\n\007message\030\002 ",
-      "\002(\t\022N\n\nmessage_id\030\003 \001(\0162:.tv.v1x1.common" +
-      ".dto.proto.core.UserNoticeCommand.Messag" +
-      "eId\022\016\n\006months\030\004 \001(\005\022\026\n\016system_message\030\005 " +
-      "\001(\t\022\r\n\005login\030\006 \001(\t\022T\n\025message_tagged_sta" +
-      "nza\030\007 \002(\01325.tv.v1x1.common.dto.proto.cor" +
-      "e.MessageTaggedIrcStanza\"9\n\tMessageId\022\013\n" +
-      "\007UNKNOWN\020\000\022\t\n\005RESUB\020\001\022\007\n\003SUB\020\002\022\013\n\007SUBGIF" +
-      "T\020\0032h\n\004data\022(.tv.v1x1.common.dto.proto.c" +
-      "ore.IrcStanza\030r \001(\01320.tv.v1x1.common.dto" +
-      ".proto.core.UserNoticeCommand\"\330\001\n\020UserSt",
-      "ateCommand\022\017\n\007channel\030\001 \002(\t\022J\n\020emote_set" +
-      "_stanza\030\002 \002(\01320.tv.v1x1.common.dto.proto" +
-      ".core.EmoteSetIrcStanza2g\n\004data\022(.tv.v1x" +
-      "1.common.dto.proto.core.IrcStanza\030s \001(\0132" +
-      "/.tv.v1x1.common.dto.proto.core.UserStat" +
-      "eCommand\"\225\002\n\016WhisperCommand\022\016\n\006target\030\001 " +
-      "\002(\t\022\017\n\007message\030\002 \002(\t\022\021\n\tthread_id\030\003 \001(\t\022" +
-      "\022\n\nmessage_id\030\004 \001(\004\022T\n\025message_tagged_st" +
-      "anza\030\005 \002(\01325.tv.v1x1.common.dto.proto.co" +
-      "re.MessageTaggedIrcStanza2e\n\004data\022(.tv.v",
-      "1x1.common.dto.proto.core.IrcStanza\030t \001(" +
-      "\0132-.tv.v1x1.common.dto.proto.core.Whispe" +
-      "rCommand"
+      "nza\030r \001(\01320.tv.v1x1.common.dto.proto.cor" +
+      "e.UserNoticeCommand\"\330\001\n\020UserStateCommand" +
+      "\022\017\n\007channel\030\001 \002(\t\022J\n\020emote_set_stanza\030\002 " +
+      "\002(\01320.tv.v1x1.common.dto.proto.core.Emot" +
+      "eSetIrcStanza2g\n\004data\022(.tv.v1x1.common.d" +
+      "to.proto.core.IrcStanza\030s \001(\0132/.tv.v1x1." +
+      "common.dto.proto.core.UserStateCommand\"\225" +
+      "\002\n\016WhisperCommand\022\016\n\006target\030\001 \002(\t\022\017\n\007mes",
+      "sage\030\002 \002(\t\022\021\n\tthread_id\030\003 \001(\t\022\022\n\nmessage" +
+      "_id\030\004 \001(\004\022T\n\025message_tagged_stanza\030\005 \002(\013" +
+      "25.tv.v1x1.common.dto.proto.core.Message" +
+      "TaggedIrcStanza2e\n\004data\022(.tv.v1x1.common" +
+      ".dto.proto.core.IrcStanza\030t \001(\0132-.tv.v1x" +
+      "1.common.dto.proto.core.WhisperCommand"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

@@ -1,15 +1,20 @@
 package tv.v1x1.common.dto.irc.commands;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import tv.v1x1.common.dto.irc.IrcSource;
 import tv.v1x1.common.dto.irc.MessageTaggedIrcStanza;
 import tv.v1x1.common.dto.proto.core.IRC;
 
+import java.lang.invoke.MethodHandles;
 import java.util.Map;
 
 /**
  * Created by naomi on 10/8/2016.
  */
 public class UserNoticeCommand extends MessageTaggedIrcStanza {
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+
     private final String channel;
     private final String message;
 
@@ -27,13 +32,17 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
     public enum MessageId {
         RESUB,
         SUB,
-        SUBGIFT;
+        SUBGIFT,
+        RAID,
+        CHARITY;
 
         public IRC.UserNoticeCommand.MessageId toProto() {
             switch(this) {
                 case RESUB: return IRC.UserNoticeCommand.MessageId.RESUB;
                 case SUB: return IRC.UserNoticeCommand.MessageId.SUB;
                 case SUBGIFT: return IRC.UserNoticeCommand.MessageId.SUBGIFT;
+                case RAID: return IRC.UserNoticeCommand.MessageId.RAID;
+                case CHARITY: return IRC.UserNoticeCommand.MessageId.CHARITY;
                 default: throw new IllegalStateException("Unknown MessageId: " + this);
             }
         }
@@ -44,7 +53,11 @@ public class UserNoticeCommand extends MessageTaggedIrcStanza {
         this.channel = channel;
         this.message = message;
         if(tags.containsKey("msg-id") && !tags.get("msg-id").isEmpty())
-            messageId = MessageId.valueOf(tags.get("msg-id").toUpperCase());
+            try {
+                messageId = MessageId.valueOf(tags.get("msg-id").toUpperCase());
+            } catch(final IllegalArgumentException e) {
+                LOG.warn("Unknown UserNoticeCommand.MessageId: {}", tags.get("msg-id").toUpperCase());
+            }
         if(tags.containsKey("msg-param-months") && !tags.get("msg-param-months").isEmpty())
             months = Integer.valueOf(tags.get("msg-param-months"));
         if(tags.containsKey("system-msg") && !tags.get("system-msg").isEmpty())
