@@ -12,4 +12,3 @@ I make your chat better!
 | Analysis | [![CodeFactor](https://www.codefactor.io/repository/github/tableflippersanonymous/v1x1/badge)](https://www.codefactor.io/repository/github/tableflippersanonymous/v1x1)      |
 | Security | [![Known Vulnerabilities](https://snyk.io/test/github/TableflippersAnonymous/v1x1/badge.svg)](https://snyk.io/test/github/TableflippersAnonymous/v1x1)      |
 | Contributors | [![CLA assistant](https://cla-assistant.io/readme/badge/TableflippersAnonymous/v1x1)](https://cla-assistant.io/TableflippersAnonymous/v1x1) |
-
