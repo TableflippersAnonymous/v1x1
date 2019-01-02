@@ -11,6 +11,7 @@ import tv.v1x1.common.services.persistence.DAOManager;
 import tv.v1x1.common.services.persistence.KeyValueStore;
 import tv.v1x1.common.services.pubsub.TopicManager;
 import tv.v1x1.common.services.queue.MessageQueueManager;
+import tv.v1x1.common.services.spotify.SpotifyApi;
 import tv.v1x1.common.services.state.DiscordDisplayNameService;
 import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
@@ -52,13 +53,20 @@ public class ApiGuiceModule extends AbstractModule {
     }
 
     @Provides
+    public SpotifyApi provideSpotifyApi() {
+        return new SpotifyApi(new String(apiModule.requireCredential("Common|Spotify|ClientId")),
+                null, new String(apiModule.requireCredential("Common|Spotify|ClientSecret")),
+                new String(apiModule.requireCredential("Common|Spotify|RedirectUri")));
+    }
+
+    @Provides
     public DiscordApi provideDiscordApi() {
         return apiModule.getInjector().getInstance(DiscordApi.class);
     }
 
     @Provides
     public KeyValueStore provideKeyValueStore() {
-        return apiModule.getTemporaryGlobalKeyValueStore();
+        return apiModule.getTemporaryKeyValueStore();
     }
 
     @Provides

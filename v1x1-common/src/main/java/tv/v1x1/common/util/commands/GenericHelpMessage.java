@@ -8,8 +8,12 @@ import java.util.List;
 // TODO: I18n this
 public class GenericHelpMessage {
     public static String helpMessage(final CommandDelegator delegator, final String commandStr, final String prefixOverride) {
-        final StringBuilder sb = new StringBuilder();
         final String prefix = (prefixOverride != null ? prefixOverride : delegator.getPrefix());
+        return helpMessage(delegator.getRegisteredCommands(), commandStr, prefix);
+    }
+
+    public static String helpMessage(final Iterable<Command> commands, final String commandStr, final String prefix) {
+        final StringBuilder sb = new StringBuilder();
         if(commandStr.isEmpty()) {
             if(!prefix.isEmpty()) {
                 sb.append("All commands start with ");
@@ -17,7 +21,7 @@ public class GenericHelpMessage {
                 sb.append(" | ");
             }
             boolean first = true;
-            for(Command command : delegator.getRegisteredCommands()) {
+            for(Command command : commands) {
                 if(first) first = false;
                 else sb.append(" | ");
                 sb.append(String.join("/", command.getCommands()));
@@ -26,7 +30,7 @@ public class GenericHelpMessage {
             }
         } else {
             Command command = null;
-            for(Command checkedCommand : delegator.getRegisteredCommands()) {
+            for(Command checkedCommand : commands) {
                 if(checkedCommand.getCommands().contains(commandStr)) {
                     command = checkedCommand;
                     break;

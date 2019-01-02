@@ -198,7 +198,7 @@ public class ConfigResource {
         }
         messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new ChannelGroupConfigChangeEvent(apiModule.toDto(), module, channelGroup));
         apiModule.handleConfigChangeEvent(channelGroup.getTenant(), module);
-        return dataProvider.getConfigurationFromJson(dataProvider.sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelGroupConfiguration.isEnabled());
+        return dataProvider.getConfigurationFromJson(dataProvider.sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelGroupConfiguration.enabled());
     }
 
     @Path("/{module}/{platform}/{channelgroup}/{channel}")
@@ -265,7 +265,7 @@ public class ConfigResource {
         }
         messageQueueManager.forName(tv.v1x1.common.modules.Module.getMainQueueForModule(module)).add(new ChannelConfigChangeEvent(apiModule.toDto(), module, channel));
         apiModule.handleConfigChangeEvent(channel.getChannelGroup().getTenant(), module);
-        return dataProvider.getConfigurationFromJson(dataProvider.sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelConfiguration.isEnabled());
+        return dataProvider.getConfigurationFromJson(dataProvider.sanitizeConfig(finalConfig, new JsonObject(), userConfigurationDefinition, ImmutableSet.of(Permission.READ_ONLY, Permission.READ_WRITE)), newChannelConfiguration.enabled());
     }
 
     @Path("/{module}/all")

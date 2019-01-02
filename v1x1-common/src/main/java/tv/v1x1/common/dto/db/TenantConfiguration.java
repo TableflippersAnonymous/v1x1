@@ -10,7 +10,7 @@ import java.util.UUID;
  * Created by cobi on 10/17/2016.
  */
 @Table(name = "tenant_configuration")
-public class TenantConfiguration {
+public class TenantConfiguration implements Configuration {
     @PartitionKey(0)
     private String module;
     @PartitionKey(1)
@@ -37,5 +37,10 @@ public class TenantConfiguration {
 
     public String getJson() {
         return json;
+    }
+
+    @Override
+    public boolean enabled() {
+        return true;
     }
 }

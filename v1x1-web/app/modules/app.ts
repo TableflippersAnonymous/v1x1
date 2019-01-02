@@ -18,7 +18,7 @@ import {ConfigurationFieldValueMasterEnableComponent} from "../components/config
 import {ConfigurationFieldValueStringComponent} from "../components/configuration/field_values/string";
 import {ConfigurationFieldValueStringListComponent} from "../components/configuration/field_values/string_list";
 import {ConfigurationFieldValueStringMapComponent} from "../components/configuration/field_values/string_map";
-import {ConfigurationFieldValueTwitchOauthComponent} from "../components/configuration/field_values/twitch_oauth";
+import {ConfigurationFieldValueOauthComponent} from "../components/configuration/field_values/oauth";
 import {FormsModule} from "@angular/forms";
 import {V1x1Api} from "../services/api";
 import {TopNavComponent} from "../components/nav/top_nav";
@@ -147,7 +147,7 @@ const routes: Routes = [
     ConfigurationFieldValueBooleanComponent, ConfigurationFieldValueBotNameComponent, ConfigurationFieldValueComplexComponent,
     ConfigurationFieldValueComplexListComponent, ConfigurationFieldValueComplexStringMapComponent, ConfigurationFieldValueCredentialComponent,
     ConfigurationFieldValueIntegerComponent, ConfigurationFieldValueMasterEnableComponent, ConfigurationFieldValueStringComponent,
-    ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueTwitchOauthComponent,
+    ConfigurationFieldValueStringListComponent, ConfigurationFieldValueStringMapComponent, ConfigurationFieldValueOauthComponent,
     ConfigurationFieldValueUserListComponent, ConfigurationFieldValuePermissionListComponent, ConfigurationFieldValueGroupComponent,
     ConfigurationFieldValuePlatformGroupComponent, ConfigurationFieldValueFileComponent,
     TopNavComponent, TopNavEntryComponent, UserDropdownNavComponent, TenantDropdownNavComponent, NavRouterComponent,

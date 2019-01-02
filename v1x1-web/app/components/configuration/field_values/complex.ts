@@ -9,7 +9,7 @@ import {ConfigurableComponent} from "../configurable";
                          [field]="complexField" [complexFields]="complexFields"
                          [originalConfiguration]="originalConfiguration[complexField.jsonField]"
                          [configuration]="configuration[complexField.jsonField]" (configurationChange)="setConfigField(complexField.jsonField, $event)"
-                         [activeTenant]="activeTenant" [channelGroup]="channelGroup"></configuration-field>
+                         [activeTenant]="activeTenant" [activeChannelGroup]="activeChannelGroup" [activeChannel]="activeChannel"></configuration-field>
   `
 })
 export class ConfigurationFieldValueComplexComponent extends ConfigurableComponent {

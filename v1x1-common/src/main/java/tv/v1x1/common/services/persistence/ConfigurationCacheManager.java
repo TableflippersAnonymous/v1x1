@@ -43,7 +43,7 @@ public class ConfigurationCacheManager {
             @Override
             public byte[] load(final byte[] channelData) {
                 final tv.v1x1.common.dto.db.ChannelConfiguration channelConfiguration = daoChannelConfiguration.get(module, Channel.KEY_CODEC.decode(channelData));
-                if(channelConfiguration == null || !channelConfiguration.isEnabled())
+                if(channelConfiguration == null || !channelConfiguration.enabled())
                     return null;
                 return channelConfiguration.getJson().getBytes();
             }
@@ -55,7 +55,7 @@ public class ConfigurationCacheManager {
             @Override
             public byte[] load(final byte[] channelGroupData) {
                 final tv.v1x1.common.dto.db.ChannelGroupConfiguration channelGroupConfiguration = daoChannelGroupConfiguration.get(module, ChannelGroup.KEY_CODEC.decode(channelGroupData));
-                if(channelGroupConfiguration == null || !channelGroupConfiguration.isEnabled())
+                if(channelGroupConfiguration == null || !channelGroupConfiguration.enabled())
                     return null;
                 return channelGroupConfiguration.getJson().getBytes();
             }

@@ -17,15 +17,19 @@ public class WebConfig {
     private String apiBase;
     @JsonProperty("pubsub_base")
     private String pubsubBase;
+    @JsonProperty("config_oauth_urls")
+    private Map<String, String> configOauthUrls;
 
     public WebConfig() {
     }
 
-    public WebConfig(final Map<Platform, String> clientIds, final Map<Platform, String> redirectUris, final String apiBase, final String pubsubBase) {
+    public WebConfig(final Map<Platform, String> clientIds, final Map<Platform, String> redirectUris,
+                     final String apiBase, final String pubsubBase, final Map<String, String> configOauthUrls) {
         this.clientIds = clientIds;
         this.redirectUris = redirectUris;
         this.apiBase = apiBase;
         this.pubsubBase = pubsubBase;
+        this.configOauthUrls = configOauthUrls;
     }
 
     public Map<Platform, String> getClientIds() {
@@ -58,5 +62,13 @@ public class WebConfig {
 
     public void setPubsubBase(final String pubsubBase) {
         this.pubsubBase = pubsubBase;
+    }
+
+    public Map<String, String> getConfigOauthUrls() {
+        return configOauthUrls;
+    }
+
+    public void setConfigOauthUrls(final Map<String, String> configOauthUrls) {
+        this.configOauthUrls = configOauthUrls;
     }
 }
