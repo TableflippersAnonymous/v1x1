@@ -25,7 +25,7 @@ import {first, map, mergeAll} from "rxjs/operators";
             <configuration-field *ngFor="let field of configurationDefinition.fields"
                                  [field]="field" [complexFields]="configurationDefinition.complexFields"
                                  [originalConfiguration]="originalConfiguration[field.jsonField]" [activeTenant]="activeTenant"
-                                 [channelGroup]="channelGroupPlatformMappingValue.channelGroup"
+                                 [activeChannelGroup]="channelGroupPlatformMappingValue.channelGroup" [activeChannel]="null"
                                  [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
           </mat-card-content>
           <mat-card-actions>

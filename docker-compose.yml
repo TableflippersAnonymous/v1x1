@@ -113,3 +113,9 @@ services:
       - redis
       - zoo
       - cass
+  spotify:
+    image: v1x1-spotify:latest
+    depends_on:
+      - redis
+      - zoo
+      - cass

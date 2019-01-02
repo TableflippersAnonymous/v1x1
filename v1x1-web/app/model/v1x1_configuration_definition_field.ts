@@ -4,7 +4,7 @@ export enum ConfigType {
   INTEGER,
   STRING,
   CREDENTIAL,
-  TWITCH_OAUTH,
+  OAUTH,
   MASTER_ENABLE,
   BOOLEAN,
   BOT_NAME,

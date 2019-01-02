@@ -1,13 +1,10 @@
 package tv.v1x1.common.util.data;
 
 import java.io.ByteArrayInputStream;
-import org.codehaus.jackson.util.ByteArrayBuilder;
-
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * @author Josh
@@ -52,9 +49,11 @@ public class CompositeKey {
             for (int idx = 0; idx < arrayLength; idx++) {
                 final int length = dis.readInt();
                 ret[idx] = new byte[length];
-                final int readLength = dis.read(ret[idx]);
-                if (length != readLength)
-                    throw new IllegalArgumentException("Reached end of key while trying to read " + length + " bytes.  Actually read: " + readLength);
+                if(length > 0) {
+                    final int readLength = dis.read(ret[idx]);
+                    if (length != readLength)
+                        throw new IllegalArgumentException("Reached end of key while trying to read " + length + " bytes.  Actually read: " + readLength);
+                }
             }
             return ret;
         } catch (final IOException ex) {

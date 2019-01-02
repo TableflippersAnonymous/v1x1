@@ -11,7 +11,7 @@ import java.util.UUID;
  * Created by naomi on 11/5/2016.
  */
 @Table(name = "channel_group_configuration")
-public class ChannelGroupConfiguration {
+public class ChannelGroupConfiguration implements Configuration {
     @PartitionKey(0)
     private String module;
     @PartitionKey(1)
@@ -53,7 +53,7 @@ public class ChannelGroupConfiguration {
         return channelGroupId;
     }
 
-    public boolean isEnabled() {
+    public boolean enabled() {
         return enabled;
     }
 

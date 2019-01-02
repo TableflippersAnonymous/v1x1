@@ -5,8 +5,6 @@ import {ConfigurableComponent} from "./configurable";
 import {V1x1Api} from "../../services/api";
 import {V1x1ApiCache} from "../../services/api_cache";
 import {V1x1Configuration} from "../../model/v1x1_configuration";
-import {V1x1ChannelGroup} from "../../model/v1x1_channel_group";
-import {V1x1Channel} from "../../model/v1x1_channel";
 import {V1x1ConfigurationDefinitionField} from "../../model/v1x1_configuration_definition_field";
 import {JsonConvert} from "json2typescript";
 
@@ -24,10 +22,12 @@ import {JsonConvert} from "json2typescript";
             <configuration-field *ngIf="scope !== 'tenant'"
                                  [field]="overrideField" [complexFields]="{}"
                                  [originalConfiguration]="originalEnabled"
+                                 [activeTenant]="activeTenant" [activeChannelGroup]="activeChannelGroup" [activeChannel]="activeChannel"
                                  [configuration]="enabled" (configurationChange)="setEnabled($event)"></configuration-field>
             <configuration-field *ngFor="let field of configurationDefinition.fields"
                                  [field]="field" [complexFields]="configurationDefinition.complexFields"
                                  [originalConfiguration]="originalConfiguration[field.jsonField]"
+                                 [activeTenant]="activeTenant" [activeChannelGroup]="activeChannelGroup" [activeChannel]="activeChannel"
                                  [configuration]="configuration[field.jsonField]" (configurationChange)="setConfigField(field.jsonField, $event)"></configuration-field>
           </mat-card-content>
           <mat-card-actions>
@@ -43,8 +43,6 @@ export class ConfigurationScopeComponent extends ConfigurableComponent {
   @Input() public v1x1Module: V1x1Module;
   @Input() public configurationDefinition: V1x1ConfigurationDefinition;
   @Input() public scope: string;
-  @Input() public activeChannelGroup: V1x1ChannelGroup;
-  @Input() public activeChannel: V1x1Channel;
   @Input() public enabled: boolean;
   @Output() public enabledChange = new EventEmitter();
   @Input() public originalEnabled: boolean;

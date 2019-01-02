@@ -32,6 +32,7 @@ import tv.v1x1.common.services.state.TwitchDisplayNameService;
 import tv.v1x1.common.services.twitch.TwitchApi;
 import tv.v1x1.common.services.twitch.dto.auth.TokenResponse;
 import tv.v1x1.common.services.twitch.dto.users.PrivateUser;
+import tv.v1x1.common.util.data.CompositeKey;
 import tv.v1x1.modules.core.api.ApiModule;
 import tv.v1x1.modules.core.api.api.rest.ApiPrimitive;
 import tv.v1x1.modules.core.api.api.rest.AuthTokenResponse;
@@ -199,7 +200,7 @@ public class MetaResource {
     public StateResponse getState() {
         final byte[] state = new byte[32];
         secureRandom.nextBytes(state);
-        stateStore.put(state, Longs.toByteArray(new Date().getTime() + 3600000));
+        stateStore.put(CompositeKey.makeKey("stateunauth".getBytes(), state), Longs.toByteArray(new Date().getTime() + 3600000));
         return new StateResponse(BaseEncoding.base64Url().encode(state), 3600000);
     }
 
@@ -214,10 +215,10 @@ public class MetaResource {
 
     private String useState(final String stateStr) {
         final byte[] state = BaseEncoding.base64Url().decode(stateStr);
-        final byte[] expiryBytes = stateStore.get(state);
+        final byte[] expiryBytes = stateStore.get(CompositeKey.makeKey("stateunauth".getBytes(), state));
         if(expiryBytes == null)
             throw new BadRequestException("State not found");
-        stateStore.delete(state);
+        stateStore.delete(CompositeKey.makeKey("stateauth".getBytes(), state));
         final long expiry = Longs.fromByteArray(expiryBytes);
         if(new Date(expiry).before(new Date()))
             throw new BadRequestException("State expired");

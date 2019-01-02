@@ -27,16 +27,16 @@ public class TmiUserConfiguration implements UserConfiguration {
     @TenantPermission(Permission.READ_WRITE)
     private boolean customBot = false;
 
-    @DisplayName("Bot name:")
+    @DisplayName("Bot name")
     @Description("This allows you to enter a bot name other than v1x1.")
     @Type(ConfigType.BOT_NAME)
     @JsonProperty("bot_name")
     @TenantPermission(Permission.NONE)
     private String botName;
 
-    @DisplayName("OAuth Token:")
-    @Description("What is your Twitch OAuth token for the bot?")
-    @Type(ConfigType.TWITCH_OAUTH)
+    @DisplayName("Bot Account")
+    @Description("TMI")
+    @Type(ConfigType.OAUTH)
     @Requires("custom_bot")
     @JsonProperty("oauth_token")
     @TenantPermission(Permission.WRITE_ONLY)

@@ -48,7 +48,9 @@ export class ConfigurationFieldValuePlatformGroupComponent extends ConfigurableC
   reconfigure(): void {
     if(this.subscription != null)
       this.subscription.unsubscribe();
-    this.subscription = this.globalState.activeTenant.get().pipe(map(activeTenant => this.apiCache.getPlatformGroups(activeTenant.id, this.channelGroup.platform, this.channelGroup.id)), mergeAll()).subscribe(
+    this.subscription = this.globalState.activeTenant.get().pipe(map(activeTenant =>
+      this.apiCache.getPlatformGroups(activeTenant.id, this.activeChannelGroup.platform, this.activeChannelGroup.id)),
+      mergeAll()).subscribe(
       groups => {
         this.groups = groups;
       }

@@ -26,7 +26,7 @@ public class DAOChannelConfiguration {
     }
 
     public ChannelConfiguration get(final String moduleName, final Platform platform, final String channelGroupId, final String channelId) {
-        return mapper.get(moduleName, platform, channelGroupId, channelGroupId);
+        return mapper.get(moduleName, platform, channelGroupId, channelId);
     }
 
     public void put(final ChannelConfiguration channelConfiguration) {
