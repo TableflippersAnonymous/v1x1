@@ -152,12 +152,12 @@ public class InboundResource {
     }
 
     private Response relativeRedirect(final String location) {
-        return Response.status(Response.Status.TEMPORARY_REDIRECT)
-            .header("Content-Type", "text/html")
-            .header("Location", location)
-            .entity("<!doctype html>\n<html><head><script>window.location.href='" + location + "';</script></head>" +
-                    "<body>Redirecting you back to v1x1.  <a href=\"" + location + "\">Click here</a> if you don't get redirected.</body></html>")
-            .build();
+        return Response.status(Response.Status.OK)
+                .type(MediaType.TEXT_HTML_TYPE)
+                .entity("<!doctype html>\n<html><head><script>window.location.href='" + location + "';</script></head>" +
+                        "<body>Redirecting you back to v1x1.  <a href=\"" + location + "\">Click here</a> " +
+                        "if you don't get redirected.</body></html>")
+                .build();
     }
 
     private void writeUserConfigEntry(final byte[][] decodedStateData, final String moduleName, final String key,
