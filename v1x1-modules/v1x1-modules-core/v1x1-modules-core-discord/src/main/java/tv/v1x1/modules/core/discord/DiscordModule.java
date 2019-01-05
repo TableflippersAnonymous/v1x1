@@ -43,6 +43,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -112,10 +113,10 @@ public class DiscordModule extends ServiceModule<DiscordGlobalConfiguration, Dis
 
             final PermissionCacheKey that = (PermissionCacheKey) o;
 
-            if (tenant != null ? !tenant.equals(that.tenant) : that.tenant != null) return false;
-            if (globalUser != null ? !globalUser.equals(that.globalUser) : that.globalUser != null) return false;
-            if (channelGroupId != null ? !channelGroupId.equals(that.channelGroupId) : that.channelGroupId != null) return false;
-            return platformGroups != null ? platformGroups.equals(that.platformGroups) : that.platformGroups == null;
+            if (!Objects.equals(tenant, that.tenant)) return false;
+            if (!Objects.equals(globalUser, that.globalUser)) return false;
+            if (!Objects.equals(channelGroupId, that.channelGroupId)) return false;
+            return Objects.equals(platformGroups, that.platformGroups);
 
         }
 
