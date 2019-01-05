@@ -41,6 +41,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
@@ -55,6 +56,9 @@ import java.util.stream.Collectors;
 public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConfiguration> {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
     private static final UUID SCHEDULER_UPDATE_CHANNELS = new UUID(java.util.UUID.nameUUIDFromBytes("Module|TMI|UpdateChannels".getBytes()));
+    private static final int RECONNECT_DELAY_MS = 1000;
+    private static final int RECONNECT_SPLAY_MS = 1000;
+    private static final Random RANDOM = new Random();
 
     private final LoadingCache<String, Tenant> tenantCache;
     private final LoadingCache<UserCacheKey, GlobalUser> globalUserCache;
@@ -247,7 +251,7 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
             e.printStackTrace();
         }
         for(final Map.Entry<String, TmiBot> entry : bots.entrySet())
-            entry.getValue().shutdown();
+            part(entry.getKey());
         eventLoopGroup.shutdownGracefully();
         super.shutdown();
     }
@@ -391,6 +395,12 @@ public class TmiModule extends ServiceModule<TmiGlobalConfiguration, TmiUserConf
             e.printStackTrace();
             throw e;
         }
+    }
+
+    void handleBotClose(final TmiBot tmiBot) {
+        if(bots.remove(String.valueOf(tmiBot.getChannel().getId()), tmiBot))
+            scheduledExecutorService.schedule(() -> join(String.valueOf(tmiBot.getChannel().getId())),
+                    RECONNECT_DELAY_MS + RANDOM.nextInt(RECONNECT_SPLAY_MS), TimeUnit.MILLISECONDS);
     }
 
     @Override

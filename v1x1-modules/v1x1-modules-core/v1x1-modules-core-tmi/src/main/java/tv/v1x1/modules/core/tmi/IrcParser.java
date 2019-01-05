@@ -42,7 +42,7 @@ public class IrcParser {
         final IrcStanza.IrcCommand command = parseCommand(parts[1]);
         if (command == null)
             return null;
-        final String rawArgs = parts.length > 2 ? parts[2] : null;
+        final String rawArgs = parts.length > 2 ? parts[2] : ""; // rawArgs cannot be null, throws NPE in ProtoBuf.
         final List<String> args = parseArgs(rawArgs);
         return buildStanza(line, tagMap, source, command, rawArgs, args.toArray(new String[]{}));
     }

@@ -125,14 +125,12 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelInactive(final ChannelHandlerContext ctx) {
         tmiBot.cleanup();
-        if(tmiBot.isRunning())
-            tmiBot.connect();
+        tmiBot.close();
     }
 
     @Override
     public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
         LOG.error("[{}] [{}] Got exception: ", username, channel.getDisplayName(), cause);
-        tmiBot.clearConnecting();
         tmiBot.disconnect();
     }
 
@@ -233,6 +231,8 @@ public class TmiClientHandler extends ChannelInboundHandlerAdapter {
     }
 
     private void event(final ReconnectCommand reconnectCommand, final Span parentSpan) {
+        // We disconnect.  The reconnection will happen in TmiModule.handleBotClose()
+        tmiBot.disconnect();
         tmiBot.event(new TwitchReconnectEvent(tmiBot.module, tmiBot.bot, reconnectCommand), parentSpan);
     }
 

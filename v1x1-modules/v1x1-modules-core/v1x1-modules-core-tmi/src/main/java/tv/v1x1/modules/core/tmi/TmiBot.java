@@ -31,8 +31,7 @@ import java.util.UUID;
 public class TmiBot {
     private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private volatile boolean running;
-    private volatile boolean connecting;
+    private volatile boolean closed;
     private volatile ChannelFuture channelFuture;
     private final String oauthToken;
     private final String username;
@@ -108,10 +107,7 @@ public class TmiBot {
         }
     }
 
-    synchronized void connect() {
-        if(connecting)
-            return;
-        connecting = true;
+    void connect() {
         if(channelFuture != null && channelFuture.channel().isOpen())
             channelFuture.channel().close();
         final Bootstrap b = new Bootstrap();
@@ -137,14 +133,19 @@ public class TmiBot {
 
     private void quit() {
         sendLine("QUIT :Disconnecting.");
+        close();
+    }
+
+    void close() {
+        if(closed)
+            return;
         if(channelFuture != null && channelFuture.channel().isOpen())
             channelFuture.channel().close();
-        if(running)
-            connect();
+        closed = true;
+        tmiModule.handleBotClose(this);
     }
 
     public void shutdown() {
-        running = false;
         disconnect();
     }
 
@@ -172,12 +173,7 @@ public class TmiBot {
         LOG.info("[{}:{}] [{}] {}", username, id, channel.getDisplayName(), m.replace(oauthToken, "<oauth token removed>"));
     }
 
-    public boolean isRunning() {
-        return running;
-    }
-
     void login() {
-        clearConnecting();
         joinLimiter.submit(() -> {
             sendLine("PASS :oauth:" + oauthToken);
             sendLine("USER " + username + " \"v1x1.tv\" \"irc.chat.twitch.tv\" :" + username);
@@ -185,10 +181,6 @@ public class TmiBot {
             sendLine("CAP REQ :twitch.tv/commands twitch.tv/tags");
             this.joinChannels();
         });
-    }
-
-    public void clearConnecting() {
-        connecting = false;
     }
 
     public Channel getChannel() {
