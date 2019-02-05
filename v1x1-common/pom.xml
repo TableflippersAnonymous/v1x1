@@ -118,7 +118,7 @@
         <dependency>
             <groupId>io.sentry</groupId>
             <artifactId>sentry-logback</artifactId>
-            <version>1.7.17</version>
+            <version>1.7.18</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
