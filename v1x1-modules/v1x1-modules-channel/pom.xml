@@ -26,6 +26,7 @@
       <module>v1x1-modules-channel-uptime</module>
       <module>v1x1-modules-channel-wasm</module>
       <module>v1x1-modules-channel-voicelog</module>
+      <module>v1x1-modules-channel-counter</module>
   </modules>
 
   <dependencies>
