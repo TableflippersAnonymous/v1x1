@@ -132,6 +132,7 @@ spec:
               - {type: core,    moduleName: tmi}
               - {type: global,  moduleName: ops_tool}
               - {type: channel, moduleName: caster}
+              - {type: channel, moduleName: counter}
               - {type: channel, moduleName: echo}
               - {type: channel, moduleName: factoids}
               - {type: channel, moduleName: hello_world}
