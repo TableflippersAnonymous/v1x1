@@ -154,7 +154,7 @@ function cmdCqlsh() {
   if [ "x$ID" == "x" ]; then
     echo "Cassandra container doesn't seem to be running"
   else
-    docker exec -it v1x1_cass_1 cqlsh
+    docker exec -it v1x1_cass_1 cqlsh -k v1x1
     exit $?
   fi
 }

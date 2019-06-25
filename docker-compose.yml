@@ -119,3 +119,9 @@ services:
       - redis
       - zoo
       - cass
+  counter:
+    image: v1x1-counter:latest
+    depends_on:
+      - redis
+      - zoo
+      - cass
