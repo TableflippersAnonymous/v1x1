@@ -3,7 +3,7 @@ I make your chat better!
 
 [Website](https://v1x1.tv/)
 
-# Badges
+# Badges 
 
 | Purpose  | Badge |
 |----------|-------|
