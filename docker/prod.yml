@@ -17,13 +17,10 @@ redisson:
     retryAttempts: 10
     failedSlaveCheckInterval: 10
 cassandra:
-  cluster_name: "Tableflippers Cluster"
+  cluster_name: "home"
   keyspace: "v1x1"
   contact_points:
-  - k8s-w01.tblflp.zone
-  - k8s-w02.tblflp.zone
-  - k8s-w03.tblflp.zone
-  - k8s-w04.tblflp.zone
+  - home-home-service.cass-operator.svc.cluster.local
   authenticated: true
   username: v1x1
   password: "{{ENV:CASSANDRA_PASSWORD}}"
