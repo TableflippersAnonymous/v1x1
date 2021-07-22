@@ -22,7 +22,7 @@ public class CassandraConfig {
     private long updateMs = 100;
     private int minimumMeasurements = 50;
 
-    private String consistencyLevel = "LOCAL_ONE";
+    private String consistencyLevel = "QUORUM";
     private String serialConsistencyLevel = "SERIAL";
     private int fetchSize = 5000;
 
